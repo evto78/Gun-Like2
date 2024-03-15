@@ -5,6 +5,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    [Header("Item Given Buffs")]
+    public PlayerItem internalItemScript;
+
+    private float speedBuff;
+    private float jumpBuff;
+    private float sprintBuff;
+
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
@@ -68,6 +75,8 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
+        UpdateBuffStats();
+
         //groundcheck
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
         Debug.Log("on ground = " + grounded);
@@ -127,20 +136,20 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
-            moveSpeed = crouchSpeed;
+            moveSpeed = crouchSpeed * speedBuff;
         }
 
         //mode - sprinting
         if (grounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprinting;
-            moveSpeed = sprintSpeed;
+            moveSpeed = sprintSpeed * speedBuff;
         }
         //mode - walking
         else if (grounded)
         {
             state = MovementState.walking;
-            moveSpeed = walkSpeed;
+            moveSpeed = walkSpeed * speedBuff;
         }
         //mode - air
         else
@@ -157,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
         if (OnSlope() && !exitingSlope)
         {
             Debug.Log("ON SLOPE");
-            rb.AddForce(GetSlopeMoveDir() * moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDir() * moveSpeed * 20f * speedBuff, ForceMode.Force);
 
             if(rb.velocity.y > 0)
             {
@@ -168,12 +177,12 @@ public class PlayerMovement : MonoBehaviour
         //on ground
         if (grounded)
         {
-            rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveDir.normalized * moveSpeed * 10f * speedBuff, ForceMode.Force);
         }
         //in air
         else
         {
-            rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultiplier * speedBuff, ForceMode.Force);
         }
 
         rb.useGravity = !OnSlope();
@@ -232,5 +241,12 @@ public class PlayerMovement : MonoBehaviour
     Vector3 GetSlopeMoveDir()
     {
         return Vector3.ProjectOnPlane(moveDir, slopeHit.normal).normalized;
+    }
+
+    void UpdateBuffStats() 
+    {
+        speedBuff = internalItemScript.playerItems[3] * 1.2f + 1;
+        sprintBuff = internalItemScript.playerItems[4] * 1.2f + 1;
+        jumpBuff = internalItemScript.playerItems[5] * 1.2f + 1;
     }
 }
