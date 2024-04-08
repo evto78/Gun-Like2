@@ -494,7 +494,7 @@ Transform:
   m_GameObject: {fileID: 1546790320219384397}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.99254614, z: -0, w: 0.12186937}
-  m_LocalPosition: {x: 0.3301524, y: 0, z: 0.33254594}
+  m_LocalPosition: {x: 0.3301524, y: -0.11800003, z: 0.33254594}
   m_LocalScale: {x: 7, y: 7, z: 7}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -5573,7 +5573,7 @@ MonoBehaviour:
   crouchSpeed: 5
   airStrafeSpeed: 5
   jumpForce: 10
-  coyoteTime: 0.25
+  coyoteTime: 0
   mantleOrigin: {x: 0, y: 3, z: 0}
   mantleForce: {x: 0, y: 7, z: 5}
   mantleDistance: 3
@@ -5716,20 +5716,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -5894,9 +5894,9 @@ Transform:
   m_GameObject: {fileID: 8120150805568587265}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.99254614, z: -0, w: 0.12186938}
-  m_LocalPosition: {x: -0.27868196, y: 0, z: 0.399}
-  m_LocalScale: {x: 7, y: 7, z: 7}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: -0.27868196, y: -0.118, z: 0.399}
+  m_LocalScale: {x: 7, y: 5.6694403, z: 7}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7977733804644182837}
   m_LocalEulerAnglesHint: {x: 0, y: 166, z: 0}
