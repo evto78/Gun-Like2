@@ -17,38 +17,44 @@ public class DevItemSpawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(2);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(3);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(4);
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             GameObject spawnedItem;
-            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f), transform.rotation);
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
             spawnedItem.GetComponent<Item>().SetItemID(5);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            GameObject spawnedItem;
+            spawnedItem = Instantiate(item, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z + 5f), transform.rotation);
+            spawnedItem.GetComponent<Item>().SetItemID(6);
         }
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6579472335999389183}
   - component: {fileID: 1285652077693890508}
   - component: {fileID: 8004105622894791808}
+  - component: {fileID: 6024775814756687264}
   m_Layer: 3
   m_Name: Sphere
   m_TagString: item
@@ -33,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5883093142619167091}
+  - {fileID: 9125867790356937051}
   m_Father: {fileID: 5846345732420189142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6579472335999389183
@@ -92,7 +94,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2187559249630203040}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c65a24c006211d44da18167f8dcccb0a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -105,6 +107,27 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.68
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &6024775814756687264
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2187559249630203040}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2363819598549132092
 GameObject:
@@ -277,6 +300,90 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6706938018381636938}
   m_maskType: 0
+--- !u!1 &3953532742476380412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9125867790356937051}
+  - component: {fileID: 6866566453474216706}
+  m_Layer: 0
+  m_Name: Sprite
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9125867790356937051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3953532742476380412}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4816307991126555244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &6866566453474216706
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3953532742476380412}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 4a61e7712177e6b4596181b427e837d4, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5, y: 5}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &6608729508006346496
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +427,7 @@ Rigidbody:
   m_GameObject: {fileID: 6608729508006346496}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -350,12 +457,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f714c3033270644b5621e371b405c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteList:
+  - {fileID: 21300000, guid: 4a61e7712177e6b4596181b427e837d4, type: 3}
+  - {fileID: 21300000, guid: 6fed56bff24386e43a8fddfccb9e155b, type: 3}
+  - {fileID: 21300000, guid: e8859c3252c13ed4da75f1fac3342bec, type: 3}
+  - {fileID: 21300000, guid: e5692a09f43f85a4ab2a5271a0761694, type: 3}
+  - {fileID: 21300000, guid: 48518eed6b525a542bdc0c1301626c72, type: 3}
+  - {fileID: 21300000, guid: e7d3c5b42ee062f4aa01d31c87dee3d1, type: 3}
+  - {fileID: 21300000, guid: 89010809b67c09d4d99d6ec3eabece51, type: 3}
   itemList:
-  - hammer
-  - scope
-  - extended mag
-  - adrenaline
-  - sprint enhancer
-  - light boots
+  - Adrenaline
+  - Springy Boots
+  - Cat Plush
+  - Butt-er
+  - Hardened Bullets
+  - Aircraft Grade Metal
+  - Extended Mag
   itemID: 0
   itemText: {fileID: 3670894863867622849}
+  sr: {fileID: 6866566453474216706}
