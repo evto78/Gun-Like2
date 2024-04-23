@@ -473,7 +473,6 @@ namespace peterkcodes.AdvancedMovement
             if (planeMode && Input.GetKey(KeyCode.LeftShift))
             {
                 velocity += Vector3.up * planeSpeed/6;
-                Debug.Log("VROOM! " + velocity.y);
             }
 
             TryJump();

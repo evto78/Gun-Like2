@@ -84,7 +84,5 @@ public class GunScript : MonoBehaviour
             }
             
         }
-
-        Debug.Log("Bullets: " + currentBullets + "/" + maxBullets);
     }
 }
