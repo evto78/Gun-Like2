@@ -225,7 +225,6 @@ namespace peterkcodes.AdvancedMovement
         private CharacterController cc;
         private float stamina = 1;
         #endregion
-
         bool buttered = false;
         bool planeMode = false;
         float planeSpeed = 0.0f;
@@ -238,6 +237,7 @@ namespace peterkcodes.AdvancedMovement
 
         public void StatUpdate(List<int> givenItems)
         {
+            
             baseMoveSpeed = 10;
             sprintMoveSpeed = baseMoveSpeed * 1.6f * (givenItems[0]/12f + 1f);
             jumpForce = 8 * (givenItems[1]/10f + 1f);

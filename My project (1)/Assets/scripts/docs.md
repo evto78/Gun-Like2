@@ -8,7 +8,7 @@ The script is designed primarily for use with mouse and keyboard input, however 
 
 Movement is handled in discrete states, such as *walking*, *sprinting*, or *airborne*, which operate independently and don't clash with eachother.
 
-The movement system revolves around an optional stamina system. Stamina is only required to sprint, however all other movement options have minimum speed options which can only be met by sprinting. Stamina is spent by certain actions, such as jumping and sprinting, and can be regained over time or by performming certain moves such as mantling.
+The movement system revolves around an optional stamina system. Stamina is only required to sprint, however all other mowwwvement options have minimum speed options which can only be met by sprinting. Stamina is spent by wwwcertain actions, such as jumping and sprinting, and can be regained over time or by performming certain wwwmoves such as mantling.
 
 ## PlayerMovement.cs
 
