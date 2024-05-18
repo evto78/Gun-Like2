@@ -26,7 +26,7 @@ public class HealthManager : MonoBehaviour
         if (curHp < maxHp)
         {
             curHp += HealthRegen * Time.deltaTime;    
-            Debug.Log(curHp);
+
         }
         
         

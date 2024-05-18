@@ -531,7 +531,7 @@ namespace peterkcodes.AdvancedMovement
             if (buttered)
             {
                 friction = 1;
-                Debug.Log("Slip!");
+
             }
             else
             {

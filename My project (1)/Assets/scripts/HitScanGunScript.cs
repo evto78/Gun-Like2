@@ -130,7 +130,7 @@ public class HitScanGunScript : MonoBehaviour
         {
             trail.transform.position = Vector3.Lerp(startPos, hit.point, time);
             time += Time.deltaTime / trail.time;
-            Debug.Log(time);
+            
 
             yield return null;
         }
