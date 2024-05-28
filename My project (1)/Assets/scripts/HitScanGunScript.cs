@@ -23,6 +23,7 @@ public class HitScanGunScript : MonoBehaviour
     public TrailRenderer bulletTrail;
 
     public ParticleSystem particleSystem;
+    private ParticleSystem cloneparticleSys;
 
     Vector3 accuracy = new Vector3(0, 0, 0);
 
@@ -135,8 +136,10 @@ public class HitScanGunScript : MonoBehaviour
             yield return null;
         }
         trail.transform.position = hit.point;
-        Instantiate(particleSystem, hit.point, Quaternion.LookRotation(hit.normal));
+        
+        cloneparticleSys = Instantiate(particleSystem, hit.point, Quaternion.LookRotation(hit.normal));
 
+        Destroy(cloneparticleSys, 5);
         Destroy(trail.gameObject, trail.time);
     }
 }
