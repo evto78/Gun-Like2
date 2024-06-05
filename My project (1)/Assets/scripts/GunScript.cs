@@ -6,7 +6,7 @@ public class GunScript : MonoBehaviour
 {
     Animator animator;
     public int maxBullets = 8;
-    int currentBullets;
+    public int currentBullets;
 
     public float attackSpeed = 1;
     float attackTimer = 0;

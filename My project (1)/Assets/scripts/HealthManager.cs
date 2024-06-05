@@ -8,8 +8,8 @@ public class HealthManager : MonoBehaviour
 {
     public int maxHp = 100;
     public float curHp;
-    
-    public float HealthRegen = 1;
+    public float armor = 5;
+    public float healthRegen = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,24 +18,39 @@ public class HealthManager : MonoBehaviour
     }
     public void StatUpdate(List<int> givenItems)
     {
-        HealthRegen = 1 * (givenItems[2]/10 + 1);
+        healthRegen = 1f * (givenItems[2]/10f + 1f);
         
     }
     void Update()
     {
         if (curHp < maxHp)
         {
-            curHp += HealthRegen * Time.deltaTime;    
+            curHp += healthRegen * Time.deltaTime;    
 
         }
-        
-        
     }
-    private void OnTriggerEnter(Collider collision) 
+
+    public void TakeDamage(float damageTaken)
     {
-        if(collision.gameObject.tag == "HurtBox")
+        if (damageTaken <= 0)
         {
-            curHp -= 2;
+            //Heal
+            curHp += damageTaken;
+        }
+        else
+        {
+            //Damage
+            if (damageTaken <= armor)
+            {
+                //armor has absorbed all damage but min dmg is 1
+                curHp -= 1f;
+            }
+            else
+            {
+                //return new hp with dmg reduced by armor
+                curHp -= (damageTaken - armor);
+                Debug.Log(damageTaken - armor + " " + armor + " " + damageTaken);
+            }
         }
     }
 }

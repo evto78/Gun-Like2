@@ -2,25 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-namespace peterkcodes.AdvancedMovement.Demo
+using TMPro;
+public class UIManager : MonoBehaviour
 {
-    /// <summary>
-    /// A basic UI manager script which in this case is only used to update the stamina bar.
-    /// </summary>
-    public class UIManager : MonoBehaviour
+    public TextMeshProUGUI lGunAmmo;
+    public TextMeshProUGUI rGunAmmo;
+
+    public HitScanGunScript revScript;
+    public GunScript gunScript;
+
+    // Update is called once per frame
+    void Update()
     {
-        [SerializeField] private Transform staminaBar;
-        [SerializeField] private PlayerMovement movement;
-
-        private void Start()
-        {
-            movement.uiStaminaUpdate += UpdateStaminaBar;   
-        }
-
-        public void UpdateStaminaBar(float _stamina)
-        {
-            staminaBar.localScale = new Vector3(_stamina, 1, 1);
-        }
+        lGunAmmo.text = revScript.currentBullets + " / " + revScript.maxBullets;
+        rGunAmmo.text = gunScript.currentBullets + " / " + gunScript.maxBullets;
     }
 }

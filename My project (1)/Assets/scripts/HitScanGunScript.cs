@@ -6,7 +6,7 @@ public class HitScanGunScript : MonoBehaviour
 {
     Animator animator;
     public int maxBullets = 8;
-    int currentBullets;
+    public int currentBullets;
 
     public float attackSpeed = 1;
     float attackTimer = 0;
@@ -139,7 +139,7 @@ public class HitScanGunScript : MonoBehaviour
         
         cloneparticleSys = Instantiate(particleSystem, hit.point, Quaternion.LookRotation(hit.normal));
 
-        Destroy(cloneparticleSys, 5);
+        Destroy(cloneparticleSys.gameObject, 5);
         Destroy(trail.gameObject, trail.time);
     }
 }

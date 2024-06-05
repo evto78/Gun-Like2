@@ -32,6 +32,7 @@ namespace peterkcodes.AdvancedMovement
         private void Update()
         {
             playerMvt.StatUpdate(playerItems);
+            healthManager.StatUpdate(playerItems);
             
         }
     }
