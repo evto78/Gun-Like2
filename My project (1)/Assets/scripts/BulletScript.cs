@@ -10,10 +10,15 @@ public class BulletScript : MonoBehaviour
 
     bool collided = false;
 
+    public Camera mainCamera;
+    Ray ray;
+    RaycastHit hit;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
+
     }
 
     private void OnCollisionEnter(Collision collision)

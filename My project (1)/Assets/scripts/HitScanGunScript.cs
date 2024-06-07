@@ -25,6 +25,10 @@ public class HitScanGunScript : MonoBehaviour
     public ParticleSystem particleSystem;
     private ParticleSystem cloneparticleSys;
 
+    public Camera mainCamera;
+    Ray ray;
+    RaycastHit hit;
+
     Vector3 accuracy = new Vector3(0, 0, 0);
 
     // Start is called before the first frame update
@@ -43,6 +47,7 @@ public class HitScanGunScript : MonoBehaviour
             if (reloadTimer <= 0)
             {
                 reloading = false;
+                currentBullets = maxBullets;
             }
         }
         if (shooting)
@@ -78,7 +83,7 @@ public class HitScanGunScript : MonoBehaviour
     void Shoot()
     {
         animator.SetTrigger("Shooting");
-        animator.speed = attackSpeed;
+        animator.speed = attackSpeed + attackSpeed/10f;
         shooting = true;
         attackTimer = 1;
         if (currentBullets > 0)
@@ -104,7 +109,7 @@ public class HitScanGunScript : MonoBehaviour
         reloadTimer = 1;
         shooting = false;
         attackTimer = 0;
-        currentBullets = maxBullets;
+        //currentBullets = maxBullets;
     }
 
     private Vector3 GetDirection()

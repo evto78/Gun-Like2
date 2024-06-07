@@ -5,16 +5,19 @@ using UnityEngine.UI;
 using TMPro;
 public class UIManager : MonoBehaviour
 {
-    public TextMeshProUGUI lGunAmmo;
-    public TextMeshProUGUI rGunAmmo;
+    public TextMeshProUGUI lGunAmmoText;
+    public TextMeshProUGUI rGunAmmoText;
+    public TextMeshProUGUI healthText;
 
     public HitScanGunScript revScript;
     public GunScript gunScript;
+    public HealthManager healthManager;
 
     // Update is called once per frame
     void Update()
     {
-        lGunAmmo.text = revScript.currentBullets + " / " + revScript.maxBullets;
-        rGunAmmo.text = gunScript.currentBullets + " / " + gunScript.maxBullets;
+        lGunAmmoText.text = revScript.currentBullets + " / " + revScript.maxBullets;
+        rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.maxBullets;
+        healthText.text = healthManager.curHp + " / " + healthManager.maxHp;
     }
 }

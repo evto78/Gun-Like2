@@ -21,6 +21,11 @@ public class GunScript : MonoBehaviour
     public GameObject pistolBullet;
     public Transform firePoint;
 
+    public Camera cam;
+
+    Ray ray;
+    RaycastHit hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +42,7 @@ public class GunScript : MonoBehaviour
             if (reloadTimer <= 0)
             {
                 reloading = false;
+                currentBullets = maxBullets;
             }
         }
         if (shooting)
@@ -66,7 +72,7 @@ public class GunScript : MonoBehaviour
             reloadTimer = 1;
             shooting = false;
             attackTimer = 0;
-            currentBullets = maxBullets;
+            //currentBullets = maxBullets;
         }
 
         if (Input.GetMouseButton(0) && !reloading && !shooting)
@@ -81,6 +87,8 @@ public class GunScript : MonoBehaviour
 
                 GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
                 spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulletSpeed, ForceMode.Impulse);
+
+                spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
             }
             
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.UI;
+using TMPro;
 
 public class HealthManager : MonoBehaviour
 {
