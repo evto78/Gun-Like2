@@ -6,14 +6,16 @@ namespace peterkcodes.AdvancedMovement
 {
     public class PlayerItem : MonoBehaviour
     {
-        public List<int> playerItems;
+        public List<int> leftItems;
+        public List<int> rightItems;
+
         public PlayerMovement playerMvt;
         public HealthManager healthManager;
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.tag == "item")
             {
-                playerItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                rightItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                 Debug.Log("Item of Item ID " + collision.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
                 Destroy(collision.gameObject);
             }
@@ -23,7 +25,7 @@ namespace peterkcodes.AdvancedMovement
         {
             if (collision.gameObject.tag == "item")
             {
-                playerItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                rightItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                 Debug.Log("Item of Item ID " + collision.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
                 Destroy(collision.gameObject);
             }
@@ -31,8 +33,8 @@ namespace peterkcodes.AdvancedMovement
 
         private void Update()
         {
-            playerMvt.StatUpdate(playerItems);
-            healthManager.StatUpdate(playerItems);
+            playerMvt.StatUpdate(rightItems, leftItems);
+            healthManager.StatUpdate(rightItems, leftItems);
             
         }
     }

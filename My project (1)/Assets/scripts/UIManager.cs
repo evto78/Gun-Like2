@@ -18,6 +18,6 @@ public class UIManager : MonoBehaviour
     {
         lGunAmmoText.text = revScript.currentBullets + " / " + revScript.maxBullets;
         rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.maxBullets;
-        healthText.text = healthManager.curHp + " / " + healthManager.maxHp;
+        healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
     }
 }

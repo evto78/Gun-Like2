@@ -235,19 +235,18 @@ namespace peterkcodes.AdvancedMovement
             cc = GetComponent<CharacterController>();
         }
 
-        public void StatUpdate(List<int> givenItems)
+        public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems)
         {
-            
             baseMoveSpeed = 10;
-            sprintMoveSpeed = baseMoveSpeed * 1.6f * (givenItems[0]/12f + 1f);
-            jumpForce = 8 * (givenItems[1]/10f + 1f);
-            airStrafeSpeed = baseMoveSpeed / (2 / (givenItems[5]/10f + 1f));
+            sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] / 12f + 1f) + (givenRightItems[0] / 12f + 1f));
+            jumpForce = 8 * ((givenLeftItems[1] / 10f + 1f) + (givenRightItems[1] / 10f + 1f));
+            airStrafeSpeed = baseMoveSpeed / (2 / ((givenLeftItems[5] / 10f + 1f) + (givenRightItems[5] / 10f + 1f)));
             maxSlideVelocity = baseMoveSpeed * 3f;
             slideAccelerationRate = baseMoveSpeed * 2f;
             maxWallrunVelocity = baseMoveSpeed * 2.5f;
             wallrunAcceleration = baseMoveSpeed * 2f;
             wallkickForce = new Vector2 (jumpForce * 3, jumpForce);
-            if (givenItems[3] > 0)
+            if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
             {
                 maxSlideVelocity = maxSlideVelocity * 1.5f;
                 slideAccelerationRate = slideAccelerationRate * 1.5f;
@@ -257,10 +256,10 @@ namespace peterkcodes.AdvancedMovement
             {
                 buttered = false;
             }
-            if(givenItems[5] > 0)
+            if((givenLeftItems[5] > 0) || (givenRightItems[5] > 0))
             {
                 planeMode = true;
-                planeSpeed = (givenItems[5] / 5f + 1f) * sprintMoveSpeed/5f;
+                planeSpeed = ((givenLeftItems[5] / 5f + 1f) + (givenRightItems[5] / 5f + 1f)) * sprintMoveSpeed/5f;
             }
             else
             {

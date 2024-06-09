@@ -16,11 +16,11 @@ public class HealthManager : MonoBehaviour
     void Start()
     {
         curHp = maxHp;
-    
     }
-    public void StatUpdate(List<int> givenItems)
+    public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems)
     {
-        healthRegen = 1f * (givenItems[2]/10f + 1f);
+        healthRegen = 1f * ((givenLeftItems[2]/10f + 1f) + (givenRightItems[2]/10f + 1f));
+        armor = 5f * (((givenLeftItems[3]-1f)/25f + 1f) + ((givenRightItems[3]-1f)/25f + 1f));
         
     }
     void Update()
@@ -51,7 +51,6 @@ public class HealthManager : MonoBehaviour
             {
                 //return new hp with dmg reduced by armor
                 curHp -= (damageTaken - armor);
-                Debug.Log(damageTaken - armor + " " + armor + " " + damageTaken);
             }
         }
     }
