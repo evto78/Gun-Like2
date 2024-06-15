@@ -19,8 +19,8 @@ public class DamageText : MonoBehaviour
     private void Start()
     {
         timer = 3f;
-        Debug.Log("hello");
-        transform.position = Vector3.zero;
+        
+        //transform.position = Vector3.zero;
     }
 
     public void SetText(string sentText, string givenColor)
@@ -46,6 +46,8 @@ public class DamageText : MonoBehaviour
         {
             textDisplay.color = badHit;
         }
+
+        Debug.Log(textDisplay.text);
     }
 
     void Update()
