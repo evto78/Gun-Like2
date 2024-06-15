@@ -14,6 +14,9 @@ public class BulletScript : MonoBehaviour
     Ray ray;
     RaycastHit hit;
 
+    public float damage;
+    public bool isCrit;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -21,8 +24,36 @@ public class BulletScript : MonoBehaviour
 
     }
 
+    public void setStats(float givenDmg, bool isCritHit)
+    {
+        damage = givenDmg;
+        isCrit = isCritHit;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (!isCrit)
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+            }
+            else
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+            }
+        }
+        if (collision.gameObject.tag == "EnemyWeakPoint")
+        {
+            if (!isCrit)
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+            }
+            else
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+            }
+        }
         if (!collided)
         {
             rb.velocity = Vector3.zero;

@@ -18,6 +18,10 @@ public class GunScript : MonoBehaviour
     bool reloading = false;
     bool shooting = false;
 
+    public float damage;
+    public float critChance;
+    public float critDamage;
+
     public GameObject pistolBullet;
     public Transform firePoint;
 
@@ -89,6 +93,15 @@ public class GunScript : MonoBehaviour
                 spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulletSpeed, ForceMode.Impulse);
 
                 spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
+                if(Random.Range(1, 100) < critChance)
+                {
+                    spawnedBullet.GetComponent<BulletScript>().setStats(damage * critDamage, true);
+                }
+                else
+                {
+                    spawnedBullet.GetComponent<BulletScript>().setStats(damage, false);
+                }
+                
             }
             
         }

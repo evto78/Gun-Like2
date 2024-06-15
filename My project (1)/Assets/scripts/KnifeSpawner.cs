@@ -5,13 +5,17 @@ using UnityEngine;
 public class KnifeSpawner : MonoBehaviour
 {
 
-    public GameObject knife;
+    public GameObject enemy;
 
     void Update()
     {
         if (Input.GetKey(KeyCode.N))
         {
-            GameObject spawnedKnife = Instantiate(knife, new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z), transform.rotation);
+            GameObject spawnedEnemy = Instantiate(enemy, new Vector3(transform.position.x, transform.position.y + 2.2f, transform.position.z), transform.rotation);
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            GameObject spawnedEnemy = Instantiate(enemy, new Vector3(transform.position.x, transform.position.y + 2.2f, transform.position.z), transform.rotation);
         }
     }
 }

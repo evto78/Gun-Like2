@@ -14,6 +14,7 @@ public class KnifeEnemy : MonoBehaviour
     Vector3 tarDir;
 
     float timer;
+    float closestDistance;
 
     public float maxHp;
     public float curHp;
@@ -38,14 +39,32 @@ public class KnifeEnemy : MonoBehaviour
         state = "search";
         player = GameObject.Find("Player");
         target = player;
-        orbitOptions.Add(GameObject.Find("Orbit Point North"));
-        orbitOptions.Add(GameObject.Find("Orbit Point North East"));
-        orbitOptions.Add(GameObject.Find("Orbit Point North West"));
-        orbitOptions.Add(GameObject.Find("Orbit Point East"));
-        orbitOptions.Add(GameObject.Find("Orbit Point West"));
-        orbitOptions.Add(GameObject.Find("Orbit Point South"));
-        orbitOptions.Add(GameObject.Find("Orbit Point South East"));
-        orbitOptions.Add(GameObject.Find("Orbit Point South West"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North East1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North West1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point East1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point West1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South East1"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South West1"));
+
+        orbitOptions.Add(GameObject.Find("Orbit Point North2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North East2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North West2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point East2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point West2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South East2"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South West2"));
+
+        orbitOptions.Add(GameObject.Find("Orbit Point North3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North East3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point North West3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point East3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point West3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South East3"));
+        orbitOptions.Add(GameObject.Find("Orbit Point South West3"));
 
         curHp = maxHp;
     }
@@ -91,6 +110,17 @@ public class KnifeEnemy : MonoBehaviour
 
     void Orbit()
     {
+        closestDistance = 9999999f;
+        for (int i = 0; i < orbitOptions.Count; i+=1)
+        {
+            if (Vector3.Distance(orbitOptions[i].transform.position, transform.position) < closestDistance)
+            {
+                orbitFollow = orbitOptions[i];
+                closestDistance = Vector3.Distance(orbitFollow.transform.position, transform.position);
+                target = orbitFollow;
+                Debug.Log(closestDistance);
+            }
+        }
         target = orbitFollow;
         Move(target);
         Turn(target);
@@ -113,7 +143,17 @@ public class KnifeEnemy : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) < 20)
         {
             state = "orbit";
-            orbitFollow = orbitOptions[Random.Range(0, orbitOptions.Count)];
+
+            closestDistance = 9999999f;
+            for (int i = 0; i < orbitOptions.Count; i++)
+            {
+                if(Vector3.Distance(orbitOptions[i].transform.position, transform.position) < closestDistance)
+                {
+                    orbitFollow = orbitOptions[i];
+                    closestDistance = Vector3.Distance(orbitFollow.transform.position, orbitFollow.transform.position);
+                }
+            }
+
             target = orbitFollow;
             timer = Random.Range(10f, 10f);
         }
