@@ -11,6 +11,7 @@ namespace peterkcodes.AdvancedMovement
 
         public PlayerMovement playerMvt;
         public HealthManager healthManager;
+        public GunManager gunManager;
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.tag == "item")
@@ -35,7 +36,7 @@ namespace peterkcodes.AdvancedMovement
         {
             playerMvt.StatUpdate(rightItems, leftItems);
             healthManager.StatUpdate(rightItems, leftItems);
-            
+            gunManager.StatUpdate(rightItems, leftItems);
         }
     }
 

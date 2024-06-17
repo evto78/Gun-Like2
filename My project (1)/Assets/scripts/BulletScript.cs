@@ -16,6 +16,10 @@ public class BulletScript : MonoBehaviour
 
     public float damage;
     public bool isCrit;
+    public bool isAutoWeak;
+    public float weakDamage;
+
+    public int pierce = 0;
 
     void Awake()
     {
@@ -24,10 +28,13 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg)
     {
         damage = givenDmg;
         isCrit = isCritHit;
+        pierce = givenPierce;
+        isAutoWeak = isAutoWeakHit;
+        weakDamage = givenWeakDmg;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,31 +43,49 @@ public class BulletScript : MonoBehaviour
         {
             if (!isCrit)
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+                if (!isAutoWeak)
+                {
+                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+                }
+                else
+                {
+                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+                }
             }
             else
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+                if (!isAutoWeak)
+                {
+                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+                }
+                else
+                {
+                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+                }
             }
         }
         if (collision.gameObject.tag == "EnemyWeakPoint")
         {
             if (!isCrit)
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform);
             }
             else
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform);
             }
         }
-        if (!collided)
+        if (!collided && pierce < 1)
         {
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
             Destroy(mesh);
             collided = true;
+        }
+        else
+        {
+            pierce -= 1;
         }
         
     }

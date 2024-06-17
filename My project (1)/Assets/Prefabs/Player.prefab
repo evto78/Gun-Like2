@@ -233,7 +233,7 @@ MonoBehaviour:
   firePoint: {fileID: 2626037932259951616}
   mask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 769
   bulletTrail: {fileID: 1812891125541723055, guid: 0f3e7ce777e6d74499652a72cfb40ded, type: 3}
   particleSystem: {fileID: 5839023028993970213, guid: 8ed22f1078c80ac4da4a8f102b4b6e03, type: 3}
   mainCamera: {fileID: 1393313361983663020}
@@ -852,6 +852,7 @@ GameObject:
   - component: {fileID: 5709547698563251606}
   - component: {fileID: 7860991048136506821}
   - component: {fileID: 5924764694817556357}
+  - component: {fileID: 851844682939571270}
   - component: {fileID: 4028998516295020128}
   - component: {fileID: 4722810109522141470}
   - component: {fileID: 6856610232415453959}
@@ -971,8 +972,58 @@ MonoBehaviour:
   groundCheckScale: {x: 0.25, y: 0.15, z: 0.25}
   groundLayers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 823
   useStamina: 0
+--- !u!114 &851844682939571270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6742514721943170716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f55f23b971af6a4285d88a2d4faa6d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftHand: {fileID: 1819510996242308224}
+  rightHand: {fileID: 8597466958665035196}
+  masterAtkSpd: 1
+  masterReSpd: 1
+  masterDmg: 1
+  masterMagSize: 1
+  masterAcc: 1
+  masterBulSpd: 1
+  masterBulSize: 1
+  masterBulPir: 0
+  masterCritChance: 1
+  masterCritDamage: 1
+  masterWeakPointChance: 1
+  masterWeakPointDamage: 1
+  leftAtkSpd: 1
+  leftReSpd: 1
+  leftDmg: 1
+  leftMagSize: 1
+  leftAcc: 1
+  leftBulSpd: 1
+  leftBulSize: 1
+  leftBulPir: 0
+  leftCritChance: 1
+  leftCritDamage: 1
+  leftWeakPointChance: 1
+  leftWeakPointDamage: 1
+  rightAtkSpd: 1
+  rightReSpd: 1
+  rightDmg: 1
+  rightMagSize: 1
+  rightAcc: 1
+  rightBulSpd: 1
+  rightBulSize: 1
+  rightBulPir: 0
+  rightCritChance: 1
+  rightCritDamage: 1
+  rightWeakPointChance: 1
+  rightWeakPointDamage: 1
 --- !u!114 &4028998516295020128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1121,6 +1172,7 @@ MonoBehaviour:
   rightItems: 
   playerMvt: {fileID: 5924764694817556357}
   healthManager: {fileID: 4707781026237606956}
+  gunManager: {fileID: 851844682939571270}
 --- !u!114 &7416388612031029063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1529,14 +1581,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ef1bee0412a4b4b904465c46de642f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBullets: 10
+  manager: {fileID: 851844682939571270}
+  baseMagSize: 8
+  baseAtkSpd: 1
+  baseReSpd: 1
+  baseBulSpd: 1000
+  baseDmg: 10
+  baseAcc: 15
+  baseBulSize: 1
+  baseBulPir: 0
+  baseCritChance: 0
+  baseCritDamage: 2
+  baseWeakPointChance: 0
+  baseWeakPointDamage: 1.5
+  magSize: 0
+  atkSpd: 0
+  reSpd: 0
+  bulSpd: 0
+  dmg: 0
+  acc: 0
+  bulSize: 0
+  bulPir: 0
+  critChance: 0
+  critDamage: 0
+  weakPointChance: 0
+  weakPointDamage: 0
   currentBullets: 0
-  attackSpeed: 2
-  reloadSpeed: 1
-  bulletSpeed: 40
-  damage: 10
-  critChance: 10
-  critDamage: 2
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   firePoint: {fileID: 951894001244339966}
   cam: {fileID: 1393313361983663020}

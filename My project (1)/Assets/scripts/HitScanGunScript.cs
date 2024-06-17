@@ -69,14 +69,21 @@ public class HitScanGunScript : MonoBehaviour
             animator.SetBool("NoAmmo", true);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !reloading && currentBullets != maxBullets)
-        {
-            Reload();
-        }
+    }
 
-        if (Input.GetMouseButton(0) && !reloading && !shooting)
+    public void AttemptShoot()
+    {
+        if (!reloading && !shooting)
         {
             Shoot();
+        }
+    }
+
+    public void AttemptReload()
+    {
+        if (!reloading && currentBullets != maxBullets)
+        {
+            Reload();
         }
     }
 
