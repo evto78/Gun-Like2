@@ -18,8 +18,13 @@ public class BulletScript : MonoBehaviour
     public bool isCrit;
     public bool isAutoWeak;
     public float weakDamage;
+    public float bulSpd;
 
     public int pierce = 0;
+
+    public Collider myCollider;
+
+    List<Collider> collisions = new List<Collider>();
 
     void Awake()
     {
@@ -28,13 +33,16 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd)
     {
         damage = givenDmg;
         isCrit = isCritHit;
         pierce = givenPierce;
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
+        bulSpd = givenBulSpd;
+
+        GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -86,10 +94,20 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
+            collisions.Add(collision.collider);
+            Physics.IgnoreCollision(myCollider, collision.collider, true);
         }
         
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        //if (collisions.Contains(collision.collider))
+        //{
+            //Physics.IgnoreCollision(collision.collider, myCollider, false);
+        //}
+    }
+    
     private void FixedUpdate()
     {
         if (rb.freezeRotation)

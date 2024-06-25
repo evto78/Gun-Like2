@@ -159,29 +159,30 @@ public class GunScript : MonoBehaviour
             currentBullets--;
 
             GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
-            spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
+            spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
+            //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
 
             spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
             if (Random.Range(1, 100) < critChance)
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage, true, bulPir, true, weakPointDamage);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage, true, bulPir, true, weakPointDamage, bulSpd);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage, true, bulPir, false, weakPointDamage);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage, true, bulPir, false, weakPointDamage, bulSpd);
                 }
             }
             else
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage, false, bulPir, true, weakPointDamage);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage, false, bulPir, true, weakPointDamage, bulSpd);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg, false, bulPir, false, weakPointDamage);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg, false, bulPir, false, weakPointDamage, bulSpd);
                 }
             }
 
