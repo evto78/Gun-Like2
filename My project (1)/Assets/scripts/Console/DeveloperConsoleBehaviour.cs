@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DeveloperConsoleBehaviour : MonoBehaviour
 {
@@ -35,5 +36,35 @@ public class DeveloperConsoleBehaviour : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }
-}
 
+    public void Toggle()
+    {
+        
+        if (uiCanvas.activeSelf)
+        {
+            Time.timeScale = pausedTimeScale;
+            uiCanvas.SetActive(false);
+        }
+        else
+        {
+            pausedTimeScale = Time.timeScale;
+            Time.timeScale = 0;
+            uiCanvas.SetActive(true);
+            inputField.ActivateInputField();
+        }
+    }
+    private void Update() 
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Toggle();
+            Debug.Log("toggled");
+        }
+    }
+    public void ProcessCommand(string inputValue)
+    {
+        developerConsole.ProcessCommand(inputValue);
+
+        inputField.text = string.Empty;
+    }
+}
