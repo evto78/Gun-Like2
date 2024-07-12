@@ -55,7 +55,7 @@ public class DeveloperConsoleBehaviour : MonoBehaviour
     }
     private void Update() 
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Tilde))
         {
             Toggle();
             Debug.Log("toggled");
