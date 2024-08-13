@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour
@@ -20,7 +19,7 @@ public class BulletScript : MonoBehaviour
     public bool isAutoWeak;
     public float weakDamage;
     public float bulSpd;
-    public float grav;
+
     public int pierce = 0;
 
     public Collider myCollider;
@@ -34,7 +33,7 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float givenGrav)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd)
     {
         damage = givenDmg;
         isCrit = isCritHit;
@@ -42,10 +41,8 @@ public class BulletScript : MonoBehaviour
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
         bulSpd = givenBulSpd;
-        grav = givenGrav;
 
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
-        GetComponent<Rigidbody>().AddForce(-transform.up * grav, ForceMode.Force);
     }
 
     private void OnCollisionEnter(Collision collision)
