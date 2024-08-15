@@ -17,17 +17,17 @@ public class HealthManager : MonoBehaviour
     {
         curHp = maxHp;
     }
-    public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems)
+    public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
-        healthRegen = 1f * ((givenLeftItems[2]/10f + 1f) + (givenRightItems[2]/10f + 1f));
-        armor = 5f * (((givenLeftItems[3]-1f)/25f + 1f) + ((givenRightItems[3]-1f)/25f + 1f));
-        
+        healthRegen = 1f * ((givenLeftItems[2] / 10f + 1f) + (givenRightItems[2] / 10f + 1f));
+        armor = 5f * (((givenLeftItems[3] - 1f) / 25f + 1f) + ((givenRightItems[3] - 1f) / 25f + 1f));
+
     }
     void Update()
     {
         if (curHp < maxHp)
         {
-            curHp += healthRegen * Time.deltaTime;    
+            curHp += healthRegen * Time.deltaTime;
 
         }
     }

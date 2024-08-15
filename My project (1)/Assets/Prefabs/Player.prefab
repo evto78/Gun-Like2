@@ -225,10 +225,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad98dc8cf180deb41acc32052f2c1de2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBullets: 6
+  manager: {fileID: 851844682939571270}
+  baseMagSize: 6
+  baseAtkSpd: 1
+  baseReSpd: 1
+  baseBulSpd: 9999
+  baseDmg: 20
+  baseAcc: 5
+  baseBulSize: 1
+  baseBulPir: 0
+  baseCritChance: 0
+  baseCritDamage: 2
+  baseWeakPointChance: 0
+  baseWeakPointDamage: 2
+  magSize: 0
+  atkSpd: 0
+  reSpd: 0
+  bulSpd: 0
+  dmg: 0
+  acc: 0
+  bulSize: 0
+  bulPir: 0
+  critChance: 0
+  critDamage: 0
+  weakPointChance: 0
+  weakPointDamage: 0
   currentBullets: 0
-  attackSpeed: 1
-  reloadSpeed: 0.5
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   firePoint: {fileID: 2626037932259951616}
   mask:

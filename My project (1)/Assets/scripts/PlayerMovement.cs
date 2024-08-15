@@ -156,7 +156,7 @@ namespace peterkcodes.AdvancedMovement
 
         [Tooltip("Gravity applied while against a wall but not moving.")]
         [SerializeField] private float wallSlipGravity;
-        
+
         private bool isAgainstWall;
         private bool wallDirection;
         private RaycastHit wallHit;
@@ -235,7 +235,7 @@ namespace peterkcodes.AdvancedMovement
             cc = GetComponent<CharacterController>();
         }
 
-        public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems)
+        public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
         {
             baseMoveSpeed = 10;
             sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] / 12f + 1f) + (givenRightItems[0] / 12f + 1f));
@@ -245,7 +245,7 @@ namespace peterkcodes.AdvancedMovement
             slideAccelerationRate = baseMoveSpeed * 2f;
             maxWallrunVelocity = baseMoveSpeed * 2.5f;
             wallrunAcceleration = baseMoveSpeed * 2f;
-            wallkickForce = new Vector2 (jumpForce * 3, jumpForce);
+            wallkickForce = new Vector2(jumpForce * 3, jumpForce);
             if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
             {
                 maxSlideVelocity = maxSlideVelocity * 1.5f;
@@ -256,10 +256,10 @@ namespace peterkcodes.AdvancedMovement
             {
                 buttered = false;
             }
-            if((givenLeftItems[5] > 0) || (givenRightItems[5] > 0))
+            if ((givenLeftItems[5] > 0) || (givenRightItems[5] > 0))
             {
                 planeMode = true;
-                planeSpeed = ((givenLeftItems[5] / 5f + 1f) + (givenRightItems[5] / 5f + 1f)) * sprintMoveSpeed/5f;
+                planeSpeed = ((givenLeftItems[5] / 5f + 1f) + (givenRightItems[5] / 5f + 1f)) * sprintMoveSpeed / 5f;
             }
             else
             {
@@ -322,7 +322,7 @@ namespace peterkcodes.AdvancedMovement
             sprintNextUpdate = true;
         }
 
-        public void SetInputAxes (Vector2 value)
+        public void SetInputAxes(Vector2 value)
         {
             inputAxes = value;
         }
@@ -397,7 +397,7 @@ namespace peterkcodes.AdvancedMovement
         private void ManageAir()
         {
             //Disable mantling if cooldown hasn't expired
-            if(Time.time < lastMantleTime + mantleCooldown)
+            if (Time.time < lastMantleTime + mantleCooldown)
                 isMantleValid = false;
 
             timeSinceGrounded += Time.fixedDeltaTime;
@@ -471,7 +471,7 @@ namespace peterkcodes.AdvancedMovement
 
             if (planeMode && Input.GetKey(KeyCode.LeftShift))
             {
-                velocity += Vector3.up * planeSpeed/6;
+                velocity += Vector3.up * planeSpeed / 6;
             }
 
             TryJump();
@@ -479,7 +479,7 @@ namespace peterkcodes.AdvancedMovement
 
         private void ManageSprint()
         {
-            
+
 
             timeSinceGrounded = 0;
 
@@ -694,7 +694,7 @@ namespace peterkcodes.AdvancedMovement
             AddImpulseForce((wallNormal * wallkickForce.x + Vector3.up * _upForce) - stickForce);
             GrantStamina(staminaOnWallkickGrant);
         }
-        
+
         /// <summary>
         /// Converts input axes into a worldspace direction for movement
         /// </summary>
@@ -809,7 +809,7 @@ namespace peterkcodes.AdvancedMovement
         /// <summary>
         /// Returns the angle of the surface below the player.
         /// </summary>
-        private float GetSlideAngle (Vector3 _moveVector)
+        private float GetSlideAngle(Vector3 _moveVector)
         {
             float angle = 0;
             if (Physics.Raycast(transform.position, Vector2.down, out RaycastHit hit, groundLayers))

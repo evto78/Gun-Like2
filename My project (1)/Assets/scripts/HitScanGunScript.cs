@@ -5,16 +5,42 @@ using UnityEngine;
 public class HitScanGunScript : MonoBehaviour
 {
     Animator animator;
-    public int maxBullets = 8;
-    public int currentBullets;
+    public GunManager manager;
 
-    public float attackSpeed = 1;
+    //Base stats for this gun
+    public float baseMagSize = 6;
+    public float baseAtkSpd = 1f;
+    public float baseReSpd = 1f;
+    public float baseBulSpd = 9999f;
+    public float baseDmg = 20f;
+    public float baseAcc = 5f;
+    public float baseBulSize = 1f;
+    public int baseBulPir = 0;
+    public float baseCritChance = 0f;
+    public float baseCritDamage = 2f;
+    public float baseWeakPointChance = 0f;
+    public float baseWeakPointDamage = 2f;
+
+    //Modified Stats
+    public float magSize;
+    public float atkSpd;
+    public float reSpd;
+    public float bulSpd;
+    public float dmg;
+    public float acc;
+    public float bulSize;
+    public int bulPir;
+    public float critChance;
+    public float critDamage;
+    public float weakPointChance;
+    public float weakPointDamage;
+
+    //Status
     float attackTimer = 0;
-    public float reloadSpeed = 1;
     float reloadTimer = 0;
-
     bool reloading = false;
     bool shooting = false;
+    public int currentBullets;
 
     public GameObject pistolBullet;
     public Transform firePoint;
@@ -29,13 +55,43 @@ public class HitScanGunScript : MonoBehaviour
     Ray ray;
     RaycastHit hit;
 
-    Vector3 accuracy = new Vector3(0, 0, 0);
-
     // Start is called before the first frame update
     void Start()
     {
-        currentBullets = maxBullets;
+        currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
+    }
+
+    public void StatUpdateLeft()
+    {
+        magSize = Mathf.Round(baseMagSize * manager.leftMagSize);
+        atkSpd = baseAtkSpd * manager.leftAtkSpd;
+        reSpd = baseReSpd * manager.leftReSpd;
+        bulSpd = baseBulSpd * manager.leftBulSpd;
+        dmg = baseDmg * manager.leftDmg;
+        acc = baseAcc * manager.leftAcc;
+        bulSize = baseBulSize * manager.leftBulSize;
+        bulPir = baseBulPir + manager.leftBulPir;
+        critChance = baseCritChance * manager.leftCritChance;
+        critDamage = baseCritDamage * manager.leftCritDamage;
+        weakPointChance = baseWeakPointChance * manager.leftWeakPointChance;
+        weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
+    }
+
+    public void StatUpdateRight()
+    {
+        magSize = Mathf.Round(baseMagSize * manager.rightMagSize);
+        atkSpd = baseAtkSpd * manager.rightAtkSpd;
+        reSpd = baseReSpd * manager.rightReSpd;
+        bulSpd = baseBulSpd * manager.rightBulSpd;
+        dmg = baseDmg * manager.rightDmg;
+        acc = baseAcc * manager.rightAcc;
+        bulSize = baseBulSize * manager.rightBulSize;
+        bulPir = baseBulPir + manager.rightBulPir;
+        critChance = baseCritChance * manager.rightCritChance;
+        critDamage = baseCritDamage * manager.rightCritDamage;
+        weakPointChance = baseWeakPointChance * manager.rightWeakPointChance;
+        weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
     }
 
     // Update is called once per frame
@@ -43,16 +99,16 @@ public class HitScanGunScript : MonoBehaviour
     {
         if (reloading)
         {
-            reloadTimer -= Time.deltaTime * reloadSpeed;
+            reloadTimer -= Time.deltaTime * reSpd;
             if (reloadTimer <= 0)
             {
                 reloading = false;
-                currentBullets = maxBullets;
+                currentBullets = Mathf.RoundToInt(magSize);
             }
         }
         if (shooting)
         {
-            attackTimer -= Time.deltaTime * attackSpeed;
+            attackTimer -= Time.deltaTime * atkSpd;
             if (attackTimer <= 0)
             {
                 shooting = false;
@@ -81,7 +137,7 @@ public class HitScanGunScript : MonoBehaviour
 
     public void AttemptReload()
     {
-        if (!reloading && currentBullets != maxBullets)
+        if (!reloading && currentBullets != magSize)
         {
             Reload();
         }
@@ -90,7 +146,7 @@ public class HitScanGunScript : MonoBehaviour
     void Shoot()
     {
         animator.SetTrigger("Shooting");
-        animator.speed = attackSpeed + attackSpeed/10f;
+        animator.speed = atkSpd + atkSpd / 10f;
         shooting = true;
         attackTimer = 1;
         if (currentBullets > 0)
@@ -98,12 +154,49 @@ public class HitScanGunScript : MonoBehaviour
             currentBullets--;
 
             Vector3 direction = GetDirection();
-            //GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
             if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, float.MaxValue, mask))
             {
                 TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
 
                 StartCoroutine(SpawnTrail(trail, hit));
+
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.transform);
+                        }
+                        else
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage, false, "critHit", hit.transform);
+                        }
+                    }
+                    else
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.transform);
+                        }
+                        else
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg, false, "normalHit", hit.transform);
+                        }
+                    }
+                }
+                if (hit.collider.gameObject.CompareTag("EnemyWeakPoint"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.transform);
+                    }
+                    else
+                    {
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.transform);
+                    }
+                }
+
             }
         }
     }
@@ -111,12 +204,12 @@ public class HitScanGunScript : MonoBehaviour
     void Reload()
     {
         animator.SetTrigger("Reloading");
-        animator.speed = reloadSpeed;
+        animator.speed = reSpd;
         reloading = true;
         reloadTimer = 1;
         shooting = false;
         attackTimer = 0;
-        //currentBullets = maxBullets;
+        //currentBullets = Mathf.RoundToInt(magSize);
     }
 
     private Vector3 GetDirection()
@@ -124,9 +217,9 @@ public class HitScanGunScript : MonoBehaviour
         Vector3 direction = -transform.forward;
 
         direction += new Vector3(
-            Random.Range(-accuracy.x, accuracy.x),
-            Random.Range(-accuracy.y, accuracy.y),
-            Random.Range(-accuracy.z, accuracy.z)
+            Random.Range(-acc, acc),
+            Random.Range(-acc, acc),
+            Random.Range(-acc, acc)
             );
 
         direction.Normalize();
@@ -139,16 +232,16 @@ public class HitScanGunScript : MonoBehaviour
         float time = 0;
         Vector3 startPos = trail.transform.position;
 
-        while(time < 1)
+        while (time < 1)
         {
             trail.transform.position = Vector3.Lerp(startPos, hit.point, time);
             time += Time.deltaTime / trail.time;
-            
+
 
             yield return null;
         }
         trail.transform.position = hit.point;
-        
+
         cloneparticleSys = Instantiate(particleSystem, hit.point, Quaternion.LookRotation(hit.normal));
 
         Destroy(cloneparticleSys.gameObject, 5);

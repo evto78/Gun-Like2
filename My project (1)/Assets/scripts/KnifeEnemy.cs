@@ -118,7 +118,6 @@ public class KnifeEnemy : MonoBehaviour
                 orbitFollow = orbitOptions[i];
                 closestDistance = Vector3.Distance(orbitFollow.transform.position, transform.position);
                 target = orbitFollow;
-                Debug.Log(closestDistance);
             }
         }
         target = orbitFollow;

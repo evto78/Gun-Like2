@@ -48,7 +48,7 @@ public class GunManager : MonoBehaviour
     public float rightCritDamage = 1f;
     public float rightWeakPointChance = 1f;
     public float rightWeakPointDamage = 1f;
-    public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems)
+    public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
         masterAtkSpd = 1f;
         masterReSpd = 1f;

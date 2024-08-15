@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         fps = (int)(1f / Time.unscaledDeltaTime);
-        lGunAmmoText.text = revScript.currentBullets + " / " + revScript.maxBullets;
+        lGunAmmoText.text = revScript.currentBullets + " / " + revScript.baseMagSize;
         rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.baseMagSize;
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
         fpsText.text = "FPS: " + fps;
