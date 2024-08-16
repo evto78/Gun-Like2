@@ -8,12 +8,12 @@ public class GunScript : MonoBehaviour
     public GunManager manager;
 
     //Base stats for this gun
-    public float baseMagSize = 8;
-    public float baseAtkSpd = 1f;
+    public float baseMagSize = 15;
+    public float baseAtkSpd = 2f;
     public float baseReSpd = 1f;
-    public float baseBulSpd = 1000f;
+    public float baseBulSpd = 100f;
     public float baseDmg = 10f;
-    public float baseAcc = 15f;
+    public float baseAcc = 5f;
     public float baseBulSize = 1f;
     public int baseBulPir = 0;
     public float baseCritChance = 0f;
@@ -67,7 +67,7 @@ public class GunScript : MonoBehaviour
         reSpd = baseReSpd * manager.leftReSpd;
         bulSpd = baseBulSpd * manager.leftBulSpd;
         dmg = baseDmg * manager.leftDmg;
-        acc = baseAcc * manager.leftAcc;
+        acc = baseAcc / manager.leftAcc;
         bulSize = baseBulSize * manager.leftBulSize;
         bulPir = baseBulPir + manager.leftBulPir;
         critChance = baseCritChance * manager.leftCritChance;
@@ -85,7 +85,7 @@ public class GunScript : MonoBehaviour
         reSpd = baseReSpd * manager.rightReSpd;
         bulSpd = baseBulSpd * manager.rightBulSpd;
         dmg = baseDmg * manager.rightDmg;
-        acc = baseAcc * manager.rightAcc;
+        acc = baseAcc / manager.rightAcc;
         bulSize = baseBulSize * manager.rightBulSize;
         bulPir = baseBulPir + manager.rightBulPir;
         critChance = baseCritChance * manager.rightCritChance;

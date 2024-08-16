@@ -13,7 +13,7 @@ public class HitScanGunScript : MonoBehaviour
     public float baseReSpd = 1f;
     public float baseBulSpd = 9999f;
     public float baseDmg = 20f;
-    public float baseAcc = 5f;
+    public float baseAcc = 0.05f;
     public float baseBulSize = 1f;
     public int baseBulPir = 0;
     public float baseCritChance = 0f;
@@ -69,7 +69,7 @@ public class HitScanGunScript : MonoBehaviour
         reSpd = baseReSpd * manager.leftReSpd;
         bulSpd = baseBulSpd * manager.leftBulSpd;
         dmg = baseDmg * manager.leftDmg;
-        acc = baseAcc * manager.leftAcc;
+        acc = baseAcc / manager.leftAcc;
         bulSize = baseBulSize * manager.leftBulSize;
         bulPir = baseBulPir + manager.leftBulPir;
         critChance = baseCritChance * manager.leftCritChance;
@@ -85,7 +85,7 @@ public class HitScanGunScript : MonoBehaviour
         reSpd = baseReSpd * manager.rightReSpd;
         bulSpd = baseBulSpd * manager.rightBulSpd;
         dmg = baseDmg * manager.rightDmg;
-        acc = baseAcc * manager.rightAcc;
+        acc = baseAcc / manager.rightAcc;
         bulSize = baseBulSize * manager.rightBulSize;
         bulPir = baseBulPir + manager.rightBulPir;
         critChance = baseCritChance * manager.rightCritChance;

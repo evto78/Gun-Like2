@@ -16,7 +16,7 @@ public class DevItemSpawner : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.End))
         {
-            SpawnItem(Random.Range(0,10));
+            SpawnItem(Random.Range(0,14));
         }
         
     }
