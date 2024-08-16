@@ -35,6 +35,9 @@ public class GunScript : MonoBehaviour
     public float weakPointChance;
     public float weakPointDamage;
 
+    //item checks
+    public float heavy;
+
     //Status
     float reloadTimer = 0;
     float attackTimer = 0;
@@ -71,6 +74,8 @@ public class GunScript : MonoBehaviour
         critDamage = baseCritDamage * manager.leftCritDamage;
         weakPointChance = baseWeakPointChance * manager.leftWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
+
+        heavy = manager.leftHeavy;
     }
 
     public void StatUpdateRight()
@@ -87,6 +92,8 @@ public class GunScript : MonoBehaviour
         critDamage = baseCritDamage * manager.rightCritDamage;
         weakPointChance = baseWeakPointChance * manager.rightWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
+
+        heavy = manager.rightHeavy;
     }
 
     // Update is called once per frame
@@ -167,22 +174,22 @@ public class GunScript : MonoBehaviour
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage, true, bulPir, true, weakPointDamage, bulSpd);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage, true, bulPir, true, weakPointDamage, bulSpd, heavy, bulSize);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage, true, bulPir, false, weakPointDamage, bulSpd);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage, true, bulPir, false, weakPointDamage, bulSpd, heavy, bulSize);
                 }
             }
             else
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage, false, bulPir, true, weakPointDamage, bulSpd);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage, false, bulPir, true, weakPointDamage, bulSpd, heavy, bulSize);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg, false, bulPir, false, weakPointDamage, bulSpd);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg, false, bulPir, false, weakPointDamage, bulSpd, heavy, bulSize);
                 }
             }
 

@@ -240,7 +240,6 @@ namespace peterkcodes.AdvancedMovement
             baseMoveSpeed = 10;
             sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] / 12f + 1f) + (givenRightItems[0] / 12f + 1f));
             jumpForce = 8 * ((givenLeftItems[1] / 10f + 1f) + (givenRightItems[1] / 10f + 1f));
-            airStrafeSpeed = baseMoveSpeed / (2 / ((givenLeftItems[5] / 10f + 1f) + (givenRightItems[5] / 10f + 1f)));
             maxSlideVelocity = baseMoveSpeed * 3f;
             slideAccelerationRate = baseMoveSpeed * 2f;
             maxWallrunVelocity = baseMoveSpeed * 2.5f;
@@ -259,7 +258,7 @@ namespace peterkcodes.AdvancedMovement
             if ((givenLeftItems[5] > 0) || (givenRightItems[5] > 0))
             {
                 planeMode = true;
-                planeSpeed = ((givenLeftItems[5] / 5f + 1f) + (givenRightItems[5] / 5f + 1f)) * sprintMoveSpeed / 5f;
+                planeSpeed = (givenRightItems[5] / 5f + 1f) * sprintMoveSpeed / 5f;
             }
             else
             {

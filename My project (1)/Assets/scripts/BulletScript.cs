@@ -33,7 +33,7 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize)
     {
         damage = givenDmg;
         isCrit = isCritHit;
@@ -41,6 +41,18 @@ public class BulletScript : MonoBehaviour
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
         bulSpd = givenBulSpd;
+
+        if (isHeavy != 0f)
+        {
+            rb.useGravity = true;
+            rb.mass = isHeavy;
+        }
+        else
+        {
+            rb.useGravity = false;
+        }
+
+        transform.localScale = new Vector3(transform.localScale.x * givenBulSize, transform.localScale.y * givenBulSize, transform.localScale.z * givenBulSize);
 
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
     }
@@ -97,17 +109,17 @@ public class BulletScript : MonoBehaviour
             collisions.Add(collision.collider);
             Physics.IgnoreCollision(myCollider, collision.collider, true);
         }
-        
+
     }
 
     private void OnCollisionExit(Collision collision)
     {
         //if (collisions.Contains(collision.collider))
         //{
-            //Physics.IgnoreCollision(collision.collider, myCollider, false);
+        //Physics.IgnoreCollision(collision.collider, myCollider, false);
         //}
     }
-    
+
     private void FixedUpdate()
     {
         if (rb.freezeRotation)
