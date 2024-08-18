@@ -12,7 +12,21 @@ public class EnemyHealthManager : MonoBehaviour
 
     public float armor;
 
-    public GameObject damageText;
+    //public GameObject damageText;
+
+    public TextMeshProUGUI lastDmg;
+    public TextMeshProUGUI mostDmg;
+    public TextMeshProUGUI dps;
+    public TextMeshProUGUI hps;
+
+    float damagePerSecond;
+    float hitsPerSecond;
+    float hitcounter;
+    float damagecounter;
+    float highestDamage;
+    float latestDamage;
+
+    float timer;
 
     void Start()
     {
@@ -21,35 +35,62 @@ public class EnemyHealthManager : MonoBehaviour
 
     void Update()
     {
-        
+        CalculateStats();
     }
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Transform hitLocation)
     {
+        hitcounter++;
+
         if (ignoreArmor)
         {
             curHp -= dmgTaken;
-            PopUpText(Mathf.RoundToInt(curHp -= dmgTaken), textColor, hitLocation);
+            latestDamage = dmgTaken;
+            //PopUpText(Mathf.RoundToInt(curHp -= dmgTaken), textColor, hitLocation);
         }
         else
         {
             if (armor >= dmgTaken)
             {
                 curHp -= 1f;
-                PopUpText(1, textColor, hitLocation);
+                latestDamage = 1f;
+                //PopUpText(1, textColor, hitLocation);
             }
             else
             {
                 curHp -= (dmgTaken - armor);
-                PopUpText(Mathf.RoundToInt(dmgTaken - armor), textColor, hitLocation);
+                latestDamage = dmgTaken - armor;
+                //PopUpText(Mathf.RoundToInt(dmgTaken - armor), textColor, hitLocation);
             }
+        }
+
+        if (latestDamage > highestDamage)
+        {
+            highestDamage = latestDamage;
+        }
+        damagecounter += latestDamage;
+
+        lastDmg.text = "Last damage: "+latestDamage;
+        mostDmg.text = "Most damage: "+highestDamage;
+    }
+
+    void CalculateStats()
+    {
+        timer -= Time.deltaTime;
+        if (timer <= 0)
+        {
+            timer = 1f;
+            dps.text = "DPS: "+damagecounter;
+            hps.text = "HPS: " + hitcounter;
+            damagecounter = 0;
+            hitcounter = 0;
         }
     }
 
     void PopUpText(int dmgText, string textColor, Transform hitLocation)
     {
-        GameObject spawnedText = Instantiate(damageText);
-        spawnedText.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + 5, transform.position.z);
-        spawnedText.GetComponent<DamageText>().SetText(dmgText.ToString(), textColor);
+        //GameObject spawnedText = Instantiate(damageText);
+        //spawnedText.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + 5, transform.position.z);
+        //spawnedText.GetComponent<DamageText>().SetText(dmgText.ToString(), textColor);
     }
 }
