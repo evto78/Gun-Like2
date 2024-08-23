@@ -39,9 +39,10 @@ public class GunManager : MonoBehaviour
     public float leftWeakPointChance = 1f;
     public float leftWeakPointDamage = 1f;
     // left item checks
-    public float leftHeavy = 0f;
+    public float leftHeavyBul = 0f;
     public int leftMutatedCell = 0;
     float leftMutatedCellTimer = 0f;
+    public float leftBowAct = 0f;
 
     // right weapons base stats
     public float rightAtkSpd = 1f;
@@ -57,9 +58,10 @@ public class GunManager : MonoBehaviour
     public float rightWeakPointChance = 1f;
     public float rightWeakPointDamage = 1f;
     // right item checks
-    public float rightHeavy = 0f;
+    public float rightHeavyBul = 0f;
     public int rightMutatedCell = 0;
     float rightMutatedCellTimer = 0f;
+    public float rightBowAct = 0f;
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
@@ -80,12 +82,12 @@ public class GunManager : MonoBehaviour
         masterWeakPointChance = 1f;
         masterWeakPointDamage = 1f;
 
-        leftAtkSpd = 1f * masterAtkSpd;
+        leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[16] / 10f + 1f);
         leftReSpd = 1f * (givenLeftItems[7] / 10f + 1f) * masterReSpd;
-        leftDmg = 1f * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
+        leftDmg = 1f * (givenLeftItems[16] / 5f + 1f) * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
         leftMagSize = 1f * (givenLeftItems[6] / 5f + 1f) * masterMagSize;
-        leftAcc = 1f * (givenLeftItems[8] / 5f + 1f) * masterAcc;
-        leftBulSpd = 1f * (givenLeftItems[9] / 10f + 1f) / (givenLeftItems[11] / 10f + 1f) * masterBulSpd;
+        leftAcc = 1f * (givenLeftItems[8] / 5f + 1f) * (givenLeftItems[16] / 10f + 1f) * masterAcc;
+        leftBulSpd = 1f * (givenLeftItems[9] / 10f + 1f) * (givenLeftItems[16] / 10f + 1f) * masterBulSpd / (givenLeftItems[11] / 10f + 1f);
         leftBulSize = 1f * (givenLeftItems[11] / 10f + 1f) * masterBulSize;
         leftBulPir = (0 + givenLeftItems[10] + masterBulPir);
         leftCritChance = 1f * masterCritChance;
@@ -93,15 +95,16 @@ public class GunManager : MonoBehaviour
         leftWeakPointChance = 1f * masterWeakPointChance;
         leftWeakPointDamage = 1f * masterWeakPointDamage;
 
-        leftHeavy = givenLeftItems[11];
+        leftHeavyBul = givenLeftItems[11];
         leftMutatedCell = givenLeftItems[14];
+        leftBowAct = givenLeftItems[16];
 
-        rightAtkSpd = 1f * masterAtkSpd;
+        rightAtkSpd = 1f * masterAtkSpd / (givenRightItems[16] / 5f + 1f);
         rightReSpd = 1f * (givenRightItems[7] / 10f + 1f) * masterReSpd;
-        rightDmg = 1f * (givenRightItems[4] / 10f + 1f) * (givenRightItems[13] / 5f + 1f) * masterDmg / (givenRightItems[12] / 10f + 1f);
+        rightDmg = 1f * (givenRightItems[16] / 5f + 1f) * (givenRightItems[4] / 10f + 1f) * (givenRightItems[13] / 5f + 1f) * masterDmg / (givenRightItems[12] / 10f + 1f);
         rightMagSize = 1f * (givenRightItems[6] / 5f + 1f) * masterMagSize;
-        rightAcc = 1f * (givenRightItems[8] / 5f + 1f) * masterAcc;
-        rightBulSpd = 1f * (givenRightItems[9] / 10f + 1f) / (givenRightItems[11] / 10f + 1f) * masterBulSpd;
+        rightAcc = 1f * (givenRightItems[8] / 5f + 1f) * (givenRightItems[16] / 10f + 1f) * masterAcc;
+        rightBulSpd = 1f * (givenRightItems[9] / 10f + 1f) * (givenRightItems[16] / 10f + 1f) * masterBulSpd / (givenRightItems[11] / 10f + 1f);
         rightBulSize = 1f * (givenRightItems[11] / 10f + 1f) * masterBulSize;
         rightBulPir = (0 + givenRightItems[10] + masterBulPir) + 1;
         rightCritChance = 1f * masterCritChance;
@@ -109,8 +112,9 @@ public class GunManager : MonoBehaviour
         rightWeakPointChance = 1f * masterWeakPointChance;
         rightWeakPointDamage = 1f * masterWeakPointDamage;
 
-        rightHeavy = givenRightItems[11];
+        rightHeavyBul = givenRightItems[11];
         rightMutatedCell = givenRightItems[14];
+        rightBowAct = givenRightItems[16];
 
         rightHand.SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
@@ -135,6 +139,10 @@ public class GunManager : MonoBehaviour
         {
             leftHand.SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
         }
+        if (Input.GetMouseButtonUp(0))
+        {
+            leftHand.SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
+        }
     }
 
     void RightGunUpdate()
@@ -142,6 +150,10 @@ public class GunManager : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             rightHand.SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            rightHand.SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
         }
     }
 

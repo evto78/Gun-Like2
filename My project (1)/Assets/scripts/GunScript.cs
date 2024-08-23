@@ -36,7 +36,8 @@ public class GunScript : MonoBehaviour
     public float weakPointDamage;
 
     //item checks
-    public float heavy;
+    public float heavyBul;
+    public float bowAct;
 
     //Status
     float reloadTimer = 0;
@@ -44,6 +45,8 @@ public class GunScript : MonoBehaviour
     public int currentBullets;
     bool reloading = false;
     bool shooting = false;
+    float bowCharge;
+
 
     public GameObject pistolBullet;
     public Transform firePoint;
@@ -75,7 +78,8 @@ public class GunScript : MonoBehaviour
         weakPointChance = baseWeakPointChance * manager.leftWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
 
-        heavy = manager.leftHeavy;
+        heavyBul = manager.leftHeavyBul;
+        bowAct = manager.leftBowAct;
     }
 
     public void StatUpdateRight()
@@ -93,7 +97,8 @@ public class GunScript : MonoBehaviour
         weakPointChance = baseWeakPointChance * manager.rightWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
 
-        heavy = manager.rightHeavy;
+        heavyBul = manager.rightHeavyBul;
+        bowAct = manager.rightBowAct;
     }
 
     // Update is called once per frame
@@ -131,9 +136,26 @@ public class GunScript : MonoBehaviour
 
     public void AttemptShoot()
     {
-        if (!reloading && !shooting)
+        if ((bowAct > 0) && (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)))
         {
-            Shoot();
+            bowCharge += 1 * atkSpd * Time.deltaTime;
+            if (bowCharge > bowAct + 1f) { bowCharge = bowAct + 1f; }
+        }
+        else
+        {
+            if (!reloading && !shooting)
+            {
+                Shoot(1f);
+            }
+        }
+    }
+
+    public void AttemptShootUp()
+    {
+        if (bowAct > 0)
+        {
+            Shoot(bowCharge);
+            bowCharge = 0f;
         }
     }
 
@@ -155,7 +177,7 @@ public class GunScript : MonoBehaviour
         attackTimer = 0;
     }
 
-    public void Shoot()
+    public void Shoot(float bowChar)
     {
         animator.SetTrigger("Shooting");
         animator.speed = atkSpd;
@@ -166,6 +188,7 @@ public class GunScript : MonoBehaviour
             currentBullets--;
 
             GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
+            acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
             //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
 
@@ -174,22 +197,22 @@ public class GunScript : MonoBehaviour
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage, true, bulPir, true, weakPointDamage, bulSpd, heavy, bulSize);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage, true, bulPir, false, weakPointDamage, bulSpd, heavy, bulSize);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize);
                 }
             }
             else
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage, false, bulPir, true, weakPointDamage, bulSpd, heavy, bulSize);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg, false, bulPir, false, weakPointDamage, bulSpd, heavy, bulSize);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize);
                 }
             }
 

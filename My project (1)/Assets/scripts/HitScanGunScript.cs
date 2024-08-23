@@ -35,12 +35,15 @@ public class HitScanGunScript : MonoBehaviour
     public float weakPointChance;
     public float weakPointDamage;
 
+    public float bowAct;
+
     //Status
     float attackTimer = 0;
     float reloadTimer = 0;
     bool reloading = false;
     bool shooting = false;
     public int currentBullets;
+    float bowCharge;
 
     public GameObject pistolBullet;
     public Transform firePoint;
@@ -76,6 +79,8 @@ public class HitScanGunScript : MonoBehaviour
         critDamage = baseCritDamage * manager.leftCritDamage;
         weakPointChance = baseWeakPointChance * manager.leftWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
+
+        bowAct = manager.leftBowAct;
     }
 
     public void StatUpdateRight()
@@ -92,6 +97,8 @@ public class HitScanGunScript : MonoBehaviour
         critDamage = baseCritDamage * manager.rightCritDamage;
         weakPointChance = baseWeakPointChance * manager.rightWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
+
+        bowAct = manager.rightBowAct;
     }
 
     // Update is called once per frame
@@ -126,12 +133,29 @@ public class HitScanGunScript : MonoBehaviour
         }
 
     }
-
+    
     public void AttemptShoot()
     {
-        if (!reloading && !shooting)
+        if ((bowAct > 0) && (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)))
         {
-            Shoot();
+            bowCharge += 1 * atkSpd * Time.deltaTime;
+            if (bowCharge > bowAct + 1f) { bowCharge = bowAct + 1f; }
+        }
+        else
+        {
+            if (!reloading && !shooting)
+            {
+                Shoot(1f);
+            }
+        }
+    }
+
+    public void AttemptShootUp()
+    {
+        if (bowAct > 0)
+        {
+            Shoot(bowCharge);
+            bowCharge = 0f;
         }
     }
 
@@ -143,7 +167,7 @@ public class HitScanGunScript : MonoBehaviour
         }
     }
 
-    void Shoot()
+    void Shoot(float bowChar)
     {
         animator.SetTrigger("Shooting");
         animator.speed = atkSpd + atkSpd / 10f;
@@ -153,7 +177,7 @@ public class HitScanGunScript : MonoBehaviour
         {
             currentBullets--;
 
-            Vector3 direction = GetDirection();
+            Vector3 direction = GetDirection(bowChar);
             if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, float.MaxValue, mask))
             {
                 TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
@@ -166,22 +190,22 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", hit.transform);
                         }
                         else
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage, false, "critHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", hit.transform);
                         }
                     }
                     else
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", hit.transform);
                         }
                         else
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg, false, "normalHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.transform);
                         }
                     }
                 }
@@ -212,9 +236,11 @@ public class HitScanGunScript : MonoBehaviour
         //currentBullets = Mathf.RoundToInt(magSize);
     }
 
-    private Vector3 GetDirection()
+    private Vector3 GetDirection(float bowChar)
     {
         Vector3 direction = -transform.forward;
+
+        acc = acc / bowChar;
 
         direction += new Vector3(
             Random.Range(-acc, acc),

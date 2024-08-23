@@ -6152,8 +6152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f08430e0fe620340a928c51494cbac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftItems: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  rightItems: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  leftItems: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  rightItems: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   commonItems: 
   uncommonItems: 
   rareItems: 
@@ -6480,7 +6480,8 @@ MonoBehaviour:
   critDamage: 0
   weakPointChance: 0
   weakPointDamage: 0
-  heavy: 0
+  heavyBul: 0
+  bowAct: 0
   currentBullets: 0
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   firePoint: {fileID: 3051493154538946985}
@@ -6869,8 +6870,9 @@ MonoBehaviour:
   leftCritDamage: 1
   leftWeakPointChance: 1
   leftWeakPointDamage: 1
-  leftHeavy: 0
+  leftHeavyBul: 0
   leftMutatedCell: 0
+  leftBowAct: 0
   rightAtkSpd: 1
   rightReSpd: 1
   rightDmg: 1
@@ -6883,8 +6885,9 @@ MonoBehaviour:
   rightCritDamage: 1
   rightWeakPointChance: 1
   rightWeakPointDamage: 1
-  rightHeavy: 0
+  rightHeavyBul: 0
   rightMutatedCell: 0
+  rightBowAct: 0
 --- !u!20 &3763550551577302267
 Camera:
   m_ObjectHideFlags: 0
@@ -7743,6 +7746,8 @@ MonoBehaviour:
   crouchSpeed: 5
   airStrafeSpeed: 5
   jumpForce: 10
+  numberOfJumps: 0
+  jumpsLeft: 0
   coyoteTime: 0
   mantleOrigin: {x: 0, y: 3, z: 0}
   mantleForce: {x: 0, y: 7, z: 5}
@@ -7774,6 +7779,7 @@ MonoBehaviour:
   wallTilt: 5
   wallSlipGravity: 6.5
   gravityRate: 19.6
+  gravityModifier: 0
   friction: 100
   drag: 10
   stickyForce: -10
@@ -7900,6 +7906,7 @@ MonoBehaviour:
   critDamage: 0
   weakPointChance: 0
   weakPointDamage: 0
+  bowAct: 0
   currentBullets: 0
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   firePoint: {fileID: 224429847045520215}

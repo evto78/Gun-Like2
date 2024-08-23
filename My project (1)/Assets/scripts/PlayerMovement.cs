@@ -46,6 +46,12 @@ namespace peterkcodes.AdvancedMovement
         [Tooltip("The force to jump with on flat ground.")]
         [SerializeField] private float jumpForce;
 
+        [Tooltip("the amount of jumps you can do.")]
+        [SerializeField] private int numberOfJumps;
+
+        [Tooltip("how many jumps are currently left.")]
+        [SerializeField] private int jumpsLeft;
+
         [Tooltip("The time after stepping of a ledge where the player can still perform a jump.")]
         [SerializeField] private float coyoteTime;
 
@@ -174,6 +180,9 @@ namespace peterkcodes.AdvancedMovement
         [Tooltip("The standard rate of gravity.")]
         [SerializeField] private float gravityRate;
 
+        [Tooltip("The modifer that will be applied to both kinds of gravity")]
+        [SerializeField] private float gravityModifier;
+
         [Tooltip("The rate at which velocity reaches 0 when on the ground")]
         [SerializeField] private float friction;
 
@@ -238,13 +247,15 @@ namespace peterkcodes.AdvancedMovement
         public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
         {
             baseMoveSpeed = 10;
-            sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] / 12f + 1f) + (givenRightItems[0] / 12f + 1f));
-            jumpForce = 8 * ((givenLeftItems[1] / 10f + 1f) + (givenRightItems[1] / 10f + 1f));
+            sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0]+ givenRightItems[0]) / 12f + 1f);
+            jumpForce = 8 * ((givenLeftItems[1]+ givenRightItems[1]) / 10f + 1f);
             maxSlideVelocity = baseMoveSpeed * 3f;
             slideAccelerationRate = baseMoveSpeed * 2f;
             maxWallrunVelocity = baseMoveSpeed * 2.5f;
             wallrunAcceleration = baseMoveSpeed * 2f;
             wallkickForce = new Vector2(jumpForce * 3, jumpForce);
+            numberOfJumps = 1 + givenLeftItems[15] + givenRightItems[15];
+            gravityModifier = 1f / ((givenLeftItems[15] + givenRightItems[15]) / 10f + 1f);
             if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
             {
                 maxSlideVelocity = maxSlideVelocity * 1.5f;
@@ -645,9 +656,15 @@ namespace peterkcodes.AdvancedMovement
         #region Movement Helper Methods
         private void TryJump()
         {
-            if (jumpNextUpdate && (grounded || timeSinceGrounded < coyoteTime))
+            if (jumpNextUpdate && ((grounded || timeSinceGrounded < coyoteTime) || jumpsLeft > 0))
             {
+
                 timeSinceGrounded = coyoteTime;
+                if (!grounded)
+                {
+                    velocity = new Vector3(velocity.x, 0, velocity.z);
+                }
+                jumpsLeft -= 1;
                 AddImpulseForce(Vector3.up * (jumpForce - stickyForce));
             }
         }
@@ -658,6 +675,7 @@ namespace peterkcodes.AdvancedMovement
         private void BaseMovement()
         {
             timeSinceGrounded = 0;
+            jumpsLeft = numberOfJumps;
             if (!grounded)
             {
                 wasSprinting = false;
@@ -731,12 +749,12 @@ namespace peterkcodes.AdvancedMovement
             //If against a wall but not wallrunning, apply the slip gravity.
             if (isAgainstWall)
             {
-                velocity -= Vector3.up * wallSlipGravity * Time.fixedDeltaTime;
+                velocity -= Vector3.up * wallSlipGravity * Time.fixedDeltaTime * gravityModifier;
             }
             else
             {
                 //Otherwise, apply normal gravity.
-                velocity -= Vector3.up * gravityRate * Time.fixedDeltaTime;
+                velocity -= Vector3.up * gravityRate * Time.fixedDeltaTime * gravityModifier;
             }
 
             //When grounded, clamp the y velocity to not go below the 'stickyForce'
