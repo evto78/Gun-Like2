@@ -36,6 +36,7 @@ public class HitScanGunScript : MonoBehaviour
     public float weakPointDamage;
 
     public float bowAct;
+    public int heavySpirits;
 
     //Status
     float attackTimer = 0;
@@ -81,6 +82,7 @@ public class HitScanGunScript : MonoBehaviour
         weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
 
         bowAct = manager.leftBowAct;
+        heavySpirits = manager.leftHeavySpirit;
     }
 
     public void StatUpdateRight()
@@ -99,6 +101,7 @@ public class HitScanGunScript : MonoBehaviour
         weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
 
         bowAct = manager.rightBowAct;
+        heavySpirits = manager.rightHeavySpirit;
     }
 
     // Update is called once per frame
@@ -133,7 +136,7 @@ public class HitScanGunScript : MonoBehaviour
         }
 
     }
-    
+
     public void AttemptShoot()
     {
         if ((bowAct > 0) && (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)))
@@ -208,6 +211,12 @@ public class HitScanGunScript : MonoBehaviour
                             hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.transform);
                         }
                     }
+
+                    if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                    }
+
                 }
                 if (hit.collider.gameObject.CompareTag("EnemyWeakPoint"))
                 {
@@ -218,6 +227,11 @@ public class HitScanGunScript : MonoBehaviour
                     else
                     {
                         hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.transform);
+                    }
+
+                    if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
                 }
 

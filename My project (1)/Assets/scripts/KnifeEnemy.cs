@@ -235,7 +235,7 @@ public class KnifeEnemy : MonoBehaviour
         if (collision.gameObject.tag == "Player" && attacking)
         {
             attacking = false;
-            player.GetComponent<HealthManager>().TakeDamage(damage);
+            player.GetComponent<HealthManager>().TakeDamage(damage, false);
 
             //fly back after attacking
             transform.LookAt(player.transform.position);

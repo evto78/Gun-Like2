@@ -22,6 +22,8 @@ public class BulletScript : MonoBehaviour
 
     public int pierce = 0;
 
+    public int heavySpirits;
+
     public Collider myCollider;
 
     List<Collider> collisions = new List<Collider>();
@@ -33,7 +35,7 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits)
     {
         damage = givenDmg;
         isCrit = isCritHit;
@@ -41,6 +43,8 @@ public class BulletScript : MonoBehaviour
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
         bulSpd = givenBulSpd;
+
+        heavySpirits = givenHeavySpirits;
 
         if (isHeavy != 0f)
         {
@@ -82,7 +86,15 @@ public class BulletScript : MonoBehaviour
                 {
                     collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
                 }
+
             }
+
+            if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+            }
+
+
         }
         if (collision.gameObject.tag == "EnemyWeakPoint")
         {
@@ -93,6 +105,11 @@ public class BulletScript : MonoBehaviour
             else
             {
                 collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform);
+            }
+
+            if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
         }
         if (!collided && pierce < 1)

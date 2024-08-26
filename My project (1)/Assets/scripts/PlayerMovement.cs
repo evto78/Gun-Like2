@@ -238,17 +238,22 @@ namespace peterkcodes.AdvancedMovement
         bool planeMode = false;
         float planeSpeed = 0.0f;
 
+        HealthManager healthMan;
+        List<Vector4> effectList;
+
         // Start is called before the first frame update
         void Start()
         {
             cc = GetComponent<CharacterController>();
+            healthMan = GetComponent<HealthManager>();
+            effectList = healthMan.activeEffects;
         }
 
         public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
         {
-            baseMoveSpeed = 10;
-            sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0]+ givenRightItems[0]) / 12f + 1f);
-            jumpForce = 8 * ((givenLeftItems[1]+ givenRightItems[1]) / 10f + 1f);
+            baseMoveSpeed = 10 / ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
+            sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] + givenRightItems[0]) / 12f + 1f);
+            jumpForce = 8 * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
             maxSlideVelocity = baseMoveSpeed * 3f;
             slideAccelerationRate = baseMoveSpeed * 2f;
             maxWallrunVelocity = baseMoveSpeed * 2.5f;
@@ -273,8 +278,16 @@ namespace peterkcodes.AdvancedMovement
             }
             else
             {
-                planeMode = true;
+                planeMode = false;
             }
+
+            //status effect buffs / debuffs
+
+            if (effectList[9].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+            if (effectList[10].x > 0f) { baseMoveSpeed = baseMoveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+            if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+            if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 10 + 1f); }
+            if (effectList[16].x > 0f) { baseMoveSpeed = baseMoveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10 + 1f); }
         }
 
         private void FixedUpdate()
@@ -432,6 +445,7 @@ namespace peterkcodes.AdvancedMovement
 
             if (grounded)
             {
+                healthMan.GiveEffect("bunny hop buff", 1f);
                 timeSinceGrounded = 0;
                 SetMovementState((wasSprinting) ? MoveState.sprint : MoveState.walk);
                 fxSetTilt?.Invoke(0);

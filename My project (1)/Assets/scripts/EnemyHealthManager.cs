@@ -6,7 +6,7 @@ using TMPro;
 
 public class EnemyHealthManager : MonoBehaviour
 {
-    
+
     public float curHp;
     public float maxHp;
 
@@ -70,8 +70,13 @@ public class EnemyHealthManager : MonoBehaviour
         }
         damagecounter += latestDamage;
 
-        lastDmg.text = "Last damage: "+latestDamage;
-        mostDmg.text = "Most damage: "+highestDamage;
+        lastDmg.text = "Last damage: " + latestDamage;
+        mostDmg.text = "Most damage: " + highestDamage;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 
     void CalculateStats()
@@ -80,7 +85,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (timer <= 0)
         {
             timer = 1f;
-            dps.text = "DPS: "+damagecounter;
+            dps.text = "DPS: " + damagecounter;
             hps.text = "HPS: " + hitcounter;
             damagecounter = 0;
             hitcounter = 0;

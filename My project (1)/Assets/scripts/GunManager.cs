@@ -8,6 +8,9 @@ public class GunManager : MonoBehaviour
     List<int> leftList = new List<int>();
     List<int> rightList = new List<int>();
 
+    HealthManager healthMan;
+    List<Vector4> effectList;
+
     public GameObject leftHand;
     public GameObject rightHand;
 
@@ -43,6 +46,7 @@ public class GunManager : MonoBehaviour
     public int leftMutatedCell = 0;
     float leftMutatedCellTimer = 0f;
     public float leftBowAct = 0f;
+    public int leftHeavySpirit = 0;
 
     // right weapons base stats
     public float rightAtkSpd = 1f;
@@ -62,6 +66,13 @@ public class GunManager : MonoBehaviour
     public int rightMutatedCell = 0;
     float rightMutatedCellTimer = 0f;
     public float rightBowAct = 0f;
+    public int rightHeavySpirit = 0;
+
+    private void Start()
+    {
+        healthMan = GetComponent<HealthManager>();
+        effectList = healthMan.activeEffects;
+    }
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
@@ -82,6 +93,16 @@ public class GunManager : MonoBehaviour
         masterWeakPointChance = 1f;
         masterWeakPointDamage = 1f;
 
+        //status effect buffs / debuffs
+
+        if (effectList[3].x > 0f) { masterReSpd = masterReSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[4].x > 0f) { masterCritChance = masterCritChance * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[5].x > 0f) { masterWeakPointDamage = masterWeakPointDamage * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[7].x > 0f) { masterAtkSpd = masterAtkSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[11].x > 0f) { masterDmg = masterDmg * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[12].x > 0f) { masterDmg = masterDmg / ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[13].x > 0f) { masterAtkSpd = masterAtkSpd / ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+
         leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[16] / 10f + 1f);
         leftReSpd = 1f * (givenLeftItems[7] / 10f + 1f) * masterReSpd;
         leftDmg = 1f * (givenLeftItems[16] / 5f + 1f) * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
@@ -98,6 +119,7 @@ public class GunManager : MonoBehaviour
         leftHeavyBul = givenLeftItems[11];
         leftMutatedCell = givenLeftItems[14];
         leftBowAct = givenLeftItems[16];
+        leftHeavySpirit = givenLeftItems[19];
 
         rightAtkSpd = 1f * masterAtkSpd / (givenRightItems[16] / 5f + 1f);
         rightReSpd = 1f * (givenRightItems[7] / 10f + 1f) * masterReSpd;
@@ -115,6 +137,7 @@ public class GunManager : MonoBehaviour
         rightHeavyBul = givenRightItems[11];
         rightMutatedCell = givenRightItems[14];
         rightBowAct = givenRightItems[16];
+        rightHeavySpirit = givenRightItems[19];
 
         rightHand.SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
