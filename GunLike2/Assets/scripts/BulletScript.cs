@@ -61,7 +61,7 @@ public class BulletScript : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
@@ -124,7 +124,6 @@ public class BulletScript : MonoBehaviour
         {
             pierce -= 1;
             collisions.Add(collision.collider);
-            Physics.IgnoreCollision(myCollider, collision.collider, true);
         }
 
     }
