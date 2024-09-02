@@ -61,8 +61,9 @@ public class BulletScript : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
     }
 
-    private void OnTriggerEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("COLLISION");
         if (collision.gameObject.tag == "Enemy")
         {
             if (!isCrit)
@@ -123,7 +124,7 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
-            collisions.Add(collision.collider);
+            collisions.Add(collision.GetComponent<Collider>());
         }
 
     }
