@@ -61,56 +61,85 @@ public class BulletScript : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void RunOnCollide(GameObject gameObject)
     {
-        Debug.Log("COLLISION");
-        if (collision.gameObject.tag == "Enemy")
+        if (gameObject.tag == "Enemy")
         {
             if (!isCrit)
             {
                 if (!isAutoWeak)
                 {
-                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+                    if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                    {
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+                    }
+
+                    gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                 }
                 else
                 {
-                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+                    if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                    {
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+                    }
+
+                    gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                 }
             }
             else
             {
                 if (!isAutoWeak)
                 {
-                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+                    if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                    {
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+                    }
+
+                    gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                 }
                 else
                 {
-                    collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+                    if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                    {
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+                    }
+
+                    gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                 }
 
             }
 
-            if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
 
 
         }
-        if (collision.gameObject.tag == "EnemyWeakPoint")
+        if (gameObject.tag == "EnemyWeakPoint")
         {
             if (!isCrit)
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform);
+                if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                {
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform);
+                }
+
+                gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
             else
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform);
+                if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                {
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform);
+                }
+
+                gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
 
-            if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
         }
         if (!collided && pierce < 1)
@@ -124,21 +153,24 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
-            collisions.Add(collision.GetComponent<Collider>());
         }
-
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        //if (collisions.Contains(collision.collider))
-        //{
-        //Physics.IgnoreCollision(collision.collider, myCollider, false);
-        //}
+        RunOnCollide(collision.gameObject);
     }
 
     private void FixedUpdate()
     {
+        //Debug.Log("Transform : " + transform.position.x + " " + transform.position.y + " " + transform.position.z + " ");
+        //Debug.Log("Velocity : " + rb.velocity.x + " " + rb.velocity.y + " " + rb.velocity.z + " ");
+        //Debug.Log("Distance : " + Vector3.Distance(transform.position, (transform.position + rb.velocity)));
+        if (Physics.Raycast(transform.position, rb.velocity, out RaycastHit hit, Vector3.Distance(transform.position, (transform.position + rb.velocity))))
+        {
+            //RunOnCollide(hit.collider.gameObject);
+        }
+
         if (rb.freezeRotation)
         {
             rb.velocity = Vector3.zero;

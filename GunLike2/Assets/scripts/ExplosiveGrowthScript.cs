@@ -19,7 +19,7 @@ public class ExplosiveGrowthScript : MonoBehaviour
 		damage = (damageTaken / 3f + 1f) * (numberOfExplosiveGrowths / 5f + 1f);
 		explosionTimer = 0.5f;
 
-		transform.localScale = new Vector3(1f * (numberOfExplosiveGrowths / 5f + 1f), 1f * (numberOfExplosiveGrowths / 5f + 1f), 1f * (numberOfExplosiveGrowths / 5f + 1f));
+		transform.localScale = new Vector3((numberOfExplosiveGrowths * 2f + 14f), (numberOfExplosiveGrowths * 2f + 14f), (numberOfExplosiveGrowths * 2f + 14f));
 	}
 
 	private void OnTriggerEnter(Collider collision)

@@ -95,13 +95,13 @@ public class GunManager : MonoBehaviour
 
         //status effect buffs / debuffs
 
-        if (effectList[3].x > 0f) { masterReSpd = masterReSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[4].x > 0f) { masterCritChance = masterCritChance * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[5].x > 0f) { masterWeakPointDamage = masterWeakPointDamage * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[7].x > 0f) { masterAtkSpd = masterAtkSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[11].x > 0f) { masterDmg = masterDmg * ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[12].x > 0f) { masterDmg = masterDmg / ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
-        if (effectList[13].x > 0f) { masterAtkSpd = masterAtkSpd / ((givenLeftItems[17] + givenRightItems[17]) / 10 + 1f); }
+        if (effectList[3].x > 0f) { masterReSpd = masterReSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[4].x > 0f) { masterCritChance = masterCritChance * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[5].x > 0f) { masterWeakPointDamage = masterWeakPointDamage * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[7].x > 0f) { masterAtkSpd = masterAtkSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[11].x > 0f) { masterDmg = masterDmg * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[12].x > 0f) { masterDmg = masterDmg / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[13].x > 0f) { masterAtkSpd = masterAtkSpd / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
 
         leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[16] / 10f + 1f);
         leftReSpd = 1f * (givenLeftItems[7] / 10f + 1f) * masterReSpd;
