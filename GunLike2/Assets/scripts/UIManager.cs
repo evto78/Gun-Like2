@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
     public TextMeshProUGUI fpsText;
+    public TextMeshProUGUI velocityText;
 
     public HitScanGunScript revScript;
     public GunScript gunScript;

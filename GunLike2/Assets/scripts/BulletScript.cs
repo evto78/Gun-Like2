@@ -163,12 +163,9 @@ public class BulletScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Debug.Log("Transform : " + transform.position.x + " " + transform.position.y + " " + transform.position.z + " ");
-        //Debug.Log("Velocity : " + rb.velocity.x + " " + rb.velocity.y + " " + rb.velocity.z + " ");
-        //Debug.Log("Distance : " + Vector3.Distance(transform.position, (transform.position + rb.velocity)));
-        if (Physics.Raycast(transform.position, rb.velocity, out RaycastHit hit, Vector3.Distance(transform.position, (transform.position + rb.velocity))))
+        if (Physics.Raycast(transform.position, rb.velocity, out RaycastHit hit, Vector3.Distance(transform.position, (transform.position + rb.velocity)*Time.deltaTime)))
         {
-            //RunOnCollide(hit.collider.gameObject);
+            RunOnCollide(hit.collider.gameObject);
         }
 
         if (rb.freezeRotation)
