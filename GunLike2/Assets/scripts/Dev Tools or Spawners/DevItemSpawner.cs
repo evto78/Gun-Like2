@@ -64,7 +64,7 @@ public class DevItemSpawner : MonoBehaviour
 	private void SpawnItem(int iD)
 	{
 		GameObject spawnedItem;
-		spawnedItem = Instantiate(item, new Vector3(transform.localPosition.x, transform.localPosition.y + 2f, transform.localPosition.z + 5f), transform.rotation);
+		spawnedItem = Instantiate(item, new Vector3(transform.position.x+transform.forward.x, transform.position.y+transform.forward.y+2f, transform.position.z+transform.forward.z+5f), transform.rotation);
 		spawnedItem.GetComponent<Item>().SetItemID(iD);
 	}
 }

@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace peterkcodes.AdvancedMovement
-{
+
     public class PlayerItem : MonoBehaviour
     {
         public List<int> leftItems;
@@ -25,6 +24,10 @@ namespace peterkcodes.AdvancedMovement
         public HealthManager healthManager;
         public GunManager gunManager;
 
+        public Transform playerCamera;
+
+        public GameObject itemDisplay;
+
         private void Awake()
         {
             commonItems.InsertRange(0, new int[] { 0, 1, 2, 4, 6, 7, 8, 9, 60, 61, 62, 63, 64, 65, 78, 94, 173, 174, 175, 177 });
@@ -37,35 +40,57 @@ namespace peterkcodes.AdvancedMovement
             nuclearItems.InsertRange(0, new int[] { 21, 30, 37, 68, 74, 87, 93, 115, 120, 142, 152, 169, 170, 171, 172, 176, 180, 181, 185, 186 });
             uniqueItems.InsertRange(0, new int[] { 46, 48, 49, 50, 51, 52, 53, 54, 56, 66, 72, 84, 85, 97, 98, 99, 100, 103, 104, 105, 106, 107, 108, 109, 110, 111, 143, 187, 188, 189, 190 });
 
-            rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, uniqueItems, mutatedItems, hauntedItems, nuclearItems, irradiatedItems });
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.tag == "item")
-            {
-                rightItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                Debug.Log("Item of Item ID " + collision.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
-                Destroy(collision.gameObject);
-            }
-        }
-
-        private void OnTriggerEnter(Collider collision)
-        {
-            if (collision.gameObject.tag == "item")
-            {
-                rightItems[collision.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                Debug.Log("Item of Item ID " + collision.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
-                Destroy(collision.gameObject);
-            }
+            rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
         }
 
         private void Update()
         {
-            playerMvt.StatUpdate(rightItems, leftItems, rarityList);
-            healthManager.StatUpdate(rightItems, leftItems, rarityList);
-            gunManager.StatUpdate(rightItems, leftItems, rarityList);
+            playerMvt.StatUpdate(leftItems, rightItems, rarityList);
+            healthManager.StatUpdate(leftItems, rightItems, rarityList);
+            gunManager.StatUpdate(leftItems, rightItems, rarityList);
+
+
+            LookForItem();
+        }
+
+        void LookForItem()
+        {
+            Vector3 camPos = playerCamera.position;
+            Ray ray = new Ray(camPos, playerCamera.forward);
+            RaycastHit hit;
+
+            Debug.DrawLine(camPos, camPos + playerCamera.forward * 7f);
+            if (Physics.Raycast(ray, out hit, 7f))
+            {
+                if(hit.collider.gameObject.tag == "item")
+                {
+                    Vector3 hitItem = hit.collider.gameObject.transform.position;
+
+                    itemDisplay.SetActive(true);
+                    itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(hit.collider.gameObject.GetComponentInParent<Item>().WhatItem(), hitItem);
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                        Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
+                        Destroy(hit.collider.gameObject);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Q))
+                    {
+                        leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                        Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
+                        Destroy(hit.collider.gameObject);
+                    }
+                }
+                else
+                {
+                    itemDisplay.SetActive(false);
+                }
+            }
+            else
+            {
+                itemDisplay.SetActive(false);
+            }
         }
     }
 
-}

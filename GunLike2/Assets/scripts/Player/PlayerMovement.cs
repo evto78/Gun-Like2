@@ -507,7 +507,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (planeMode && Input.GetKey(KeyCode.LeftShift))
         {
-            velocity += Vector3.up * planeSpeed / 6;
+            velocity += transform.forward * planeSpeed / 6;
         }
 
         TryJump();
