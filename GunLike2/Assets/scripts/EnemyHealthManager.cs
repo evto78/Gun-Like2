@@ -73,6 +73,11 @@ public class EnemyHealthManager : MonoBehaviour
         mostDmg.text = "Most damage: " + highestDamage;
     }
 
+    public void TakePercentDamage(float pDmgTaken)
+    {
+        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform);
+    }
+
     public void Die()
     {
         Destroy(gameObject);

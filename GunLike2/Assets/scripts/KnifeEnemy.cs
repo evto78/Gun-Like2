@@ -16,6 +16,10 @@ public class KnifeEnemy : MonoBehaviour
     float timer;
     float closestDistance;
 
+    int aiTimer;
+    public bool aiTimerActive;
+    public int aiTimerIntervals;
+
     public float maxHp;
     public float curHp;
     public float damage;
@@ -67,36 +71,46 @@ public class KnifeEnemy : MonoBehaviour
         orbitOptions.Add(GameObject.Find("Orbit Point South West3"));
 
         curHp = maxHp;
+
+        aiTimer = aiTimerIntervals;
     }
 
     void Update()
     {
-        if (player == null)
+        aiTimer += 1;
+
+        if (aiTimer >= aiTimerIntervals || aiTimerActive)
         {
-            player = GameObject.Find("Player");
-        }
-        else
-        {
-            if (state == "search")
+            if (player == null)
             {
-                Search();
+                player = GameObject.Find("Player");
             }
-            if (state == "orbit")
+            else
             {
-                Orbit();
-            }
-            if (state == "charge")
-            {
-                Charge();
+                if (state == "search")
+                {
+                    Search();
+                }
+                if (state == "orbit")
+                {
+                    Orbit();
+                }
+                if (state == "charge")
+                {
+                    Charge();
+                }
+
+                if (Vector3.Distance(transform.position, player.transform.position) > 21)
+                {
+                    state = "search";
+                    attacking = false;
+                }
+
             }
 
-            if (Vector3.Distance(transform.position, player.transform.position) > 21)
-            {
-                state = "search";
-                attacking = false;
-            }
-
+            aiTimer = 0;
         }
+        
     }
 
     void Charge()

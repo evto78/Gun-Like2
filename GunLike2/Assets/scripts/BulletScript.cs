@@ -21,10 +21,14 @@ public class BulletScript : MonoBehaviour
     public float bulSpd;
 
     public int pierce = 0;
+    public bool ricochet = false;
 
     public int heavySpirits;
+    public int nuclearBullets;
 
     public Collider myCollider;
+
+    public Vector3 myPos;
 
     List<Collider> collisions = new List<Collider>();
 
@@ -35,7 +39,7 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico)
     {
         damage = givenDmg;
         isCrit = isCritHit;
@@ -45,6 +49,8 @@ public class BulletScript : MonoBehaviour
         bulSpd = givenBulSpd;
 
         heavySpirits = givenHeavySpirits;
+        nuclearBullets = givenNuclearBul;
+        ricochet = givenRico;
 
         if (isHeavy != 0f)
         {
@@ -114,6 +120,13 @@ public class BulletScript : MonoBehaviour
                 gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
 
+            if (nuclearBullets > 0)
+            {
+                if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
+                {
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                }
+            }
 
         }
         if (gameObject.tag == "EnemyWeakPoint")
@@ -141,6 +154,14 @@ public class BulletScript : MonoBehaviour
             {
                 gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
+
+            if (nuclearBullets > 0)
+            {
+                if(Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
+                {
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                }
+            }
         }
         if (!collided && pierce < 1)
         {
@@ -153,17 +174,47 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
+
+            if (ricochet)
+            {
+                Ray ricoRay = new Ray(transform.position, transform.forward);
+                RaycastHit ricoHit;
+
+                myPos = transform.position;
+                if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
+                {
+                    Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
+
+                    //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
+                    //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
+                    //float ricoRotZ = 90f - Mathf.Atan2(reflectDir.x, reflectDir.y) * Mathf.Rad2Deg;
+                    
+                    //transform.eulerAngles = new Vector3(ricoRotX, ricoRotY, ricoRotZ);
+
+                    Vector3 storedVelocity = rb.velocity;
+
+                    rb.velocity = Vector3.zero;
+                    rb.velocity = (reflectDir * storedVelocity.magnitude) / 2f;
+
+                    transform.rotation = Quaternion.LookRotation(rb.velocity);
+                }
+            }
+            else
+            {
+
+            }
         }
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        RunOnCollide(collision.gameObject);
+        //RunOnCollide(collision.gameObject);
     }
 
     private void FixedUpdate()
     {
-        if (Physics.Raycast(transform.position, rb.velocity, out RaycastHit hit, Vector3.Distance(transform.position, (transform.position + rb.velocity)*Time.deltaTime)))
+        myPos = transform.position;
+        if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
             RunOnCollide(hit.collider.gameObject);
         }
