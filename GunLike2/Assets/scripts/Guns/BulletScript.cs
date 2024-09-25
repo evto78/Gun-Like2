@@ -82,7 +82,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -91,7 +91,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -103,7 +103,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -112,7 +112,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -140,7 +140,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -149,7 +149,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -223,7 +223,7 @@ public class BulletScript : MonoBehaviour
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
             transform.position = hit.point;
-            RunOnCollide(hit.collider.gameObject);
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint") { RunOnCollide(hit.collider.gameObject); }
         }
 
         if (rb.freezeRotation)

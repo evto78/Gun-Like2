@@ -215,13 +215,13 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", hit.point);
 
                             hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
                         else
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", hit.point);
 
                             hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -230,13 +230,13 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", hit.point);
 
                             hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
                         else
                         {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.transform);
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.point);
 
                             hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -259,13 +259,13 @@ public class HitScanGunScript : MonoBehaviour
                 {
                     if (Random.Range(1, 100) < critChance)
                     {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.transform);
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.point);
 
                         hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
                     else
                     {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.transform);
+                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.point);
 
                         hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
@@ -329,13 +329,13 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.point);
 
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
                         else
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.point);
 
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -344,13 +344,13 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (Random.Range(1, 100) < weakPointChance)
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.point);
 
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
                         else
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.point);
 
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -373,13 +373,13 @@ public class HitScanGunScript : MonoBehaviour
                 {
                     if (Random.Range(1, 100) < critChance)
                     {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.transform);
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.point);
 
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
                     else
                     {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.transform);
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.point);
 
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
@@ -436,7 +436,7 @@ public class HitScanGunScript : MonoBehaviour
                         {
                             if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                             {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.transform);
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.point);
                             }
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -444,7 +444,7 @@ public class HitScanGunScript : MonoBehaviour
                         {
                             if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                             {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.transform);
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.point);
                             }
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -455,7 +455,7 @@ public class HitScanGunScript : MonoBehaviour
                         {
                             if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                             {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.transform);
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.point);
                             }
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -463,7 +463,7 @@ public class HitScanGunScript : MonoBehaviour
                         {
                             if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                             {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.transform);
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.point);
                             }
                             newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                         }
@@ -488,7 +488,7 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.point);
                         }
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
@@ -496,7 +496,7 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                         {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.transform);
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.point);
                         }
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }

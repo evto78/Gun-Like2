@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
     public TextMeshProUGUI fpsText;
-    public TextMeshProUGUI velocityText;
+    //public TextMeshProUGUI velocityText;
 
     public HitScanGunScript revScript;
     public GunScript gunScript;
@@ -29,18 +29,5 @@ public class UIManager : MonoBehaviour
         rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.magSize;
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
         fpsText.text = "FPS: " + fps;
-    }
-
-    public void PopUpText(float dmgTaken, string givenColor, Vector3 worldPos)
-    {
-        GameObject spawnedText = Instantiate(damageText);
-
-        spawnedText.transform.SetParent(myCanvas.transform);
-
-        spawnedText.GetComponent<DamageText>().SetText(dmgTaken + "", givenColor, worldPos) ;
-
-        TextMeshProUGUI theText = spawnedText.GetComponent<TextMeshProUGUI>();
-
-        theText.text = ""+dmgTaken;
     }
 }

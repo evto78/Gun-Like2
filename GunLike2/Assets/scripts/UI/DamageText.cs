@@ -22,7 +22,7 @@ public class DamageText : MonoBehaviour
 
     private void Start()
     {
-        timer = 999f;
+        timer = 3f;
     }
 
     public void SetText(string sentText, string givenColor, Vector3 worldPos)
@@ -57,9 +57,15 @@ public class DamageText : MonoBehaviour
     {
         if(myCamera == null) { myCamera = Camera.main; }
 
+        transform.position = myRelatieWorldPos;
+
+        transform.LookAt(myCamera.transform);
+        transform.Rotate(0, 180, 0);
+
         timer -= Time.deltaTime;
-        transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
-        transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
+
+        //transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
 
         if (timer <= 0)
         {

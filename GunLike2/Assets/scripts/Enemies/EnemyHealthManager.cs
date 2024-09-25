@@ -11,7 +11,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public float armor;
 
-    //public GameObject damageText;
+    public GameObject damageText;
 
     public TextMeshProUGUI lastDmg;
     public TextMeshProUGUI mostDmg;
@@ -46,7 +46,7 @@ public class EnemyHealthManager : MonoBehaviour
         CalculateStats();
     }
 
-    public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Transform hitLocation)
+    public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation)
     {
         hitcounter++;
 
@@ -54,7 +54,6 @@ public class EnemyHealthManager : MonoBehaviour
         {
             curHp -= dmgTaken;
             latestDamage = dmgTaken;
-            //PopUpText(Mathf.RoundToInt(curHp -= dmgTaken), textColor, hitLocation);
         }
         else
         {
@@ -62,17 +61,15 @@ public class EnemyHealthManager : MonoBehaviour
             {
                 curHp -= 1f;
                 latestDamage = 1f;
-                //PopUpText(1, textColor, hitLocation);
             }
             else
             {
                 curHp -= (dmgTaken - armor);
                 latestDamage = dmgTaken - armor;
-                //PopUpText(Mathf.RoundToInt(dmgTaken - armor), textColor, hitLocation);
             }
         }
 
-        uiManager.PopUpText(latestDamage, textColor, hitLocation.position);
+        PopUpText(latestDamage.ToString(), textColor, hitLocation);
 
         if (latestDamage > highestDamage)
         {
@@ -87,7 +84,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakePercentDamage(float pDmgTaken)
     {
-        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform);
+        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position);
     }
 
     public void Die()
@@ -108,10 +105,15 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    void PopUpText(int dmgText, string textColor, Transform hitLocation)
+    void PopUpText(string dmgText, string textColor, Vector3 hitLocation)
     {
-        //GameObject spawnedText = Instantiate(damageText);
-        //spawnedText.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + 5, transform.position.z);
-        //spawnedText.GetComponent<DamageText>().SetText(dmgText.ToString(), textColor);
+        Debug.Log("hit: " + hitLocation);
+        Debug.Log("me: " + transform.position);
+
+        GameObject spawnedText = Instantiate(damageText);
+        spawnedText.gameObject.transform.position = hitLocation;
+        spawnedText.GetComponent<DamageText>().SetText(dmgText, textColor, hitLocation);
+
+        //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }
 }
