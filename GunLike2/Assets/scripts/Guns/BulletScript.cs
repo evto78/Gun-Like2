@@ -39,6 +39,11 @@ public class BulletScript : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
+    }
+
     public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico)
     {
         damage = givenDmg;
@@ -194,7 +199,8 @@ public class BulletScript : MonoBehaviour
                     Vector3 storedVelocity = rb.velocity;
 
                     rb.velocity = Vector3.zero;
-                    rb.velocity = (reflectDir * storedVelocity.magnitude) / 2f;
+                    if (rb.useGravity == true) { rb.velocity = ((reflectDir * storedVelocity.magnitude) / 2f) + Vector3.up * 2 + transform.forward * 2; }
+                    if (rb.useGravity == false) { rb.velocity = ((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2; }
 
                     transform.rotation = Quaternion.LookRotation(rb.velocity);
                 }
@@ -216,6 +222,7 @@ public class BulletScript : MonoBehaviour
         myPos = transform.position;
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
+            transform.position = hit.point;
             RunOnCollide(hit.collider.gameObject);
         }
 

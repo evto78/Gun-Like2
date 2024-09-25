@@ -17,12 +17,19 @@ public class ItemDisplayScript : MonoBehaviour
     // [1] is the debuffs
     // [2] is the effects
     // [3] is the flavor text
+    // [4] is the buff summery
+    // [5] is the debuff summery
+    // [6] is the effect summery
     // add more as needed \/
 
     public List<string> buffList = new List<string>();
     public List<string> debuffList = new List<string>();
     public List<string> effectList = new List<string>();
     public List<string> flavorList = new List<string>();
+
+    public List<string> buffSummeryList = new List<string>();
+    public List<string> debuffSummeryList = new List<string>();
+    public List<string> effectSummeryList = new List<string>();
 
     public List<Sprite> backgroundList = new List<Sprite>();
 
@@ -48,6 +55,9 @@ public class ItemDisplayScript : MonoBehaviour
         describeList.Add(debuffList);
         describeList.Add(effectList);
         describeList.Add(flavorList);
+        describeList.Add(buffSummeryList);
+        describeList.Add(debuffSummeryList);
+        describeList.Add(effectSummeryList);
     }
 
     // Update is called once per frame
@@ -61,9 +71,19 @@ public class ItemDisplayScript : MonoBehaviour
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
         nameTxt.text = itemScript.itemList[iD];
-        buffTxt.text = describeList[0][iD];
-        debuffTxt.text = describeList[1][iD];
-        effectTxt.text = describeList[2][iD];
+        if (Input.GetKey(KeyCode.C))
+        {
+            buffTxt.text = describeList[0][iD];
+            debuffTxt.text = describeList[1][iD];
+            effectTxt.text = describeList[2][iD];
+        }
+        else
+        {
+            buffTxt.text = describeList[4][iD];
+            debuffTxt.text = describeList[5][iD];
+            effectTxt.text = describeList[6][iD];
+        }
+        
         flavorTxt.text = describeList[3][iD];
 
         itemSprite.sprite = itemScript.spriteList[iD];

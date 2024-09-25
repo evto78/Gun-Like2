@@ -109,12 +109,12 @@ public class GunManager : MonoBehaviour
         if (effectList[12].x > 0f) { masterDmg = masterDmg / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[13].x > 0f) { masterAtkSpd = masterAtkSpd / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
 
-        leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[21] / 10f + 1f) * (givenLeftItems[16] / 10f + 1f);
+        leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[21] / 10f + 1f);
         leftReSpd = 1f * (givenLeftItems[7] / 10f + 1f) * masterReSpd;
-        leftDmg = 1f * (givenLeftItems[21] / 10f + 1f) * (givenLeftItems[16] / 5f + 1f) * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
+        leftDmg = 1f * (givenLeftItems[21] / 10f + 1f) * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
         leftMagSize = 1f * (givenLeftItems[6] / 5f + 1f) * masterMagSize;
-        leftAcc = 1f * (givenLeftItems[8] / 5f + 1f) * (givenLeftItems[16] / 10f + 1f) * masterAcc;
-        leftBulSpd = 1f * (givenLeftItems[9] / 10f + 1f) * (givenLeftItems[16] / 10f + 1f) * masterBulSpd / (givenLeftItems[11] / 10f + 1f);
+        leftAcc = 1f * (givenLeftItems[8] / 5f + 1f) * masterAcc;
+        leftBulSpd = 1f * (givenLeftItems[9] / 10f + 1f) * masterBulSpd / (givenLeftItems[11] / 10f + 1f) * (givenLeftItems[12] / 10f + 1f);
         leftBulSize = 1f * (givenLeftItems[11] / 10f + 1f) * masterBulSize;
         leftBulPir = (0 + givenLeftItems[10] + masterBulPir);
         leftCritChance = 1f * masterCritChance;
@@ -130,18 +130,18 @@ public class GunManager : MonoBehaviour
 
         leftRicochet = false;
 
+        if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
         if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
-
         if (givenLeftItems[26] > 0f || givenLeftItems[27] > 0f) { leftRicochet = true; }
 
-        rightAtkSpd = 1f * masterAtkSpd / (givenRightItems[21] / 10f + 1f) * (givenRightItems[16] / 5f + 1f);
+        rightAtkSpd = 1f * masterAtkSpd / (givenRightItems[21] / 10f + 1f);
         rightReSpd = 1f * (givenRightItems[7] / 10f + 1f) * masterReSpd;
-        rightDmg = 1f * (givenRightItems[21] / 10f + 1f) * (givenRightItems[16] / 5f + 1f) * (givenRightItems[4] / 10f + 1f) * (givenRightItems[13] / 5f + 1f) * masterDmg / (givenRightItems[12] / 10f + 1f);
+        rightDmg = 1f * (givenRightItems[21] / 10f + 1f) * (givenRightItems[4] / 10f + 1f) * (givenRightItems[13] / 5f + 1f) * masterDmg / (givenRightItems[12] / 10f + 1f);
         rightMagSize = 1f * (givenRightItems[6] / 5f + 1f) * masterMagSize;
-        rightAcc = 1f * (givenRightItems[8] / 5f + 1f) * (givenRightItems[16] / 10f + 1f) * masterAcc;
-        rightBulSpd = 1f * (givenRightItems[9] / 10f + 1f) * (givenRightItems[16] / 10f + 1f) * masterBulSpd / (givenRightItems[11] / 10f + 1f);
+        rightAcc = 1f * (givenRightItems[8] / 5f + 1f) * masterAcc;
+        rightBulSpd = 1f * (givenRightItems[9] / 10f + 1f) * masterBulSpd / (givenRightItems[11] / 10f + 1f) * (givenRightItems[12] / 10f + 1f);
         rightBulSize = 1f * (givenRightItems[11] / 10f + 1f) * masterBulSize;
-        rightBulPir = (0 + givenRightItems[10] + masterBulPir) + 1;
+        rightBulPir = (0 + givenRightItems[10] + masterBulPir);
         rightCritChance = 1f * masterCritChance;
         rightCritDamage = 1f * masterCritDamage;
         rightWeakPointChance = 1f * masterWeakPointChance;
@@ -155,9 +155,9 @@ public class GunManager : MonoBehaviour
 
         rightRicochet = false;
 
+        if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
+        if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
         if (givenRightItems[26] > 0f || givenRightItems[27] > 0f) { rightRicochet = true; }
-
-        if (givenRightItems[21] > 0f) {rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
 
         rightHand.SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);

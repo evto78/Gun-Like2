@@ -6,12 +6,19 @@ using TMPro;
 public class Item : MonoBehaviour
 {
     public List<Sprite> spriteList;
-
     public List<string> itemList;
+
+    public List<Material> backgroundList = new List<Material>();
+
     public int itemID;
     public TextMeshPro itemText;
     Rigidbody rb;
     public SpriteRenderer sr;
+
+    public MeshRenderer mr;
+
+    public GameObject player;
+    PlayerItem playerItem;
 
     private void Start()
     {
@@ -19,6 +26,11 @@ public class Item : MonoBehaviour
         //itemText.text = itemList[itemID];
 
         rb = GetComponent<Rigidbody>();
+
+        rb.useGravity = true;
+        rb.isKinematic = false;
+
+        
     }
 
     public void SetItemID(int givenID)
@@ -30,5 +42,33 @@ public class Item : MonoBehaviour
     public int WhatItem()
     {
         return itemID;
+    }
+
+    public void StayStill()
+    {
+        //rb.velocity = Vector3.zero;
+    }
+
+    private void Update()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+            playerItem = player.GetComponent<PlayerItem>();
+
+            for (int i = 0; i < playerItem.rarityList.Count; i++)
+            {
+                if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; Debug.Log("" + i + " : " + itemID + " " + mr.material); }
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Ground")
+        {
+            rb.useGravity = false;
+            rb.isKinematic = true;
+        }
     }
 }

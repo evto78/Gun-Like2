@@ -7,6 +7,7 @@ public class LookAtCursor : MonoBehaviour
     public Camera mainCamera;
     Ray ray;
     RaycastHit hit;
+    public LayerMask mask;
 
     void Start()
     {
@@ -20,7 +21,7 @@ public class LookAtCursor : MonoBehaviour
 
         transform.localEulerAngles = Vector3.zero;
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, float.MaxValue, mask))
         {
             Vector3 targetPoint = hit.point;
 

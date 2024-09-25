@@ -69,6 +69,8 @@ using UnityEngine;
                     itemDisplay.SetActive(true);
                     itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(hit.collider.gameObject.GetComponentInParent<Item>().WhatItem(), hitItem);
 
+                    hit.collider.gameObject.GetComponentInParent<Item>().StayStill();
+
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;

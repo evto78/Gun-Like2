@@ -42,10 +42,7 @@ public class DevItemSpawner : MonoBehaviour
 				numberTyped = numberTyped.Substring(0, numberTyped.Length - 1);
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
-			{
-				Debug.Log("ATTEMPING TO SPAWN: " + numberTyped);
-				Debug.Log("ATTEMPING TO SPAWN: " + System.Int32.Parse(numberTyped.Trim()));
-				
+			{	
 				SpawnItem(System.Int32.Parse(numberTyped.Trim()));
 
 				typing = false;

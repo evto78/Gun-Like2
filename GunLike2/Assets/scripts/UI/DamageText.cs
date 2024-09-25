@@ -12,20 +12,25 @@ public class DamageText : MonoBehaviour
     public Color critWeakHit;
     public Color badHit;
 
+    public Vector3 myRelatieWorldPos;
+
     public TextMeshPro textDisplay;
+
+    public Camera myCamera;
 
     float timer;
 
     private void Start()
     {
-        timer = 3f;
-        
-        //transform.position = Vector3.zero;
+        timer = 999f;
     }
 
-    public void SetText(string sentText, string givenColor)
+    public void SetText(string sentText, string givenColor, Vector3 worldPos)
     {
+        myCamera = Camera.main;
+
         textDisplay.text = sentText;
+        myRelatieWorldPos = worldPos;
         if (givenColor == "normalHit")
         {
             textDisplay.color = normalHit;
@@ -46,14 +51,15 @@ public class DamageText : MonoBehaviour
         {
             textDisplay.color = badHit;
         }
-
-        Debug.Log(textDisplay.text);
     }
 
     void Update()
     {
+        if(myCamera == null) { myCamera = Camera.main; }
+
         timer -= Time.deltaTime;
-        transform.position = new Vector3(transform.position.x, transform.position.y+(timer/40f), transform.position.z);
+        transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
 
         if (timer <= 0)
         {

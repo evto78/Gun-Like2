@@ -18,6 +18,9 @@ public class EnemyHealthManager : MonoBehaviour
     public TextMeshProUGUI dps;
     public TextMeshProUGUI hps;
 
+    public UIManager uiManager;
+    public GameObject player;
+
     float damagePerSecond;
     float hitsPerSecond;
     float hitcounter;
@@ -30,6 +33,12 @@ public class EnemyHealthManager : MonoBehaviour
     void Start()
     {
         curHp = maxHp;
+
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+            uiManager = player.GetComponent<UIManager>();
+        }
     }
 
     void Update()
@@ -63,6 +72,8 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
+        uiManager.PopUpText(latestDamage, textColor, hitLocation.position);
+
         if (latestDamage > highestDamage)
         {
             highestDamage = latestDamage;
@@ -71,6 +82,7 @@ public class EnemyHealthManager : MonoBehaviour
 
         lastDmg.text = "Last damage: " + latestDamage;
         mostDmg.text = "Most damage: " + highestDamage;
+
     }
 
     public void TakePercentDamage(float pDmgTaken)

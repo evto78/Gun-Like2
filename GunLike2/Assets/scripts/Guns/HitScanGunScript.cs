@@ -37,6 +37,7 @@ public class HitScanGunScript : MonoBehaviour
 
     public float bowAct;
     public int heavySpirits;
+    public int nuclearBul;
 
     //Status
     float attackTimer = 0;
@@ -46,13 +47,19 @@ public class HitScanGunScript : MonoBehaviour
     public int currentBullets;
     float bowCharge;
 
+    bool ricochet = false;
+
     public GameObject pistolBullet;
     public Transform firePoint;
 
     public LayerMask mask;
     public TrailRenderer bulletTrail;
 
-    public ParticleSystem particleSystem;
+    public LineRenderer lr;
+    float lineTimer;
+    List<Vector3> linePoints = new List<Vector3>();
+
+    public ParticleSystem particleSys;
     private ParticleSystem cloneparticleSys;
 
     public Camera mainCamera;
@@ -83,6 +90,8 @@ public class HitScanGunScript : MonoBehaviour
 
         bowAct = manager.leftBowAct;
         heavySpirits = manager.leftHeavySpirit;
+        nuclearBul = manager.leftNuclearBul;
+        ricochet = manager.leftRicochet;
     }
 
     public void StatUpdateRight()
@@ -102,6 +111,8 @@ public class HitScanGunScript : MonoBehaviour
 
         bowAct = manager.rightBowAct;
         heavySpirits = manager.rightHeavySpirit;
+        nuclearBul = manager.rightNuclearBul;
+        ricochet = manager.rightRicochet;
     }
 
     // Update is called once per frame
@@ -135,6 +146,9 @@ public class HitScanGunScript : MonoBehaviour
             animator.SetBool("NoAmmo", true);
         }
 
+        if(lineTimer > 0f) { lineTimer -= Time.deltaTime * atkSpd; if (lineTimer < 0f) { lineTimer = 0f; } }
+        lr.startWidth = lineTimer;
+        lr.endWidth = lineTimer;
     }
 
     public void AttemptShoot()
@@ -181,11 +195,19 @@ public class HitScanGunScript : MonoBehaviour
             currentBullets--;
 
             Vector3 direction = GetDirection(bowChar);
+
+            lr.positionCount = 1;
+            lr.SetPosition(0, firePoint.position);
+            linePoints.Clear();
+            linePoints.Add(firePoint.position);
+
             if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, float.MaxValue, mask))
             {
-                TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
+                
 
-                StartCoroutine(SpawnTrail(trail, hit));
+                //TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
+
+                //StartCoroutine(SpawnTrail(trail, hit));
 
                 if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
@@ -225,6 +247,13 @@ public class HitScanGunScript : MonoBehaviour
                         hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
 
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
                 }
                 if (hit.collider.gameObject.CompareTag("EnemyWeakPoint"))
                 {
@@ -245,10 +274,264 @@ public class HitScanGunScript : MonoBehaviour
                     {
                         hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
+
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
+                }
+
+                linePoints.Add(hit.point);
+
+                if (bulPir > 0) { PierceAndRico(bowChar, bulPir, ray, hit, direction); }
+                else
+                {
+                    RenderLine();
                 }
 
             }
+            else
+            {
+                linePoints.Add(firePoint.position + direction * 9999);
+                RenderLine();
+            }
         }
+    }
+
+    void PierceAndRico(float bowChar, int pierceLeft, Ray givenRay, RaycastHit givenHit, Vector3 givenRayDir)
+    {
+        Debug.Log(pierceLeft);
+        pierceLeft--;
+
+        if (ricochet)
+        {
+            Vector3 reflectDir = Vector3.Reflect(givenRayDir, givenHit.normal);
+
+            Ray newRay = new Ray(givenHit.point, reflectDir);
+            RaycastHit newHit;
+
+            Debug.DrawRay(givenHit.point, reflectDir, Color.magenta, 10f);
+            Debug.DrawLine(givenHit.point, givenHit.point + Vector3.up * 5f, Color.green, 10f);
+            Debug.DrawLine(givenHit.point + reflectDir, givenHit.point + reflectDir + Vector3.up * 5f, Color.white, 10f);
+
+            if (Physics.Raycast(newRay, out newHit, float.MaxValue, mask))
+            {
+                //TrailRenderer trail = Instantiate(bulletTrail, newHit.point, Quaternion.identity);
+
+                //StartCoroutine(SpawnTrail(trail, newHit));
+
+                if (newHit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.transform);
+
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                        else
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.transform);
+
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+                    else
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.transform);
+
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                        else
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.transform);
+
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+
+                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                    }
+
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
+                }
+                if (newHit.collider.gameObject.CompareTag("EnemyWeakPoint"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.transform);
+
+                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                    }
+                    else
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.transform);
+
+                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                    }
+
+                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                    }
+
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
+                }
+
+                linePoints.Add(newHit.point);
+                Debug.Log(newHit.point);
+
+                if (pierceLeft > 0) { PierceAndRico(bowChar, pierceLeft, newRay, newHit, reflectDir); }
+                else
+                {
+                    RenderLine();
+                }
+            }
+            else
+            {
+                linePoints.Add(givenHit.point + reflectDir * 9999);
+                RenderLine();
+            }
+        }
+        else
+        {
+            Vector3 reflectDir = givenRayDir;
+
+            Ray newRay = new Ray(givenHit.point, reflectDir);
+            RaycastHit newHit;
+            Debug.DrawRay(givenHit.point, reflectDir, Color.magenta, 10f);
+            Debug.DrawLine(givenHit.point, givenHit.point + Vector3.up * 5f, Color.green, 10f);
+            Debug.DrawLine(givenHit.point+reflectDir, givenHit.point+reflectDir + Vector3.up * 5f, Color.white, 10f);
+            if (Physics.Raycast(newRay, out newHit, float.MaxValue, mask))
+            {
+                //TrailRenderer trail = Instantiate(bulletTrail, givenHit.point, Quaternion.identity);
+
+                //StartCoroutine(SpawnTrail(trail, newHit));
+
+                if (newHit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                            {
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.transform);
+                            }
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                        else
+                        {
+                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                            {
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.transform);
+                            }
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+                    else
+                    {
+                        if (Random.Range(1, 100) < weakPointChance)
+                        {
+                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                            {
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.transform);
+                            }
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                        else
+                        {
+                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                            {
+                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.transform);
+                            }
+                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+
+                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                    }
+
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
+                }
+                if (newHit.collider.gameObject.CompareTag("EnemyWeakPoint"))
+                {
+                    if (Random.Range(1, 100) < critChance)
+                    {
+                        if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.transform);
+                        }
+                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                    }
+                    else
+                    {
+                        if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.transform);
+                        }
+                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                    }
+
+                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    {
+                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+                    }
+
+                    if (nuclearBul > 0)
+                    {
+                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                        {
+                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                        }
+                    }
+                }
+
+                linePoints.Add(newHit.point);
+                Debug.Log(newHit.point);
+
+                if (pierceLeft > 0) { PierceAndRico(bowChar, pierceLeft, newRay, newHit, reflectDir); }
+                else
+                {
+                    RenderLine();
+                }
+            }
+            else
+            {
+                linePoints.Add(givenHit.point + reflectDir * 9999);
+                RenderLine();
+            }
+        }
+
+        
     }
 
     void Reload()
@@ -294,9 +577,22 @@ public class HitScanGunScript : MonoBehaviour
         }
         trail.transform.position = hit.point;
 
-        cloneparticleSys = Instantiate(particleSystem, hit.point, Quaternion.LookRotation(hit.normal));
+        cloneparticleSys = Instantiate(particleSys, hit.point, Quaternion.LookRotation(hit.normal));
 
         Destroy(cloneparticleSys.gameObject, 5);
         Destroy(trail.gameObject, trail.time);
+    }
+
+    void RenderLine()
+    {
+        lineTimer = 0.3f;
+
+        lr.positionCount = linePoints.Count;
+
+        for (int i = 0; i < linePoints.Count; i++)
+        {
+            Debug.DrawLine(linePoints[i], linePoints[i] + Vector3.up * 3f, Color.yellow, 10f);
+            lr.SetPosition(i, linePoints[i]);
+        }
     }
 }

@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 578d4bb9d67a76749946931acdcd0719, type: 2}
+  - {fileID: 2100000, guid: 47c3e23135051214a8497136dae65d35, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104,7 +104,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.68
   m_Center: {x: 0, y: 0, z: 0}
@@ -442,9 +442,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &4407914032827648525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +515,18 @@ MonoBehaviour:
   - Intro to Trigger-nometry
   - Advanced Trigger-nometry
   - Masters in Trigger-nometry
+  backgroundList:
+  - {fileID: 2100000, guid: 7b58298dfd4bf364593ff0c39b859feb, type: 2}
+  - {fileID: 2100000, guid: 79f0c590c756ed94594b32eef15dde32, type: 2}
+  - {fileID: 2100000, guid: e1d5dcca0dcd48f4d8c7660ce074df68, type: 2}
+  - {fileID: 2100000, guid: 459eeed55c3a77e458cb23a35fea11a4, type: 2}
+  - {fileID: 2100000, guid: c64aad39bc684274c9bca65749583ee2, type: 2}
+  - {fileID: 2100000, guid: 47c3e23135051214a8497136dae65d35, type: 2}
+  - {fileID: 2100000, guid: 8776cf367fa9c0341977f54ea6bca14f, type: 2}
+  - {fileID: 2100000, guid: e3f3b5e07e2106642a1d757097c4b7b0, type: 2}
+  - {fileID: 2100000, guid: 12bb8527bb7b4384facd6bc9258eb1f4, type: 2}
   itemID: 0
   itemText: {fileID: 3670894863867622849}
   sr: {fileID: 6866566453474216706}
+  mr: {fileID: 1285652077693890508}
+  player: {fileID: 0}
