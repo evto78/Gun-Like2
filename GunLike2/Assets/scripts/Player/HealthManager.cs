@@ -43,7 +43,7 @@ public class HealthManager : MonoBehaviour
 
 		healthRegen = 1f * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f);
 		armor = 5f * ((givenLeftItems[3] + givenRightItems[3] - 1) / 25f + 1f) / ((givenLeftItems[12] + givenRightItems[12]) / 10f + 1f);
-		maxHp = Mathf.FloorToInt(100f * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f));
+		maxHp = Mathf.FloorToInt(100f * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];

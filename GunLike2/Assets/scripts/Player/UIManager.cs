@@ -21,6 +21,9 @@ public class UIManager : MonoBehaviour
 
     int fps = 0;
 
+    public Camera mainCamera;
+    public Camera overlayCamera;
+
     // Update is called once per frame
     void Update()
     {
