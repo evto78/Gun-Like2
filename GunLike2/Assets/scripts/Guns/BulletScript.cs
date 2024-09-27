@@ -30,6 +30,8 @@ public class BulletScript : MonoBehaviour
 
     public Vector3 myPos;
 
+    public string whatHandThisComesFrom;
+
     List<Collider> collisions = new List<Collider>();
 
     void Awake()
@@ -44,8 +46,10 @@ public class BulletScript : MonoBehaviour
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand)
     {
+        whatHandThisComesFrom = whatHand;
+
         damage = givenDmg;
         isCrit = isCritHit;
         pierce = givenPierce;
@@ -82,7 +86,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -91,7 +95,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position, whatHandThisComesFrom);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -103,7 +107,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position, whatHandThisComesFrom);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -112,7 +116,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -140,7 +144,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -149,7 +153,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);

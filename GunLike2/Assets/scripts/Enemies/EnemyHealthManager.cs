@@ -46,7 +46,7 @@ public class EnemyHealthManager : MonoBehaviour
         CalculateStats();
     }
 
-    public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation)
+    public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
         hitcounter++;
 
@@ -69,7 +69,7 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        PopUpText(latestDamage.ToString(), textColor, hitLocation);
+        PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
 
         if (latestDamage > highestDamage)
         {
@@ -84,7 +84,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakePercentDamage(float pDmgTaken)
     {
-        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position);
+        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position, "self");
     }
 
     public void Die()
@@ -105,14 +105,17 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    void PopUpText(string dmgText, string textColor, Vector3 hitLocation)
+    void PopUpText(string dmgText, string textColor, Vector3 hitLocation, string source)
     {
         Debug.Log("hit: " + hitLocation);
         Debug.Log("me: " + transform.position);
 
-        GameObject spawnedText = Instantiate(damageText);
+        GameObject spawnedText = Instantiate(damageText, player.GetComponentInChildren<Canvas>().gameObject.transform);
+
+        //spawnedText.transform.SetParent(player.GetComponentInChildren<Canvas>().gameObject.transform);
+
         spawnedText.gameObject.transform.position = hitLocation;
-        spawnedText.GetComponent<DamageText>().SetText(dmgText, textColor, hitLocation);
+        spawnedText.GetComponent<DamageText>().SetText(dmgText, textColor, hitLocation, source);
 
         //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }

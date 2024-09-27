@@ -14,7 +14,10 @@ public class DamageText : MonoBehaviour
 
     public Vector3 myRelatieWorldPos;
 
-    public TextMeshPro textDisplay;
+    public Vector3 drift;
+    public float driftStr;
+
+    public TextMeshProUGUI textDisplay;
 
     public Camera myCamera;
 
@@ -22,10 +25,10 @@ public class DamageText : MonoBehaviour
 
     private void Start()
     {
-        timer = 3f;
+        timer = 2f;
     }
 
-    public void SetText(string sentText, string givenColor, Vector3 worldPos)
+    public void SetText(string sentText, string givenColor, Vector3 worldPos, string source)
     {
         myCamera = Camera.main;
 
@@ -51,25 +54,68 @@ public class DamageText : MonoBehaviour
         {
             textDisplay.color = badHit;
         }
+
+        driftStr = Random.Range(10f, 15f);
+
+        if (source == "left")
+        {
+            drift = new Vector3(Random.Range(-0.7f, -0.3f), Random.Range(0.5f, 1f), 1f);
+        }
+        if (source == "right")
+        {
+            drift = new Vector3(Random.Range(0.7f, 0.3f), Random.Range(0.5f, 1f), 1f);
+        }
+        if (source == "self")
+        {
+            drift = new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0.5f, 1f), 1f);
+        }
+        
     }
 
     void Update()
     {
         if(myCamera == null) { myCamera = Camera.main; }
 
-        transform.position = myRelatieWorldPos;
+        //transform.position = myRelatieWorldPos;
 
-        transform.LookAt(myCamera.transform);
-        transform.Rotate(0, 180, 0);
+        //transform.LookAt(myCamera.transform);
+        transform.localEulerAngles = new Vector3(0, 0, 0);
 
         timer -= Time.deltaTime;
 
         //transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
         //transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
 
+        transform.position = PositionWithDrift();
+
         if (timer <= 0)
         {
             Destroy(gameObject);
         }
+
+        ManageFadeOut();
+    }
+
+    private void FixedUpdate()
+    {
+        transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
+    }
+
+    void ManageFadeOut()
+    {
+        textDisplay.color = new Color(textDisplay.color.r, textDisplay.color.g, textDisplay.color.b, 100f * (timer / 2f) );
+    }
+
+    Vector3 PositionWithDrift()
+    {
+        Vector3 newPos;
+
+        transform.position = myCamera.WorldToScreenPoint(myRelatieWorldPos);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
+
+        newPos = transform.position + drift * (driftStr * (2f - timer));
+
+        return newPos;
     }
 }

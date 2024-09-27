@@ -60,6 +60,8 @@ public class GunScript : MonoBehaviour
     Ray ray;
     RaycastHit hit;
 
+    public string whatHandThisIsIn;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +71,8 @@ public class GunScript : MonoBehaviour
 
     public void StatUpdateLeft()
     {
+        whatHandThisIsIn = "left";
+
         magSize = Mathf.Round(baseMagSize * manager.leftMagSize);
         atkSpd = baseAtkSpd * manager.leftAtkSpd;
         reSpd = baseReSpd * manager.leftReSpd;
@@ -91,6 +95,8 @@ public class GunScript : MonoBehaviour
 
     public void StatUpdateRight()
     {
+        whatHandThisIsIn = "right";
+
         magSize = Mathf.Round(baseMagSize * manager.rightMagSize);
         atkSpd = baseAtkSpd * manager.rightAtkSpd;
         reSpd = baseReSpd * manager.rightReSpd;
@@ -207,22 +213,22 @@ public class GunScript : MonoBehaviour
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn);
                 }
             }
             else
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn);
                 }
             }
 

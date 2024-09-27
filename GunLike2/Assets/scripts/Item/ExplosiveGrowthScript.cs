@@ -26,7 +26,7 @@ public class ExplosiveGrowthScript : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Enemy")
 		{
-			collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position);
+			collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, "self");
 		}
 		if (collision.gameObject.tag == "Player")
 		{
