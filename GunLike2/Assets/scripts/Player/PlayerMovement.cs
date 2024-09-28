@@ -31,10 +31,10 @@ public class PlayerMovement : MonoBehaviour
     #region Movement
     [Header("Movement")]
     [Tooltip("The player's move speed when walking.")]
-    [SerializeField] private float baseMoveSpeed;
+    [SerializeField] public float moveSpeed;
 
     [Tooltip("The player's move speed when sprinting on flat ground.")]
-    [SerializeField] private float sprintMoveSpeed;
+    [SerializeField] public float sprintMoveSpeed;
 
     [Tooltip("The player's move speed when crouched.")]
     [SerializeField] private float crouchSpeed;
@@ -43,10 +43,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float airStrafeSpeed;
 
     [Tooltip("The force to jump with on flat ground.")]
-    [SerializeField] private float jumpForce;
+    [SerializeField] public float jumpForce;
 
     [Tooltip("the amount of jumps you can do.")]
-    [SerializeField] private int numberOfJumps;
+    [SerializeField] public int numberOfJumps;
 
     [Tooltip("how many jumps are currently left.")]
     [SerializeField] private int jumpsLeft;
@@ -238,6 +238,11 @@ public class PlayerMovement : MonoBehaviour
     float planeSpeed = 0.0f;
     bool hasBunny = false;
 
+    public float baseMoveSpeed;
+    public float baseSprintMoveSpeed;
+    public float baseJumpForce;
+    public int baseNumberOfJumps;
+
     HealthManager healthMan;
     List<Vector4> effectList;
 
@@ -251,21 +256,26 @@ public class PlayerMovement : MonoBehaviour
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
-        baseMoveSpeed = 10 / ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
+        baseMoveSpeed = 10f;
+        baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
+        baseJumpForce = 8;
+        baseNumberOfJumps = 0;
+
+        moveSpeed = baseMoveSpeed / ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
 
         //status effect buffs / debuffs
-        if (effectList[10].x > 0f) { baseMoveSpeed = baseMoveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[16].x > 0f) { baseMoveSpeed = baseMoveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+        if (effectList[10].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
 
-        airStrafeSpeed = baseMoveSpeed;
-        sprintMoveSpeed = baseMoveSpeed * 1.6f * ((givenLeftItems[0] + givenRightItems[0]) / 12f + 1f);
-        jumpForce = 8 * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
-        maxSlideVelocity = baseMoveSpeed * 3f;
-        slideAccelerationRate = baseMoveSpeed * 2f;
-        maxWallrunVelocity = baseMoveSpeed * 2.5f;
-        wallrunAcceleration = baseMoveSpeed * 2f;
+        airStrafeSpeed = moveSpeed;
+        sprintMoveSpeed = baseSprintMoveSpeed * ((givenLeftItems[0] + givenRightItems[0]) / 10f + 1f);
+        jumpForce = baseJumpForce * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
+        maxSlideVelocity = moveSpeed * 3f;
+        slideAccelerationRate = moveSpeed * 2f;
+        maxWallrunVelocity = moveSpeed * 2.5f;
+        wallrunAcceleration = moveSpeed * 2f;
         wallkickForce = new Vector2(jumpForce * 3, jumpForce);
-        numberOfJumps = 0 + givenLeftItems[15] + givenRightItems[15];
+        numberOfJumps = baseNumberOfJumps + givenLeftItems[15] + givenRightItems[15];
         gravityModifier = 1f / ((givenLeftItems[15] + givenRightItems[15]) / 10f + 1f);
         if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
         {
@@ -712,7 +722,7 @@ public class PlayerMovement : MonoBehaviour
 
         TryJump();
 
-        Vector3 _move = GetMovementInputVector() * ((currentState == MoveState.walk) ? baseMoveSpeed : crouchSpeed);
+        Vector3 _move = GetMovementInputVector() * ((currentState == MoveState.walk) ? moveSpeed : crouchSpeed);
         Vector3 _adjusted;
         if (_move != Vector3.zero)
         {

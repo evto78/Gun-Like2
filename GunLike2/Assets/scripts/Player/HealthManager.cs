@@ -17,10 +17,14 @@ public class HealthManager : MonoBehaviour
 	// z == Timeleft until 1 stack is removed
 	// w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
-	public int maxHp = 100;
+	public int baseMaxHP = 100;
+	public float baseArmor = 5f;
+	public float baseHealthRegen = 1f;
+
+	public int maxHp;
 	public float curHp;
-	public float armor = 5;
-	public float healthRegen = 1f;
+	public float armor;
+	public float healthRegen;
 	float regenTimer;
 
 	float orgGum;
@@ -35,15 +39,16 @@ public class HealthManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+		maxHp = baseMaxHP;
 		curHp = maxHp;
 	}
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
 		rarityList = givenRarityList;
 
-		healthRegen = 1f * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f);
-		armor = 5f * ((givenLeftItems[3] + givenRightItems[3] - 1) / 25f + 1f) / ((givenLeftItems[12] + givenRightItems[12]) / 10f + 1f);
-		maxHp = Mathf.FloorToInt(100f * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
+		healthRegen = baseHealthRegen * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f);
+		armor = baseArmor * ((givenLeftItems[3] + givenRightItems[3]) / 25f + 1f) / ((givenLeftItems[12] + givenRightItems[12]) / 10f + 1f);
+		maxHp = Mathf.FloorToInt(baseMaxHP * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
