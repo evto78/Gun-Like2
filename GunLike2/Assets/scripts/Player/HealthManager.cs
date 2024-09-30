@@ -17,11 +17,11 @@ public class HealthManager : MonoBehaviour
 	// z == Timeleft until 1 stack is removed
 	// w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
-	public int baseMaxHP = 100;
+	public float baseMaxHP = 100f;
 	public float baseArmor = 5f;
 	public float baseHealthRegen = 1f;
 
-	public int maxHp;
+	public float maxHp;
 	public float curHp;
 	public float armor;
 	public float healthRegen;
@@ -35,6 +35,7 @@ public class HealthManager : MonoBehaviour
 
 	public UIManager uiMan;
 	public PlayerMovement playerMvt;
+	public PlayerItem playerItem;
 
 	// Start is called before the first frame update
 	void Start()
@@ -53,6 +54,28 @@ public class HealthManager : MonoBehaviour
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
 		numOfBunnies = 0 + givenLeftItems[20] + givenRightItems[20];
+
+		//Irradiated French Pastry
+		if (givenLeftItems[22] > 0)
+        {
+			if (playerItem.leftIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (givenLeftItems[22] * 2)); }
+			if (playerItem.leftIFPStatToBuff == 27) { healthRegen = healthRegen * (givenLeftItems[22] * 2); }
+			if (playerItem.leftIFPStatToBuff == 28) { armor = armor * (givenLeftItems[22] * 2); }
+
+			if (playerItem.leftIFPStatToDeBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenLeftItems[22])); }
+			if (playerItem.leftIFPStatToDeBuff == 27) { healthRegen = healthRegen * (0.9f / givenLeftItems[22]); }
+			if (playerItem.leftIFPStatToDeBuff == 28) { armor = armor * (0.9f / givenLeftItems[22]); }
+		}
+		if (givenRightItems[22] > 0)
+		{
+			if (playerItem.rightIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (givenRightItems[22] * 2)); }
+			if (playerItem.rightIFPStatToBuff == 27) { healthRegen = healthRegen * (givenRightItems[22] * 2); }
+			if (playerItem.rightIFPStatToBuff == 28) { armor = armor * (givenRightItems[22] * 2); }
+
+			if (playerItem.rightIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenRightItems[22])); }
+			if (playerItem.rightIFPStatToBuff == 27) { healthRegen = healthRegen * (0.9f / givenRightItems[22]); }
+			if (playerItem.rightIFPStatToBuff == 28) { armor = armor * (0.9f / givenRightItems[22]); }
+		}
 
 		//status effect buffs / debuffs
 

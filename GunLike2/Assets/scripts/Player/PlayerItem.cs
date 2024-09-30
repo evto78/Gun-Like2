@@ -65,6 +65,12 @@ public class PlayerItem : MonoBehaviour
 
     public GameObject itemDisplay;
 
+    //ItemChecks
+    public int leftIFPStatToBuff;
+    public int leftIFPStatToDeBuff;
+    public int rightIFPStatToBuff;
+    public int rightIFPStatToDeBuff;
+
     private void Awake()
     {
         commonItems.InsertRange(0, new int[] { 0, 1, 2, 4, 6, 7, 8, 9, 60, 61, 62, 63, 64, 65, 78, 94, 173, 174, 175, 177 });
@@ -175,6 +181,66 @@ public class PlayerItem : MonoBehaviour
         modifierList.Add(healthManager.maxHp / healthManager.baseMaxHP);
         modifierList.Add(healthManager.healthRegen / healthManager.baseHealthRegen);
         modifierList.Add(healthManager.armor / healthManager.baseArmor);
+
+        float minValue = float.MaxValue;
+        float maxValue = float.MinValue;
+
+        if (leftItems[22] == 0)
+        {
+            leftIFPStatToBuff = 0;
+            leftIFPStatToDeBuff = 28;
+
+            for (int i = 0; i < modifierList.Count; i++)
+            {
+                if (i < 15 || i > 25)
+                {
+                    if (modifierList[i] < minValue && modifierList[i] != 1f) { minValue = modifierList[i]; leftIFPStatToBuff = i; }
+                    if (modifierList[i] > maxValue && modifierList[i] != 1f) { maxValue = modifierList[i]; leftIFPStatToDeBuff = i; }
+                }
+            }
+
+            if(Random.Range(0, modifierList.Count - 1) < modifierList.Count/2f)
+            {
+                if (modifierList[leftIFPStatToBuff] == 1) { leftIFPStatToBuff = Random.Range(0, 14); }
+                if (modifierList[leftIFPStatToDeBuff] == 1) { leftIFPStatToDeBuff = Random.Range(0, 14); }
+            }
+            else
+            {
+                if (modifierList[leftIFPStatToBuff] == 1) { leftIFPStatToBuff = Random.Range(26, modifierList.Count - 1); }
+                if (modifierList[leftIFPStatToDeBuff] == 1) { leftIFPStatToDeBuff = Random.Range(26, modifierList.Count - 1); }
+            }
+            
+        }
+
+        minValue = float.MaxValue;
+        maxValue = float.MinValue;
+
+        if (rightItems[22] == 0)
+        {
+            rightIFPStatToBuff = 0;
+            rightIFPStatToDeBuff = 28;
+
+            for (int i = 0; i < modifierList.Count; i++)
+            {
+                if (i < 4 || i > 14)
+                {
+                    if (modifierList[i] < minValue && modifierList[i] != 1f) { minValue = modifierList[i]; rightIFPStatToBuff = i; }
+                    if (modifierList[i] > maxValue && modifierList[i] != 1f) { maxValue = modifierList[i]; rightIFPStatToDeBuff = i; }
+                }
+            }
+
+            if (Random.Range(0, modifierList.Count - 1) < modifierList.Count / 2f)
+            {
+                if (modifierList[rightIFPStatToBuff] == 1) { rightIFPStatToBuff = Random.Range(0, 3); }
+                if (modifierList[rightIFPStatToDeBuff] == 1) { rightIFPStatToDeBuff = Random.Range(0, 3); }
+            }
+            else
+            {
+                if (modifierList[rightIFPStatToBuff] == 1) { rightIFPStatToBuff = Random.Range(15, modifierList.Count - 1); }
+                if (modifierList[rightIFPStatToDeBuff] == 1) { rightIFPStatToDeBuff = Random.Range(15, modifierList.Count - 1); }
+            }
+        }
+
     }
 }
 

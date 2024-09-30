@@ -244,6 +244,8 @@ public class PlayerMovement : MonoBehaviour
     public int baseNumberOfJumps;
 
     HealthManager healthMan;
+    public PlayerItem playerItem;
+
     List<Vector4> effectList;
 
     // Start is called before the first frame update
@@ -277,6 +279,8 @@ public class PlayerMovement : MonoBehaviour
         wallkickForce = new Vector2(jumpForce * 3, jumpForce);
         numberOfJumps = baseNumberOfJumps + givenLeftItems[15] + givenRightItems[15];
         gravityModifier = 1f / ((givenLeftItems[15] + givenRightItems[15]) / 10f + 1f);
+
+        //Item Checks
         if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
         {
             maxSlideVelocity = maxSlideVelocity * 1.5f;
@@ -303,6 +307,32 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             hasBunny = false;
+        }
+
+        //Irradiated French Pastry
+        if (givenLeftItems[22] > 0)
+        {
+            if (playerItem.leftIFPStatToBuff == 0) { moveSpeed = moveSpeed * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 2) { jumpForce = jumpForce * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenLeftItems[22] * 2)); }
+
+            if (playerItem.leftIFPStatToDeBuff == 0) { moveSpeed = moveSpeed * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 2) { jumpForce = jumpForce * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenLeftItems[22])); }
+        }
+        if (givenRightItems[22] > 0)
+        {
+            if (playerItem.rightIFPStatToBuff == 0) { moveSpeed = moveSpeed * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 2) { jumpForce = jumpForce * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenRightItems[22] * 2)); }
+
+            if (playerItem.rightIFPStatToDeBuff == 0) { moveSpeed = moveSpeed * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 2) { jumpForce = jumpForce * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenRightItems[22])); }
         }
 
         //status effect buffs / debuffs

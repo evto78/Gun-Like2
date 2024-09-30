@@ -9,6 +9,7 @@ public class GunManager : MonoBehaviour
     List<int> rightList = new List<int>();
 
     HealthManager healthMan;
+    public PlayerItem playerItem;
     List<Vector4> effectList;
 
     public GameObject leftHand;
@@ -158,6 +159,60 @@ public class GunManager : MonoBehaviour
         if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
         if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
         if (givenRightItems[26] > 0f || givenRightItems[27] > 0f) { rightRicochet = true; }
+
+        //Irradiated French Pastry
+        if (givenLeftItems[22] > 0)
+        {
+            if (playerItem.leftIFPStatToBuff == 4) { leftCritChance = leftCritChance * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 5) { leftCritDamage = leftCritDamage * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 6) { leftWeakPointDamage = leftWeakPointDamage * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 7) { leftDmg = leftDmg * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 8) { leftAtkSpd = leftAtkSpd * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 9) { leftReSpd = leftReSpd * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 10) { leftMagSize = leftMagSize * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 11) { leftAcc = leftAcc * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 12) { leftBulSpd = leftBulSpd * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 13) { leftBulSize = leftBulSize * (givenLeftItems[22] * 2); }
+            if (playerItem.leftIFPStatToBuff == 14) { leftBulPir = leftBulPir * (givenLeftItems[22] * 2); }
+
+            if (playerItem.leftIFPStatToDeBuff == 4) { leftCritChance = leftCritChance * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 5) { leftCritDamage = leftCritDamage * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 6) { leftWeakPointDamage = leftWeakPointDamage * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 7) { leftDmg = leftDmg * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 8) { leftAtkSpd = leftAtkSpd * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 9) { leftReSpd = leftReSpd * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 10) { leftMagSize = leftMagSize * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 11) { leftAcc = leftAcc * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 12) { leftBulSpd = leftBulSpd * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 13) { leftBulSize = leftBulSize * (0.9f / givenLeftItems[22]); }
+            if (playerItem.leftIFPStatToDeBuff == 14) { leftBulPir = Mathf.FloorToInt(leftBulPir * (0.9f / givenLeftItems[22])); }
+        }
+        if (givenRightItems[22] > 0)
+        {
+            if (playerItem.rightIFPStatToBuff == 15) { rightCritChance = rightCritChance * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 16) { rightCritDamage = rightCritDamage * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 17) { rightWeakPointDamage = rightWeakPointDamage * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 18) { rightDmg = rightDmg * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 19) { rightAtkSpd = rightAtkSpd * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 20) { rightReSpd = rightReSpd * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 21) { rightMagSize = rightMagSize * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 22) { rightAcc = rightAcc * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 23) { rightBulSpd = rightBulSpd * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 24) { rightBulSize = rightBulSize * (givenRightItems[22] * 2); }
+            if (playerItem.rightIFPStatToBuff == 25) { rightBulPir = rightBulPir * (givenRightItems[22] * 2); }
+
+            if (playerItem.rightIFPStatToDeBuff == 15) { rightCritChance = rightCritChance * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 16) { rightCritDamage = rightCritDamage * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 17) { rightWeakPointDamage = rightWeakPointDamage * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 18) { rightDmg = rightDmg * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 19) { rightAtkSpd = rightAtkSpd * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 20) { rightReSpd = rightReSpd * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 21) { rightMagSize = rightMagSize * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 22) { rightAcc = rightAcc * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 23) { rightBulSpd = rightBulSpd * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 24) { rightBulSize = rightBulSize * (0.9f / givenRightItems[22]); }
+            if (playerItem.rightIFPStatToDeBuff == 25) { rightBulPir = Mathf.FloorToInt(rightBulPir * (0.9f / givenRightItems[22])); }
+        }
 
         rightHand.SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
