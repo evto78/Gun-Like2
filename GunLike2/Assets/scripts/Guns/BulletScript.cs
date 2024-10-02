@@ -8,6 +8,8 @@ public class BulletScript : MonoBehaviour
     public ParticleSystem hitParticle;
     public GameObject mesh;
 
+    public GameObject bulletPrefab;
+
     bool collided = false;
 
     public Camera mainCamera;
@@ -25,6 +27,10 @@ public class BulletScript : MonoBehaviour
 
     public int heavySpirits;
     public int nuclearBullets;
+    public int introTrig;
+    public GameObject pairedBullet;
+    public bool isTrigLead;
+    public float myIsHeavy;
 
     public Collider myCollider;
 
@@ -46,7 +52,7 @@ public class BulletScript : MonoBehaviour
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
     }
 
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand, int givenIntroTrig)
     {
         whatHandThisComesFrom = whatHand;
 
@@ -59,8 +65,11 @@ public class BulletScript : MonoBehaviour
 
         heavySpirits = givenHeavySpirits;
         nuclearBullets = givenNuclearBul;
+        introTrig = givenIntroTrig;
+
         ricochet = givenRico;
 
+        myIsHeavy = isHeavy;
         if (isHeavy != 0f)
         {
             rb.useGravity = true;
@@ -74,6 +83,12 @@ public class BulletScript : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * givenBulSize, transform.localScale.y * givenBulSize, transform.localScale.z * givenBulSize);
 
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
+    }
+
+    public void IntroTrigSetUp(GameObject givenPairedBullet, bool isLead)
+    {
+        pairedBullet = givenPairedBullet;
+        isTrigLead = isLead;
     }
 
     private void RunOnCollide(GameObject gameObject)
@@ -179,6 +194,28 @@ public class BulletScript : MonoBehaviour
             hitParticle.Play();
             Destroy(mesh);
             collided = true;
+
+            if(introTrig > 0)
+            {
+                if (isTrigLead)
+                {
+                    if (pairedBullet.GetComponent<BulletScript>().collided)
+                    {
+                        //from there to here
+                    }
+                }
+                else
+                {
+                    if (pairedBullet.GetComponent<BulletScript>().collided)
+                    {
+                        rb.freezeRotation = false;
+                        transform.LookAt(pairedBullet.transform);
+                        rb.freezeRotation = true;
+                        GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                    }
+                }
+            }
         }
         else
         {
