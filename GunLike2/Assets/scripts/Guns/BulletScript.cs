@@ -124,7 +124,7 @@ public class BulletScript : MonoBehaviour
 
             }
 
-            if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            if ((gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
             {
                 gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }
@@ -159,7 +159,7 @@ public class BulletScript : MonoBehaviour
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
 
-            if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            if ((gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
             {
                 gameObject.GetComponentInParent<EnemyHealthManager>().Die();
             }

@@ -24,6 +24,11 @@ public class UIManager : MonoBehaviour
     public Camera mainCamera;
     public Camera overlayCamera;
 
+    private void Start()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -32,5 +37,6 @@ public class UIManager : MonoBehaviour
         rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.magSize;
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
         fpsText.text = "FPS: " + fps;
+
     }
 }

@@ -248,7 +248,7 @@ public class HitScanGunScript : MonoBehaviour
                         }
                     }
 
-                    if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
@@ -276,7 +276,7 @@ public class HitScanGunScript : MonoBehaviour
                         hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
 
-                    if (Random.Range(1, 100) <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
@@ -362,7 +362,7 @@ public class HitScanGunScript : MonoBehaviour
                         }
                     }
 
-                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
@@ -390,7 +390,7 @@ public class HitScanGunScript : MonoBehaviour
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
 
-                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
@@ -475,7 +475,7 @@ public class HitScanGunScript : MonoBehaviour
                         }
                     }
 
-                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
@@ -507,7 +507,7 @@ public class HitScanGunScript : MonoBehaviour
                         newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
                     }
 
-                    if (Random.Range(1, 100) <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
                     {
                         newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
                     }
