@@ -271,7 +271,7 @@ public class PlayerMovement : MonoBehaviour
 
         airStrafeSpeed = moveSpeed;
         sprintMoveSpeed = baseSprintMoveSpeed * ((givenLeftItems[0] + givenRightItems[0]) / 10f + 1f);
-        jumpForce = baseJumpForce * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
+        jumpForce = baseJumpForce * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f) / ((givenLeftItems[23] + givenRightItems[23]) / 10f + 1f);
         maxSlideVelocity = moveSpeed * 3f;
         slideAccelerationRate = moveSpeed * 2f;
         maxWallrunVelocity = moveSpeed * 2.5f;

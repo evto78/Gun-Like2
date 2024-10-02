@@ -49,6 +49,8 @@ public class GunManager : MonoBehaviour
     public float leftBowAct = 0f;
     public int leftHeavySpirit = 0;
     public int leftNuclearBul = 0;
+    public int leftHungryParasite = 0;
+    float leftHungryParasiteTimer = 0f;
 
     public bool leftRicochet = false;
 
@@ -72,6 +74,8 @@ public class GunManager : MonoBehaviour
     public float rightBowAct = 0f;
     public int rightHeavySpirit = 0;
     public int rightNuclearBul = 0;
+    public int rightHungryParasite = 0;
+    float rightHungryParasiteTimer = 0f;
 
     public bool rightRicochet = false;
 
@@ -128,6 +132,7 @@ public class GunManager : MonoBehaviour
         leftBowAct = givenLeftItems[16];
         leftHeavySpirit = givenLeftItems[19];
         leftNuclearBul = givenLeftItems[21];
+        leftHungryParasite = givenRightItems[24];
 
         leftRicochet = false;
 
@@ -153,6 +158,7 @@ public class GunManager : MonoBehaviour
         rightBowAct = givenRightItems[16];
         rightHeavySpirit = givenRightItems[19];
         rightNuclearBul = givenRightItems[21];
+        rightHungryParasite = givenRightItems[24];
 
         rightRicochet = false;
 
@@ -276,18 +282,38 @@ public class GunManager : MonoBehaviour
                 rightMutatedCellTimer = 500 / (rightMutatedCell / 10f + 1f);
             }
         }
+
+        if (leftHungryParasite > 0)
+        {
+            leftHungryParasiteTimer -= Time.deltaTime;
+            if (leftHungryParasiteTimer <= 0)
+            {
+                HungryParasiteReroll(leftList);
+                leftHungryParasiteTimer = 60 / (leftHungryParasite / 2f + 1f);
+            }
+        }
+
+        if (rightHungryParasite > 0)
+        {
+            rightHungryParasiteTimer -= Time.deltaTime;
+            if (rightHungryParasiteTimer <= 0)
+            {
+                HungryParasiteReroll(rightList);
+                rightHungryParasiteTimer = 60 / (rightHungryParasite / 2f + 1f);
+            }
+        }
     }
 
     void mutatedCellReroll(List<int> itemList)
     {
         int itemsToReroll = 0;
 
-        for (int i = 0; i < rarityList[5].Count; i++)
+        for (int i = 0; i < rarityList[4].Count; i++)
         {
-            if (itemList[rarityList[5][i]] > 0)
+            if (itemList[rarityList[4][i]] > 0)
             {
-                itemsToReroll = itemsToReroll + itemList[rarityList[5][i]];
-                itemList[rarityList[5][i]] = 0;
+                itemsToReroll = itemsToReroll + itemList[rarityList[4][i]];
+                itemList[rarityList[4][i]] = 0;
             }
         }
 
@@ -298,8 +324,39 @@ public class GunManager : MonoBehaviour
 
         for (int q = 0; q <= itemsToReroll; q++)
         {
-            int rand = Random.Range(0, rarityList[5].Count);
-            itemList[rarityList[5][rand]] += 1;
+            int rand = Random.Range(0, rarityList[4].Count);
+            itemList[rarityList[4][rand]] += 1;
+        }
+    }
+
+    void HungryParasiteReroll(List<int> itemList)
+    {
+        List<int> rerollOptions = new List<int>();
+
+        for (int i = 0; i < rarityList[0].Count; i++)
+        {
+            if (itemList[rarityList[0][i]] > 0)
+            {
+                rerollOptions.Add(rarityList[0][i]);
+            }
+        }
+
+        if (Random.Range(1, 100) < (100 * itemList[24] / 20f))
+        {
+            for (int i = 0; i < rarityList[1].Count; i++)
+            {
+                if (itemList[rarityList[1][i]] > 0)
+                {
+                    rerollOptions.Add(rarityList[1][i]);
+                }
+            }
+        }
+
+        if(rerollOptions.Count > 0)
+        {
+            int rerolledItem = rerollOptions[Random.Range(0, rerollOptions.Count - 1)];
+            itemList[rerolledItem]--;
+            itemList[rarityList[4][Random.Range(0, rarityList.Count - 1)]]++;
         }
     }
 }

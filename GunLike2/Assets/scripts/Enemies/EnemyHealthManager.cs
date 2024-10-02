@@ -79,7 +79,6 @@ public class EnemyHealthManager : MonoBehaviour
 
         lastDmg.text = "Last damage: " + latestDamage;
         mostDmg.text = "Most damage: " + highestDamage;
-
     }
 
     public void TakePercentDamage(float pDmgTaken)
@@ -107,9 +106,6 @@ public class EnemyHealthManager : MonoBehaviour
 
     void PopUpText(string dmgText, string textColor, Vector3 hitLocation, string source)
     {
-        Debug.Log("hit: " + hitLocation);
-        Debug.Log("me: " + transform.position);
-
         GameObject spawnedText = Instantiate(damageText, player.GetComponentInChildren<Canvas>().gameObject.transform);
 
         //spawnedText.transform.SetParent(player.GetComponentInChildren<Canvas>().gameObject.transform);

@@ -32,6 +32,7 @@ public class HealthManager : MonoBehaviour
 	float expGrowth;
 	public GameObject expGrowthExplosion;
 	int numOfBunnies;
+	int symGrowth;
 
 	public UIManager uiMan;
 	public PlayerMovement playerMvt;
@@ -47,13 +48,14 @@ public class HealthManager : MonoBehaviour
 	{
 		rarityList = givenRarityList;
 
-		healthRegen = baseHealthRegen * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f);
+		healthRegen = baseHealthRegen * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f) / ((givenLeftItems[24] + givenRightItems[24]) / 10f + 1f);
 		armor = baseArmor * ((givenLeftItems[3] + givenRightItems[3]) / 25f + 1f) / ((givenLeftItems[12] + givenRightItems[12]) / 10f + 1f);
-		maxHp = Mathf.FloorToInt(baseMaxHP * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
+		maxHp = Mathf.FloorToInt(baseMaxHP * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) * ((givenLeftItems[23] + givenRightItems[23]) / 2.5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
 		numOfBunnies = 0 + givenLeftItems[20] + givenRightItems[20];
+		symGrowth = 0 + givenLeftItems[23] + givenRightItems[23];
 
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
@@ -86,7 +88,18 @@ public class HealthManager : MonoBehaviour
 	void Update()
 	{
 		regenTimer -= Time.deltaTime;
-		if ((curHp < maxHp) && regenTimer <= 0f) { curHp += healthRegen * Time.deltaTime; }
+		if ((curHp < maxHp) && regenTimer <= 0f) 
+		{
+			if(symGrowth > 0 && curHp / maxHp > 0.8f)
+            {
+				curHp -= healthRegen * Time.deltaTime;
+			}
+            else
+            {
+				curHp += healthRegen * Time.deltaTime;
+			}
+			
+		}
 		if (curHp > maxHp) { curHp = maxHp; }
 
 		itemChecks();

@@ -58,7 +58,7 @@ public class Item : MonoBehaviour
 
             for (int i = 0; i < playerItem.rarityList.Count; i++)
             {
-                if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; Debug.Log("" + i + " : " + itemID + " " + mr.material); }
+                if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; }
             }
         }
     }

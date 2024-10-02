@@ -10314,8 +10314,8 @@ MonoBehaviour:
   - Jump Height + 10%(+10%)
   - Damage + 20%(+20%)
   - (Your Lowest Stat) X2 (X2)
-  - 
-  - 
+  - Max HP + 40%(+40%)
+  - '-'
   - 
   - 
   - 
@@ -10506,8 +10506,8 @@ MonoBehaviour:
   - Speed - 10%(-10%)
   - Magazine Size - 50%(-50%), Attack Speed - 50%(-50%)
   - (Your Highest Stat) X0.9 (X0.9)
-  - 
-  - 
+  - Jump Height - 10%(-10%)
+  - Passive Hp Regen - 10%(-10%)
   - 
   - 
   - 
@@ -10709,8 +10709,10 @@ MonoBehaviour:
   - Bullets have a 25% chance to do 15% of enimes current hp as damage. Stacking
     further increases the chance by 5%.
   - '-'
-  - 
-  - 
+  - When above 80% HP, Passive healing damages you.
+  - Every minute reroll a random common item into a random mutated item. On stacking
+    timer shortens by 50%, and adds an increasing chace to reroll a uncommon item
+    instead.
   - 
   - 
   - 
@@ -10902,9 +10904,9 @@ MonoBehaviour:
   - A heavy weight lifted.
   - Comfy cozy and pre-warmed!
   - we had to find some use for the nuclear waste.
-  - Just what you don't need
-  - 
-  - 
+  - Just what you don't need.
+  - If you're cold their cold, give them direct acsess to your bloodstream.
+  - '"I am NOT doing that..." "AND JUST LET THEM STARVE!?"'
   - 
   - 
   - 
@@ -11095,8 +11097,8 @@ MonoBehaviour:
   - Jump Height +
   - Damage ++
   - (Your Lowest Stat) X2 (X2)
-  - 
-  - 
+  - Max HP +++
+  - '-'
   - 
   - 
   - 
@@ -11287,8 +11289,8 @@ MonoBehaviour:
   - Speed -
   - Magazine Size --, Attack Speed --
   - (Your Highest Stat) X0.9 (X0.9)
-  - 
-  - 
+  - Jump Height -
+  - Passive HP Regen -
   - 
   - 
   - 
@@ -11480,8 +11482,8 @@ MonoBehaviour:
   - Gain a stacking speed and jump boost after you land.
   - Bullets have a 25% chance to do 15% of enimes current hp as damage
   - Effect locks in on pick up.
-  - 
-  - 
+  - When above 80% HP, Passive healing damages you.
+  - Every minute convert a random common item into a mutated item.
   - 
   - 
   - 
@@ -16922,6 +16924,7 @@ MonoBehaviour:
   leftBowAct: 0
   leftHeavySpirit: 0
   leftNuclearBul: 0
+  leftHungryParasite: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -16940,6 +16943,7 @@ MonoBehaviour:
   rightBowAct: 0
   rightHeavySpirit: 0
   rightNuclearBul: 0
+  rightHungryParasite: 0
   rightRicochet: 0
 --- !u!20 &3763550551577302267
 Camera:
