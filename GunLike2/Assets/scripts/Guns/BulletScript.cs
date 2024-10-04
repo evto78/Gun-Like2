@@ -44,7 +44,7 @@ public class BulletScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
-
+        collided = false;
     }
 
     private void Update()
@@ -204,8 +204,8 @@ public class BulletScript : MonoBehaviour
                         //from there to here
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
-
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce + 10, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
                     }
                 }
                 else
@@ -217,7 +217,8 @@ public class BulletScript : MonoBehaviour
                         transform.LookAt(pairedBullet.transform);
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce + 10, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
                     }
                 }
             }
@@ -269,7 +270,7 @@ public class BulletScript : MonoBehaviour
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
             transform.position = hit.point;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint") { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground") { RunOnCollide(hit.collider.gameObject); }
         }
 
         if (rb.freezeRotation)
