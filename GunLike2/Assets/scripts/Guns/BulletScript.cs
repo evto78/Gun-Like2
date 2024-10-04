@@ -202,12 +202,17 @@ public class BulletScript : MonoBehaviour
                     if (pairedBullet.GetComponent<BulletScript>().collided)
                     {
                         //from there to here
+                        GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
+                        spawnedBullet.transform.LookAt(transform);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+
                     }
                 }
                 else
                 {
                     if (pairedBullet.GetComponent<BulletScript>().collided)
                     {
+                        //from here to there
                         rb.freezeRotation = false;
                         transform.LookAt(pairedBullet.transform);
                         rb.freezeRotation = true;

@@ -51,6 +51,7 @@ public class GunManager : MonoBehaviour
     public int leftNuclearBul = 0;
     public int leftHungryParasite = 0;
     float leftHungryParasiteTimer = 0f;
+    public int leftIntroTrig = 0;
 
     public bool leftRicochet = false;
 
@@ -76,6 +77,7 @@ public class GunManager : MonoBehaviour
     public int rightNuclearBul = 0;
     public int rightHungryParasite = 0;
     float rightHungryParasiteTimer = 0f;
+    public int rightIntroTrig = 0;
 
     public bool rightRicochet = false;
 
@@ -133,6 +135,7 @@ public class GunManager : MonoBehaviour
         leftHeavySpirit = givenLeftItems[19];
         leftNuclearBul = givenLeftItems[21];
         leftHungryParasite = givenRightItems[24];
+        leftIntroTrig = givenLeftItems[25];
 
         leftRicochet = false;
 
@@ -159,6 +162,7 @@ public class GunManager : MonoBehaviour
         rightHeavySpirit = givenRightItems[19];
         rightNuclearBul = givenRightItems[21];
         rightHungryParasite = givenRightItems[24];
+        rightIntroTrig = givenRightItems[25];
 
         rightRicochet = false;
 
