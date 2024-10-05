@@ -228,6 +228,33 @@ public class GunManager : MonoBehaviour
         leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
     }
 
+    float Calc(float modifier, int amount, float baseVal)
+    {
+        float result = baseVal;
+
+        if(modifier > 0)
+        {
+            //Buff
+
+            for (int i = 0; i <= amount; i++)
+            {
+                result = result + result * (modifier / 100);
+            }
+        }
+        else if(modifier < 0)
+        {
+            //Debuff
+            modifier = modifier * -1f;
+
+            for (int i = 0; i <= amount; i++)
+            {
+                result = result - result * (modifier / 100);
+            }
+        }
+
+        return result;
+    }
+
     private void Update()
     {
         leftGunUpdate();

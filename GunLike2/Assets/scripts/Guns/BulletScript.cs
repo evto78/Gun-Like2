@@ -54,6 +54,7 @@ public class BulletScript : MonoBehaviour
 
     public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand, int givenIntroTrig)
     {
+        Debug.Log("Stats Were Set " + gameObject.name);
         whatHandThisComesFrom = whatHand;
 
         damage = givenDmg;
@@ -83,6 +84,10 @@ public class BulletScript : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * givenBulSize, transform.localScale.y * givenBulSize, transform.localScale.z * givenBulSize);
 
         GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
+        if (name == "TRIGBULLET")
+        {
+            rb.AddForce(transform.forward * bulSpd, ForceMode.VelocityChange);
+        }
     }
 
     public void IntroTrigSetUp(GameObject givenPairedBullet, bool isLead)
@@ -93,6 +98,8 @@ public class BulletScript : MonoBehaviour
 
     private void RunOnCollide(GameObject gameObject)
     {
+        Debug.Log("Collided, " + collided + " " + transform.gameObject.name);
+
         if (gameObject.tag == "Enemy")
         {
             if (!isCrit)
@@ -189,6 +196,7 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
+            Debug.Log("Final Collide " + name);
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
@@ -203,9 +211,12 @@ public class BulletScript : MonoBehaviour
                     {
                         //from there to here
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
+                        spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce + 10, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, myIsHeavy, 1, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
+
+                        spawnedBullet.GetComponent<BulletScript>().collided = false;
                     }
                 }
                 else
@@ -217,8 +228,11 @@ public class BulletScript : MonoBehaviour
                         transform.LookAt(pairedBullet.transform);
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce + 10, isAutoWeak, weakDamage, bulSpd, myIsHeavy, transform.localScale.x, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.name = "TRIGBULLET";
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, myIsHeavy, 1, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
+
+                        spawnedBullet.GetComponent<BulletScript>().collided = false;
                     }
                 }
             }
@@ -261,7 +275,7 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        //RunOnCollide(collision.gameObject);
+        if (!collided) { RunOnCollide(collision.gameObject); }
     }
 
     private void FixedUpdate()
@@ -273,9 +287,10 @@ public class BulletScript : MonoBehaviour
             if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground") { RunOnCollide(hit.collider.gameObject); }
         }
 
-        if (rb.freezeRotation)
+        if (rb.freezeRotation && rb.velocity.magnitude > Vector3.zero.magnitude)
         {
-            rb.velocity = Vector3.zero;
+            //rb.velocity = Vector3.zero;
+            //Debug.Log("Set to 0 " + name);
         }
     }
 }
