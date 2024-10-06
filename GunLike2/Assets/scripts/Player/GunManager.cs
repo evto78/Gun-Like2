@@ -108,26 +108,55 @@ public class GunManager : MonoBehaviour
 
         //status effect buffs / debuffs
 
-        if (effectList[3].x > 0f) { masterReSpd = masterReSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[4].x > 0f) { masterCritChance = masterCritChance * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[5].x > 0f) { masterWeakPointDamage = masterWeakPointDamage * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[7].x > 0f) { masterAtkSpd = masterAtkSpd * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[11].x > 0f) { masterDmg = masterDmg * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[12].x > 0f) { masterDmg = masterDmg / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[13].x > 0f) { masterAtkSpd = masterAtkSpd / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[3].x > 0f) { masterReSpd = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterReSpd); }
+        if (effectList[4].x > 0f) { masterCritChance = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterCritChance); }
+        if (effectList[5].x > 0f) { masterWeakPointDamage = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterWeakPointDamage); }
+        if (effectList[7].x > 0f) { masterAtkSpd = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterAtkSpd); }
+        if (effectList[11].x > 0f) { masterDmg = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterDmg); }
+        if (effectList[12].x > 0f) { masterDmg = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterDmg); }
+        if (effectList[13].x > 0f) { masterAtkSpd = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterAtkSpd); }
 
-        leftAtkSpd = 1f * masterAtkSpd / (givenLeftItems[21] / 2f + 1f);
-        leftReSpd = 1f * (givenLeftItems[7] / 10f + 1f) * masterReSpd;
-        leftDmg = 1f * (givenLeftItems[21] / 5f + 1f) * (givenLeftItems[4] / 10f + 1f) * (givenLeftItems[13] / 5f + 1f) * masterDmg / (givenLeftItems[12] / 10f + 1f);
-        leftMagSize = 1f * (givenLeftItems[6] / 5f + 1f) * masterMagSize / (givenLeftItems[21] / 2f + 1f);
-        leftAcc = 1f * (givenLeftItems[8] / 5f + 1f) * masterAcc;
-        leftBulSpd = 1f * (givenLeftItems[9] / 10f + 1f) * masterBulSpd / (givenLeftItems[11] / 10f + 1f) * (givenLeftItems[12] / 10f + 1f);
-        leftBulSize = 1f * (givenLeftItems[11] / 10f + 1f) * masterBulSize;
-        leftBulPir = (0 + givenLeftItems[10] + masterBulPir);
+        leftAtkSpd = 1f * masterAtkSpd;
+        leftReSpd = 1f * masterReSpd;
+        leftDmg = 1f * masterDmg;
+        leftMagSize = 1f * masterMagSize;
+        leftAcc = 1f * masterAcc;
+        leftBulSpd = 1f * masterBulSpd;
+        leftBulSize = 1f * masterBulSize;
+        leftBulPir = 0 + masterBulPir;
         leftCritChance = 1f * masterCritChance;
         leftCritDamage = 1f * masterCritDamage;
         leftWeakPointChance = 1f * masterWeakPointChance;
         leftWeakPointDamage = 1f * masterWeakPointDamage;
+
+        rightAtkSpd = 1f * masterAtkSpd;
+        rightReSpd = 1f * masterReSpd;
+        rightDmg = 1f * masterDmg;
+        rightMagSize = 1f * masterMagSize;
+        rightAcc = 1f * masterAcc;
+        rightBulSpd = 1f * masterBulSpd;
+        rightBulSize = 1f * masterBulSize;
+        rightBulPir = 0 + masterBulPir;
+        rightCritChance = 1f * masterCritChance;
+        rightCritDamage = 1f * masterCritDamage;
+        rightWeakPointChance = 1f * masterWeakPointChance;
+        rightWeakPointDamage = 1f * masterWeakPointDamage;
+
+
+        leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
+        leftReSpd = Calc(10f, givenLeftItems[7], leftReSpd);
+        leftDmg = Calc(20f, givenLeftItems[21], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[13], leftDmg);
+        leftDmg = Calc(10f, givenLeftItems[4], leftDmg);
+        leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
+        leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
+        leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
+        leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
+        leftBulSpd = Calc(10f, givenLeftItems[9], leftBulSpd);
+        leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
+        leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
+        leftBulSize = Calc(10f, givenLeftItems[11], leftBulSize);
+        leftBulPir += givenLeftItems[10];
 
         leftHeavyBul = givenLeftItems[11];
         leftMutatedCell = givenLeftItems[14];
@@ -143,18 +172,20 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
         if (givenLeftItems[26] > 0f || givenLeftItems[27] > 0f) { leftRicochet = true; }
 
-        rightAtkSpd = 1f * masterAtkSpd / (givenRightItems[21] / 2f + 1f);
-        rightReSpd = 1f * (givenRightItems[7] / 10f + 1f) * masterReSpd;
-        rightDmg = 1f * (givenRightItems[21] / 5f + 1f) * (givenRightItems[4] / 10f + 1f) * (givenRightItems[13] / 5f + 1f) * masterDmg / (givenRightItems[12] / 10f + 1f);
-        rightMagSize = 1f * (givenRightItems[6] / 5f + 1f) * masterMagSize / (givenRightItems[21] / 2f + 1f);
-        rightAcc = 1f * (givenRightItems[8] / 5f + 1f) * masterAcc;
-        rightBulSpd = 1f * (givenRightItems[9] / 10f + 1f) * masterBulSpd / (givenRightItems[11] / 10f + 1f) * (givenRightItems[12] / 10f + 1f);
-        rightBulSize = 1f * (givenRightItems[11] / 10f + 1f) * masterBulSize;
-        rightBulPir = (0 + givenRightItems[10] + masterBulPir);
-        rightCritChance = 1f * masterCritChance;
-        rightCritDamage = 1f * masterCritDamage;
-        rightWeakPointChance = 1f * masterWeakPointChance;
-        rightWeakPointDamage = 1f * masterWeakPointDamage;
+        rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
+        rightReSpd = Calc(10f, givenRightItems[7], rightReSpd);
+        rightDmg = Calc(20f, givenRightItems[21], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[13], rightDmg);
+        rightDmg = Calc(10f, givenRightItems[4], rightDmg);
+        rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
+        rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
+        rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
+        rightAcc = Calc(20f, givenRightItems[8], rightAcc);
+        rightBulSpd = Calc(10f, givenRightItems[9], rightBulSpd);
+        rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
+        rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
+        rightBulSize = Calc(10f, givenRightItems[11], rightBulSize);
+        rightBulPir += givenRightItems[10];
 
         rightHeavyBul = givenRightItems[11];
         rightMutatedCell = givenRightItems[14];
@@ -232,7 +263,9 @@ public class GunManager : MonoBehaviour
     {
         float result = baseVal;
 
-        if(modifier > 0)
+        if (amount <= 0) { return result; }
+
+        if (modifier > 0)
         {
             //Buff
 
@@ -250,6 +283,11 @@ public class GunManager : MonoBehaviour
             {
                 result = result - result * (modifier / 100);
             }
+        }
+
+        if (Mathf.FloorToInt(result) <= 0)
+        {
+            result = Mathf.CeilToInt(result);
         }
 
         return result;

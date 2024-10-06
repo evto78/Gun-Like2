@@ -263,22 +263,29 @@ public class PlayerMovement : MonoBehaviour
         baseJumpForce = 8;
         baseNumberOfJumps = 0;
 
-        moveSpeed = baseMoveSpeed / ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f);
-
-        //status effect buffs / debuffs
-        if (effectList[10].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
-
+        moveSpeed = baseMoveSpeed;
+        sprintMoveSpeed = baseSprintMoveSpeed;
+        jumpForce = baseJumpForce;
         airStrafeSpeed = moveSpeed;
-        sprintMoveSpeed = baseSprintMoveSpeed * ((givenLeftItems[0] + givenRightItems[0]) / 10f + 1f);
-        jumpForce = baseJumpForce * ((givenLeftItems[1] + givenRightItems[1]) / 10f + 1f) * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f) / ((givenLeftItems[23] + givenRightItems[23]) / 10f + 1f);
         maxSlideVelocity = moveSpeed * 3f;
         slideAccelerationRate = moveSpeed * 2f;
         maxWallrunVelocity = moveSpeed * 2.5f;
         wallrunAcceleration = moveSpeed * 2f;
         wallkickForce = new Vector2(jumpForce * 3, jumpForce);
-        numberOfJumps = baseNumberOfJumps + givenLeftItems[15] + givenRightItems[15];
-        gravityModifier = 1f / ((givenLeftItems[15] + givenRightItems[15]) / 10f + 1f);
+        numberOfJumps = baseNumberOfJumps;
+        gravityModifier = 1f;
+
+        //status effect buffs / debuffs
+        if (effectList[10].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
+        if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+
+        moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
+        sprintMoveSpeed = Calc(10f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
+        jumpForce = Calc(10f, givenLeftItems[1] + givenRightItems[1], jumpForce);
+        jumpForce = Calc(10f, givenLeftItems[20] + givenRightItems[20], jumpForce);
+        jumpForce = Calc(-10f, givenLeftItems[23] + givenRightItems[23], jumpForce);
+        numberOfJumps += givenLeftItems[15] + givenRightItems[15];
+        gravityModifier = Calc(-10f, givenLeftItems[15] + givenRightItems[15], gravityModifier);
 
         //Item Checks
         if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
@@ -340,6 +347,40 @@ public class PlayerMovement : MonoBehaviour
         if (effectList[9].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+    }
+
+    float Calc(float modifier, int amount, float baseVal)
+    {
+        float result = baseVal;
+
+        if (amount <= 0) { return result; }
+
+        if (modifier > 0)
+        {
+            //Buff
+
+            for (int i = 0; i <= amount; i++)
+            {
+                result = result + result * (modifier / 100);
+            }
+        }
+        else if (modifier < 0)
+        {
+            //Debuff
+            modifier = modifier * -1f;
+
+            for (int i = 0; i <= amount; i++)
+            {
+                result = result - result * (modifier / 100);
+            }
+        }
+
+        if (Mathf.FloorToInt(result) <= 0)
+        {
+            result = Mathf.CeilToInt(result);
+        }
+
+        return result;
     }
 
     private void FixedUpdate()

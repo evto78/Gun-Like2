@@ -48,9 +48,19 @@ public class HealthManager : MonoBehaviour
 	{
 		rarityList = givenRarityList;
 
-		healthRegen = baseHealthRegen * ((givenLeftItems[2] + givenRightItems[2]) / 10f + 1f) * ((givenLeftItems[14] + givenRightItems[14]) / 10f + 1f) / ((givenLeftItems[24] + givenRightItems[24]) / 10f + 1f);
-		armor = baseArmor * ((givenLeftItems[3] + givenRightItems[3]) / 25f + 1f) / ((givenLeftItems[12] + givenRightItems[12]) / 10f + 1f);
-		maxHp = Mathf.FloorToInt(baseMaxHP * ((givenLeftItems[12] + givenRightItems[12]) / 5f + 1f) * ((givenLeftItems[23] + givenRightItems[23]) / 2.5f + 1f) / ((givenLeftItems[13] + givenRightItems[13]) / 5f + 1f) * ((givenLeftItems[18] + givenRightItems[18]) / 5f + 1f));
+		healthRegen = baseHealthRegen;
+		armor = baseArmor;
+		maxHp = baseMaxHP;
+
+		healthRegen = Calc(10f, givenLeftItems[2] + givenRightItems[2], healthRegen);
+		healthRegen = Calc(10f, givenLeftItems[14] + givenRightItems[14], healthRegen);
+		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
+		armor = Calc(5f, givenLeftItems[3] + givenRightItems[3], armor);
+		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
@@ -84,6 +94,40 @@ public class HealthManager : MonoBehaviour
 		if (activeEffects[14].x > 0f) { healthRegen = healthRegen / (orgGum / 10f + 1f); }
 		if (activeEffects[6].x > 0f) { armor = armor * (orgGum / 10f + 1f); }
 		if (activeEffects[8].x > 0f) { healthRegen = healthRegen * (orgGum / 10f + 1f); }
+	}
+
+	float Calc(float modifier, int amount, float baseVal)
+	{
+		float result = baseVal;
+
+        if (amount <= 0) { return result; }
+
+		if (modifier > 0)
+		{
+			//Buff
+
+			for (int i = 0; i < amount; i++)
+			{
+				result = result + result * (modifier / 100);
+			}
+		}
+		else if (modifier < 0)
+		{
+			//Debuff
+			modifier = modifier * -1f;
+
+			for (int i = 0; i < amount; i++)
+			{
+				result = result - result * (modifier / 100);
+			}
+		}
+
+		if(Mathf.FloorToInt(result) <= 0)
+        {
+			result = Mathf.CeilToInt(result);
+        }
+
+		return result;
 	}
 	void Update()
 	{
