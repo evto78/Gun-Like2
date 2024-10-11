@@ -285,11 +285,6 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        if (Mathf.FloorToInt(result) <= 0)
-        {
-            result = Mathf.CeilToInt(result);
-        }
-
         return result;
     }
 

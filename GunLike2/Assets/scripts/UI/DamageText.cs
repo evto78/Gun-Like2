@@ -32,7 +32,10 @@ public class DamageText : MonoBehaviour
     {
         myCamera = Camera.main;
 
-        textDisplay.text = sentText;
+        float tempRounding;
+        float.TryParse(sentText, out tempRounding);
+        tempRounding = Mathf.CeilToInt(tempRounding);
+        textDisplay.text = ""+tempRounding;
         myRelatieWorldPos = worldPos;
         if (givenColor == "normalHit")
         {
