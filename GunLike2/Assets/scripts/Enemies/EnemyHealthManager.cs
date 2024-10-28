@@ -5,6 +5,8 @@ using TMPro;
 
 public class EnemyHealthManager : MonoBehaviour
 {
+    public GameObject item;
+    public float dropChance;
 
     public float curHp;
     public float maxHp;
@@ -88,6 +90,8 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void Die()
     {
+        OnDeath();
+
         Destroy(gameObject);
     }
 
@@ -114,5 +118,30 @@ public class EnemyHealthManager : MonoBehaviour
         spawnedText.GetComponent<DamageText>().SetText(dmgText, textColor, hitLocation, source);
 
         //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
+    }
+
+    private void OnDeath()
+    {
+        if (Random.Range(1, 100) > dropChance)
+        {
+            int rand = Random.Range(1, 100);
+            List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+
+            if (rand < 71) { SpawnItem(raritys[0][Random.Range(0, raritys[0].Count)]); }
+            if (rand < 91 && rand > 70) { SpawnItem(raritys[1][Random.Range(0, raritys[1].Count)]); }
+            if (rand == 91 || rand == 92) { SpawnItem(raritys[2][Random.Range(0, raritys[2].Count)]); }
+            if (rand == 93 || rand == 94) { SpawnItem(raritys[4][Random.Range(0, raritys[4].Count)]); }
+            if (rand == 95 || rand == 96) { SpawnItem(raritys[5][Random.Range(0, raritys[5].Count)]); }
+            if (rand == 97 || rand == 98) { SpawnItem(raritys[6][Random.Range(0, raritys[6].Count)]); }
+            if (rand == 99) { SpawnItem(raritys[3][Random.Range(0, raritys[3].Count)]); }
+            if (rand == 100) { SpawnItem(raritys[7][Random.Range(0, raritys[7].Count)]); }
+        }
+    }
+
+    private void SpawnItem(int iD)
+    {
+        GameObject spawnedItem;
+        spawnedItem = Instantiate(item, new Vector3(transform.position.x + transform.forward.x, transform.position.y + transform.forward.y + 2f, transform.position.z + transform.forward.z), transform.rotation);
+        spawnedItem.GetComponent<Item>().SetItemID(iD);
     }
 }
