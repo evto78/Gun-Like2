@@ -157,7 +157,7 @@ public class GunScript : MonoBehaviour
 
     public void AttemptShoot()
     {
-        if ((bowAct > 0) && (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)))
+        if ((bowAct > 0))
         {
             bowCharge += 1 * atkSpd * Time.deltaTime;
             if (bowCharge > bowAct + 1f) { bowCharge = bowAct + 1f; }

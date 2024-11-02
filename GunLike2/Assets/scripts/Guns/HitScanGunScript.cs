@@ -38,6 +38,7 @@ public class HitScanGunScript : MonoBehaviour
     public float bowAct;
     public int heavySpirits;
     public int nuclearBul;
+    public int introTrig;
 
     //Status
     float attackTimer = 0;

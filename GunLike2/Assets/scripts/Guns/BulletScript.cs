@@ -54,7 +54,6 @@ public class BulletScript : MonoBehaviour
 
     public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand, int givenIntroTrig)
     {
-        Debug.Log("Stats Were Set " + gameObject.name);
         whatHandThisComesFrom = whatHand;
 
         damage = givenDmg;
@@ -98,7 +97,6 @@ public class BulletScript : MonoBehaviour
 
     private void RunOnCollide(GameObject gameObject)
     {
-        Debug.Log("Collided, " + collided + " " + transform.gameObject.name);
 
         if (gameObject.tag == "Enemy")
         {
@@ -196,7 +194,6 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
-            Debug.Log("Final Collide " + name);
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
