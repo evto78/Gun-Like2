@@ -97,6 +97,7 @@ public class HitScanGunScript : MonoBehaviour
         heavySpirits = manager.leftHeavySpirit;
         nuclearBul = manager.leftNuclearBul;
         ricochet = manager.leftRicochet;
+        introTrig = manager.leftIntroTrig;
     }
 
     public void StatUpdateRight()
@@ -120,6 +121,7 @@ public class HitScanGunScript : MonoBehaviour
         heavySpirits = manager.rightHeavySpirit;
         nuclearBul = manager.rightNuclearBul;
         ricochet = manager.rightRicochet;
+        introTrig = manager.rightIntroTrig;
     }
 
     // Update is called once per frame
@@ -210,86 +212,7 @@ public class HitScanGunScript : MonoBehaviour
 
             if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, float.MaxValue, mask))
             {
-                
-
-                //TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
-
-                //StartCoroutine(SpawnTrail(trail, hit));
-
-                if (hit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", hit.point, handThisIsIn);
-
-                            hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", hit.point, handThisIsIn);
-
-                            hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-                    else
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", hit.point, handThisIsIn);
-
-                            hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.point, handThisIsIn);
-
-                            hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-
-                    if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
-                if (hit.collider.gameObject.CompareTag("EnemyWeakPoint"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.point, handThisIsIn);
-
-                        hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-                    else
-                    {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.point, handThisIsIn);
-
-                        hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-
-                    if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f*(1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
+                ApplyDamageAndImpact(hit, bowChar);
 
                 linePoints.Add(hit.point);
 
@@ -326,84 +249,7 @@ public class HitScanGunScript : MonoBehaviour
 
             if (Physics.Raycast(newRay, out newHit, float.MaxValue, mask))
             {
-                //TrailRenderer trail = Instantiate(bulletTrail, newHit.point, Quaternion.identity);
-
-                //StartCoroutine(SpawnTrail(trail, newHit));
-
-                if (newHit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.point, handThisIsIn);
-
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.point, handThisIsIn);
-
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-                    else
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.point, handThisIsIn);
-
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.point, handThisIsIn);
-
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-
-                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
-                if (newHit.collider.gameObject.CompareTag("EnemyWeakPoint"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.point, handThisIsIn);
-
-                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-                    else
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.point, handThisIsIn);
-
-                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-
-                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
+                ApplyDamageAndImpact(newHit, bowChar); 
 
                 linePoints.Add(newHit.point);
                 Debug.Log(newHit.point);
@@ -426,101 +272,14 @@ public class HitScanGunScript : MonoBehaviour
 
             Ray newRay = new Ray(givenHit.point, reflectDir);
             RaycastHit newHit;
+
             Debug.DrawRay(givenHit.point, reflectDir, Color.magenta, 10f);
             Debug.DrawLine(givenHit.point, givenHit.point + Vector3.up * 5f, Color.green, 10f);
             Debug.DrawLine(givenHit.point+reflectDir, givenHit.point+reflectDir + Vector3.up * 5f, Color.white, 10f);
             if (Physics.Raycast(newRay, out newHit, float.MaxValue, mask))
             {
-                //TrailRenderer trail = Instantiate(bulletTrail, givenHit.point, Quaternion.identity);
 
-                //StartCoroutine(SpawnTrail(trail, newHit));
-
-                if (newHit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                            {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", newHit.point, handThisIsIn);
-                            }
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                            {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", newHit.point, handThisIsIn);
-                            }
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-                    else
-                    {
-                        if (Random.Range(1, 100) < weakPointChance)
-                        {
-                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                            {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", newHit.point, handThisIsIn);
-                            }
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                        else
-                        {
-                            if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                            {
-                                newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", newHit.point, handThisIsIn);
-                            }
-                            newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                        }
-                    }
-
-                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
-                if (newHit.collider.gameObject.CompareTag("EnemyWeakPoint"))
-                {
-                    if (Random.Range(1, 100) < critChance)
-                    {
-                        if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", newHit.point, handThisIsIn);
-                        }
-                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-                    else
-                    {
-                        if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", newHit.point, handThisIsIn);
-                        }
-                        newHit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                    }
-
-                    if ((newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-                    {
-                        newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
-                    }
-
-                    if (nuclearBul > 0)
-                    {
-                        if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
-                        {
-                            newHit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                        }
-                    }
-                }
+                ApplyDamageAndImpact(newHit, bowChar);
 
                 linePoints.Add(newHit.point);
                 Debug.Log(newHit.point);
@@ -539,6 +298,85 @@ public class HitScanGunScript : MonoBehaviour
         }
 
         
+    }
+
+    //Does weak point detection, crit chance, damage application, and all items that deal with on hit.
+    void ApplyDamageAndImpact(RaycastHit hit, float bowChar)
+    {
+        if (hit.collider.gameObject.CompareTag("Enemy"))
+        {
+            if (Random.Range(1, 100) < critChance)
+            {
+                if (Random.Range(1, 100) < weakPointChance)
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage * bowChar, false, "critWeakHit", hit.point, handThisIsIn);
+
+                    hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                }
+                else
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * bowChar, false, "critHit", hit.point, handThisIsIn);
+
+                    hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                }
+            }
+            else
+            {
+                if (Random.Range(1, 100) < weakPointChance)
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage * bowChar, false, "weakHit", hit.point, handThisIsIn);
+
+                    hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                }
+                else
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * bowChar, false, "normalHit", hit.point, handThisIsIn);
+
+                    hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+                }
+            }
+
+            if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            {
+                hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+            }
+
+            if (nuclearBul > 0)
+            {
+                if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                }
+            }
+        }
+        if (hit.collider.gameObject.CompareTag("EnemyWeakPoint"))
+        {
+            if (Random.Range(1, 100) < critChance)
+            {
+                hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * critDamage * weakPointDamage, false, "critWeakHit", hit.point, handThisIsIn);
+
+                hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(dmg * weakPointDamage, false, "weakHit", hit.point, handThisIsIn);
+
+                hit.collider.gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+            }
+
+            if ((hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().curHp / hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+            {
+                hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().Die();
+            }
+
+            if (nuclearBul > 0)
+            {
+                if (Random.Range(1, 100) <= (25 + 5 * nuclearBul))
+                {
+                    hit.collider.gameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                }
+            }
+        }
     }
 
     void Reload()
