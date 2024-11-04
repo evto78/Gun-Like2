@@ -204,7 +204,7 @@ public class HitScanGunScript : MonoBehaviour
             currentBullets--;
 
             Vector3 direction = GetDirection(bowChar);
-
+            
             lr.positionCount = 1;
             lr.SetPosition(0, firePoint.position);
             linePoints.Clear();
