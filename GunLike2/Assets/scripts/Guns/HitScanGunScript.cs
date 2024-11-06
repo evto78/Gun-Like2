@@ -228,7 +228,59 @@ public class HitScanGunScript : MonoBehaviour
                 linePoints.Add(firePoint.position + direction * 9999);
                 RenderLine();
             }
+
+            if (introTrig > 0)
+            {
+                acc = acc * 1.5f;
+                direction = GetDirection(bowChar);
+
+                //lr.positionCount = 1;
+                //lr.SetPosition(0, firePoint.position);
+                //linePoints.Clear();
+                linePoints.Add(firePoint.position);
+
+                if (Physics.Raycast(firePoint.position, direction, out RaycastHit trigHit, float.MaxValue, mask))
+                {
+                    ApplyDamageAndImpact(trigHit, bowChar);
+
+                    linePoints.Add(trigHit.point);
+
+                    if (bulPir > 0) { PierceAndRico(bowChar, bulPir, ray, trigHit, direction); }
+                    else
+                    {
+                        RenderLine();
+                    }
+
+                }
+                else
+                {
+                    linePoints.Add(firePoint.position + direction * 9999);
+                    RenderLine();
+                }
+
+                //lr.positionCount = 1;
+                //lr.SetPosition(0, firePoint.position);
+                //linePoints.Clear();
+                linePoints.Add(trigHit.point);
+
+                if (Physics.Raycast(trigHit.point, hit.point - trigHit.point, out RaycastHit trigresultHit, Vector3.Distance(hit.point, trigHit.point), mask))
+                {
+                    ApplyDamageAndImpact(trigresultHit, bowChar);
+
+                    linePoints.Add(trigresultHit.point);
+
+                    RenderLine();
+
+
+                }
+                else
+                {
+                    linePoints.Add(trigHit.point + (hit.point - trigHit.point * 9999));
+                    RenderLine();
+                }
+            }
         }
+        
     }
 
     void PierceAndRico(float bowChar, int pierceLeft, Ray givenRay, RaycastHit givenHit, Vector3 givenRayDir)

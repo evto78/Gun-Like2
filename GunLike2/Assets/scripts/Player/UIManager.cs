@@ -29,12 +29,15 @@ public class UIManager : MonoBehaviour
     private GameObject pauseUI;
 
     public string state;
+    public bool isPaused;
 
     private void Start()
     {
         playUI = GameObject.Find("Play UI");
         inventoryUI = GameObject.Find("Inventory UI");
         pauseUI = GameObject.Find("Pause UI");
+
+        isPaused = false;
 
         ChangeState("play");
     }
@@ -51,6 +54,9 @@ public class UIManager : MonoBehaviour
 
     void ManageInput()
     {
+        if (isPaused) {Time.timeScale = 0f; }
+        else {Time.timeScale = 1f; }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if(state == "play") { ChangeState("pause"); }
@@ -67,9 +73,9 @@ public class UIManager : MonoBehaviour
     public void ChangeState(string newState)
     {
         state = newState;
-        if (state == "play") { playUI.SetActive(true); inventoryUI.SetActive(false); pauseUI.SetActive(false); }
-        if (state == "inventory") { playUI.SetActive(false); inventoryUI.SetActive(true); pauseUI.SetActive(false); }
-        if (state == "pause") { playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(true); }
+        if (state == "play") { playUI.SetActive(true); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
+        if (state == "inventory") { playUI.SetActive(false); inventoryUI.SetActive(true); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
+        if (state == "pause") { playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(true); isPaused = true; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
     }
 
     void UpdatePlayUI()
@@ -83,10 +89,10 @@ public class UIManager : MonoBehaviour
     }
     void UpdateInventoryUI()
     {
-
+        
     }
     void UpdatePauseUI()
     {
-
+        
     }
 }

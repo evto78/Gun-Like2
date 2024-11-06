@@ -237,10 +237,8 @@ public class GunScript : MonoBehaviour
                 }
             }
 
-            if (introTrig > 0 && currentBullets > 0)
+            if (introTrig > 0)
             {
-                currentBullets--;
-
                 GameObject spawnedBulletB = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
                 spawnedBullet.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBulletB, true);
                 spawnedBulletB.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBullet, false);
