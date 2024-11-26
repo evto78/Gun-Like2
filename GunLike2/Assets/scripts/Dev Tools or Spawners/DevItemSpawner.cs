@@ -7,6 +7,8 @@ using TMPro;
 public class DevItemSpawner : MonoBehaviour
 {
 	public GameObject item;
+	public GameObject itemPotential;
+
 	private Camera cam;
 
 	public TextMeshProUGUI consoleText;
@@ -43,7 +45,19 @@ public class DevItemSpawner : MonoBehaviour
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
 			{	
-				SpawnItem(System.Int32.Parse(numberTyped.Trim()));
+				if(numberTyped == "c") { SpawnPotential(0); }
+				if(numberTyped == "u") { SpawnPotential(1); }
+				if(numberTyped == "r") { SpawnPotential(2); }
+				if(numberTyped == "l") { SpawnPotential(3); }
+				if(numberTyped == "m") { SpawnPotential(4); }
+				if(numberTyped == "h") { SpawnPotential(5); }
+				if(numberTyped == "i") { SpawnPotential(6); }
+				if(numberTyped == "n") { SpawnPotential(7); }
+				if(numberTyped == "o") { SpawnPotential(8); }
+                else
+                {
+					SpawnItem(System.Int32.Parse(numberTyped.Trim()));
+				}
 
 				typing = false;
 			}
@@ -61,7 +75,19 @@ public class DevItemSpawner : MonoBehaviour
 	private void SpawnItem(int iD)
 	{
 		GameObject spawnedItem;
-		spawnedItem = Instantiate(item, new Vector3(transform.position.x+transform.forward.x, transform.position.y+transform.forward.y+2f, transform.position.z+transform.forward.z+5f), transform.rotation);
+		spawnedItem = Instantiate(item);
+		spawnedItem.transform.position = transform.position;
+		spawnedItem.transform.rotation = transform.rotation;
+		spawnedItem.transform.Translate(0, 2, 4, Space.Self);
 		spawnedItem.GetComponent<Item>().SetItemID(iD);
+	}
+	void SpawnPotential(int iD)
+    {
+		GameObject spawnedItem;
+		spawnedItem = Instantiate(itemPotential);
+		spawnedItem.transform.position = transform.position;
+		spawnedItem.transform.rotation = transform.rotation;
+		spawnedItem.transform.Translate(0, 2, 4, Space.Self);
+		spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
 	}
 }

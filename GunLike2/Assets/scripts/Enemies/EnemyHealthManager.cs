@@ -6,6 +6,8 @@ using TMPro;
 public class EnemyHealthManager : MonoBehaviour
 {
     public GameObject item;
+    public GameObject itemPossibility;
+
     public float dropChance;
 
     public float curHp;
@@ -20,8 +22,8 @@ public class EnemyHealthManager : MonoBehaviour
     public TextMeshProUGUI dps;
     public TextMeshProUGUI hps;
 
-    public UIManager uiManager;
-    public GameObject player;
+    UIManager uiManager;
+    GameObject player;
 
     float damagePerSecond;
     float hitsPerSecond;
@@ -122,26 +124,31 @@ public class EnemyHealthManager : MonoBehaviour
 
     private void OnDeath()
     {
-        if (Random.Range(1, 100) > dropChance)
+        if (Random.Range(1, 100) <= dropChance)
         {
             int rand = Random.Range(1, 100);
             List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
 
-            if (rand < 71) { SpawnItem(raritys[0][Random.Range(0, raritys[0].Count)]); }
-            if (rand < 91 && rand > 70) { SpawnItem(raritys[1][Random.Range(0, raritys[1].Count)]); }
-            if (rand == 91 || rand == 92) { SpawnItem(raritys[2][Random.Range(0, raritys[2].Count)]); }
-            if (rand == 93 || rand == 94) { SpawnItem(raritys[4][Random.Range(0, raritys[4].Count)]); }
-            if (rand == 95 || rand == 96) { SpawnItem(raritys[5][Random.Range(0, raritys[5].Count)]); }
-            if (rand == 97 || rand == 98) { SpawnItem(raritys[6][Random.Range(0, raritys[6].Count)]); }
-            if (rand == 99) { SpawnItem(raritys[3][Random.Range(0, raritys[3].Count)]); }
-            if (rand == 100) { SpawnItem(raritys[7][Random.Range(0, raritys[7].Count)]); }
+            if (rand < 71) { SpawnItem(0); }
+            if (rand < 91 && rand > 70) { SpawnItem(1); }
+            if (rand == 91 || rand == 92) { SpawnItem(2); }
+            if (rand == 93 || rand == 94) { SpawnItem(4); }
+            if (rand == 95 || rand == 96) { SpawnItem(5); }
+            if (rand == 97 || rand == 98) { SpawnItem(6); }
+            if (rand == 99) { SpawnItem(3); }
+            if (rand == 100) { SpawnItem(7); }
         }
     }
 
     private void SpawnItem(int iD)
     {
+        List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+
         GameObject spawnedItem;
-        spawnedItem = Instantiate(item, new Vector3(transform.position.x + transform.forward.x, transform.position.y + transform.forward.y + 2f, transform.position.z + transform.forward.z), transform.rotation);
-        spawnedItem.GetComponent<Item>().SetItemID(iD);
+        spawnedItem = Instantiate(itemPossibility);
+        spawnedItem.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 500f);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
 }
