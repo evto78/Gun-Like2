@@ -52,6 +52,7 @@ public class GunManager : MonoBehaviour
     public int leftHungryParasite = 0;
     float leftHungryParasiteTimer = 0f;
     public int leftIntroTrig = 0;
+    public int leftJam = 0;
 
     public bool leftRicochet = false;
 
@@ -78,6 +79,7 @@ public class GunManager : MonoBehaviour
     public int rightHungryParasite = 0;
     float rightHungryParasiteTimer = 0f;
     public int rightIntroTrig = 0;
+    public int rightJam = 0;
 
     public bool rightRicochet = false;
 
@@ -149,6 +151,7 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(20f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(10f, givenLeftItems[4], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
+        leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
@@ -158,6 +161,7 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(20f, givenLeftItems[25], leftAcc);
         leftAcc = Calc(20f, givenLeftItems[26], leftAcc);
         leftAcc = Calc(20f, givenLeftItems[27], leftAcc);
+        leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
         leftBulSpd = Calc(10f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
@@ -171,6 +175,7 @@ public class GunManager : MonoBehaviour
         leftNuclearBul = givenLeftItems[21];
         leftHungryParasite = givenRightItems[24];
         leftIntroTrig = givenLeftItems[25];
+        leftJam = givenLeftItems[28];
 
         leftRicochet = false;
 
@@ -184,6 +189,7 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(20f, givenRightItems[13], rightDmg);
         rightDmg = Calc(10f, givenRightItems[4], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
+        rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
@@ -193,6 +199,7 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(20f, givenRightItems[25], rightAcc);
         rightAcc = Calc(20f, givenRightItems[26], rightAcc);
         rightAcc = Calc(20f, givenRightItems[27], rightAcc);
+        rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
         rightBulSpd = Calc(10f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
@@ -206,6 +213,7 @@ public class GunManager : MonoBehaviour
         rightNuclearBul = givenRightItems[21];
         rightHungryParasite = givenRightItems[24];
         rightIntroTrig = givenRightItems[25];
+        rightJam = givenRightItems[28];
 
         rightRicochet = false;
 

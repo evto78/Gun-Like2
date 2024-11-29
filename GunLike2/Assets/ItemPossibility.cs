@@ -34,9 +34,15 @@ public class ItemPossibility : MonoBehaviour
         if(rarity == 8) { uniquePS.SetActive(true);}
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        OnInteract();
+    }
+
     public void OnInteract()
     {
         SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+        Destroy(gameObject);
     }
 
     void SpawnItem(int iD)

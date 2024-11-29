@@ -10859,11 +10859,11 @@ MonoBehaviour:
   - Accuracy + 20%(+20%)
   - 
   - 
+  - '-'
   - 
   - 
-  - 
-  - 
-  - 
+  - Jumps + 1(+1)
+  - Jumps + 1(+1)
   - 
   - 
   - 
@@ -11051,11 +11051,11 @@ MonoBehaviour:
   - Magazine Size - 20%(-20%)
   - 
   - 
+  - '-'
   - 
   - 
-  - 
-  - 
-  - 
+  - Damage - 10%(-10%)
+  - Accuracy - 10%(-10%)
   - 
   - 
   - 
@@ -11254,14 +11254,16 @@ MonoBehaviour:
     timer shortens by 50%, and adds an increasing chace to reroll a uncommon item
     instead.
   - Fire an additional bullet when you shoot. A bullet is then also fired from where
-    the first bullet hit, towards the second bullet
+    the first bullet hit, towards the second bullet.
   - 
   - 
+  - Bullets have a 10% chance to jam enemy ranged projectile users, meaning their
+    next shot will be canceled. Stacking increases odds by 5% and allows jammed to
+    stack an additonal time.
   - 
   - 
-  - 
-  - 
-  - 
+  - '-'
+  - '-'
   - 
   - 
   - 
@@ -11452,11 +11454,13 @@ MonoBehaviour:
     reasonable looking the the current prices...
   - 
   - 
+  - "the bullets are dipped in a advanced jamming substance manufactured organicly
+    from \"Fragaria \xD7 ananassa\", an excotic biological substance commanly added
+    to food products."
   - 
   - 
-  - 
-  - 
-  - 
+  - Light as a bird.
+  - Light as a bat.
   - 
   - 
   - 
@@ -11644,11 +11648,11 @@ MonoBehaviour:
   - Accuracy ++
   - 
   - 
+  - '-'
   - 
   - 
-  - 
-  - 
-  - 
+  - Jumps +
+  - Jumps +
   - 
   - 
   - 
@@ -11836,11 +11840,11 @@ MonoBehaviour:
   - Magazine Size --
   - 
   - 
+  - '-'
   - 
   - 
-  - 
-  - 
-  - 
+  - Damage -
+  - Accuracy -
   - 
   - 
   - 
@@ -12030,11 +12034,12 @@ MonoBehaviour:
     from where the bullets hit.
   - 
   - 
+  - Bullets have a chance to jam enemy ranged projectile users, meaning their next
+    shot will be canceled.
   - 
   - 
-  - 
-  - 
-  - 
+  - '-'
+  - '-'
   - 
   - 
   - 
@@ -17646,6 +17651,7 @@ MonoBehaviour:
   leftNuclearBul: 0
   leftHungryParasite: 0
   leftIntroTrig: 0
+  leftJam: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -17666,6 +17672,7 @@ MonoBehaviour:
   rightNuclearBul: 0
   rightHungryParasite: 0
   rightIntroTrig: 0
+  rightJam: 0
   rightRicochet: 0
 --- !u!20 &3763550551577302267
 Camera:

@@ -285,6 +285,8 @@ public class PlayerMovement : MonoBehaviour
         jumpForce = Calc(10f, givenLeftItems[20] + givenRightItems[20], jumpForce);
         jumpForce = Calc(-10f, givenLeftItems[23] + givenRightItems[23], jumpForce);
         numberOfJumps += givenLeftItems[15] + givenRightItems[15];
+        numberOfJumps += givenLeftItems[31] + givenRightItems[31];
+        numberOfJumps += givenLeftItems[32] + givenRightItems[32];
         gravityModifier = Calc(-10f, givenLeftItems[15] + givenRightItems[15], gravityModifier);
 
         //Item Checks
