@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
             else if(state == "inventory") { ChangeState("play"); }
             else if(state == "pause") { ChangeState("play"); }
         }
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
         {
             if (state == "play") { ChangeState("inventory"); }
             else if (state == "inventory") { ChangeState("play"); }
