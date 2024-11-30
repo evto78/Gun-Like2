@@ -96,6 +96,51 @@ public class PlayerItem : MonoBehaviour
         LookForItem();
 
         UpdateModifierList();
+
+        CheckForMerge();
+    }
+
+    void CheckForMerge()
+    {
+        //trigger-nometry
+        //LEFT
+        if(leftItems[25] > 0 && leftItems[26] > 0)
+        {
+            leftItems[26] += 1;
+            leftItems[25] -= 1;
+        }
+        if (leftItems[26] > 0 && leftItems[27] > 0)
+        {
+            leftItems[27] += 1;
+            leftItems[26] -= 1;
+        }
+        //RIGHT
+        if (rightItems[25] > 0 && rightItems[26] > 0)
+        {
+            rightItems[26] += 1;
+            rightItems[25] -= 1;
+        }
+        if (rightItems[26] > 0 && rightItems[27] > 0)
+        {
+            rightItems[27] += 1;
+            rightItems[26] -= 1;
+        }
+
+        //Angel wings / Imp wings
+        //LEFT
+        if (leftItems[31] > 0 && leftItems[32] > 0)
+        {
+            leftItems[46] += 1;
+            leftItems[31] -= 1;
+            leftItems[32] -= 1;
+        }
+        //RIGHT
+        if (rightItems[31] > 0 && rightItems[32] > 0)
+        {
+            rightItems[46] += 1;
+            rightItems[31] -= 1;
+            rightItems[32] -= 1;
+        }
     }
 
     void LookForItem()

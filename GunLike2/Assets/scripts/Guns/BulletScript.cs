@@ -31,6 +31,7 @@ public class BulletScript : MonoBehaviour
     public GameObject pairedBullet;
     public bool isTrigLead;
     public float myIsHeavy;
+    public int jam;
 
     public Collider myCollider;
 
@@ -51,8 +52,7 @@ public class BulletScript : MonoBehaviour
     {
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
     }
-
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float isHeavy, float givenBulSize, int givenHeavySpirits, int givenNuclearBul, bool givenRico, string whatHand, int givenIntroTrig)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, int givenJam)
     {
         whatHandThisComesFrom = whatHand;
 
@@ -66,6 +66,7 @@ public class BulletScript : MonoBehaviour
         heavySpirits = givenHeavySpirits;
         nuclearBullets = givenNuclearBul;
         introTrig = givenIntroTrig;
+        jam = givenJam;
 
         ricochet = givenRico;
 
@@ -107,6 +108,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -116,6 +118,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position, whatHandThisComesFrom);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -128,6 +131,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position, whatHandThisComesFrom);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -137,6 +141,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -165,6 +170,7 @@ public class BulletScript : MonoBehaviour
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -174,6 +180,7 @@ public class BulletScript : MonoBehaviour
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                    gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -210,7 +217,7 @@ public class BulletScript : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, myIsHeavy, 1, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -226,7 +233,7 @@ public class BulletScript : MonoBehaviour
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, myIsHeavy, 1, heavySpirits, nuclearBullets, ricochet, whatHandThisComesFrom, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;

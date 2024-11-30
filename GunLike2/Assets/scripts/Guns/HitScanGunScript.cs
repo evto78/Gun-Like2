@@ -39,6 +39,7 @@ public class HitScanGunScript : MonoBehaviour
     public int heavySpirits;
     public int nuclearBul;
     public int introTrig;
+    public int jam;
 
     //Status
     float attackTimer = 0;
@@ -98,6 +99,7 @@ public class HitScanGunScript : MonoBehaviour
         nuclearBul = manager.leftNuclearBul;
         ricochet = manager.leftRicochet;
         introTrig = manager.leftIntroTrig;
+        jam = manager.leftJam;
     }
 
     public void StatUpdateRight()
@@ -122,6 +124,7 @@ public class HitScanGunScript : MonoBehaviour
         nuclearBul = manager.rightNuclearBul;
         ricochet = manager.rightRicochet;
         introTrig = manager.rightIntroTrig;
+        jam = manager.rightJam;
     }
 
     // Update is called once per frame

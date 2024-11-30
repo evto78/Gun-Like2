@@ -41,6 +41,7 @@ public class GunScript : MonoBehaviour
     public int heavySpirits;
     public int nuclearBul;
     public int introTrig;
+    public int jam;
 
     //Status
     float reloadTimer = 0;
@@ -92,6 +93,7 @@ public class GunScript : MonoBehaviour
         heavySpirits = manager.leftHeavySpirit;
         nuclearBul = manager.leftNuclearBul;
         introTrig = manager.leftIntroTrig;
+        jam = manager.leftJam;
 
         ricochet = manager.leftRicochet;
     }
@@ -118,6 +120,7 @@ public class GunScript : MonoBehaviour
         heavySpirits = manager.rightHeavySpirit;
         nuclearBul = manager.rightNuclearBul;
         introTrig = manager.rightIntroTrig;
+        jam = manager.rightJam;
 
         ricochet = manager.rightRicochet;
     }
@@ -218,22 +221,22 @@ public class GunScript : MonoBehaviour
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                 }
             }
             else
             {
                 if (Random.Range(1, 100) < weakPointChance)
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                 }
                 else
                 {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                    spawnedBullet.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                 }
             }
 
@@ -252,22 +255,22 @@ public class GunScript : MonoBehaviour
                 {
                     if (Random.Range(1, 100) < weakPointChance)
                     {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                     }
                     else
                     {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                     }
                 }
                 else
                 {
                     if (Random.Range(1, 100) < weakPointChance)
                     {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                     }
                     else
                     {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, heavyBul, bulSize, heavySpirits, nuclearBul, ricochet, whatHandThisIsIn, introTrig);
+                        spawnedBulletB.GetComponent<BulletScript>().setStats(dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam);
                     }
                 }
             }

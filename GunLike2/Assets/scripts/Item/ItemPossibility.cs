@@ -19,8 +19,17 @@ public class ItemPossibility : MonoBehaviour
     public GameObject nuclearPS;
     public GameObject uniquePS;
 
+    float timer;
+
+    private void Start()
+    {
+        timer = 1f;
+    }
+
     public void SetRarity(int givenRarity)
     {
+        timer = 1f;
+
         rarity = givenRarity;
 
         if(rarity == 0) { commonPS.SetActive(true);}
@@ -34,13 +43,23 @@ public class ItemPossibility : MonoBehaviour
         if(rarity == 8) { uniquePS.SetActive(true);}
     }
 
+    private void Update()
+    {
+        timer -= Time.deltaTime;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        OnInteract();
+        if(timer <= 0f)
+        {
+            OnInteract();
+        }
     }
 
     public void OnInteract()
     {
+        Debug.Log("INTERACTED");
+
         SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
         Destroy(gameObject);
     }
