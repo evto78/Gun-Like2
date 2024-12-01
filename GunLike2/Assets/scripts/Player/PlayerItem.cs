@@ -65,6 +65,12 @@ public class PlayerItem : MonoBehaviour
 
     public GameObject itemDisplay;
 
+    public List<Vector4> leftInventory;
+    public List<Vector4> rightInventory;
+    // X = id of item
+    // Y = amount of item
+    // z = rarity of item
+
     //ItemChecks
     public int leftIFPStatToBuff;
     public int leftIFPStatToDeBuff;
@@ -183,6 +189,44 @@ public class PlayerItem : MonoBehaviour
         {
             itemDisplay.SetActive(false);
         }
+    }
+
+    public void UpdateInventory()
+    {
+        leftInventory.Clear();
+        rightInventory.Clear();
+
+        for (int i = 0; i < leftItems.Count; i++)
+        {
+            if(leftItems[i] > 0)
+            {
+                leftInventory.Add(new Vector4(i, leftItems[i], CheckRarity(i)));
+            }
+        }
+
+        for (int i = 0; i < rightItems.Count; i++)
+        {
+            if (rightItems[i] > 0)
+            {
+                rightInventory.Add(new Vector4(i, rightItems[i], CheckRarity(i)));
+            }
+        }
+
+        GetComponentInChildren<InventoryScript>().leftInventory = leftInventory;
+        GetComponentInChildren<InventoryScript>().rightInventory = rightInventory;
+    }
+    
+    int CheckRarity(int id)
+    {
+        for (int i = 0; i < rarityList.Count; i++)
+        {
+            if (rarityList[i].Contains(id))
+            {
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     void UpdateModifierList()

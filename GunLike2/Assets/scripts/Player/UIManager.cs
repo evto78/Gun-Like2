@@ -76,6 +76,12 @@ public class UIManager : MonoBehaviour
         if (state == "play") { playUI.SetActive(true); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
         if (state == "inventory") { playUI.SetActive(false); inventoryUI.SetActive(true); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
         if (state == "pause") { playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(true); isPaused = true; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
+
+        if (state == "inventory")
+        {
+            GetComponent<PlayerItem>().UpdateInventory();
+            GetComponentInChildren<InventoryScript>().ArrangeInventory();
+        }
     }
 
     void UpdatePlayUI()
