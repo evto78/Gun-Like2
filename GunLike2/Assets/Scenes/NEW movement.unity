@@ -3820,7 +3820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &423561441
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12482,7 +12482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1409826488
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13597,7 +13597,7 @@ MonoBehaviour:
   - 
   - Jumps + 1(+1)
   - Jumps + 1(+1)
-  - 
+  - '-'
   - 
   - 
   - 
@@ -13789,7 +13789,7 @@ MonoBehaviour:
   - 
   - Damage - 10%(-10%)
   - Accuracy - 10%(-10%)
-  - 
+  - '-'
   - 
   - 
   - 
@@ -13997,7 +13997,8 @@ MonoBehaviour:
   - 
   - '-'
   - '-'
-  - 
+  - Periodicly load bullets directly into your magazine. Stacks decrease time between
+    loading.
   - 
   - 
   - 
@@ -14194,7 +14195,8 @@ MonoBehaviour:
   - 
   - Light as a bird.
   - Light as a bat.
-  - 
+  - A vital component for large scale factories, also happens to be usefull for autoloading
+    firearms!
   - 
   - 
   - 
@@ -14386,7 +14388,7 @@ MonoBehaviour:
   - 
   - Jumps +
   - Jumps +
-  - 
+  - '-'
   - 
   - 
   - 
@@ -14578,7 +14580,7 @@ MonoBehaviour:
   - 
   - Damage -
   - Accuracy -
-  - 
+  - '-'
   - 
   - 
   - 
@@ -14773,7 +14775,7 @@ MonoBehaviour:
   - 
   - '-'
   - '-'
-  - 
+  - Periodicly load bullets directly into your magazine.
   - 
   - 
   - 
@@ -21389,6 +21391,7 @@ MonoBehaviour:
   leftHungryParasite: 0
   leftIntroTrig: 0
   leftJam: 0
+  leftFastInserter: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -21410,6 +21413,7 @@ MonoBehaviour:
   rightHungryParasite: 0
   rightIntroTrig: 0
   rightJam: 0
+  rightFastInserter: 0
   rightRicochet: 0
 --- !u!20 &3763550551577302267
 Camera:

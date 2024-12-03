@@ -277,4 +277,9 @@ public class GunScript : MonoBehaviour
 
         }
     }
+
+    public void addBullet()
+    {
+        currentBullets += 1;
+    }
 }

@@ -53,6 +53,8 @@ public class GunManager : MonoBehaviour
     float leftHungryParasiteTimer = 0f;
     public int leftIntroTrig = 0;
     public int leftJam = 0;
+    public float leftFastInserter = 0;
+    float leftFastInserterTimer = 0f;
 
     public bool leftRicochet = false;
 
@@ -80,6 +82,8 @@ public class GunManager : MonoBehaviour
     float rightHungryParasiteTimer = 0f;
     public int rightIntroTrig = 0;
     public int rightJam = 0;
+    public int rightFastInserter = 0;
+    float rightFastInserterTimer = 0f;
 
     public bool rightRicochet = false;
 
@@ -176,6 +180,7 @@ public class GunManager : MonoBehaviour
         leftHungryParasite = givenRightItems[24];
         leftIntroTrig = givenLeftItems[25];
         leftJam = givenLeftItems[28];
+        leftFastInserter = givenLeftItems[33];
 
         leftRicochet = false;
 
@@ -185,6 +190,7 @@ public class GunManager : MonoBehaviour
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightReSpd = Calc(10f, givenRightItems[7], rightReSpd);
+        rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
         rightDmg = Calc(20f, givenRightItems[21], rightDmg);
         rightDmg = Calc(20f, givenRightItems[13], rightDmg);
         rightDmg = Calc(10f, givenRightItems[4], rightDmg);
@@ -214,6 +220,8 @@ public class GunManager : MonoBehaviour
         rightHungryParasite = givenRightItems[24];
         rightIntroTrig = givenRightItems[25];
         rightJam = givenRightItems[28];
+        rightFastInserter = givenRightItems[33];
+        rightRicochet = false;
 
         rightRicochet = false;
 
@@ -384,6 +392,26 @@ public class GunManager : MonoBehaviour
             {
                 HungryParasiteReroll(rightList);
                 rightHungryParasiteTimer = 60 / (rightHungryParasite / 2f + 1f);
+            }
+        }
+
+        // BUG: FIND A BETTER WAY for fast inserter to be usable with all guns instead of specifically revolver and pistol
+        if (leftFastInserter > 0)
+        {
+            leftFastInserterTimer -= Time.deltaTime;
+            if (leftFastInserterTimer <= 0 && GetComponentInChildren<HitScanGunScript>().currentBullets < GetComponentInChildren<HitScanGunScript>().magSize)
+            {
+                leftHand.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                leftFastInserterTimer = 1 / (0.2f * leftFastInserter);
+            }
+        }
+        if (rightFastInserter > 0)
+        {
+            rightFastInserterTimer -= Time.deltaTime;
+            if (rightFastInserterTimer <= 0 && GetComponentInChildren<GunScript>().currentBullets < GetComponentInChildren<GunScript>().magSize)
+            {
+                rightHand.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                rightFastInserterTimer = 1 / (0.2f * rightFastInserter);
             }
         }
     }

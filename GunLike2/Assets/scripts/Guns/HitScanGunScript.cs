@@ -495,4 +495,9 @@ public class HitScanGunScript : MonoBehaviour
             lr.SetPosition(i, linePoints[i]);
         }
     }
+
+    public void addBullet()
+    {
+        currentBullets += 1;
+    }
 }
