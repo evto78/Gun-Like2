@@ -6,26 +6,30 @@ using Infohazard.HyperNav;
 public class flyingEnemyNavController : MonoBehaviour
 {
     [SerializeField] private NavAgent agent;
-    [SerializeField] private Transform target;
+    [SerializeField] public Transform target;
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
+    [SerializeField] private float brakeRange;
+    [SerializeField] private int frameSkips;
+    int frameSkipTimer;
 
-    GameObject player;
+    public GameObject player;
     Rigidbody rb;
 
-    private void Awake()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        player = GameObject.Find("Player");
+        //player = GameObject.Find("Player");
         agent = gameObject.GetComponent<NavAgent>();
     }
-
+    
     private void Update()
     {
         Vector3 vel = Calc();
 
         Move(vel);
         Turn(vel);
+        frameSkipTimer = 0;
     }
 
     void Move(Vector3 vel)
@@ -41,7 +45,7 @@ public class flyingEnemyNavController : MonoBehaviour
 
     void Turn(Vector3 vel)
     {
-        if (vel.sqrMagnitude > 0.01)
+        if (rb.velocity.sqrMagnitude > 0.01)
         {
             transform.rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
         }
@@ -49,9 +53,18 @@ public class flyingEnemyNavController : MonoBehaviour
 
     Vector3 Calc()
     {
+        if (target == null) { target = player.transform; }
         target = player.transform;
 
         agent.Destination = target.position;
+
+        Vector3 normTarVel = Vector3.Normalize(agent.DesiredVelocity);
+        Vector3 normCurVel = Vector3.Normalize(rb.velocity);
+
+        if (Vector3.Distance(normCurVel, normTarVel) > brakeRange)
+        {
+            //rb.velocity = rb.velocity / 2f;
+        }
 
         return agent.DesiredVelocity;
     }
