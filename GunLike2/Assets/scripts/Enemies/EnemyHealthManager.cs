@@ -16,23 +16,9 @@ public class EnemyHealthManager : MonoBehaviour
     public float armor;
 
     public GameObject damageText;
+    public float latestDamage;
 
-    public TextMeshProUGUI lastDmg;
-    public TextMeshProUGUI mostDmg;
-    public TextMeshProUGUI dps;
-    public TextMeshProUGUI hps;
-
-    UIManager uiManager;
     GameObject player;
-
-    float damagePerSecond;
-    float hitsPerSecond;
-    float hitcounter;
-    float damagecounter;
-    float highestDamage;
-    float latestDamage;
-
-    float timer;
 
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
@@ -47,19 +33,17 @@ public class EnemyHealthManager : MonoBehaviour
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
-            uiManager = player.GetComponent<UIManager>();
         }
     }
 
     void Update()
     {
-        CalculateStats();
         ManageEffects();
     }
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
-        hitcounter++;
+        gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
 
         if (ignoreArmor)
         {
@@ -81,15 +65,6 @@ public class EnemyHealthManager : MonoBehaviour
         }
 
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
-
-        if (latestDamage > highestDamage)
-        {
-            highestDamage = latestDamage;
-        }
-        damagecounter += latestDamage;
-
-        lastDmg.text = "Last damage: " + latestDamage;
-        mostDmg.text = "Most damage: " + highestDamage;
     }
 
     public void TakePercentDamage(float pDmgTaken)
@@ -112,19 +87,6 @@ public class EnemyHealthManager : MonoBehaviour
         OnDeath();
 
         Destroy(gameObject);
-    }
-
-    void CalculateStats()
-    {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
-        {
-            timer = 1f;
-            dps.text = "DPS: " + damagecounter;
-            hps.text = "HPS: " + hitcounter;
-            damagecounter = 0;
-            hitcounter = 0;
-        }
     }
 
     public void GiveEffect(string effectGiven, float stacksToAdd)
