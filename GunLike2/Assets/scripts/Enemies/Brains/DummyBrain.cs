@@ -32,10 +32,7 @@ public class DummyBrain : MonoBehaviour
     public void TookDmg()
     {
         hitcounter++;
-    }
 
-    void CalculateStats()
-    {
         latestDamage = healthMan.latestDamage;
 
         if (latestDamage > highestDamage)
@@ -46,7 +43,10 @@ public class DummyBrain : MonoBehaviour
 
         lastDmg.text = "Last damage: " + latestDamage;
         mostDmg.text = "Most damage: " + highestDamage;
+    }
 
+    void CalculateStats()
+    {
         timer -= Time.deltaTime;
         if (timer <= 0)
         {
