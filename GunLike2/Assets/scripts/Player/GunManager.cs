@@ -8,7 +8,7 @@ public class GunManager : MonoBehaviour
     List<int> leftList = new List<int>();
     List<int> rightList = new List<int>();
 
-    HealthManager healthMan;
+    public HealthManager healthMan;
     public PlayerItem playerItem;
     List<Vector4> effectList;
 
@@ -53,6 +53,7 @@ public class GunManager : MonoBehaviour
     float leftHungryParasiteTimer = 0f;
     public int leftIntroTrig = 0;
     public int leftJam = 0;
+    public int leftBeltFed = 0;
     public float leftFastInserter = 0;
     float leftFastInserterTimer = 0f;
 
@@ -82,6 +83,7 @@ public class GunManager : MonoBehaviour
     float rightHungryParasiteTimer = 0f;
     public int rightIntroTrig = 0;
     public int rightJam = 0;
+    public int rightBeltFed = 0;
     public int rightFastInserter = 0;
     float rightFastInserterTimer = 0f;
 
@@ -180,6 +182,7 @@ public class GunManager : MonoBehaviour
         leftHungryParasite = givenRightItems[24];
         leftIntroTrig = givenLeftItems[25];
         leftJam = givenLeftItems[28];
+        leftBeltFed = givenLeftItems[29];
         leftFastInserter = givenLeftItems[33];
 
         leftRicochet = false;
@@ -187,6 +190,7 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
         if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
         if (givenLeftItems[26] > 0f || givenLeftItems[27] > 0f) { leftRicochet = true; }
+        if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightReSpd = Calc(10f, givenRightItems[7], rightReSpd);
@@ -220,14 +224,15 @@ public class GunManager : MonoBehaviour
         rightHungryParasite = givenRightItems[24];
         rightIntroTrig = givenRightItems[25];
         rightJam = givenRightItems[28];
+        rightBeltFed = givenRightItems[29];
         rightFastInserter = givenRightItems[33];
-        rightRicochet = false;
 
         rightRicochet = false;
 
         if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
         if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
         if (givenRightItems[26] > 0f || givenRightItems[27] > 0f) { rightRicochet = true; }
+        if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
 
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)

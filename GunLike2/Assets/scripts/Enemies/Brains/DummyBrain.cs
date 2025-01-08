@@ -43,6 +43,8 @@ public class DummyBrain : MonoBehaviour
 
         lastDmg.text = "Last damage: " + latestDamage;
         mostDmg.text = "Most damage: " + highestDamage;
+
+        CalculateStats();
     }
 
     void CalculateStats()

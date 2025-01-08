@@ -199,6 +199,11 @@ public class GunScript : MonoBehaviour
         reloadTimer = 1;
         shooting = false;
         attackTimer = 0;
+
+        if(manager.leftBeltFed + manager.rightBeltFed > 0)
+        {
+            manager.healthMan.GiveEffect("pants falling", 50);
+        }
     }
 
     public void Shoot(float bowChar)

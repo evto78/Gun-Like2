@@ -111992,7 +111992,7 @@ MonoBehaviour:
   - 
   - 
   - '-'
-  - 
+  - Magazine Size X3 (X1.2)
   - 
   - Jumps + 1(+1)
   - Jumps + 1(+1)
@@ -112184,7 +112184,7 @@ MonoBehaviour:
   - 
   - 
   - '-'
-  - 
+  - Reload Speed X0.5, Speed X0.5
   - 
   - Damage - 10%(-10%)
   - Accuracy - 10%(-10%)
@@ -112392,7 +112392,8 @@ MonoBehaviour:
   - Bullets have a 10% chance to jam enemy ranged projectile users, meaning their
     next shot will be canceled. Stacking increases odds by 5% and allows jammed to
     stack an additonal time.
-  - 
+  - Your pants have fallen. Reloading has you pull up your pants, giving you a deteriorating
+    bonus to your speed for 5 seconds. Stacking adds 5 more seconds.
   - 
   - '-'
   - '-'
@@ -112590,7 +112591,7 @@ MonoBehaviour:
   - "the bullets are dipped in a advanced jamming substance manufactured organicly
     from \"Fragaria \xD7 ananassa\", an excotic biological substance commanly added
     to food products."
-  - 
+  - Ammo storage is what it's all a-belt.
   - 
   - Light as a bird.
   - Light as a bat.
@@ -112783,7 +112784,7 @@ MonoBehaviour:
   - 
   - 
   - '-'
-  - 
+  - Magazine Size X3
   - 
   - Jumps +
   - Jumps +
@@ -112975,7 +112976,7 @@ MonoBehaviour:
   - 
   - 
   - '-'
-  - 
+  - Reload Speed X0.5, Speed X0.5
   - 
   - Damage -
   - Accuracy -
@@ -113170,7 +113171,8 @@ MonoBehaviour:
   - 
   - Bullets have a chance to jam enemy ranged projectile users, meaning their next
     shot will be canceled.
-  - 
+  - Your pants have fallen. Reloading allows you to pull them back up, temporarily
+    increaseing your speed.
   - 
   - '-'
   - '-'
@@ -160660,7 +160662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 8454422321619974354}
-  sensitivity: 600
+  sensitivity: 300
   cameraTransform: {fileID: 5212142222549525572}
   camera: {fileID: 3763550551577302267}
   stateTransitionTime: 0.1
@@ -161005,6 +161007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f55f23b971af6a4285d88a2d4faa6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthMan: {fileID: 0}
   playerItem: {fileID: 164787358461852049}
   leftHand: {fileID: 4480212791086179287}
   rightHand: {fileID: 5781650994765615851}
@@ -161040,6 +161043,7 @@ MonoBehaviour:
   leftHungryParasite: 0
   leftIntroTrig: 0
   leftJam: 0
+  leftBeltFed: 0
   leftFastInserter: 0
   leftRicochet: 0
   rightAtkSpd: 1
@@ -161062,6 +161066,7 @@ MonoBehaviour:
   rightHungryParasite: 0
   rightIntroTrig: 0
   rightJam: 0
+  rightBeltFed: 0
   rightFastInserter: 0
   rightRicochet: 0
 --- !u!20 &3763550551577302267
@@ -161727,6 +161732,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeEffects:
+  - {x: 0, y: 0, z: 0, w: 0}
+  - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}

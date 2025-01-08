@@ -237,6 +237,7 @@ public class PlayerMovement : MonoBehaviour
     bool planeMode = false;
     float planeSpeed = 0.0f;
     bool hasBunny = false;
+    int beltFed = 0;
 
     public float baseMoveSpeed;
     public float baseSprintMoveSpeed;
@@ -318,6 +319,9 @@ public class PlayerMovement : MonoBehaviour
             hasBunny = false;
         }
 
+        beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
+        if(beltFed > 0) { moveSpeed = moveSpeed / 2f; sprintMoveSpeed = sprintMoveSpeed / 2f; }
+
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
         {
@@ -349,6 +353,7 @@ public class PlayerMovement : MonoBehaviour
         if (effectList[9].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+        if (effectList[17].x > 0f) { moveSpeed = moveSpeed + (moveSpeed * (effectList[17].x / 50)); sprintMoveSpeed = sprintMoveSpeed + (sprintMoveSpeed * (effectList[17].x / 50)); }
     }
 
     float Calc(float modifier, int amount, float baseVal)

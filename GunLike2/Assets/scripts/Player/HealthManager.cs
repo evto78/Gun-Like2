@@ -33,6 +33,8 @@ public class HealthManager : MonoBehaviour
 	public GameObject expGrowthExplosion;
 	int numOfBunnies;
 	int symGrowth;
+	int beltFed;
+	int activeReactor;
 
 	public UIManager uiMan;
 	public PlayerMovement playerMvt;
@@ -66,6 +68,10 @@ public class HealthManager : MonoBehaviour
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
 		numOfBunnies = 0 + givenLeftItems[20] + givenRightItems[20];
 		symGrowth = 0 + givenLeftItems[23] + givenRightItems[23];
+		beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
+		activeReactor = 0 + givenLeftItems[30] + givenRightItems[30];
+
+		if(activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
@@ -183,6 +189,32 @@ public class HealthManager : MonoBehaviour
 				}
 			}
 		}
+
+		if(activeReactor > 0)
+        {
+			if(activeEffects[18].x > 0f)
+            {
+				if (curHp / maxHp > 0.33f)
+				{
+					curHp += (maxHp / 100) * Time.deltaTime * 2f;
+				}
+				else
+				{
+					curHp += ((maxHp / 100) * 3f) * Time.deltaTime * 2f;
+				}
+			}
+            else
+            {
+				if (curHp / maxHp > 0.33f)
+				{
+					curHp -= (maxHp / 100) * Time.deltaTime;
+				}
+				else
+				{
+					curHp -= ((maxHp / 100) * 3f) * Time.deltaTime;
+				}
+			}
+        }
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
@@ -237,7 +269,11 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "organic pink meat") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, 20f, 20f, -1f); } // regen debuff
 		if (effectGiven == "organic gray meat") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, 20f, 20f, -1f); } // sprint speed debuff
 
-		if (effectGiven == "bunny hop buff") { activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, 1f, 1f, 1f); }
+		if (effectGiven == "bunny hop buff") { activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, 1f, 1f, 1f); } // irradiated bunny slippers buff
+
+		if (effectGiven == "pants falling") { activeEffects[17] = new Vector4(stacksToAdd, 0.1f * beltFed, 0.1f * beltFed, 1f); } // belt fed magazine buff
+
+		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, 3f + activeReactor * 10f, 3f + activeReactor * 10f, 1f); } // active reactor buff
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
@@ -267,7 +303,7 @@ public class HealthManager : MonoBehaviour
 				else
 				{
 					q.x -= 1f;
-					if (q.x! < 1f) { q.z = q.y; }
+					if (q.x > 0f) { q.z = q.y; }
 
 					//run effects that happen when timer ends
 					if (i == 0 || i == 1 || i == 2) { TakeDamage(q.x + 1f, false); }
@@ -305,6 +341,8 @@ public class HealthManager : MonoBehaviour
 				if (i == 14) { strToAdd = "organic pink meat"; }
 				if (i == 15) { strToAdd = "organic gray meat"; }
 				if (i == 16) { strToAdd = "bunny hop"; }
+				if (i == 17) { strToAdd = "pants falling"; }
+				if (i == 18) { strToAdd = "active reactor"; }
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
 		}

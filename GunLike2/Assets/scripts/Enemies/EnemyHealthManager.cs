@@ -43,8 +43,6 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
-        gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
-
         if (ignoreArmor)
         {
             curHp -= dmgTaken;
@@ -65,6 +63,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
 
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
+        gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
     }
 
     public void TakePercentDamage(float pDmgTaken)

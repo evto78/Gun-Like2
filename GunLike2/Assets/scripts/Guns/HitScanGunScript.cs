@@ -443,6 +443,11 @@ public class HitScanGunScript : MonoBehaviour
         shooting = false;
         attackTimer = 0;
         //currentBullets = Mathf.RoundToInt(magSize);
+
+        if (manager.leftBeltFed + manager.rightBeltFed > 0)
+        {
+            manager.healthMan.GiveEffect("pants falling", 50);
+        }
     }
 
     private Vector3 GetDirection(float bowChar)

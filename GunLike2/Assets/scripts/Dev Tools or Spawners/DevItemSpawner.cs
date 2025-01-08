@@ -54,6 +54,7 @@ public class DevItemSpawner : MonoBehaviour
 				if(numberTyped == "i") { SpawnPotential(6); }
 				if(numberTyped == "n") { SpawnPotential(7); }
 				if(numberTyped == "o") { SpawnPotential(8); }
+				if(numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
                 else
                 {
 					SpawnItem(System.Int32.Parse(numberTyped.Trim()));
