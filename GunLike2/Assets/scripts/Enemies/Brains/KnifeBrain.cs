@@ -8,6 +8,7 @@ public class KnifeBrain : MonoBehaviour
     public GameObject player;
     
     MeshRenderer mr;
+    public ParticleSystem shimmerEffect;
 
     public Material leadMat;
     public Material followMat;
@@ -15,12 +16,19 @@ public class KnifeBrain : MonoBehaviour
     public bool isLead;
     public int spawnAmount;
     public int spawnVariance;
+    public int strikeRange;
+    public float dmg;
+    bool preparing;
+    float strikeTimer;
+    bool striking;
+    float cooldownTimer;
     public GameObject knifePrefab;
 
     EnemyHealthManager healthMan;
 
     void Start()
     {
+        preparing = false;
         healthMan = GetComponent<EnemyHealthManager>();
         player = GameObject.Find("Player");
         mr = transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
@@ -40,7 +48,6 @@ public class KnifeBrain : MonoBehaviour
 
         }
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -48,6 +55,69 @@ public class KnifeBrain : MonoBehaviour
         {
             navController.player = player;
         }
+
+        if (Vector3.Distance(transform.position, player.transform.position) < strikeRange && !preparing && !striking && cooldownTimer <= 0f)
+        {
+            preparing = true;
+            navController.Pause();
+            gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity / 10f;
+            transform.LookAt(player.transform.position);
+
+            gameObject.GetComponent<Rigidbody>().freezeRotation = true;
+
+            shimmerEffect.Play();
+
+            strikeTimer = 0.5f;
+        }
+
+        if (preparing)
+        {
+            transform.LookAt(player.transform.position);
+
+            strikeTimer -= Time.deltaTime;
+            gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity / 1.1f;
+
+            if(strikeTimer <= 0f) { striking = true; preparing = false; strikeTimer = 2f; }
+        }
+
+        if (striking)
+        {
+            strikeTimer -= Time.deltaTime;
+            
+            gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse);
+
+            if(strikeTimer <= 0f)
+            {
+                StopStrike();
+            }
+        }
+
+        cooldownTimer -= Time.deltaTime;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false);
+
+            gameObject.GetComponent<Rigidbody>().freezeRotation = false;
+            gameObject.GetComponent<Rigidbody>().AddForce((transform.position - player.transform.position) * 5f, ForceMode.Impulse);
+            StopStrike();
+        }
+        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Untagged")
+        {
+            StopStrike();
+        }
+    }
+
+    void StopStrike()
+    {
+        navController.player = player;
+
+        cooldownTimer = 3f;
+        striking = false;
+        navController.Unpause();
+        gameObject.GetComponent<Rigidbody>().freezeRotation = false;
     }
 
     void SpawnFollowers(int amount)

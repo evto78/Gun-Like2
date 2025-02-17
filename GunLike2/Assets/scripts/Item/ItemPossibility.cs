@@ -58,8 +58,6 @@ public class ItemPossibility : MonoBehaviour
 
     public void OnInteract()
     {
-        Debug.Log("INTERACTED");
-
         SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
         Destroy(gameObject);
     }

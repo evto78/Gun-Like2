@@ -35,6 +35,12 @@ public class Item : MonoBehaviour
 
     public void SetItemID(int givenID)
     {
+        Debug.Log("spawning item: " + givenID);
+        if (givenID > spriteList.Count)
+        {
+            Debug.Log("Destroying");
+            Destroy(gameObject);
+        }
         itemID = givenID;
         sr.sprite = spriteList[givenID];
     }

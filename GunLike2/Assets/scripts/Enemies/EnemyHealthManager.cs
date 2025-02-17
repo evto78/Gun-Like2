@@ -39,6 +39,8 @@ public class EnemyHealthManager : MonoBehaviour
     void Update()
     {
         ManageEffects();
+
+        
     }
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
@@ -64,11 +66,15 @@ public class EnemyHealthManager : MonoBehaviour
 
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
         gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
+
+        if (curHp <= maxHp) { Die(); }
     }
 
     public void TakePercentDamage(float pDmgTaken)
     {
         TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position, "self");
+
+        if (curHp <= maxHp) { Die(); }
     }
 
     public void OnHitEffect(int jam)
