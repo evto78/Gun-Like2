@@ -32,6 +32,8 @@ Transform:
   m_Children:
   - {fileID: 3690275883139719808}
   - {fileID: 5634028446175632779}
+  - {fileID: 1668580465483370966}
+  - {fileID: 343102015500330312}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4928453764235846958
@@ -50,6 +52,7 @@ MonoBehaviour:
   doors:
   - {fileID: 3291078620295093427}
   isMainPath: 0
+  interCollider: {fileID: 2454358933294774017}
 --- !u!1 &1553371455682037404
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +186,7 @@ Transform:
   m_GameObject: {fileID: 3291078620295093427}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 5}
+  m_LocalPosition: {x: 0, y: 0.1, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -260,3 +263,112 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7666218605985980478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1668580465483370966}
+  - component: {fileID: 2454358933294774017}
+  m_Layer: 0
+  m_Name: RoomInterCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1668580465483370966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7666218605985980478}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5151817622853682338}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2454358933294774017
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7666218605985980478}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 103.30075, y: 6.7225285, z: 48.424988}
+  m_Center: {x: -0.42165375, y: 2.4836073, z: -19.114803}
+--- !u!1 &8309391253482375234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 343102015500330312}
+  - component: {fileID: 8007407840295112383}
+  m_Layer: 0
+  m_Name: Room Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &343102015500330312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8309391253482375234}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5151817622853682338}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8007407840295112383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8309391253482375234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e0b9786b188ff4fbcf9a7be56100f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startRoom: {fileID: 1074921731352622473}
+  endRoom: {fileID: 1074921731352622473, guid: baf4caba5aaec194f927ea20018df484, type: 3}
+  rooms:
+  - {fileID: 1074921731352622473, guid: 5ad863fe92c049b4eb86e4520828e9f8, type: 3}
+  - {fileID: 3349727704424509622, guid: 3e49e78f7b5c0de4f90bfbd6ba2f40f7, type: 3}
+  - {fileID: 575075975690857855, guid: efd1ee2b796722c4cba7e3d467a5b535, type: 3}
+  - {fileID: 575075975690857855, guid: eee82bed8c203844fb673ca34a7b924e, type: 3}
+  openRooms:
+  - {fileID: 1074921731352622473, guid: 49c54835d1185ce4b9af0a1bf605e026, type: 3}
+  mainRooms: 8
+  sideRooms: 5
+  maxAttempts: 10000

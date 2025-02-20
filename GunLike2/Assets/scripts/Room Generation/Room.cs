@@ -7,4 +7,5 @@ public class Room : MonoBehaviour
     public int roomID;
     public List<GameObject> doors;
     public bool isMainPath;
+    public BoxCollider interCollider;
 }
