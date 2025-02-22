@@ -155,7 +155,7 @@ public class PlayerItem : MonoBehaviour
         Ray ray = new Ray(camPos, playerCamera.forward);
         RaycastHit hit;
 
-        Debug.DrawLine(camPos, camPos + playerCamera.forward * 7f);
+        //Debug.DrawLine(camPos, camPos + playerCamera.forward * 7f);
         if (Physics.Raycast(ray, out hit, 7f))
         {
             if(hit.collider.gameObject.tag == "item")
@@ -170,19 +170,26 @@ public class PlayerItem : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                    Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
+                    //Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
                     Destroy(hit.collider.gameObject);
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                    Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
+                    //Debug.Log("Item of Item ID " + hit.collider.gameObject.GetComponentInParent<Item>().WhatItem() + " added to inventory");
                     Destroy(hit.collider.gameObject);
                 }
             }
             else
             {
                 itemDisplay.SetActive(false);
+            }
+            if(hit.collider.gameObject.tag == "Interactable")
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    hit.transform.gameObject.GetComponent<InteractableButton>().Interact();
+                }
             }
         }
         else

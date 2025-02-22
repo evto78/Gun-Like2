@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RoomGen : MonoBehaviour
 {
+    List<GameObject> oldGenRooms = new List<GameObject>();
+
     public GameObject startRoom;
     public GameObject endRoom;
     GameObject finalEndRoom;
@@ -77,6 +79,12 @@ public class RoomGen : MonoBehaviour
 
         if(attemptsMade >= maxAttempts) { Debug.Log("Could not find a layout in " + attemptsMade + " Attempts."); }
         else { Debug.Log("Done after " + attemptsMade + " Attempts."); }
+
+        foreach (GameObject genRoom in oldGenRooms)
+        {
+            Destroy(genRoom);
+        }
+        oldGenRooms.Clear();
 
         done = true;
     }
@@ -298,11 +306,13 @@ public class RoomGen : MonoBehaviour
         Destroy(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.GetComponent<Room>().doors.Remove(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.transform.parent = null;
+        generatedRooms.Add(spawnedRoom);
 
         //spawn next START room
         //spawn the room
         GameObject spawnedStartRoom = Instantiate(startRoom);
         spawnedStartRoom.name = "START";
+        spawnedStartRoom.GetComponentInChildren<RoomGen>().oldGenRooms = generatedRooms;
         spawnedStartRoom.transform.parent = spawnedRoom.GetComponent<Room>().doors[0].transform;
         spawnedStartRoom.transform.localPosition = Vector3.zero;
         spawnedStartRoom.transform.localEulerAngles = Vector3.zero;
