@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class CheckForActivate : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Material on;
+    public Material off;
+    
+    public void Activate()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        gameObject.GetComponent<MeshRenderer>().material = on;
     }
 }
