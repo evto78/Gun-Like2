@@ -5,14 +5,17 @@ using UnityEngine;
 public class RoomGen : MonoBehaviour
 {
     List<GameObject> oldGenRooms = new List<GameObject>();
+    List<GameObject> oldGenDoors = new List<GameObject>();
 
     public GameObject startRoom;
     public GameObject endRoom;
+    public GameObject connectiveDoor;
     GameObject finalEndRoom;
     public List<GameObject> rooms;
     public List<GameObject> openRooms;
 
     List<GameObject> generatedRooms;
+    List<GameObject> generatedDoors;
     List<GameObject> sideDoors;
 
     public int mainRooms;
@@ -37,11 +40,20 @@ public class RoomGen : MonoBehaviour
         sideDoors = new List<GameObject>();
         prevRoomsId = new List<int>();
         generatedRooms = new List<GameObject>();
+        generatedDoors = new List<GameObject>();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !done) 
+        {
+            Generate();
+        }
+    }
+
+    public void Activate()
+    {
+        if (!done)
         {
             Generate();
         }
@@ -60,7 +72,12 @@ public class RoomGen : MonoBehaviour
             {
                 Destroy(genRoom);
             }
+            foreach (GameObject genDoor in generatedDoors)
+            {
+                Destroy(genDoor);
+            }
             generatedRooms.Clear();
+            generatedDoors.Clear();
             prevRoomsId.Clear();
             sideDoors.Clear();
             mainRoomsMade = 0;
@@ -85,6 +102,11 @@ public class RoomGen : MonoBehaviour
             Destroy(genRoom);
         }
         oldGenRooms.Clear();
+        foreach (GameObject genDoor in oldGenDoors)
+        {
+            Destroy(genDoor);
+        }
+        oldGenDoors.Clear();
 
         done = true;
     }
@@ -175,6 +197,15 @@ public class RoomGen : MonoBehaviour
         spawnedRoom.transform.GetChild(0).Translate(-spawnedRoom.GetComponent<Room>().doors[rand].transform.localPosition);
         spawnedRoom.transform.Rotate(0f, -spawnedRoom.GetComponent<Room>().doors[rand].transform.localEulerAngles.y, 0f);
         spawnedRoom.transform.Rotate(0f, 180f, 0f);
+        //Create the connective door
+        GameObject createdDoor = Instantiate(connectiveDoor);
+        createdDoor.transform.parent = spawnedRoom.GetComponent<Room>().doors[rand].transform;
+        createdDoor.transform.localPosition = Vector3.up * 0.4f;
+        createdDoor.transform.localEulerAngles = Vector3.zero;
+        createdDoor.transform.parent = null;
+        createdDoor.GetComponent<connectiveRoomScript>().IsMain(true);
+        generatedDoors.Add(createdDoor);
+        //Cleanup
         Destroy(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.GetComponent<Room>().doors.Remove(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.transform.parent = null;
@@ -199,6 +230,15 @@ public class RoomGen : MonoBehaviour
             spawnedEndRoom.transform.Translate(spawnedEndRoom.GetComponent<Room>().doors[rand].transform.localPosition);
             spawnedEndRoom.transform.Rotate(0f, -spawnedEndRoom.GetComponent<Room>().doors[rand].transform.localEulerAngles.y, 0f);
             spawnedEndRoom.transform.Rotate(0f, 180f, 0f);
+            //Create the connective door
+            GameObject createdEndDoor = Instantiate(connectiveDoor);
+            createdEndDoor.transform.parent = spawnedEndRoom.GetComponent<Room>().doors[rand].transform;
+            createdEndDoor.transform.localPosition = Vector3.up * 0.4f;
+            createdEndDoor.transform.localEulerAngles = Vector3.zero;
+            createdEndDoor.transform.parent = null;
+            createdEndDoor.GetComponent<connectiveRoomScript>().IsMain(true);
+            generatedDoors.Add(createdEndDoor);
+            //Cleanup
             Destroy(spawnedEndRoom.GetComponent<Room>().doors[rand]);
             spawnedEndRoom.GetComponent<Room>().doors.Remove(spawnedEndRoom.GetComponent<Room>().doors[rand]);
             spawnedEndRoom.transform.parent = null;
@@ -263,6 +303,15 @@ public class RoomGen : MonoBehaviour
         spawnedRoom.transform.GetChild(0).Translate(-spawnedRoom.GetComponent<Room>().doors[rand].transform.localPosition);
         spawnedRoom.transform.Rotate(0f, -spawnedRoom.GetComponent<Room>().doors[rand].transform.localEulerAngles.y, 0f);
         spawnedRoom.transform.Rotate(0f, 180f, 0f);
+        //Create the connective door
+        GameObject createdDoor = Instantiate(connectiveDoor);
+        createdDoor.transform.parent = spawnedRoom.GetComponent<Room>().doors[rand].transform;
+        createdDoor.transform.localPosition = Vector3.up * 0.4f;
+        createdDoor.transform.localEulerAngles = Vector3.zero;
+        createdDoor.transform.parent = null;
+        createdDoor.GetComponent<connectiveRoomScript>().IsMain(false);
+        generatedDoors.Add(createdDoor);
+        //Cleanup
         Destroy(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.GetComponent<Room>().doors.Remove(spawnedRoom.GetComponent<Room>().doors[rand]);
         spawnedRoom.transform.parent = null;
@@ -313,6 +362,7 @@ public class RoomGen : MonoBehaviour
         GameObject spawnedStartRoom = Instantiate(startRoom);
         spawnedStartRoom.name = "START";
         spawnedStartRoom.GetComponentInChildren<RoomGen>().oldGenRooms = generatedRooms;
+        spawnedStartRoom.GetComponentInChildren<RoomGen>().oldGenDoors = generatedDoors;
         spawnedStartRoom.transform.parent = spawnedRoom.GetComponent<Room>().doors[0].transform;
         spawnedStartRoom.transform.localPosition = Vector3.zero;
         spawnedStartRoom.transform.localEulerAngles = Vector3.zero;

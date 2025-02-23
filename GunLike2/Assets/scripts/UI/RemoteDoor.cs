@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class RemoteDoor : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Animator animator;
+    bool open;
+
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
+        open = false;
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Activate()
     {
-        
+        if (open) { open = false; } else { open = true; }
+
+        animator.SetBool("Open", open);
     }
 }
