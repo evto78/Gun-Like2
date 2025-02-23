@@ -108285,9 +108285,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1477915592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 2108075890}
+  m_Script: {fileID: 11500000, guid: 3e38be3db9dcd794aa686a1beb749dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+  _data: {fileID: 0}
+  _instanceID: 994086193
+  _autoDetectMovement: 0
+  _blockingLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  _staticOnly: 1
+  _maxAgentRadius: 1
+  _enableMultiQuery: 1
+  _maxExternalLinkDistance: 1
+  _voxelSize: 1
+  _useStartLocations: 0
+  _startLocations: []
+  _useMultithreading: 1
+  _visualizationMode: 8
+  _visualizeNeighbors: 0
+  _visualizeNeighborsRegion: 0
+  _showVertexNumbers: 0
+  _showVertexNumbersRange: 2
+  _visualizeVoxelQueries: 0
 --- !u!4 &1477915594
 Transform:
   m_ObjectHideFlags: 0
@@ -157612,21 +157635,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106942136}
   m_CullTransparentMesh: 1
---- !u!115 &2108075890
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: NavVolume
-  m_Namespace: Infohazard.HyperNav
-  m_AssemblyName: Infohazard.HyperNav
 --- !u!1 &2111001040
 GameObject:
   m_ObjectHideFlags: 0
@@ -160464,9 +160472,17 @@ PrefabInstance:
       value: ButtonPanel
       objectReference: {fileID: 0}
     - target: {fileID: 7374034481620683564, guid: 0a2654a2ad1c33246aa66a62d2ce216f, type: 3}
+      propertyPath: linkedObjects.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374034481620683564, guid: 0a2654a2ad1c33246aa66a62d2ce216f, type: 3}
       propertyPath: linkedObjects.Array.data[0]
       value: 
       objectReference: {fileID: 2099730792}
+    - target: {fileID: 7374034481620683564, guid: 0a2654a2ad1c33246aa66a62d2ce216f, type: 3}
+      propertyPath: linkedObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 4448786081625381383}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -161549,15 +161565,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2290374856830781849, guid: 8493754fb0f35b544b480540db565772, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.77
+      value: -10.65
       objectReference: {fileID: 0}
     - target: {fileID: 2290374856830781849, guid: 8493754fb0f35b544b480540db565772, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.31
+      value: -0.198
       objectReference: {fileID: 0}
     - target: {fileID: 2290374856830781849, guid: 8493754fb0f35b544b480540db565772, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.527
+      value: 25.84
       objectReference: {fileID: 0}
     - target: {fileID: 2290374856830781849, guid: 8493754fb0f35b544b480540db565772, type: 3}
       propertyPath: m_LocalRotation.w
@@ -161592,6 +161608,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8493754fb0f35b544b480540db565772, type: 3}
+--- !u!1 &4448786081625381383 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1587344730410784294, guid: 8493754fb0f35b544b480540db565772, type: 3}
+  m_PrefabInstance: {fileID: 4448786081625381382}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4480212791086179287
 GameObject:
   m_ObjectHideFlags: 0
