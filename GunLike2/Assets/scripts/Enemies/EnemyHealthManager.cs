@@ -152,6 +152,8 @@ public class EnemyHealthManager : MonoBehaviour
 
     private void OnDeath()
     {
+        player.GetComponent<HealthManager>().EnemyDied(gameObject);
+
         if (Random.Range(1, 100) <= dropChance)
         {
             int rand = Random.Range(1, 100);

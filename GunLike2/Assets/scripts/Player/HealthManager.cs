@@ -57,6 +57,7 @@ public class HealthManager : MonoBehaviour
 		healthRegen = Calc(10f, givenLeftItems[2] + givenRightItems[2], healthRegen);
 		healthRegen = Calc(10f, givenLeftItems[14] + givenRightItems[14], healthRegen);
 		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
+		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
 		armor = Calc(5f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
@@ -156,6 +157,14 @@ public class HealthManager : MonoBehaviour
 		ManageEffects();
 		DisplayEffects();
 	}
+
+	public void EnemyDied(GameObject enemyThatDied)
+    {
+		if(activeReactor > 0)
+        {
+			GiveEffect("active reactor", 1);
+        }
+    }
 
 	void itemChecks()
 	{
@@ -273,10 +282,11 @@ public class HealthManager : MonoBehaviour
 
 		if (effectGiven == "pants falling") { activeEffects[17] = new Vector4(stacksToAdd, 0.1f * beltFed, 0.1f * beltFed, 1f); } // belt fed magazine buff
 
-		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, 3f + activeReactor * 10f, 3f + activeReactor * 10f, 1f); } // active reactor buff
+		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, activeReactor * 5f, activeReactor * 5f, 1f); } // active reactor buff
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
+		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
 	}
 
 	void ManageEffects()

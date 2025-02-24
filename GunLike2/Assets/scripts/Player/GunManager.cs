@@ -56,6 +56,13 @@ public class GunManager : MonoBehaviour
     public int leftBeltFed = 0;
     public float leftFastInserter = 0;
     float leftFastInserterTimer = 0f;
+    public float leftFireSpon;
+    public float leftSharperSpon;
+    public float leftSilverSpon;
+    public float leftHelpingSpon;
+    public float leftCoolSpon;
+    public float leftFastSpon;
+    public float leftLargeSpon;
 
     public bool leftRicochet = false;
 
@@ -86,6 +93,13 @@ public class GunManager : MonoBehaviour
     public int rightBeltFed = 0;
     public int rightFastInserter = 0;
     float rightFastInserterTimer = 0f;
+    public float rightFireSpon;
+    public float rightSharperSpon;
+    public float rightSilverSpon;
+    public float rightHelpingSpon;
+    public float rightCoolSpon;
+    public float rightFastSpon;
+    public float rightLargeSpon;
 
     public bool rightRicochet = false;
 
@@ -123,6 +137,7 @@ public class GunManager : MonoBehaviour
         if (effectList[11].x > 0f) { masterDmg = Calc(10f, givenLeftItems[17] + givenRightItems[17], masterDmg); }
         if (effectList[12].x > 0f) { masterDmg = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterDmg); }
         if (effectList[13].x > 0f) { masterAtkSpd = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterAtkSpd); }
+        if (effectList[18].x > 0f) { masterAtkSpd = masterAtkSpd * 1.5f; }
 
         leftAtkSpd = 1f * masterAtkSpd;
         leftReSpd = 1f * masterReSpd;

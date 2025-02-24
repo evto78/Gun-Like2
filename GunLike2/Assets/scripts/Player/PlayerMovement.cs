@@ -279,6 +279,7 @@ public class PlayerMovement : MonoBehaviour
         //status effect buffs / debuffs
         if (effectList[10].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+        if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
 
         moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
         sprintMoveSpeed = Calc(10f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);

@@ -85107,15 +85107,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1737544967164725653, guid: b59f99f6b9686374490d69f94a1089ef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.682254
+      value: -15.22
       objectReference: {fileID: 0}
     - target: {fileID: 1737544967164725653, guid: b59f99f6b9686374490d69f94a1089ef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.24
+      value: 3.89
       objectReference: {fileID: 0}
     - target: {fileID: 1737544967164725653, guid: b59f99f6b9686374490d69f94a1089ef, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.271046
+      value: 25.87
       objectReference: {fileID: 0}
     - target: {fileID: 1737544967164725653, guid: b59f99f6b9686374490d69f94a1089ef, type: 3}
       propertyPath: m_LocalRotation.w
@@ -112348,7 +112348,7 @@ MonoBehaviour:
   - 
   - '-'
   - Magazine Size X3 (X1.2)
-  - 
+  - Max HP + 50%(+50%)
   - Jumps + 1(+1)
   - Jumps + 1(+1)
   - '-'
@@ -112540,7 +112540,7 @@ MonoBehaviour:
   - 
   - '-'
   - Reload Speed X0.5, Speed X0.5
-  - 
+  - Passive Hp Regen - 20%(-20%)
   - Damage - 10%(-10%)
   - Accuracy - 10%(-10%)
   - '-'
@@ -112749,7 +112749,9 @@ MonoBehaviour:
     stack an additonal time.
   - Your pants have fallen. Reloading has you pull up your pants, giving you a deteriorating
     bonus to your speed for 5 seconds. Stacking adds 5 more seconds.
-  - 
+  - Your health deteriorates at a rate of 1% per second, or 3% per second when under
+    33% health. Killing an enemy causes the self damage to become healing at a doubled
+    rate and increases movement speed and firerate by 50% for 5 (+5 per stack) seconds.
   - '-'
   - '-'
   - Periodicly load bullets directly into your magazine. Stacks decrease time between
@@ -112947,7 +112949,7 @@ MonoBehaviour:
     from \"Fragaria \xD7 ananassa\", an excotic biological substance commanly added
     to food products."
   - Ammo storage is what it's all a-belt.
-  - 
+  - Don't hold near any vital organs or limbs for a period of more than 10 seconds.
   - Light as a bird.
   - Light as a bat.
   - A vital component for large scale factories, also happens to be usefull for autoloading
@@ -113140,7 +113142,7 @@ MonoBehaviour:
   - 
   - '-'
   - Magazine Size X3
-  - 
+  - Max HP +++
   - Jumps +
   - Jumps +
   - '-'
@@ -113332,7 +113334,7 @@ MonoBehaviour:
   - 
   - '-'
   - Reload Speed X0.5, Speed X0.5
-  - 
+  - Passive HP Regen --
   - Damage -
   - Accuracy -
   - '-'
@@ -113528,7 +113530,8 @@ MonoBehaviour:
     shot will be canceled.
   - Your pants have fallen. Reloading allows you to pull them back up, temporarily
     increaseing your speed.
-  - 
+  - Your health drains at a constant rate. Killing an enemy turns this drain into
+    healing at a faster rate while buffing your attack speed and movement speed.
   - '-'
   - '-'
   - Periodicly load bullets directly into your magazine.
@@ -160934,6 +160937,13 @@ MonoBehaviour:
   nuclearBul: 0
   introTrig: 0
   jam: 0
+  fireSpon: 0
+  sharperSpon: 0
+  silverSpon: 0
+  helpingSpon: 0
+  coolSpon: 0
+  fastSpon: 0
+  largeSpon: 0
   currentBullets: 0
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   firePoint: {fileID: 3051493154538946985}
@@ -161335,6 +161345,13 @@ MonoBehaviour:
   leftJam: 0
   leftBeltFed: 0
   leftFastInserter: 0
+  leftFireSpon: 0
+  leftSharperSpon: 0
+  leftSilverSpon: 0
+  leftHelpingSpon: 0
+  leftCoolSpon: 0
+  leftFastSpon: 0
+  leftLargeSpon: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -161358,6 +161375,13 @@ MonoBehaviour:
   rightJam: 0
   rightBeltFed: 0
   rightFastInserter: 0
+  rightFireSpon: 0
+  rightSharperSpon: 0
+  rightSilverSpon: 0
+  rightHelpingSpon: 0
+  rightCoolSpon: 0
+  rightFastSpon: 0
+  rightLargeSpon: 0
   rightRicochet: 0
 --- !u!20 &3763550551577302267
 Camera:

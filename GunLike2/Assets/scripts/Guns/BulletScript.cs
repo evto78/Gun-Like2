@@ -32,6 +32,13 @@ public class BulletScript : MonoBehaviour
     public bool isTrigLead;
     public float myIsHeavy;
     public int jam;
+    bool isFireSpon;
+    bool isSharperSpon;
+    bool isSilverSpon;
+    bool isHelpingSpon;
+    bool isCoolSpon;
+    bool isFastFireSpon;
+    bool isLargeSpon;
 
     public Collider myCollider;
 
@@ -52,8 +59,18 @@ public class BulletScript : MonoBehaviour
     {
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
     }
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, int givenJam)
+    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, 
+        float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, 
+        int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool, float chanceForFastFire, float chanceForLarge)
     {
+        if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; }
+        if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; }
+        if(Random.Range(1, 100) < chanceForSilver) { isSilverSpon = true; }
+        if(Random.Range(1, 100) < chanceForHelping) { isHelpingSpon = true; }
+        if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; }
+        if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; }
+        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; }
+
         whatHandThisComesFrom = whatHand;
 
         damage = givenDmg;
@@ -217,7 +234,7 @@ public class BulletScript : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -233,7 +250,7 @@ public class BulletScript : MonoBehaviour
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
