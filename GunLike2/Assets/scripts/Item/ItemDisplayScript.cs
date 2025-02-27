@@ -63,7 +63,7 @@ public class ItemDisplayScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(cam.transform.position);
+        transform.LookAt(cam.transform.position + Vector3.up);
     }
 
     public void InfoUpdate(int iD, Vector3 itemPos)

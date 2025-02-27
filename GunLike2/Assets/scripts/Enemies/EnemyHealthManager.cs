@@ -20,6 +20,10 @@ public class EnemyHealthManager : MonoBehaviour
 
     GameObject player;
 
+    public GameObject effectIcon;
+    List<GameObject> icons;
+    public Transform effectHolder;
+
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -28,6 +32,14 @@ public class EnemyHealthManager : MonoBehaviour
 
     void Start()
     {
+        icons = new List<GameObject>();
+        foreach(Vector4 effect in activeEffects)
+        {
+            GameObject spawnedIcon = Instantiate(effectIcon);
+            spawnedIcon.transform.SetParent(effectHolder, false);
+            icons.Add(spawnedIcon);
+        }
+
         curHp = maxHp;
 
         if (player == null)
@@ -67,14 +79,14 @@ public class EnemyHealthManager : MonoBehaviour
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
         gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
 
-        if (curHp <= maxHp) { Die(); }
+        if (curHp <= 0) { Die(); }
     }
 
     public void TakePercentDamage(float pDmgTaken)
     {
         TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position, "self");
 
-        if (curHp <= maxHp) { Die(); }
+        if (curHp <= 0) { Die(); }
     }
 
     public void OnHitEffect(int jam)
@@ -96,7 +108,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {
-        //damage over time
+        //Genaric DOT
         if (effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 3f, 3f, -1f); }
         if (effectGiven == "burn") { activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); }
         if (effectGiven == "radiation") { activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); }
@@ -127,7 +139,7 @@ public class EnemyHealthManager : MonoBehaviour
                 else
                 {
                     q.x -= 1f;
-                    if (q.x! < 1f) { q.z = q.y; }
+                    if (q.x! > 0f) { q.z = q.y; }
 
                     //run effects that happen when timer ends
                     if (i == 0 || i == 1 || i == 2) { TakeDamage(q.x + 1f, true, "normalHit", transform.position, "self"); }
@@ -135,6 +147,20 @@ public class EnemyHealthManager : MonoBehaviour
             }
 
             activeEffects[i] = q;
+        }
+
+        for(int i = 0; i < activeEffects.Count; i++)
+        {
+            Vector4 effect = activeEffects[i];
+            if (effect.x > 0f)
+            {
+                icons[i].SetActive(true);
+                icons[i].GetComponent<EffectIconScript>().UpdateEffectIcon(i, Mathf.RoundToInt(effect.x));
+            }
+            else
+            {
+                icons[i].SetActive(false);
+            }
         }
     }
 

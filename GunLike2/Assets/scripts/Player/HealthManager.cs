@@ -316,7 +316,7 @@ public class HealthManager : MonoBehaviour
 					if (q.x > 0f) { q.z = q.y; }
 
 					//run effects that happen when timer ends
-					if (i == 0 || i == 1 || i == 2) { TakeDamage(q.x + 1f, false); }
+					if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*5f, false); }
 				}
 			}
 

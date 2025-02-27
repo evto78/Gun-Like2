@@ -199,6 +199,13 @@ public class GunManager : MonoBehaviour
         leftJam = givenLeftItems[28];
         leftBeltFed = givenLeftItems[29];
         leftFastInserter = givenLeftItems[33];
+        leftFireSpon = givenLeftItems[34];
+        leftSharperSpon = givenLeftItems[35];
+        leftSilverSpon = givenLeftItems[36];
+        leftHelpingSpon = givenLeftItems[43];
+        leftCoolSpon = givenLeftItems[44];
+        leftLargeSpon = givenLeftItems[45];
+        leftFastSpon = givenLeftItems[47];
 
         leftRicochet = false;
 
@@ -241,6 +248,13 @@ public class GunManager : MonoBehaviour
         rightJam = givenRightItems[28];
         rightBeltFed = givenRightItems[29];
         rightFastInserter = givenRightItems[33];
+        rightFireSpon = givenRightItems[34];
+        rightSharperSpon = givenRightItems[35];
+        rightSilverSpon = givenRightItems[36];
+        rightHelpingSpon = givenRightItems[43];
+        rightCoolSpon = givenRightItems[44];
+        rightLargeSpon = givenRightItems[45];
+        rightFastSpon = givenRightItems[47];
 
         rightRicochet = false;
 
