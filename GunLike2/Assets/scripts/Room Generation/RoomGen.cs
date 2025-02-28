@@ -47,7 +47,7 @@ public class RoomGen : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !done) 
         {
-            //Generate();
+            Generate();
         }
     }
 

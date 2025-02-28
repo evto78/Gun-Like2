@@ -57,7 +57,7 @@ public class PlayerItem : MonoBehaviour
 
     public List<List<int>> rarityList = new List<List<int>>();
 
-    public PlayerMovement playerMvt;
+    public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
     public GunManager gunManager;
 
