@@ -33,12 +33,19 @@ public class BulletScript : MonoBehaviour
     public float myIsHeavy;
     public int jam;
     bool isFireSpon;
+    public GameObject fireSponEffect;
     bool isSharperSpon;
+    public GameObject sharperSponEffect;
     bool isSilverSpon;
+    public GameObject silverSponEffect;
     bool isHelpingSpon;
+    public GameObject helpingSponEffect;
     bool isCoolSpon;
+    public GameObject coolSponEffect;
     bool isFastFireSpon;
+    public GameObject fastSponEffect;
     bool isLargeSpon;
+    public GameObject largeSponEffect;
 
     public Collider myCollider;
 
@@ -63,13 +70,13 @@ public class BulletScript : MonoBehaviour
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, 
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool, float chanceForFastFire, float chanceForLarge)
     {
-        if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; }
-        if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; }
-        if(Random.Range(1, 100) < chanceForSilver) { isSilverSpon = true; }
-        if(Random.Range(1, 100) < chanceForHelping) { isHelpingSpon = true; }
-        if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; }
-        if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; }
-        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; }
+        if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForSilver) { isSilverSpon = true; silverSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForHelping) { isHelpingSpon = true; helpingSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; coolSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; fastSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); }
 
         whatHandThisComesFrom = whatHand;
 
@@ -224,6 +231,7 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
+            transform.SetParent(gameObject.transform);
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
