@@ -231,7 +231,7 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
-            transform.SetParent(gameObject.transform);
+            //transform.SetParent(gameObject.transform);
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();

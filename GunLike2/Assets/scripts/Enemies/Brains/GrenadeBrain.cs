@@ -16,7 +16,7 @@ public class GrenadeBrain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bounceTimer = 2;
+        bounceTimer = Random.Range(1.5f, 2.5f);
         tickTimer = 1;
         explTimer = 0.5f;
         rb = GetComponent<Rigidbody>();
@@ -37,7 +37,7 @@ public class GrenadeBrain : MonoBehaviour
         }
 
     }
-        void followPlayer()
+    void followPlayer()
     {
         //Vector3 dir = (target.position - transform.position);
         //Quaternion rotation = Quaternion.LookRotation(dir);

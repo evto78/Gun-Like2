@@ -11,6 +11,7 @@ public class NEWPlayerMovement : MonoBehaviour
     public GameObject cam;
     float yaw = 0.0f;
     float pitch = 0.0f;
+    float fov;
 
     public float baseMoveSpeed;
     public float baseSprintMoveSpeed;
@@ -29,6 +30,9 @@ public class NEWPlayerMovement : MonoBehaviour
 
     bool onGround;
     bool isSprinting;
+    bool slamming;
+    bool sliding;
+    Vector3 inputDir;
 
     bool buttered = false;
     bool planeMode = false;
@@ -44,6 +48,7 @@ public class NEWPlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        fov = Mathf.RoundToInt(cam.GetComponent<Camera>().fieldOfView);
         jumpsLeft = numberOfJumps;
         rb = GetComponent<Rigidbody>();
         healthMan = GetComponent<HealthManager>();
@@ -186,6 +191,9 @@ public class NEWPlayerMovement : MonoBehaviour
         onGround = GroundCheck();
         CameraMove();
         GetInputs();
+    }
+    private void FixedUpdate()
+    {
         Move();
     }
     bool GroundCheck()
@@ -227,26 +235,42 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             Jump();
         }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (onGround)
+            {
+                Slide();
+            }
+            else
+            {
+                Slam();
+            }
+        }
+        inputDir = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) { inputDir = inputDir + Vector3.forward; }
+        if (Input.GetKey(KeyCode.S)) { inputDir = inputDir - Vector3.forward; }
+        if (Input.GetKey(KeyCode.A)) { inputDir = inputDir - Vector3.right; }
+        if (Input.GetKey(KeyCode.D)) { inputDir = inputDir + Vector3.right; }
+        inputDir = Vector3.Normalize(inputDir);
+        //Debug.Log(inputDir);
+
     }
     void Move()
-    {
+    {  
         if (isSprinting)
         {
-            if (Input.GetKey(KeyCode.W)) { rb.AddForce(transform.forward * sprintMoveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.S)) { rb.AddForce(-transform.forward * sprintMoveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.A)) { rb.AddForce(-transform.right * sprintMoveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.D)) { rb.AddForce(transform.right * sprintMoveSpeed * Time.deltaTime, ForceMode.Acceleration); }
+            rb.AddRelativeForce(inputDir * sprintMoveSpeed * Time.deltaTime, ForceMode.Impulse);
         }
         else
         {
-            if (Input.GetKey(KeyCode.W)) { rb.AddForce(transform.forward * moveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.S)) { rb.AddForce(-transform.forward * moveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.A)) { rb.AddForce(-transform.right * moveSpeed * Time.deltaTime, ForceMode.Acceleration); }
-            if (Input.GetKey(KeyCode.D)) { rb.AddForce(transform.right * moveSpeed * Time.deltaTime, ForceMode.Acceleration); }
+            rb.AddRelativeForce(inputDir * moveSpeed * Time.deltaTime, ForceMode.Impulse);
         }
 
         //Limit Velocity realative to speed
         Vector3 limitedVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        //cam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(fov, fov + 10, limitedVelocity.magnitude / (sprintMoveSpeed / 100f));
+
         if (isSprinting)
         {
             if(limitedVelocity.magnitude >= sprintMoveSpeed / 100f)
@@ -276,7 +300,8 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void Slam()
     {
-
+        slamming = true;
+        rb.velocity = new Vector3(rb.velocity.x, -50f, rb.velocity.z);
     }
     void Slide()
     {
