@@ -6,12 +6,22 @@ public class NEWPlayerMovement : MonoBehaviour
 {
     Rigidbody rb;
 
-    // cam control variables;
+    // Particle Effects
+    public GameObject slamEffect;
+    public GameObject slideEffect;
+
+    // cam control variables
     public float sensitivity;
     public GameObject cam;
     float yaw = 0.0f;
     float pitch = 0.0f;
     float fov;
+
+    public Transform head;
+    float initialHeadHeight;
+    public CapsuleCollider myCollider;
+    float initialHeight;
+    Vector3 slideDir;
 
     public float baseMoveSpeed;
     public float baseSprintMoveSpeed;
@@ -53,6 +63,12 @@ public class NEWPlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;
+        sliding = false;
+        slamming = false;
+
+        initialHeadHeight = head.transform.localPosition.y;
+        initialHeight = myCollider.height;
+        slideDir = Vector3.zero;
     }
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
@@ -189,8 +205,11 @@ public class NEWPlayerMovement : MonoBehaviour
     void Update()
     {
         onGround = GroundCheck();
+        if (onGround) { slamming = false; }
         CameraMove();
         GetInputs();
+
+        Effects();
     }
     private void FixedUpdate()
     {
@@ -198,9 +217,13 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     bool GroundCheck()
     {
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 1.26f))
+        //if (Physics.Raycast(transform.position, -transform.up, out  hit, 1.26f))
+        //{
+        //    
+        //}
+        if (Physics.BoxCast(new Vector3(transform.position.x, transform.position.y - 0f, transform.position.z), transform.localScale * 0.5f, -Vector3.up, out RaycastHit hit, transform.rotation, 1f))
         {
-            if(hit.transform.gameObject.tag == "Ground")
+            if (hit.transform.gameObject.tag == "Ground")
             {
                 jumpsLeft = numberOfJumps;
                 return true;
@@ -208,6 +231,12 @@ public class NEWPlayerMovement : MonoBehaviour
         }
 
         return false;
+    }
+    private void OnDrawGizmos()
+    {
+        if (onGround) { Gizmos.color = Color.green; }
+        else { Gizmos.color = Color.red; }
+        Gizmos.DrawWireCube(new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z), transform.localScale * 0.5f);
     }
     void CameraMove()
     {
@@ -235,16 +264,28 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             Jump();
         }
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftControl))
         {
-            if (onGround)
-            {
-                Slide();
-            }
-            else
+            if (!onGround && !sliding)
             {
                 Slam();
             }
+            else
+            {
+                if (slideDir == Vector3.zero) { slideDir = transform.forward; }
+                Slide();
+            }
+        }
+        else
+        {
+            
+            if(sliding)
+            {
+                myCollider.height = initialHeight;
+                head.transform.localPosition = Vector3.up * initialHeadHeight;
+            }
+            slideDir = Vector3.zero;
+            sliding = false;
         }
         inputDir = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) { inputDir = inputDir + Vector3.forward; }
@@ -256,8 +297,14 @@ public class NEWPlayerMovement : MonoBehaviour
 
     }
     void Move()
-    {  
-        if (isSprinting)
+    {
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+
+        if (sliding)
+        {
+            rb.AddForce(slideDir * sprintMoveSpeed * 1.5f * Time.deltaTime, ForceMode.Impulse);
+        }
+        else if (isSprinting)
         {
             rb.AddRelativeForce(inputDir * sprintMoveSpeed * Time.deltaTime, ForceMode.Impulse);
         }
@@ -306,5 +353,15 @@ public class NEWPlayerMovement : MonoBehaviour
     void Slide()
     {
 
+        sliding = true;
+        myCollider.height = initialHeight / 2f;
+        head.transform.localPosition = Vector3.zero;
+    }
+    void Effects()
+    {
+        slamEffect.SetActive(slamming);
+        slideEffect.SetActive(sliding);
+        if (slamEffect.activeSelf) { slamEffect.GetComponent<ParticleSystem>().Play(); }
+        if (slideEffect.activeSelf) { slideEffect.GetComponent<ParticleSystem>().Play(); }
     }
 }
