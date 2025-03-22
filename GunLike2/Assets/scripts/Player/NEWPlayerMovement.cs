@@ -16,12 +16,16 @@ public class NEWPlayerMovement : MonoBehaviour
     float yaw = 0.0f;
     float pitch = 0.0f;
     float fov;
+    //public float minVelFov;
+    public float maxVelFov;
 
     public Transform head;
     float initialHeadHeight;
     public CapsuleCollider myCollider;
     float initialHeight;
     Vector3 slideDir;
+
+    public float friction;
 
     public float baseMoveSpeed;
     public float baseSprintMoveSpeed;
@@ -73,7 +77,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
-        baseMoveSpeed = 1000f;
+        baseMoveSpeed = 750f;
         baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
         baseJumpForce = 2000;
         baseNumberOfJumps = 1;
@@ -81,7 +85,7 @@ public class NEWPlayerMovement : MonoBehaviour
         moveSpeed = baseMoveSpeed;
         sprintMoveSpeed = baseSprintMoveSpeed;
         jumpForce = baseJumpForce;
-        airStrafeSpeed = moveSpeed;
+        airStrafeSpeed = moveSpeed * 0.5f;
         maxSlideVelocity = moveSpeed * 3f;
         slideAccelerationRate = moveSpeed * 2f;
         numberOfJumps = baseNumberOfJumps;
@@ -217,10 +221,6 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     bool GroundCheck()
     {
-        //if (Physics.Raycast(transform.position, -transform.up, out  hit, 1.26f))
-        //{
-        //    
-        //}
         if (Physics.BoxCast(new Vector3(transform.position.x, transform.position.y - 0f, transform.position.z), transform.localScale * 0.5f, -Vector3.up, out RaycastHit hit, transform.rotation, 1f))
         {
             if (hit.transform.gameObject.tag == "Ground")
@@ -269,6 +269,8 @@ public class NEWPlayerMovement : MonoBehaviour
             if (!onGround && !sliding)
             {
                 Slam();
+                //if (slideDir == Vector3.zero) { slideDir = transform.forward; }
+                //Slide();
             }
             else
             {
@@ -304,6 +306,10 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             rb.AddForce(slideDir * sprintMoveSpeed * 1.5f * Time.deltaTime, ForceMode.Impulse);
         }
+        else if (onGround)
+        {
+            rb.AddRelativeForce(inputDir * airStrafeSpeed * Time.deltaTime, ForceMode.Impulse);
+        }
         else if (isSprinting)
         {
             rb.AddRelativeForce(inputDir * sprintMoveSpeed * Time.deltaTime, ForceMode.Impulse);
@@ -336,13 +342,22 @@ public class NEWPlayerMovement : MonoBehaviour
                 rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
             }
         }
+
+        Friction();
     }
     void Jump()
     {
-        if(jumpsLeft > 0)
+        if (jumpsLeft > 0)
         {
+            
             jumpsLeft -= 1;
             rb.AddForce(transform.up * jumpForce, ForceMode.Force);
+            if (slamming)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            }
+            if (slamming) { rb.AddForce(transform.up * jumpForce, ForceMode.Force); }
+            slamming = false;
         }
     }
     void Slam()
@@ -359,9 +374,28 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void Effects()
     {
+        //camera effects
+        if(rb.velocity.magnitude > 10)
+        {
+            float t = rb.velocity.magnitude / maxVelFov;
+            Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t);
+        }
+        
+
+        //particle effects
         slamEffect.SetActive(slamming);
         slideEffect.SetActive(sliding);
         if (slamEffect.activeSelf) { slamEffect.GetComponent<ParticleSystem>().Play(); }
         if (slideEffect.activeSelf) { slideEffect.GetComponent<ParticleSystem>().Play(); }
+    }
+
+    void Friction()
+    {
+        if (onGround)
+        {
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            flatVel = flatVel / (friction * (1 + Time.deltaTime));
+            rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z);
+        }
     }
 }

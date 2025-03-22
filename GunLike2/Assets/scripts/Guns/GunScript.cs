@@ -13,7 +13,7 @@ public class GunScript : MonoBehaviour
     public float baseReSpd = 1f;
     public float baseBulSpd = 100f;
     public float baseDmg = 10f;
-    public float baseAcc = 5f;
+    public float baseAcc = 1f;
     public float baseBulSize = 1f;
     public int baseBulPir = 0;
     public float baseCritChance = 0f;

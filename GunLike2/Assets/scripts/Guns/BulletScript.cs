@@ -308,6 +308,11 @@ public class BulletScript : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collided) { RunOnCollide(collision.gameObject); }
+    }
+
     private void OnTriggerEnter(Collider collision)
     {
         if (!collided) { RunOnCollide(collision.gameObject); }
@@ -319,7 +324,7 @@ public class BulletScript : MonoBehaviour
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
             transform.position = hit.point;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground") { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged") { RunOnCollide(hit.collider.gameObject); }
         }
 
         if (rb.freezeRotation && rb.velocity.magnitude > Vector3.zero.magnitude)
