@@ -16,7 +16,7 @@ public class GrenadeBrain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bounceTimer = Random.Range(1.5f, 2.5f);
+        bounceTimer = Random.Range(0f, 3f);
         tickTimer = 1;
         explTimer = 0.5f;
         rb = GetComponent<Rigidbody>();
@@ -27,6 +27,7 @@ public class GrenadeBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        followPlayer();
         if (!Ticking)
         {
             Bounce();
@@ -39,31 +40,19 @@ public class GrenadeBrain : MonoBehaviour
     }
     void followPlayer()
     {
-        //Vector3 dir = (target.position - transform.position);
-        //Quaternion rotation = Quaternion.LookRotation(dir);
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation,  85 * Time.deltaTime);
-        //transform.position += transform.forward * speed * Time.deltaTime;
-        //if (Vector3.Distance(target.position, transform.position) < 5)
-        //{
-            //Ticking = true;
-
-        //}
+        rb.AddForce((target.position - transform.position).normalized * speed * 40f * Time.deltaTime);
     }
     void Blow()
     {
         if(tickTimer > 0)
         {
             tickTimer -= Time.deltaTime;
-        }
-        else
-        {
-            explo.SetActive(true);
-            explTimer -= Time.deltaTime;
-
-        }
-        if(explTimer <= 0)
-        {
-            Destroy(gameObject);
+            if(tickTimer <= 0)
+            {
+                explo.SetActive(true);
+                explo.transform.SetParent(null);
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -75,8 +64,8 @@ public class GrenadeBrain : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation,  85 * Time.deltaTime);
         if (bounceTimer <= 0)
         {
-            rb.AddForce(Vector3.up * 35, ForceMode.Impulse);
-            rb.AddForce(transform.forward* 40, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * speed * 3f, ForceMode.Impulse);
+            rb.AddForce(transform.forward * speed * 3f, ForceMode.Impulse);
             bounceTimer = 3;
         }
          if (Vector3.Distance(target.position, transform.position) < 5)

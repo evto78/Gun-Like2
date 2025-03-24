@@ -315,7 +315,7 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (!collided) { RunOnCollide(collision.gameObject); }
+        //if (!collided) { RunOnCollide(collision.gameObject); }
     }
 
     private void FixedUpdate()

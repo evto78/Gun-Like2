@@ -9,6 +9,7 @@ public class NEWPlayerMovement : MonoBehaviour
     // Particle Effects
     public GameObject slamEffect;
     public GameObject slideEffect;
+    public GameObject butterSlideEffect;
 
     // cam control variables
     public float sensitivity;
@@ -43,10 +44,13 @@ public class NEWPlayerMovement : MonoBehaviour
     public float gravityModifier;
 
     bool onGround;
-    bool isSprinting;
-    bool slamming;
-    bool sliding;
+    public bool isSprinting;
+    public bool slamming;
+    public bool sliding;
     Vector3 inputDir;
+    public float timeSinceGrounded;
+
+    float slidingMod;
 
     bool buttered = false;
     bool planeMode = false;
@@ -87,7 +91,7 @@ public class NEWPlayerMovement : MonoBehaviour
         jumpForce = baseJumpForce;
         airStrafeSpeed = moveSpeed * 0.5f;
         maxSlideVelocity = moveSpeed * 3f;
-        slideAccelerationRate = moveSpeed * 2f;
+        slideAccelerationRate = sprintMoveSpeed * 1.5f;
         numberOfJumps = baseNumberOfJumps;
         gravityModifier = 1f;
 
@@ -208,6 +212,9 @@ public class NEWPlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timeSinceGrounded += Time.deltaTime;
+        if (healthMan.dead) { rb.freezeRotation = false; rb.AddRelativeTorque(Vector3.one * 3f); return; }
+
         onGround = GroundCheck();
         if (onGround) { slamming = false; }
         CameraMove();
@@ -217,6 +224,7 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (healthMan.dead) { return; }
         Move();
     }
     bool GroundCheck()
@@ -226,6 +234,7 @@ public class NEWPlayerMovement : MonoBehaviour
             if (hit.transform.gameObject.tag == "Ground")
             {
                 jumpsLeft = numberOfJumps;
+                timeSinceGrounded = 0f;
                 return true;
             }
         }
@@ -274,8 +283,11 @@ public class NEWPlayerMovement : MonoBehaviour
             }
             else
             {
-                if (slideDir == Vector3.zero) { slideDir = transform.forward; }
-                Slide();
+                if(slidingMod > 0)
+                {
+                    if (slideDir == Vector3.zero) { slideDir = transform.forward; }
+                    Slide();
+                }
             }
         }
         else
@@ -288,6 +300,7 @@ public class NEWPlayerMovement : MonoBehaviour
             }
             slideDir = Vector3.zero;
             sliding = false;
+            slidingMod = 2f;
         }
         inputDir = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) { inputDir = inputDir + Vector3.forward; }
@@ -304,7 +317,30 @@ public class NEWPlayerMovement : MonoBehaviour
 
         if (sliding)
         {
-            rb.AddForce(slideDir * sprintMoveSpeed * 1.5f * Time.deltaTime, ForceMode.Impulse);
+            if(rb.velocity.y > 0)
+            {
+                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.8f; } else { slidingMod -= Time.fixedDeltaTime * 1.5f; }
+            }
+            else if (rb.velocity.y < 0)
+            {
+                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                if (buttered) { slidingMod += Time.fixedDeltaTime; } else { slidingMod += Time.fixedDeltaTime * 0.5f; }
+            }
+            else if (rb.velocity.y <= 0)
+            {
+                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.2f; } else { slidingMod -= Time.fixedDeltaTime; }
+            }
+            if(slidingMod <= 0)
+            {
+                slidingMod = 0;
+                sliding = false;
+                myCollider.height = initialHeight;
+                head.transform.localPosition = Vector3.up * initialHeadHeight;
+            }
+            if(slidingMod > 5f) { slidingMod = 5f; }
+            
         }
         else if (onGround)
         {
@@ -321,8 +357,6 @@ public class NEWPlayerMovement : MonoBehaviour
 
         //Limit Velocity realative to speed
         Vector3 limitedVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        //cam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(fov, fov + 10, limitedVelocity.magnitude / (sprintMoveSpeed / 100f));
 
         if (isSprinting)
         {
@@ -384,9 +418,18 @@ public class NEWPlayerMovement : MonoBehaviour
 
         //particle effects
         slamEffect.SetActive(slamming);
-        slideEffect.SetActive(sliding);
         if (slamEffect.activeSelf) { slamEffect.GetComponent<ParticleSystem>().Play(); }
-        if (slideEffect.activeSelf) { slideEffect.GetComponent<ParticleSystem>().Play(); }
+        if (buttered)
+        {
+            slideEffect.SetActive(false);
+            butterSlideEffect.SetActive(sliding);
+            if (butterSlideEffect.activeSelf) { slideEffect.GetComponent<ParticleSystem>().Play(); }
+        }
+        else
+        {
+            slideEffect.SetActive(sliding);
+            if (slideEffect.activeSelf) { slideEffect.GetComponent<ParticleSystem>().Play(); }
+        }
     }
 
     void Friction()

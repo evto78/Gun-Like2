@@ -352,6 +352,8 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
+        if (healthMan.dead) { return; }
+
         leftGunUpdate();
         RightGunUpdate();
         if (Input.GetKeyDown(KeyCode.R))

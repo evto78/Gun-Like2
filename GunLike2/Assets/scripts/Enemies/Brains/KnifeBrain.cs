@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class KnifeBrain : MonoBehaviour
 {
-    public flyingEnemyNavController navController;
+    //public flyingEnemyNavController navController;
     public GameObject player;
+    public GameObject target;
     
     MeshRenderer mr;
     public ParticleSystem shimmerEffect;
@@ -26,17 +27,18 @@ public class KnifeBrain : MonoBehaviour
 
     EnemyHealthManager healthMan;
 
+    bool pauseNagivation;
+
     void Start()
     {
         preparing = false;
         healthMan = GetComponent<EnemyHealthManager>();
         player = GameObject.Find("Player");
         mr = transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
-        navController = GetComponent<flyingEnemyNavController>();
 
         if (isLead)
         {
-            navController.player = player;
+            target = player;
 
             SpawnFollowers(Random.Range(spawnAmount-spawnVariance, spawnAmount+spawnVariance));
 
@@ -51,15 +53,15 @@ public class KnifeBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(navController.player == null)
+        if(target == null)
         {
-            navController.player = player;
+            target = player;
         }
 
         if (Vector3.Distance(transform.position, player.transform.position) < strikeRange && !preparing && !striking && cooldownTimer <= 0f)
         {
             preparing = true;
-            navController.Pause();
+            pauseNagivation = true;
             gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity / 10f;
             transform.LookAt(player.transform.position);
 
@@ -112,11 +114,11 @@ public class KnifeBrain : MonoBehaviour
 
     void StopStrike()
     {
-        navController.player = player;
+        target = player;
 
         cooldownTimer = 3f;
         striking = false;
-        navController.Unpause();
+        pauseNagivation = false;
         gameObject.GetComponent<Rigidbody>().freezeRotation = false;
     }
 

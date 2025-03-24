@@ -10,11 +10,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
     public TextMeshProUGUI fpsText;
+    public TextMeshProUGUI crosshair;
     //public TextMeshProUGUI velocityText;
 
     public HitScanGunScript revScript;
     public GunScript gunScript;
     public HealthManager healthManager;
+
+    public NEWPlayerMovement mvtScript;
 
     public GameObject damageText;
     public GameObject myCanvas;
@@ -24,18 +27,19 @@ public class UIManager : MonoBehaviour
     public Camera mainCamera;
     public Camera overlayCamera;
 
-    private GameObject playUI;
-    private GameObject inventoryUI;
-    private GameObject pauseUI;
+    public GameObject playUI;
+    public GameObject inventoryUI;
+    public GameObject pauseUI;
+    public GameObject deathUI;
 
     public string state;
     public bool isPaused;
 
     private void Start()
     {
-        playUI = GameObject.Find("Play UI");
-        inventoryUI = GameObject.Find("Inventory UI");
-        pauseUI = GameObject.Find("Pause UI");
+        //playUI = GameObject.Find("Play UI");
+        //inventoryUI = GameObject.Find("Inventory UI");
+        //pauseUI = GameObject.Find("Pause UI");
 
         isPaused = false;
 
@@ -45,6 +49,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (healthManager.dead) { deathUI.SetActive(true); }
         ManageInput();
 
         UpdatePlayUI();
@@ -86,6 +91,9 @@ public class UIManager : MonoBehaviour
 
     void UpdatePlayUI()
     {
+        if (mvtScript.isSprinting || mvtScript.slamming || mvtScript.sliding) { crosshair.text = "^"; }
+        else { crosshair.text = "+"; }
+
         fps = (int)(1f / Time.unscaledDeltaTime);
         fpsText.text = "FPS: " + fps;
 

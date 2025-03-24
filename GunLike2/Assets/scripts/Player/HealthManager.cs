@@ -37,12 +37,15 @@ public class HealthManager : MonoBehaviour
 	int activeReactor;
 
 	public UIManager uiMan;
-	public PlayerMovement playerMvt;
+	public NEWPlayerMovement playerMvt;
 	public PlayerItem playerItem;
+
+	public bool dead;
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
 	}
@@ -138,6 +141,8 @@ public class HealthManager : MonoBehaviour
 	}
 	void Update()
 	{
+        if (dead) { return; }
+
 		regenTimer -= Time.deltaTime;
 		if ((curHp < maxHp) && regenTimer <= 0f) 
 		{
@@ -156,6 +161,8 @@ public class HealthManager : MonoBehaviour
 		itemChecks();
 		ManageEffects();
 		DisplayEffects();
+
+		if(curHp <= 0) { dead = true; }
 	}
 
 	public void EnemyDied(GameObject enemyThatDied)
