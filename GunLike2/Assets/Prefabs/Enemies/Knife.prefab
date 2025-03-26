@@ -92,13 +92,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8135303195823942240}
-  - component: {fileID: 2839283136224348913}
   - component: {fileID: 6197071371399329386}
   - component: {fileID: 7510649052574356979}
   - component: {fileID: 6712918118906880420}
-  - component: {fileID: 2929288829833588597}
   - component: {fileID: 1358825849176315185}
-  - component: {fileID: -6536372777689031548}
   m_Layer: 9
   m_Name: Knife
   m_TagString: Enemy
@@ -125,24 +122,6 @@ Transform:
   - {fileID: 1168218593677502556}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2839283136224348913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69622700615697579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e043bac7a8b47ea4795e50e6ff2fb2ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 2929288829833588597}
-  target: {fileID: 0}
-  speed: 130
-  maxSpeed: 150
-  brakeRange: 0.5
-  player: {fileID: 0}
 --- !u!114 &6197071371399329386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,17 +134,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4d37d2ee80056541bb04ed2cd6c9c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navController: {fileID: 2839283136224348913}
   player: {fileID: 0}
+  target: {fileID: 0}
   shimmerEffect: {fileID: 995673989551240623}
   leadMat: {fileID: 2100000, guid: e739aa86a9ec265459fc5c6694199f66, type: 2}
   followMat: {fileID: 2100000, guid: 9640da59e29a6dc4bb1aee443559c33e, type: 2}
+  speed: 150
+  moveCurve: {x: 0, y: 0, z: 0}
   isLead: 1
   spawnAmount: 5
   spawnVariance: 2
-  strikeRange: 10
-  dmg: 5
-  knifePrefab: {fileID: 69622700615697579, guid: 243192198f6cc12448883e64f0fc4232, type: 3}
+  strikeRange: 18
+  dmg: 10
+  knifePrefab: {fileID: 69622700615697579, guid: 66321f82639258c4390c21e1274dd5bd, type: 3}
 --- !u!114 &7510649052574356979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,26 +197,6 @@ CapsuleCollider:
   m_Height: 3.63
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0.78}
---- !u!114 &2929288829833588597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69622700615697579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e968325ee60ba924dadeb8199d54dead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _acceptance: 1
-  _accelerationEstimate: 0
-  _sampleRadius: 2
-  _desiredSpeedRatio: 1
-  _debugPath: 0
-  _keepPathWhileCalculating: 1
-  _avoidanceAgent: {fileID: -6536372777689031548}
-  _controlAvoidanceIsActive: 1
 --- !u!54 &1358825849176315185
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -263,25 +224,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &-6536372777689031548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69622700615697579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d0d0c1edc38442bb8c8fed8394744be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _radius: 0.5
-  _maxSpeed: 50
-  _avoidanceWeight: 1
-  _avoidancePadding: 0.1
-  _debugAvoidance: 0
-  _avoidedTags:
-    _value: -1
 --- !u!1 &558316748299427355
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,6 @@ public class GrenadeBrain : MonoBehaviour
     public bool Ticking = false;
     public Rigidbody rb;
     float tickTimer = 3;
-    float explTimer = 0.5f;
     public GameObject explo;
     float bounceTimer;
     // Start is called before the first frame update
@@ -18,7 +17,6 @@ public class GrenadeBrain : MonoBehaviour
     {
         bounceTimer = Random.Range(0f, 3f);
         tickTimer = 1;
-        explTimer = 0.5f;
         rb = GetComponent<Rigidbody>();
         explo.SetActive(false);
         target = GameObject.Find("Player").transform;

@@ -107,10 +107,18 @@ public class BulletScript : MonoBehaviour
 
         transform.localScale = new Vector3(transform.localScale.x * givenBulSize, transform.localScale.y * givenBulSize, transform.localScale.z * givenBulSize);
 
-        GetComponent<Rigidbody>().AddForce(transform.forward * bulSpd, ForceMode.Impulse);
+        Vector3 forceDir = transform.forward * bulSpd;
+
+        rb.AddForce(forceDir, ForceMode.Impulse);
         if (name == "TRIGBULLET")
         {
-            rb.AddForce(transform.forward * bulSpd, ForceMode.VelocityChange);
+            rb.AddForce(forceDir, ForceMode.VelocityChange);
+        }
+        myPos = transform.position;
+        if (Physics.Raycast(myPos, forceDir, out RaycastHit hit, Vector3.Distance(myPos, (myPos + forceDir * Time.fixedDeltaTime))))
+        {
+            transform.position = hit.point;
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged") { RunOnCollide(hit.collider.gameObject); }
         }
     }
 

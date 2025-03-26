@@ -172,7 +172,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
         if (effectList[9].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
-        if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
+        if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); sprintMoveSpeed = sprintMoveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); }
         if (effectList[17].x > 0f) { moveSpeed = moveSpeed + (moveSpeed * (effectList[17].x / 50)); sprintMoveSpeed = sprintMoveSpeed + (sprintMoveSpeed * (effectList[17].x / 50)); }
     }
 
@@ -233,6 +233,7 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             if (hit.transform.gameObject.tag == "Ground")
             {
+                if (hasBunny && !onGround) { healthMan.GiveEffect("bunny hop buff", 1f); }
                 jumpsLeft = numberOfJumps;
                 timeSinceGrounded = 0f;
                 return true;
@@ -273,13 +274,21 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             Jump();
         }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (planeMode)
+            {
+                rb.AddRelativeForce(Vector3.up * planeSpeed * Time.deltaTime);
+            }
+        }
         if (Input.GetKey(KeyCode.LeftControl))
         {
             if (!onGround && !sliding)
             {
-                Slam();
-                //if (slideDir == Vector3.zero) { slideDir = transform.forward; }
-                //Slide();
+                if(Input.GetKeyDown(KeyCode.LeftControl))
+                {
+                    Slam();
+                }
             }
             else
             {
