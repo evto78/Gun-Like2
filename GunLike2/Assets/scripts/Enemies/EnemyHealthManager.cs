@@ -24,6 +24,8 @@ public class EnemyHealthManager : MonoBehaviour
     List<GameObject> icons;
     public Transform effectHolder;
 
+    bool died;
+
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -79,7 +81,7 @@ public class EnemyHealthManager : MonoBehaviour
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
         gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
 
-        if (curHp <= 0) { Die(); }
+        if (curHp <= 0 && !died) { Die(); died = true; }
     }
 
     public void TakePercentDamage(float pDmgTaken)
