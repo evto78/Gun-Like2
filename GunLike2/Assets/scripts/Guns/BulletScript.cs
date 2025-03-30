@@ -128,6 +128,13 @@ public class BulletScript : MonoBehaviour
         isTrigLead = isLead;
     }
 
+    void RunOnHit(GameObject hit)
+    {
+        hit.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
+        if (isFireSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+        if (isSharperSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 1f); }
+    }
+
     private void RunOnCollide(GameObject gameObject)
     {
 
@@ -140,8 +147,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
-                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                        if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                        RunOnHit(gameObject);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -151,8 +157,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position, whatHandThisComesFrom);
-                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                        if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                        RunOnHit(gameObject);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -165,8 +170,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position, whatHandThisComesFrom);
-                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                        if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                        RunOnHit(gameObject);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -176,8 +180,7 @@ public class BulletScript : MonoBehaviour
                     if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
                         gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
-                        gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                        if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                        RunOnHit(gameObject);
                     }
 
                     gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -206,8 +209,7 @@ public class BulletScript : MonoBehaviour
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
-                    gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                    if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                    RunOnHit(gameObject);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -217,8 +219,7 @@ public class BulletScript : MonoBehaviour
                 if (gameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
-                    gameObject.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-                    if (isFireSpon) { gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
+                    RunOnHit(gameObject);
                 }
 
                 gameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);

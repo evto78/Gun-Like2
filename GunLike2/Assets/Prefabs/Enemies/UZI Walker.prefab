@@ -5682,7 +5682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c2d231199362a4e805473fc1f083e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 5
+  offset: 3.7
   legs:
   - {fileID: 3578715229451190691}
   - {fileID: 6416637412406178813}
@@ -5696,10 +5696,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 2.06
-  m_Speed: 5
+  m_Speed: 7
   m_Acceleration: 15
   avoidancePriority: 50
-  m_AngularSpeed: 600
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -5720,6 +5720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb8a3bb3beb39a2459272f2d5890274a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  desDistance: 5
+  updateFreq: 0.5
 --- !u!114 &2659335904208058925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5736,11 +5738,11 @@ MonoBehaviour:
   firepoint: {fileID: 1062548821966943429}
   bullet: {fileID: 5914608870518321246, guid: 27ac6a2458e782b409765925b3a1f46a, type: 3}
   shotCooldown: 4
-  bulPerBurst: 8
-  fireRate: 0.1
-  dmg: 2
-  bulSpeed: 100
-  accuracy: 3
+  bulPerBurst: 15
+  fireRate: 0.05
+  dmg: 7
+  bulSpeed: 1.2
+  accuracy: 2
   jamEffect: {fileID: 4855771532441053068}
 --- !u!114 &8097453852567091253
 MonoBehaviour:
@@ -5757,9 +5759,9 @@ MonoBehaviour:
   item: {fileID: 6608729508006346496, guid: b68d450b6aedbbe4aa252780546ddf52, type: 3}
   itemPossibility: {fileID: 2157979777283688088, guid: 5cc2937a662841a4e89357de5d7ac507, type: 3}
   dropChance: 20
-  curHp: 125
-  maxHp: 125
-  armor: 0
+  curHp: 100
+  maxHp: 100
+  armor: 5
   damageText: {fileID: 5471558382887693187, guid: 82cd74ae1539dd84a8ead7f9d43cd72e, type: 3}
   latestDamage: 0
   effectIcon: {fileID: 9009043241827680975, guid: 2481330a5c7ce0c49ba5763d98f990d8, type: 3}

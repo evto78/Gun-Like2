@@ -72,8 +72,8 @@ public class UZIWalkerBrain : MonoBehaviour
         {
             turretAnim.SetBool("Recharge", false);
         }
-        fireTimer -= Time.deltaTime;
-        cooldownTimer -= Time.deltaTime;
+        fireTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
+        cooldownTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
         
     }
 
@@ -87,7 +87,7 @@ public class UZIWalkerBrain : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(bullet);
         spawnedBullet.transform.position = firepoint.transform.position;
-        spawnedBullet.transform.LookAt(player.transform);
+        spawnedBullet.transform.LookAt(player.transform.position + player.GetComponent<Rigidbody>().velocity / 3f);
         spawnedBullet.transform.Rotate(new Vector3(Random.Range(-1f,1f), Random.Range(-1f,1f), 0) * accuracy);
         spawnedBullet.GetComponent<EnemyBullet>().SetStats(dmg);
         
