@@ -45,6 +45,7 @@ public class DevItemSpawner : MonoBehaviour
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
 			{	
+				if(numberTyped == "$") { GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; }
 				if(numberTyped == "c") { SpawnPotential(0); }
 				if(numberTyped == "u") { SpawnPotential(1); }
 				if(numberTyped == "r") { SpawnPotential(2); }

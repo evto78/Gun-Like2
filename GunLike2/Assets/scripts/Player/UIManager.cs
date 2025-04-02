@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
     public TextMeshProUGUI fpsText;
     public TextMeshProUGUI crosshair;
-    //public TextMeshProUGUI velocityText;
+    public TextMeshProUGUI moneyText;
 
     public HitScanGunScript revScript;
     public GunScript gunScript;
@@ -96,6 +96,8 @@ public class UIManager : MonoBehaviour
 
         fps = (int)(1f / Time.unscaledDeltaTime);
         fpsText.text = "FPS: " + fps;
+
+        moneyText.text = healthManager.money + "$";
 
         lGunAmmoText.text = revScript.currentBullets + " / " + revScript.magSize;
         rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.magSize;

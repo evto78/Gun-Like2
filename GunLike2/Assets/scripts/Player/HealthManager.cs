@@ -31,20 +31,29 @@ public class HealthManager : MonoBehaviour
 	float orgGumTimer;
 	float expGrowth;
 	public GameObject expGrowthExplosion;
+	public GameObject radioactiveDomesExplosion;
 	int numOfBunnies;
 	int symGrowth;
 	int beltFed;
 	int activeReactor;
+	int radioDome;
+	float radioTimer;
+	int radiosQued;
 
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
 	public PlayerItem playerItem;
+
+	public int money;
+
+	public int baseCost;
 
 	public bool dead;
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		money = 0;
 		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
@@ -74,6 +83,7 @@ public class HealthManager : MonoBehaviour
 		symGrowth = 0 + givenLeftItems[23] + givenRightItems[23];
 		beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
 		activeReactor = 0 + givenLeftItems[30] + givenRightItems[30];
+		radioDome = 0 + givenLeftItems[37] + givenRightItems[37];
 
 		if(activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -165,12 +175,14 @@ public class HealthManager : MonoBehaviour
 		if(curHp <= 0) { dead = true; }
 	}
 
-	public void EnemyDied(GameObject enemyThatDied)
+	public void EnemyDied(GameObject enemyThatDied, int moneyDropped)
     {
 		if(activeReactor > 0)
         {
 			GiveEffect("active reactor", 1);
         }
+
+		money += moneyDropped;
     }
 
 	void itemChecks()
@@ -231,10 +243,21 @@ public class HealthManager : MonoBehaviour
 				}
 			}
         }
+
+		radioTimer -= Time.deltaTime;
+		if(radioTimer <= 0 && radiosQued > 0)
+        {
+			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
+			spawnedRadioDome.transform.position = transform.position;
+			spawnedRadioDome.GetComponent<RadioactiveDomes>().damage = maxHp * (15f / 100f);
+			radiosQued -= 1;
+			radioTimer = 0.5f;
+		}
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
 	{
+		bool wasAtMax = (curHp == maxHp);
 		if (damageTaken <= 0)
 		{
 			//Heal
@@ -260,6 +283,17 @@ public class HealthManager : MonoBehaviour
 				GameObject createdGrowthExplosion = Instantiate(expGrowthExplosion, transform.position, transform.rotation);
 				createdGrowthExplosion.GetComponent<ExplosiveGrowthScript>().Explode(expGrowth, damageTaken);
 			}
+		}
+
+		if (curHp != maxHp && wasAtMax && radioDome > 0)
+		{
+			TakeDamage(maxHp * (15f / 100f), false);
+			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
+			spawnedRadioDome.transform.position = transform.position;
+			spawnedRadioDome.GetComponent<RadioactiveDomes>().damage = maxHp * (15f / 100f);
+
+			radioTimer = 0.5f;
+			radiosQued += radioDome - 1;
 		}
 	}
 

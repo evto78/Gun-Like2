@@ -8,6 +8,9 @@ public class EnemyHealthManager : MonoBehaviour
     public GameObject item;
     public GameObject itemPossibility;
 
+    public int moneyDrop;
+    public int dropVariance;
+
     public float dropChance;
 
     public float curHp;
@@ -117,6 +120,7 @@ public class EnemyHealthManager : MonoBehaviour
 
         //Item effects
         if (effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
+        if (effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
     }
 
     void ManageEffects()
@@ -180,21 +184,27 @@ public class EnemyHealthManager : MonoBehaviour
 
     private void OnDeath()
     {
-        player.GetComponent<HealthManager>().EnemyDied(gameObject);
+        if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
+        player.GetComponent<HealthManager>().EnemyDied(gameObject, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
 
-        if (Random.Range(1, 100) <= dropChance)
+        //gunlike classic
+        if(player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38] > 0)
         {
-            int rand = Random.Range(1, 100);
-            List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+            dropChance += 25 * (player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]);
+            if (Random.Range(1, 100) <= dropChance)
+            {
+                int rand = Random.Range(1, 100);
+                List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
 
-            if (rand < 71) { SpawnItem(0); }
-            if (rand < 91 && rand > 70) { SpawnItem(1); }
-            if (rand == 91 || rand == 92) { SpawnItem(2); }
-            if (rand == 93 || rand == 94) { SpawnItem(4); }
-            if (rand == 95 || rand == 96) { SpawnItem(5); }
-            if (rand == 97 || rand == 98) { SpawnItem(6); }
-            if (rand == 99) { SpawnItem(3); }
-            if (rand == 100) { SpawnItem(7); }
+                if (rand < 71) { SpawnItem(0); }
+                if (rand < 91 && rand > 70) { SpawnItem(1); }
+                if (rand == 91 || rand == 92) { SpawnItem(2); }
+                if (rand == 93 || rand == 94) { SpawnItem(4); }
+                if (rand == 95 || rand == 96) { SpawnItem(5); }
+                if (rand == 97 || rand == 98) { SpawnItem(6); }
+                if (rand == 99) { SpawnItem(3); }
+                if (rand == 100) { SpawnItem(7); }
+            }
         }
     }
 

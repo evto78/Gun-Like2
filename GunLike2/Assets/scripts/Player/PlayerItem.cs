@@ -188,7 +188,8 @@ public class PlayerItem : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    hit.transform.gameObject.GetComponent<InteractableButton>().Interact();
+                    //hit.transform.gameObject.GetComponent<InteractableButton>().Interact();
+                    hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
                 }
             }
         }

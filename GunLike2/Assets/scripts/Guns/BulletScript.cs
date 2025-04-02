@@ -133,6 +133,7 @@ public class BulletScript : MonoBehaviour
         hit.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
         if (isFireSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
         if (isSharperSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 1f); }
+        if (isSilverSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("lucky", 1f); }
     }
 
     private void RunOnCollide(GameObject gameObject)
