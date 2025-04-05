@@ -36,7 +36,8 @@ public class ItemContainer : MonoBehaviour
         GameObject spawnedItem;
         spawnedItem = Instantiate(itemPossibility);
         spawnedItem.transform.position = spawnPos.position;
-        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 500f);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * 100f);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 200f);
         spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
@@ -56,7 +57,7 @@ public class ItemContainer : MonoBehaviour
         if (animatie) { anim.SetTrigger("Open"); }
         hatch.GetComponent<Collider>().isTrigger = true;
         hatch.AddComponent<Rigidbody>();
-        hatch.GetComponent<Rigidbody>().AddForce((Vector3.up * 1000f) + (Vector3.one * Random.Range(-100f,100f)));
+        hatch.GetComponent<Rigidbody>().AddForce((spawnPos.transform.forward * 1000f) + (Vector3.one * Random.Range(-100f,100f)));
         hatch.GetComponent<Rigidbody>().AddTorque(Vector3.one * Random.Range(-100f,100f));
         hatch.transform.SetParent(null);
         Destroy(hatch, 10f);
