@@ -39,6 +39,8 @@ public class HealthManager : MonoBehaviour
 	int radioDome;
 	float radioTimer;
 	int radiosQued;
+	int experimentalImp;
+	float experTimer;
 
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
@@ -74,6 +76,7 @@ public class HealthManager : MonoBehaviour
 		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[39] + givenRightItems[39], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 
@@ -84,8 +87,9 @@ public class HealthManager : MonoBehaviour
 		beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
 		activeReactor = 0 + givenLeftItems[30] + givenRightItems[30];
 		radioDome = 0 + givenLeftItems[37] + givenRightItems[37];
+		experimentalImp = 0 + givenLeftItems[39] + givenRightItems[39];
 
-		if(activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
+		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
@@ -153,19 +157,23 @@ public class HealthManager : MonoBehaviour
 	{
         if (dead) { return; }
 
-		regenTimer -= Time.deltaTime;
-		if ((curHp < maxHp) && regenTimer <= 0f) 
-		{
-			if(symGrowth > 0 && curHp / maxHp > 0.8f)
-            {
-				curHp -= healthRegen * Time.deltaTime;
+		if(experimentalImp <= 0)
+        {
+			regenTimer -= Time.deltaTime;
+			if ((curHp < maxHp) && regenTimer <= 0f)
+			{
+				if (symGrowth > 0 && curHp / maxHp > 0.8f)
+				{
+					curHp -= healthRegen * Time.deltaTime;
+				}
+				else
+				{
+					curHp += healthRegen * Time.deltaTime;
+				}
+
 			}
-            else
-            {
-				curHp += healthRegen * Time.deltaTime;
-			}
-			
 		}
+		
 		if (curHp > maxHp) { curHp = maxHp; }
 
 		itemChecks();
@@ -253,6 +261,30 @@ public class HealthManager : MonoBehaviour
 			radiosQued -= 1;
 			radioTimer = 0.5f;
 		}
+
+		if(experimentalImp > 0)
+        {
+			experTimer -= Time.deltaTime;
+
+			if(experTimer <= 0)
+            {
+				experTimer = 0.5f;
+
+				if(Random.Range(1,100) > (53 - experimentalImp * 3))
+                {
+					TakeDamage(-1f * healthRegen, false);
+					Debug.Log("Healing for: " + -1f * healthRegen);
+                }
+                else
+                {
+					if(curHp > 0.5f * healthRegen)
+                    {
+						TakeDamage(0.5f * healthRegen, false);
+						Debug.Log("Damaging for: " + 0.5f * healthRegen);
+					}
+                }
+            }
+        }
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
@@ -261,7 +293,7 @@ public class HealthManager : MonoBehaviour
 		if (damageTaken <= 0)
 		{
 			//Heal
-			curHp += damageTaken;
+			curHp -= damageTaken;
 		}
 		else
 		{

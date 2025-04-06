@@ -191,7 +191,7 @@ public class EnemyHealthManager : MonoBehaviour
         if(player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38] > 0)
         {
             dropChance += 25 * (player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]);
-            if (Random.Range(1, 100) <= dropChance)
+            if (Random.Range(1, 100) <= dropChance + ((player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]) * 10))
             {
                 int rand = Random.Range(1, 100);
                 List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
