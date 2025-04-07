@@ -63,6 +63,7 @@ public class GunManager : MonoBehaviour
     public float leftCoolSpon;
     public float leftFastSpon;
     public float leftLargeSpon;
+    public int leftPossession;
 
     public bool leftRicochet = false;
 
@@ -100,6 +101,7 @@ public class GunManager : MonoBehaviour
     public float rightCoolSpon;
     public float rightFastSpon;
     public float rightLargeSpon;
+    public int rightPossession;
 
     public bool rightRicochet = false;
 
@@ -171,6 +173,7 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(20f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(10f, givenLeftItems[4], leftDmg);
+        leftDmg = Calc(10f, givenLeftItems[40], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
@@ -206,6 +209,7 @@ public class GunManager : MonoBehaviour
         leftCoolSpon = givenLeftItems[44];
         leftLargeSpon = givenLeftItems[45];
         leftFastSpon = givenLeftItems[47];
+        leftPossession = givenLeftItems[40];
 
         leftRicochet = false;
 
@@ -220,6 +224,7 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(20f, givenRightItems[21], rightDmg);
         rightDmg = Calc(20f, givenRightItems[13], rightDmg);
         rightDmg = Calc(10f, givenRightItems[4], rightDmg);
+        rightDmg = Calc(10f, givenRightItems[40], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
@@ -255,6 +260,7 @@ public class GunManager : MonoBehaviour
         rightCoolSpon = givenRightItems[44];
         rightLargeSpon = givenRightItems[45];
         rightFastSpon = givenRightItems[47];
+        rightPossession = givenRightItems[40];
 
         rightRicochet = false;
 

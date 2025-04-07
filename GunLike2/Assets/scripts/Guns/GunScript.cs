@@ -6,6 +6,8 @@ public class GunScript : MonoBehaviour
 {
     Animator animator;
     public GunManager manager;
+    Transform player;
+    public GameObject possessionEffect;
 
     //Base stats for this gun
     public float baseMagSize = 15;
@@ -49,6 +51,7 @@ public class GunScript : MonoBehaviour
     public float coolSpon;
     public float fastSpon;
     public float largeSpon;
+    public int possession;
 
     //Status
     float reloadTimer = 0;
@@ -71,11 +74,15 @@ public class GunScript : MonoBehaviour
 
     public string whatHandThisIsIn;
 
+    float timeSinceShot;
+    public Transform target;
+
     // Start is called before the first frame update
     void Start()
     {
         currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
+        player = GameObject.Find("Player").transform;
     }
 
     public void StatUpdateLeft()
@@ -108,6 +115,7 @@ public class GunScript : MonoBehaviour
         coolSpon = manager.leftCoolSpon;
         fastSpon = manager.leftFastSpon;
         largeSpon = manager.leftLargeSpon;
+        possession = manager.leftPossession;
 
     ricochet = manager.leftRicochet;
     }
@@ -142,6 +150,7 @@ public class GunScript : MonoBehaviour
         coolSpon = manager.rightCoolSpon;
         fastSpon = manager.rightFastSpon;
         largeSpon = manager.rightLargeSpon;
+        possession = manager.rightPossession;
 
         ricochet = manager.rightRicochet;
     }
@@ -149,6 +158,40 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timeSinceShot += Time.deltaTime;
+
+        if(possession > 0 && timeSinceShot > 5f)
+        {
+            if(currentBullets <= 0) { AttemptReload(); }
+
+            possessionEffect.SetActive(true);
+
+            List<RaycastHit> hits = new List<RaycastHit>();
+
+            hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 25f, Vector3.one * 10f, cam.transform.forward, cam.transform.rotation, 100f));
+
+            EnemyHealthManager eHealthMan;
+            target = null;
+            foreach(RaycastHit hit in hits)
+            {
+                //Debug.Log(hit.transform.gameObject.name);
+                if (hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out eHealthMan))
+                {
+                    if ((eHealthMan.curHp + eHealthMan.armor) <= dmg)
+                    {
+                        target = hit.transform;
+                        break;
+                    }
+                }
+                
+            }
+            if(target != null)
+            {
+                AttemptShoot();
+            }
+        }
+        else { target = null; possessionEffect.SetActive(false); }
+
         if (reloading)
         {
             reloadTimer -= Time.deltaTime * reSpd;
@@ -235,9 +278,12 @@ public class GunScript : MonoBehaviour
         attackTimer = 1;
         if (currentBullets > 0)
         {
+            timeSinceShot = 0f;
+
             currentBullets--;
 
             GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
+            if(target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
             //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
