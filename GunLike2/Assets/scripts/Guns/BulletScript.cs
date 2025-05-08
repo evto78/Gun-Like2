@@ -118,7 +118,7 @@ public class BulletScript : MonoBehaviour
         if (Physics.Raycast(myPos, forceDir, out RaycastHit hit, Vector3.Distance(myPos, (myPos + forceDir * Time.fixedDeltaTime))))
         {
             transform.position = hit.point;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged") { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
     }
 
@@ -331,10 +331,11 @@ public class BulletScript : MonoBehaviour
     private void FixedUpdate()
     {
         myPos = transform.position;
+        Debug.Log("My pos: " + myPos + ". Predicted pos: " + (myPos + (rb.velocity * Time.fixedDeltaTime)) + ". ");
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
         {
             transform.position = hit.point;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged") { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
 
         if (rb.freezeRotation && rb.velocity.magnitude > Vector3.zero.magnitude)

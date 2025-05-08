@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 8775326574407350230}
   - component: {fileID: 4800626544823883103}
   - component: {fileID: 7435961549262629462}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 3029381275542875000}
   - component: {fileID: 3975827650243571299}
   - component: {fileID: 662964248040335936}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Cost Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 1356494551661890904}
   - component: {fileID: 9176088547116248730}
   - component: {fileID: 6929333664027117052}
+  - component: {fileID: 1768861595083356560}
   m_Layer: 0
   m_Name: Crate
   m_TagString: Interactable
@@ -741,6 +742,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &1768861595083356560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4014124084827065428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7715a01f171e12e43ab9f907f3ec8a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedObject: {fileID: 3002757840727446620}
+  renDistance: 10
 --- !u!1 &4666960312222908123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,7 +1268,7 @@ GameObject:
   - component: {fileID: 1689274650109034378}
   - component: {fileID: 5013543037124061633}
   - component: {fileID: 5337190959052085825}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
