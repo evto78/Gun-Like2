@@ -122,7 +122,7 @@ public class GunManager : MonoBehaviour
         masterDmg = 1f;
         masterMagSize = 1f;
         masterAcc = 1f;
-        masterBulSpd = 1f;
+        masterBulSpd = 100f;
         masterBulSize = 1f;
         masterBulPir = 0;
         masterCritChance = 1f;
