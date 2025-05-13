@@ -23,16 +23,19 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    public void Play()
+    public void Play(string what)
     {
-        if (!starting)
+        if(what == "new")
         {
-            bgDoor.Activate();
-            cam.GetComponent<Animator>().SetBool("Leaving", true);
-            starting = true;
-            foreach(GameObject go in uiTOHIDE)
+            if (!starting)
             {
-                go.SetActive(false);
+                bgDoor.Activate();
+                cam.GetComponent<Animator>().SetBool("Leaving", true);
+                starting = true;
+                foreach (GameObject go in uiTOHIDE)
+                {
+                    go.SetActive(false);
+                }
             }
         }
     }

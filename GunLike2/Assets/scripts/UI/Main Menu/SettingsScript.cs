@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 
 public class SettingsScript : MonoBehaviour
 {
     public TextAsset settingsFile;
-    public List<RichSetting> settings;
+    List<RichSetting> settings;
+    public List<SettingSlider> sliders;
 
+    [System.Serializable]
     public struct RichSetting
-    {
+    {        
         public string name;
         public float val;
+    }
+    [System.Serializable]
+    public struct SettingSlider
+    {
+        public string name;
+        public Slider slider;
     }
     void Start()
     {
@@ -22,7 +31,28 @@ public class SettingsScript : MonoBehaviour
             settings = BuildSettingsFile();
         }
 
+        int index = 0;
+        foreach (SettingSlider element in sliders)
+        {
+            element.slider.value = settings[index+1].val / 100f;
+
+            index++;
+        }
+
         UpdatePrefs();
+    }
+    private void Update()
+    {
+        int index = 0;
+        foreach(SettingSlider element in sliders)
+        {
+            RichSetting temp;
+            temp.name = settings[index + 1].name;
+            temp.val = element.slider.value * 100f;
+            settings[index + 1] = temp;
+
+            index++;
+        }
     }
     private void OnDisable()
     {
