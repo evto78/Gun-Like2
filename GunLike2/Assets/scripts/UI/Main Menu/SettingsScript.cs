@@ -6,108 +6,55 @@ using UnityEngine.UI;
 
 public class SettingsScript : MonoBehaviour
 {
-    public TextAsset settingsFile;
-    List<RichSetting> settings;
-    public List<SettingSlider> sliders;
-
-    [System.Serializable]
-    public struct RichSetting
-    {        
-        public string name;
-        public float val;
-    }
-    [System.Serializable]
-    public struct SettingSlider
+    List<string> keys;
+    public List<Slider> sliders;
+    public Toggle fullscreen;
+    private void Start()
     {
-        public string name;
-        public Slider slider;
-    }
-    void Start()
-    {
-        settings = Unpack(settingsFile);
-        if(settings[0].name != "BUILT")
-        {
-            Debug.Log("Settings file rebuilt");
-            settings = BuildSettingsFile();
-        }
+        BuildKeys();
 
         int index = 0;
-        foreach (SettingSlider element in sliders)
+        foreach(string key in keys)
         {
-            element.slider.value = settings[index+1].val / 100f;
-
+            if (PlayerPrefs.HasKey(keys[index]))
+            {
+                sliders[index].value = PlayerPrefs.GetFloat(keys[index]);
+            }
             index++;
         }
 
-        UpdatePrefs();
+        if (!PlayerPrefs.HasKey("FULLSCREEN")) { PlayerPrefs.SetString("FULLSCREEN", "TRUE"); }
+        Screen.fullScreen = PlayerPrefs.GetString("FULLSCREEN") == "TRUE";
+        fullscreen.isOn = Screen.fullScreen;
     }
     private void Update()
     {
         int index = 0;
-        foreach(SettingSlider element in sliders)
+        foreach(Slider slider in sliders)
         {
-            RichSetting temp;
-            temp.name = settings[index + 1].name;
-            temp.val = element.slider.value * 100f;
-            settings[index + 1] = temp;
-
+            PlayerPrefs.SetFloat(keys[index], slider.value);
             index++;
         }
     }
-    private void OnDisable()
+    public void Fullscreen(bool input)
     {
-        Pack(settings, settingsFile);
-    }
-    private void OnDestroy()
-    {
-        Pack(settings, settingsFile);
-    }
-    private void OnApplicationQuit()
-    {
-        Pack(settings, settingsFile);
-    }
-    public List<RichSetting> Unpack(TextAsset txtFile)
-    {
-        List<RichSetting> returnedList;
-        returnedList = new List<RichSetting>();
-        foreach( string element in txtFile.ToString().Split("/"))
+        Screen.fullScreen = input;
+        if (input)
         {
-            if (element.Contains(":"))
-            {
-                RichSetting constructing = new RichSetting();
-                constructing.name = element.Split(":")[0];
-                constructing.val = float.Parse(element.Split(":")[1]);
-                returnedList.Add(constructing);
-            }
+            PlayerPrefs.SetString("FULLSCREEN", "TRUE");
         }
-
-        return returnedList;
-    }
-    public void Pack(List<RichSetting> settingList, TextAsset txtFile)
-    {
-        string packedStr = "";
-        foreach (RichSetting element in settingList)
+        else
         {
-            packedStr = packedStr + (element.name + ":" + element.val) + "/";
+            PlayerPrefs.SetString("FULLSCREEN", "FALSE");
         }
-        File.WriteAllText("Assets/Resources/" + txtFile.name + ".txt", packedStr);
     }
-    List<RichSetting> BuildSettingsFile()
+    void BuildKeys()
     {
-        RichSetting tempSetting;
-        List<RichSetting> builtList = new List<RichSetting>();
-        tempSetting.name = "BUILT"; tempSetting.val = 0f; builtList.Add(tempSetting);
-        tempSetting.name = "MASTERVOL"; tempSetting.val = 100f; builtList.Add(tempSetting);
-        tempSetting.name = "MUSICVOL"; tempSetting.val = 100f; builtList.Add(tempSetting);
-        tempSetting.name = "EFFECTVOL"; tempSetting.val = 100f; builtList.Add(tempSetting);
-
-        return builtList;
-    }
-    public void UpdatePrefs()
-    {
-        foreach(RichSetting element in settings)
-        {
-            PlayerPrefs.SetFloat(element.name, element.val);
-        }
+        keys = new List<string>();
+        keys.Add("MASTERVOL");
+        keys.Add("MUSICVOL");
+        keys.Add("EFFECTVOL");
+        keys.Add("FOV");
+        keys.Add("SENS");
     }
 }
