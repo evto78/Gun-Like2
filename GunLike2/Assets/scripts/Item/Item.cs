@@ -5,6 +5,7 @@ using TMPro;
 
 public class Item : MonoBehaviour
 {
+    public ItemObject itemObj;
     public List<Sprite> spriteList;
     public List<string> itemList;
 
@@ -23,7 +24,6 @@ public class Item : MonoBehaviour
     private void Start()
     {
         itemText.text = "";
-        //itemText.text = itemList[itemID];
 
         rb = GetComponent<Rigidbody>();
 
@@ -35,14 +35,11 @@ public class Item : MonoBehaviour
 
     public void SetItemID(int givenID)
     {
+        //happens b4 start
         Debug.Log("spawning item: " + givenID);
-        if (givenID > spriteList.Count)
-        {
-            Debug.Log("Destroying");
-            Destroy(gameObject);
-        }
+        itemObj = Resources.Load<ItemObject>("Items/"+givenID.ToString());
         itemID = givenID;
-        sr.sprite = spriteList[givenID];
+        sr.sprite = itemObj.itemSprite;
     }
 
     public int WhatItem()

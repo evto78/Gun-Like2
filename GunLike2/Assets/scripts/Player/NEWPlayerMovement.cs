@@ -106,9 +106,9 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
 
         moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
-        sprintMoveSpeed = Calc(10f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
-        jumpForce = Calc(10f, givenLeftItems[1] + givenRightItems[1], jumpForce);
-        jumpForce = Calc(10f, givenLeftItems[20] + givenRightItems[20], jumpForce);
+        sprintMoveSpeed = Calc(20f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
+        jumpForce = Calc(20f, givenLeftItems[1] + givenRightItems[1], jumpForce);
+        jumpForce = Calc(20f, givenLeftItems[20] + givenRightItems[20], jumpForce);
         jumpForce = Calc(-10f, givenLeftItems[23] + givenRightItems[23], jumpForce);
         numberOfJumps += givenLeftItems[15] + givenRightItems[15];
         numberOfJumps += givenLeftItems[31] + givenRightItems[31];

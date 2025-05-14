@@ -68,15 +68,15 @@ public class HealthManager : MonoBehaviour
 		armor = baseArmor;
 		maxHp = baseMaxHP;
 
-		healthRegen = Calc(10f, givenLeftItems[2] + givenRightItems[2], healthRegen);
-		healthRegen = Calc(10f, givenLeftItems[14] + givenRightItems[14], healthRegen);
+		healthRegen = Calc(20f, givenLeftItems[2] + givenRightItems[2], healthRegen);
+		healthRegen = Calc(20f, givenLeftItems[14] + givenRightItems[14], healthRegen);
 		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
 		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
-		armor = Calc(5f, givenLeftItems[3] + givenRightItems[3], armor);
+		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[39] + givenRightItems[39], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[39] + givenRightItems[39], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 

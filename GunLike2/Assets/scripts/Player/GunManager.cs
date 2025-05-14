@@ -169,11 +169,11 @@ public class GunManager : MonoBehaviour
 
 
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
-        leftReSpd = Calc(10f, givenLeftItems[7], leftReSpd);
+        leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
         leftDmg = Calc(20f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[13], leftDmg);
-        leftDmg = Calc(10f, givenLeftItems[4], leftDmg);
-        leftDmg = Calc(10f, givenLeftItems[40], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
@@ -186,10 +186,10 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(20f, givenLeftItems[26], leftAcc);
         leftAcc = Calc(20f, givenLeftItems[27], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
-        leftBulSpd = Calc(10f, givenLeftItems[9], leftBulSpd);
+        leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
-        leftBulSize = Calc(10f, givenLeftItems[11], leftBulSize);
+        leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
         leftBulPir += givenLeftItems[10];
 
         leftHeavyBul = givenLeftItems[11];
@@ -219,12 +219,12 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
-        rightReSpd = Calc(10f, givenRightItems[7], rightReSpd);
+        rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
         rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
         rightDmg = Calc(20f, givenRightItems[21], rightDmg);
         rightDmg = Calc(20f, givenRightItems[13], rightDmg);
-        rightDmg = Calc(10f, givenRightItems[4], rightDmg);
-        rightDmg = Calc(10f, givenRightItems[40], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[4], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[40], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
@@ -237,10 +237,10 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(20f, givenRightItems[26], rightAcc);
         rightAcc = Calc(20f, givenRightItems[27], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
-        rightBulSpd = Calc(10f, givenRightItems[9], rightBulSpd);
+        rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
-        rightBulSize = Calc(10f, givenRightItems[11], rightBulSize);
+        rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
         rightBulPir += givenRightItems[10];
 
         rightHeavyBul = givenRightItems[11];
