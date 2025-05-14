@@ -17,6 +17,7 @@ public class NEWPlayerMovement : MonoBehaviour
     float yaw = 0.0f;
     float pitch = 0.0f;
     float fov;
+    float fps;
     //public float minVelFov;
     public float maxVelFov;
 
@@ -67,6 +68,10 @@ public class NEWPlayerMovement : MonoBehaviour
     void Start()
     {
         fov = Mathf.RoundToInt(cam.GetComponent<Camera>().fieldOfView);
+        if (PlayerPrefs.HasKey("FOV")) { fov = PlayerPrefs.GetFloat("FOV"); }
+        if (PlayerPrefs.HasKey("SENS")) { sensitivity = PlayerPrefs.GetFloat("SENS") / 10f; }
+        if (PlayerPrefs.HasKey("FPS")) { fps = PlayerPrefs.GetFloat("FPS"); } else { fps = 120; }
+        Application.targetFrameRate = Mathf.RoundToInt(fps);
         jumpsLeft = numberOfJumps;
         rb = GetComponent<Rigidbody>();
         healthMan = GetComponent<HealthManager>();

@@ -9,8 +9,13 @@ public class MainMenuManager : MonoBehaviour
     Camera cam;
     bool starting;
     public List<GameObject> uiTOHIDE;
+    private void Awake()
+    {
+        Time.timeScale = 1f;
+    }
     void Start()
     {
+        Time.timeScale = 1f;
         cam = Camera.main;
     }
 
