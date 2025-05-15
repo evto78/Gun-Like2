@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 37
+  m_EditorClassIdentifier: 
+  id: 37
+  itemName: Radioactive Metal Domes
+  rarity: Nuclear
+  itemSprite: {fileID: 21300000, guid: bcca249f9036f6249b7483f446fdbcfc, type: 3}
+  effect: When at max hp and taking damage, let out a wave of bright blue radiation,
+    you take damage equal to 15% your mhp and then deal that damage to everyone hit
+    by the wave. this effect cannot kill you. An additional wave is created after
+    a delay per stack.
+  buff: '-'
+  debuff: '-'
+  effectSum: When dmg and at full HP, take extra damage and let out a wave of damage
+    based on your max hp.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: There is a small twig seperating the domes, probably don't need it.
+  ideaCredit: 
+  flavorCredit: 
