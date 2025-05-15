@@ -8,28 +8,7 @@ public class ItemDisplayScript : MonoBehaviour
 {
     public GameObject player;
     public GameObject cam;
-    public GameObject item;
-    Item itemScript;
     PlayerItem playerItemScript;
-
-    public List<List<string>> describeList = new List<List<string>>();
-    // [0] is the buffs
-    // [1] is the debuffs
-    // [2] is the effects
-    // [3] is the flavor text
-    // [4] is the buff summery
-    // [5] is the debuff summery
-    // [6] is the effect summery
-    // add more as needed \/
-
-    public List<string> buffList = new List<string>();
-    public List<string> debuffList = new List<string>();
-    public List<string> effectList = new List<string>();
-    public List<string> flavorList = new List<string>();
-
-    public List<string> buffSummeryList = new List<string>();
-    public List<string> debuffSummeryList = new List<string>();
-    public List<string> effectSummeryList = new List<string>();
 
     public List<Sprite> backgroundList = new List<Sprite>();
 
@@ -48,17 +27,7 @@ public class ItemDisplayScript : MonoBehaviour
 
     private void Start()
     {
-
-        itemScript = item.GetComponent<Item>();
         playerItemScript = player.GetComponent<PlayerItem>();
-
-        describeList.Add(buffList);
-        describeList.Add(debuffList);
-        describeList.Add(effectList);
-        describeList.Add(flavorList);
-        describeList.Add(buffSummeryList);
-        describeList.Add(debuffSummeryList);
-        describeList.Add(effectSummeryList);
     }
 
     // Update is called once per frame
@@ -67,15 +36,15 @@ public class ItemDisplayScript : MonoBehaviour
         transform.LookAt(cam.transform.position + Vector3.up);
     }
 
-    public void InfoUpdate(int iD, Vector3 itemPos)
+    public void InfoUpdate(ItemObject selectedItem, Vector3 itemPos)
     {
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
-        nameTxt.text = itemScript.itemList[iD];
+        nameTxt.text = selectedItem.itemName;
         if (Input.GetKey(KeyCode.C))
         {
             //id 22 is the irradiated french pastry
-            if(iD == 22)
+            if(selectedItem.id == 22)
             {
                 //irradiated french pastry
                 string lftBff = "NA";
@@ -129,26 +98,42 @@ public class ItemDisplayScript : MonoBehaviour
             }
             else
             {
-                buffTxt.text = describeList[0][iD];
-                debuffTxt.text = describeList[1][iD];
-                effectTxt.text = describeList[2][iD];
+                buffTxt.text = selectedItem.buff;
+                debuffTxt.text = selectedItem.debuff;
+                effectTxt.text = selectedItem.effect;
             }
         }
         else
         {
-            buffTxt.text = describeList[4][iD];
-            debuffTxt.text = describeList[5][iD];
-            effectTxt.text = describeList[6][iD];
+            buffTxt.text = selectedItem.buffSum;
+            debuffTxt.text = selectedItem.debuffSum;
+            effectTxt.text = selectedItem.effectSum;
         }
         
-        flavorTxt.text = describeList[3][iD];
+        flavorTxt.text = selectedItem.flavor;
 
-        itemSprite.sprite = itemScript.spriteList[iD];
+        itemSprite.sprite = selectedItem.itemSprite;
 
-        for (int i = 0; i < playerItemScript.rarityList.Count; i++)
-        {
-            if (playerItemScript.rarityList[i].Contains(iD)) { bgFlavor.sprite = backgroundList[i]; bgItem.sprite = backgroundList[i]; bgOutline.sprite = backgroundList[i]; bgDesc.sprite = backgroundList[i]; bgTitle.sprite = backgroundList[i]; }
-        }
+        SetRarity(selectedItem.rarity);
 
+    }
+    void SetRarity(string rarity)
+    {
+        int temp = 0;
+        if(rarity == "Common") { temp = 0; }
+        else if (rarity == "Uncommon") { temp= 1; }
+        else if (rarity == "Rare") { temp= 2; }
+        else if (rarity == "Legendary") { temp= 3; }
+        else if (rarity == "Mutated") { temp= 4; }
+        else if (rarity == "Haunted") { temp= 5; }
+        else if (rarity == "Irradiated") { temp= 6; }
+        else if (rarity == "Nuclear") { temp= 7; }
+        else if (rarity == "Unique") { temp= 8; }
+
+        bgFlavor.sprite = backgroundList[temp]; 
+        bgItem.sprite = backgroundList[temp]; 
+        bgOutline.sprite = backgroundList[temp]; 
+        bgDesc.sprite = backgroundList[temp]; 
+        bgTitle.sprite = backgroundList[temp];
     }
 }

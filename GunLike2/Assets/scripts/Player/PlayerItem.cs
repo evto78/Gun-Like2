@@ -157,7 +157,7 @@ public class PlayerItem : MonoBehaviour
                 Vector3 hitItem = hit.collider.gameObject.transform.position;
 
                 itemDisplay.SetActive(true);
-                itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(hit.collider.gameObject.GetComponentInParent<Item>().WhatItem(), hitItem);
+                itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(hit.collider.gameObject.GetComponentInParent<Item>().itemObj, hitItem);
 
                 hit.collider.gameObject.GetComponentInParent<Item>().StayStill();
 

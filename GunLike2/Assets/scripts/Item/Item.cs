@@ -6,8 +6,6 @@ using TMPro;
 public class Item : MonoBehaviour
 {
     public ItemObject itemObj;
-    public List<Sprite> spriteList;
-    public List<string> itemList;
 
     public List<Material> backgroundList = new List<Material>();
 

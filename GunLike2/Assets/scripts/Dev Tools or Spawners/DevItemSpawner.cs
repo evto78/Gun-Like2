@@ -8,6 +8,7 @@ public class DevItemSpawner : MonoBehaviour
 {
 	public GameObject item;
 	public GameObject itemPotential;
+	List<ItemObject> itemData;
 
 	private Camera cam;
 
@@ -18,6 +19,8 @@ public class DevItemSpawner : MonoBehaviour
 
 	private void Start()
 	{
+		itemData = new List<ItemObject>();
+		itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
 		typing = false;
 		cam = Camera.main;
 	}
@@ -26,7 +29,7 @@ public class DevItemSpawner : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.End))
 		{
-			SpawnItem(Random.Range(0, item.GetComponent<Item>().itemList.Count - 1));
+			SpawnItem(Random.Range(0, itemData.Count - 1));
 		}
 
 		if (Input.GetKeyDown(KeyCode.BackQuote) && !typing)

@@ -14,7 +14,6 @@ public class InventoryScript : MonoBehaviour
     public GameObject leftInvObj;
     public GameObject rightInvObj;
 
-    List<Sprite> itemSprites;
     public List<Sprite> itemBg;
 
     public List<List<GameObject>> leftSlots = new List<List<GameObject>>();
@@ -23,8 +22,6 @@ public class InventoryScript : MonoBehaviour
     private void Start()
     {
         player = GameObject.Find("Player");
-
-        itemSprites = item.GetComponent<Item>().spriteList;
 
         for(int r = 0; r < 20; r++)
         {
@@ -57,7 +54,7 @@ public class InventoryScript : MonoBehaviour
                 {
                     //0 - BG, 1 - Sprite, 2 - Text
                     leftSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[Mathf.RoundToInt(leftInventory[leftItemsIndex].z)];
-                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = itemSprites[Mathf.RoundToInt(leftInventory[leftItemsIndex].x)];
+                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/"+ (Mathf.RoundToInt(leftInventory[leftItemsIndex].x)).ToString()).itemSprite;
                     leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 1);
                     leftSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = ""+Mathf.RoundToInt(leftInventory[leftItemsIndex].y);
                     leftItemsToBeAdded--;
@@ -83,7 +80,7 @@ public class InventoryScript : MonoBehaviour
                 {
                     //0 - BG, 1 - Sprite, 2 - Text
                     rightSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[Mathf.RoundToInt(rightInventory[rightItemsIndex].z)];
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = itemSprites[Mathf.RoundToInt(rightInventory[rightItemsIndex].x)];
+                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/" + (Mathf.RoundToInt(leftInventory[rightItemsIndex].x)).ToString()).itemSprite;
                     rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 1);
                     rightSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "" + Mathf.RoundToInt(rightInventory[rightItemsIndex].y);
                     rightItemsToBeAdded--;

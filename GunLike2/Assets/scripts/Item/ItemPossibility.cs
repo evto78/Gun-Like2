@@ -23,12 +23,13 @@ public class ItemPossibility : MonoBehaviour
 
     private void Start()
     {
-        timer = 1f;
+        rarityList = GameObject.Find("Player").GetComponent<PlayerItem>().rarityList;
+        timer = 0.5f;
     }
 
     public void SetRarity(int givenRarity)
     {
-        timer = 1f;
+        timer = 0.5f;
 
         rarity = givenRarity;
 
@@ -51,6 +52,13 @@ public class ItemPossibility : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if(timer <= 0f)
+        {
+            OnInteract();
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (timer <= 0f)
         {
             OnInteract();
         }
