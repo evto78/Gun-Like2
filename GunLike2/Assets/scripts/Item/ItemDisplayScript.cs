@@ -48,6 +48,7 @@ public class ItemDisplayScript : MonoBehaviour
 
     private void Start()
     {
+
         itemScript = item.GetComponent<Item>();
         playerItemScript = player.GetComponent<PlayerItem>();
 

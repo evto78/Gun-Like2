@@ -17,6 +17,14 @@ public class ItemObject : ScriptableObject
     /// +++ = 60%
     /// + 1/2 = 10%
     /// </summary>
+    [Header("Display Text")]
+    public string effect;
+    public string buff;
+    public string debuff;
+    public string effectSum;
+    public string buffSum;
+    public string debuffSum;
+    public string flavor;
     [Header("Credit")]
     public string ideaCredit;
     public string flavorCredit;

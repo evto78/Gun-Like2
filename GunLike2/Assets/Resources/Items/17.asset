@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 17
+  m_EditorClassIdentifier: 
+  id: 17
+  itemName: Organic Gumball Machine
+  rarity: Mutated
+  itemSprite: {fileID: 21300000, guid: c964648f818909140b0a639e599e8527, type: 3}
+  effect: Every 20 seconds get a random buff with a 20% chance of getting a debuff
+    instead. Stacking lowers debuff chance by 10% and makes buffs / debuffs from
+    this more effective.
+  buff: '-'
+  debuff: '-'
+  effectSum: Periodicly gain a random stat buff, with a small chance of getting a
+    debuff instead.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: I heard the organic ones get better with time, just watch out for the meat
+    flavor...
+  ideaCredit: Jason
+  flavorCredit: 

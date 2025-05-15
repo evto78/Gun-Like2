@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 16
+  m_EditorClassIdentifier: 
+  id: 16
+  itemName: Bow-Action
+  rarity: Rare
+  itemSprite: {fileID: 21300000, guid: e0fac09a7da9c9540a3a1bcbe6222add, type: 3}
+  effect: Weapon becomes a charge shot. Giving damage, bullet speed, and accuracy
+    for charge. Charge speed scales with attack speed. Stacking gives a higher charge
+    speed and a higher charge cap.
+  buff: Damage + 20%(+0%), Accuracy + 20%(+20%), Bullet Speed + 20%(+20%)
+  debuff: Attack Speed - 20%(-0%)
+  effectSum: Weapon becomes a charge shot. Buffing variable stats the longer you
+    charge, up to a cap.
+  buffSum: Damage + , Accuracy + , Bullet Speed +
+  debuffSum: Attack Speed -
+  flavor: Hey more firepower is more firepower.
+  ideaCredit: 
+  flavorCredit: 
