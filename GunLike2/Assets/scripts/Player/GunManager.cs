@@ -173,6 +173,7 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(40f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[11], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
@@ -223,6 +224,7 @@ public class GunManager : MonoBehaviour
         rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
         rightDmg = Calc(40f, givenRightItems[21], rightDmg);
         rightDmg = Calc(40f, givenRightItems[13], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[11], rightDmg);
         rightDmg = Calc(20f, givenRightItems[4], rightDmg);
         rightDmg = Calc(20f, givenRightItems[40], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
