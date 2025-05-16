@@ -14,7 +14,7 @@ public class ItemObject : ScriptableObject
     /// General Definition of buff symbols
     /// + = 20%
     /// ++ = 40%
-    /// +++ = 60%
+    /// +++ = 50%/60%
     /// + 1/2 = 10%
     /// </summary>
     [Header("Display Text")]
