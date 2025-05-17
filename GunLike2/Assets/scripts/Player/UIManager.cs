@@ -13,8 +13,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI crosshair;
     public TextMeshProUGUI moneyText;
 
-    public HitScanGunScript revScript;
-    public GunScript gunScript;
+    public GunManager gunManager;
     public HealthManager healthManager;
 
     public NEWPlayerMovement mvtScript;
@@ -40,6 +39,8 @@ public class UIManager : MonoBehaviour
         //playUI = GameObject.Find("Play UI");
         //inventoryUI = GameObject.Find("Inventory UI");
         //pauseUI = GameObject.Find("Pause UI");
+
+        gunManager = gameObject.GetComponent<GunManager>();
 
         isPaused = false;
 
@@ -99,8 +100,8 @@ public class UIManager : MonoBehaviour
 
         moneyText.text = healthManager.money + "$";
 
-        lGunAmmoText.text = revScript.currentBullets + " / " + revScript.magSize;
-        rGunAmmoText.text = gunScript.currentBullets + " / " + gunScript.magSize;
+        lGunAmmoText.text = gunManager.leftHand.GetComponentInChildren<GunScript>().currentBullets + " / " + gunManager.leftHand.GetComponentInChildren<GunScript>().magSize;
+        rGunAmmoText.text = gunManager.rightHand.GetComponentInChildren<GunScript>().currentBullets + " / " + gunManager.rightHand.GetComponentInChildren<GunScript>().magSize;
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
     }
     void UpdateInventoryUI()

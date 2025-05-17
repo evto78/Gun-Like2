@@ -29,6 +29,7 @@ public class BulletScript : MonoBehaviour
     public int heavySpirits;
     public int nuclearBullets;
     public int introTrig;
+    public int advTrig;
     public GameObject pairedBullet;
     public bool isTrigLead;
     public float myIsHeavy;
@@ -67,10 +68,12 @@ public class BulletScript : MonoBehaviour
     {
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
+
+        Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.cyan);
     }
     public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, 
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, 
-        int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool, float chanceForFastFire, float chanceForLarge)
+        int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool, float chanceForFastFire, float chanceForLarge, int givenAdvTrig)
     {
         if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
@@ -92,6 +95,7 @@ public class BulletScript : MonoBehaviour
         heavySpirits = givenHeavySpirits;
         nuclearBullets = givenNuclearBul;
         introTrig = givenIntroTrig;
+        advTrig = givenAdvTrig;
         jam = givenJam;
 
         ricochet = givenRico;
@@ -119,11 +123,10 @@ public class BulletScript : MonoBehaviour
         myPos = transform.position;
         if (Physics.Raycast(myPos, forceDir, out RaycastHit hit, Vector3.Distance(myPos, (myPos + forceDir * Time.fixedDeltaTime))))
         {
-            transform.position = hit.point;
+            transform.position = hit.point - transform.forward;
             if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
     }
-
     public void IntroTrigSetUp(GameObject givenPairedBullet, bool isLead)
     {
         pairedBullet = givenPairedBullet;
@@ -140,7 +143,7 @@ public class BulletScript : MonoBehaviour
 
     private void RunOnCollide(GameObject givenGameObject)
     {
-        rb.velocity = Vector3.zero;
+        //rb.velocity = Vector3.zero;
         collidedPos = transform.position;
         //transform.position = collidedPos;
         //transform.position = givenGameObject.transform.position;
@@ -264,7 +267,7 @@ public class BulletScript : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -280,7 +283,7 @@ public class BulletScript : MonoBehaviour
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -294,27 +297,73 @@ public class BulletScript : MonoBehaviour
 
             if (ricochet)
             {
+                if(advTrig > 0) { if(Random.Range(1, 100) > 20) { pierce += 1; } }
+
+                Debug.Log("Begining Rico");
                 Ray ricoRay = new Ray(transform.position, transform.forward);
                 RaycastHit ricoHit;
 
                 myPos = transform.position;
-                if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime))))
+                //Checkforward
+                if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
                 {
+                    Debug.Log("Rico Hit! FORWARDS");
                     Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
+                    Debug.Log("Reflect Dir found: " + reflectDir);
 
                     //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
                     //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
                     //float ricoRotZ = 90f - Mathf.Atan2(reflectDir.x, reflectDir.y) * Mathf.Rad2Deg;
-                    
+
                     //transform.eulerAngles = new Vector3(ricoRotX, ricoRotY, ricoRotZ);
 
                     Vector3 storedVelocity = rb.velocity;
 
                     rb.velocity = Vector3.zero;
-                    if (rb.useGravity == true) { rb.velocity = ((reflectDir * storedVelocity.magnitude) / 2f) + Vector3.up * 2 + transform.forward * 2; }
-                    if (rb.useGravity == false) { rb.velocity = ((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2; }
+                    if (rb.useGravity == true) { rb.AddForce(((((reflectDir * storedVelocity.magnitude) / 2f) + Vector3.up * 2) + transform.forward * 2), ForceMode.VelocityChange); }
+                    if (rb.useGravity == false) { rb.AddForce((((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2),ForceMode.VelocityChange); }
+                    Debug.DrawRay(transform.position, (((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2) * Time.deltaTime, Color.green);
+                    Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.red);
+
 
                     transform.rotation = Quaternion.LookRotation(rb.velocity);
+                }
+                //Checkbackward
+                else
+                {
+                    ricoRay = new Ray(transform.position, -transform.forward);
+
+                    myPos = transform.position;
+                    if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
+                    {
+                        Debug.Log("Rico Hit! BACKWARDS!... Adjusting position for better reflect.");
+                        transform.position = transform.position - transform.forward * (rb.velocity * Time.deltaTime).magnitude;
+                        ricoRay = new Ray(transform.position, transform.forward);
+
+                        myPos = transform.position;
+                        if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 6f))))
+                        {
+                            Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
+                            Debug.Log("Reflect Dir found: " + reflectDir);
+
+                            //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
+                            //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
+                            //float ricoRotZ = 90f - Mathf.Atan2(reflectDir.x, reflectDir.y) * Mathf.Rad2Deg;
+
+                            //transform.eulerAngles = new Vector3(ricoRotX, ricoRotY, ricoRotZ);
+
+                            Vector3 storedVelocity = rb.velocity;
+
+                            rb.velocity = Vector3.zero;
+                            if (rb.useGravity == true) { rb.AddForce(((((reflectDir * storedVelocity.magnitude) / 2f) + Vector3.up * 2) + transform.forward * 2), ForceMode.VelocityChange); }
+                            if (rb.useGravity == false) { rb.AddForce((((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2), ForceMode.VelocityChange); }
+                            Debug.DrawRay(transform.position, (((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2) * Time.deltaTime, Color.green);
+                            Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.red);
+
+
+                            transform.rotation = Quaternion.LookRotation(rb.velocity);
+                        }
+                    }
                 }
             }
             else
@@ -339,7 +388,7 @@ public class BulletScript : MonoBehaviour
         myPos = transform.position;
         if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * 1.5f * Time.fixedDeltaTime))))
         {
-            transform.position = hit.point;
+            transform.position = hit.point - transform.forward;
             if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
 

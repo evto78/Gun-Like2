@@ -52,6 +52,8 @@ public class GunManager : MonoBehaviour
     public int leftHungryParasite = 0;
     float leftHungryParasiteTimer = 0f;
     public int leftIntroTrig = 0;
+    public int leftAdvTrig = 0;
+    public int leftMasterTrig = 0;
     public int leftJam = 0;
     public int leftBeltFed = 0;
     public float leftFastInserter = 0;
@@ -90,6 +92,8 @@ public class GunManager : MonoBehaviour
     public int rightHungryParasite = 0;
     float rightHungryParasiteTimer = 0f;
     public int rightIntroTrig = 0;
+    public int rightAdvTrig = 0;
+    public int rightMasterTrig = 0;
     public int rightJam = 0;
     public int rightBeltFed = 0;
     public int rightFastInserter = 0;
@@ -122,7 +126,7 @@ public class GunManager : MonoBehaviour
         masterDmg = 1f;
         masterMagSize = 1f;
         masterAcc = 1f;
-        masterBulSpd = 100f;
+        masterBulSpd = 1f;
         masterBulSize = 1f;
         masterBulPir = 0;
         masterCritChance = 1f;
@@ -175,23 +179,23 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[11], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
+        leftDmg = Calc(40f, givenLeftItems[26], leftAcc);
+        leftDmg = Calc(40f, givenLeftItems[27], leftAcc);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[26], leftMagSize);
-        leftMagSize = Calc(-20f, givenLeftItems[27], leftMagSize);
         leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
-        leftAcc = Calc(20f, givenLeftItems[25], leftAcc);
-        leftAcc = Calc(20f, givenLeftItems[26], leftAcc);
-        leftAcc = Calc(20f, givenLeftItems[27], leftAcc);
+        leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
+        leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
-        leftBulPir += givenLeftItems[10];
+        leftBulPir += givenLeftItems[10] + givenLeftItems[26];
 
         leftHeavyBul = givenLeftItems[11];
         leftMutatedCell = givenLeftItems[14];
@@ -200,6 +204,8 @@ public class GunManager : MonoBehaviour
         leftNuclearBul = givenLeftItems[21];
         leftHungryParasite = givenRightItems[24];
         leftIntroTrig = givenLeftItems[25];
+        leftAdvTrig = givenLeftItems[26];
+        leftMasterTrig = givenLeftItems[27];
         leftJam = givenLeftItems[28];
         leftBeltFed = givenLeftItems[29];
         leftFastInserter = givenLeftItems[33];
@@ -216,8 +222,10 @@ public class GunManager : MonoBehaviour
 
         if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
         if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
-        if (givenLeftItems[26] > 0f || givenLeftItems[27] > 0f) { leftRicochet = true; }
+        if (givenLeftItems[26] > 0f) { leftRicochet = true; }
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
+        if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
+        if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
@@ -227,23 +235,23 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(20f, givenRightItems[11], rightDmg);
         rightDmg = Calc(20f, givenRightItems[4], rightDmg);
         rightDmg = Calc(20f, givenRightItems[40], rightDmg);
+        rightDmg = Calc(40f, givenRightItems[26], rightDmg);
+        rightDmg = Calc(40f, givenRightItems[27], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[26], rightMagSize);
-        rightMagSize = Calc(-20f, givenRightItems[27], rightMagSize);
         rightAcc = Calc(20f, givenRightItems[8], rightAcc);
-        rightAcc = Calc(20f, givenRightItems[25], rightAcc);
-        rightAcc = Calc(20f, givenRightItems[26], rightAcc);
-        rightAcc = Calc(20f, givenRightItems[27], rightAcc);
+        rightAcc = Calc(40f, givenRightItems[25], rightAcc);
+        rightAcc = Calc(40f, givenRightItems[27], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
-        rightBulPir += givenRightItems[10];
+        rightBulPir += givenRightItems[10] + givenRightItems[26];
 
         rightHeavyBul = givenRightItems[11];
         rightMutatedCell = givenRightItems[14];
@@ -252,6 +260,8 @@ public class GunManager : MonoBehaviour
         rightNuclearBul = givenRightItems[21];
         rightHungryParasite = givenRightItems[24];
         rightIntroTrig = givenRightItems[25];
+        rightAdvTrig = givenRightItems[26];
+        rightMasterTrig = givenRightItems[27];
         rightJam = givenRightItems[28];
         rightBeltFed = givenRightItems[29];
         rightFastInserter = givenRightItems[33];
@@ -268,8 +278,10 @@ public class GunManager : MonoBehaviour
 
         if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
         if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
-        if (givenRightItems[26] > 0f || givenRightItems[27] > 0f) { rightRicochet = true; }
+        if (givenRightItems[26] > 0f) { rightRicochet = true; }
         if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
+        if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
+        if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
 
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
@@ -325,8 +337,8 @@ public class GunManager : MonoBehaviour
             if (playerItem.rightIFPStatToDeBuff == 25) { rightBulPir = Mathf.FloorToInt(rightBulPir * (0.9f / givenRightItems[22])); }
         }
 
-        rightHand.SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
-        leftHand.SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
+        rightHand.transform.GetChild(0).SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
+        leftHand.transform.GetChild(0).SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
     }
 
     float Calc(float modifier, int amount, float baseVal)
@@ -366,8 +378,8 @@ public class GunManager : MonoBehaviour
         RightGunUpdate();
         if (Input.GetKeyDown(KeyCode.R))
         {
-            leftHand.SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
-            rightHand.SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
+            leftHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
+            rightHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
         }
 
         itemChecks();
@@ -377,11 +389,11 @@ public class GunManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            leftHand.SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
+            leftHand.transform.GetChild(0).SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
         }
         if (Input.GetMouseButtonUp(0))
         {
-            leftHand.SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
+            leftHand.transform.GetChild(0).SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -389,11 +401,11 @@ public class GunManager : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            rightHand.SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
+            rightHand.transform.GetChild(0).SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
         }
         if (Input.GetMouseButtonUp(1))
         {
-            rightHand.SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
+            rightHand.transform.GetChild(0).SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -439,22 +451,21 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        // BUG: FIND A BETTER WAY for fast inserter to be usable with all guns instead of specifically revolver and pistol
         if (leftFastInserter > 0)
         {
             leftFastInserterTimer -= Time.deltaTime;
-            if (leftFastInserterTimer <= 0 && GetComponentInChildren<HitScanGunScript>().currentBullets < GetComponentInChildren<HitScanGunScript>().magSize)
+            if (leftFastInserterTimer <= 0 && leftHand.GetComponentInChildren<GunScript>().currentBullets < leftHand.GetComponentInChildren<GunScript>().magSize)
             {
-                leftHand.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                leftHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
                 leftFastInserterTimer = 1 / (0.2f * leftFastInserter);
             }
         }
         if (rightFastInserter > 0)
         {
             rightFastInserterTimer -= Time.deltaTime;
-            if (rightFastInserterTimer <= 0 && GetComponentInChildren<GunScript>().currentBullets < GetComponentInChildren<GunScript>().magSize)
+            if (rightFastInserterTimer <= 0 && rightHand.GetComponentInChildren<GunScript>().currentBullets < rightHand.GetComponentInChildren<GunScript>().magSize)
             {
-                rightHand.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
                 rightFastInserterTimer = 1 / (0.2f * rightFastInserter);
             }
         }
