@@ -50,10 +50,12 @@ public class Vector3Script : GunScript
             acc = 25f;
         }
         //vector3 unique
-        if (acc > 1f) { acc = 1f; }
-        atkSpd += 0.8f / acc;
+        
     }
-
+    public override void LateStatUpdate()
+    {
+        base.LateStatUpdate(); // DAMN
+    }
     public override void StatUpdateRight()
     {
         whatHandThisIsIn = "right";

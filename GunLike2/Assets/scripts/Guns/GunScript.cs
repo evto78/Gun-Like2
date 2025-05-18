@@ -134,6 +134,7 @@ public class GunScript : MonoBehaviour
         {
             acc = 25f;
         }
+        LateStatUpdate();
     }
 
     public virtual void StatUpdateRight()
@@ -181,6 +182,12 @@ public class GunScript : MonoBehaviour
         {
             acc = 25f;
         }
+        LateStatUpdate();
+    }
+
+    public virtual void LateStatUpdate()
+    {
+
     }
 
     // Update is called once per frame
@@ -296,6 +303,18 @@ public class GunScript : MonoBehaviour
         {
             manager.healthMan.GiveEffect("pants falling", 50);
         }
+
+        LateReload();
+    }
+
+    public virtual void LateReload()
+    {
+
+    }
+
+    public virtual void EarlyShoot()
+    {
+
     }
 
     public virtual void Shoot(float bowChar)
@@ -306,7 +325,7 @@ public class GunScript : MonoBehaviour
         attackTimer = 1;
         if (currentBullets > 0)
         {
-            
+            EarlyShoot();
 
             timeSinceShot = 0f;
 
