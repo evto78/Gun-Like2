@@ -17,7 +17,6 @@ public class DoubleBarrelScript : GunScript
             {
                 for(int i = 0; i < magSize /2; i++)
                 {
-                    //Debug.Log("BAM!");
                     Shoot(1f);
                 }
             }

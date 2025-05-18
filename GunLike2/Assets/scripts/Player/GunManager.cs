@@ -117,9 +117,37 @@ public class GunManager : MonoBehaviour
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
-        leftList = givenLeftItems;
-        rightList = givenRightItems;
+        leftList.Clear();
+        leftList.AddRange(givenLeftItems);
+        rightList.Clear();
+        rightList.AddRange(givenRightItems);
         rarityList = givenRarityList;
+
+        int daEagleIgnoredLeft = 0;
+        int daEagleIgnoredRight = 0;
+        //da eagle ignores common
+        if(leftHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        {
+            for(int i = 0; i < givenLeftItems.Count; i++)
+            {
+                if (rarityList[0].Contains(i))
+                {
+                    daEagleIgnoredLeft += givenLeftItems[i];
+                    givenLeftItems[i] = 0;
+                }
+            }
+        }
+        if (rightHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        {
+            for (int i = 0; i < givenRightItems.Count; i++)
+            {
+                if (rarityList[0].Contains(i))
+                {
+                    daEagleIgnoredRight += givenRightItems[i];
+                    givenRightItems[i] = 0;
+                }
+            }
+        }
 
         masterAtkSpd = 1f;
         masterReSpd = 1f;
@@ -171,6 +199,27 @@ public class GunManager : MonoBehaviour
         rightWeakPointChance = 1f * masterWeakPointChance;
         rightWeakPointDamage = 1f * masterWeakPointDamage;
 
+        // da eagle special treatment
+        if(daEagleIgnoredLeft > 0)
+        {
+            leftAtkSpd = Calc(5f, daEagleIgnoredLeft, leftAtkSpd);
+            leftReSpd = Calc(5f, daEagleIgnoredLeft, leftReSpd);
+            leftDmg = Calc(5f, daEagleIgnoredLeft, leftDmg);
+            leftMagSize = Calc(5f, daEagleIgnoredLeft, leftMagSize);
+            leftAcc = Calc(5f, daEagleIgnoredLeft, leftAcc);
+            leftBulSpd = Calc(5f, daEagleIgnoredLeft, leftBulSpd);
+            leftBulSize = Calc(5f, daEagleIgnoredLeft, leftBulSize);
+        }
+        if (daEagleIgnoredRight > 0)
+        {
+            rightAtkSpd = Calc(5f, daEagleIgnoredRight, rightAtkSpd);
+            rightReSpd = Calc(5f, daEagleIgnoredRight, rightReSpd);
+            rightDmg = Calc(5f, daEagleIgnoredRight, rightDmg);
+            rightMagSize = Calc(5f, daEagleIgnoredRight, rightMagSize);
+            rightAcc = Calc(5f, daEagleIgnoredRight, rightAcc);
+            rightBulSpd = Calc(5f, daEagleIgnoredRight, rightBulSpd);
+            rightBulSize = Calc(5f, daEagleIgnoredRight, rightBulSize);
+        }
 
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
         leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
@@ -339,6 +388,19 @@ public class GunManager : MonoBehaviour
 
         rightHand.transform.GetChild(0).SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.transform.GetChild(0).SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
+
+        //undo any changes made
+        if(leftHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        {
+            givenLeftItems.Clear();
+            givenLeftItems.AddRange(leftList);
+        }
+        if(rightHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        {
+            givenRightItems.Clear();
+            givenRightItems.AddRange(rightList);
+        }
+        
     }
 
     float Calc(float modifier, int amount, float baseVal)

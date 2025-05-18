@@ -8,6 +8,7 @@ public class GunScript : MonoBehaviour
     public GunManager manager;
     Transform player;
     public GameObject possessionEffect;
+    public string gunName;
 
     //Base stats for this gun
     public float baseMagSize = 15;
@@ -87,8 +88,13 @@ public class GunScript : MonoBehaviour
         currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").transform;
-    }
 
+        LateStart();
+    }
+    public virtual void LateStart()
+    {
+
+    }
     public virtual void StatUpdateLeft()
     {
         whatHandThisIsIn = "left";
@@ -303,20 +309,16 @@ public class GunScript : MonoBehaviour
         {
             manager.healthMan.GiveEffect("pants falling", 50);
         }
-
         LateReload();
     }
-
     public virtual void LateReload()
     {
 
     }
-
     public virtual void EarlyShoot()
     {
 
     }
-
     public virtual void Shoot(float bowChar)
     {
         animator.SetTrigger("Shooting");
@@ -325,10 +327,9 @@ public class GunScript : MonoBehaviour
         attackTimer = 1;
         if (currentBullets > 0)
         {
-            EarlyShoot();
-
             timeSinceShot = 0f;
 
+            EarlyShoot();
             currentBullets--;
 
             GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
