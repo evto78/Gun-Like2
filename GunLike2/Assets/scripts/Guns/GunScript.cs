@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
-    Animator animator;
+    protected Animator animator;
     public GunManager manager;
     Transform player;
     public GameObject possessionEffect;
@@ -76,7 +76,7 @@ public class GunScript : MonoBehaviour
 
     public string whatHandThisIsIn;
 
-    float timeSinceShot;
+    protected float timeSinceShot;
     public Transform target;
 
     // Start is called before the first frame update
@@ -184,7 +184,7 @@ public class GunScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         timeSinceShot += Time.deltaTime;
 
@@ -298,14 +298,16 @@ public class GunScript : MonoBehaviour
         }
     }
 
-    public void Shoot(float bowChar)
+    public virtual void Shoot(float bowChar)
     {
         animator.SetTrigger("Shooting");
-        animator.speed = atkSpd;
+        animator.speed = atkSpd * 1.5f;
         shooting = true;
         attackTimer = 1;
         if (currentBullets > 0)
         {
+            
+
             timeSinceShot = 0f;
 
             currentBullets--;

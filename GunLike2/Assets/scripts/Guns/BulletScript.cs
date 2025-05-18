@@ -73,7 +73,8 @@ public class BulletScript : MonoBehaviour
     }
     public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, 
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, 
-        int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool, float chanceForFastFire, float chanceForLarge, int givenAdvTrig)
+        int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
+        float chanceForFastFire, float chanceForLarge, int givenAdvTrig)
     {
         if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
@@ -256,6 +257,7 @@ public class BulletScript : MonoBehaviour
             hitParticle.Play();
             Destroy(mesh);
             collided = true;
+            gameObject.GetComponent<Collider>().enabled = false;
 
             if(introTrig > 0)
             {
@@ -320,9 +322,9 @@ public class BulletScript : MonoBehaviour
                     Vector3 storedVelocity = rb.velocity;
 
                     rb.velocity = Vector3.zero;
-                    if (rb.useGravity == true) { rb.AddForce(((((reflectDir * storedVelocity.magnitude) / 2f) + Vector3.up * 2) + transform.forward * 2), ForceMode.VelocityChange); }
-                    if (rb.useGravity == false) { rb.AddForce((((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2),ForceMode.VelocityChange); }
-                    Debug.DrawRay(transform.position, (((reflectDir * storedVelocity.magnitude) / 2f) + transform.forward * 2) * Time.deltaTime, Color.green);
+                    if (rb.useGravity == true) { rb.AddForce(((((reflectDir * storedVelocity.magnitude) / 1f) + Vector3.up * 2) + transform.forward * 2), ForceMode.VelocityChange); }
+                    if (rb.useGravity == false) { rb.AddForce((((reflectDir * storedVelocity.magnitude) / 1f) + transform.forward * 2),ForceMode.VelocityChange); }
+                    Debug.DrawRay(transform.position, (((reflectDir * storedVelocity.magnitude) / 1f) + transform.forward * 2) * Time.deltaTime, Color.green);
                     Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.red);
 
 
