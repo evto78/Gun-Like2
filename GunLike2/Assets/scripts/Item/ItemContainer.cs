@@ -14,6 +14,8 @@ public class ItemContainer : MonoBehaviour
     GameObject player;
     bool interacted;
     public bool animatie;
+    public int numOfItems;
+    int itemsSpawned;
 
     public TextMeshProUGUI costTxt;
     void Start()
@@ -36,8 +38,8 @@ public class ItemContainer : MonoBehaviour
         GameObject spawnedItem;
         spawnedItem = Instantiate(itemPossibility);
         spawnedItem.transform.position = spawnPos.position;
-        spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * 100f);
-        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 200f);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
+        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
         spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
@@ -62,17 +64,22 @@ public class ItemContainer : MonoBehaviour
         hatch.transform.SetParent(null);
         Destroy(hatch, 10f);
 
-        int rand = Random.Range(1, 100);
-        List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+        itemsSpawned = 0;
+        for(int i = 0; i < numOfItems; i++)
+        {
+            itemsSpawned++;
+            int rand = Random.Range(1, 100);
+            List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
 
-        if (rand < 71) { SpawnItem(0); }
-        if (rand < 91 && rand > 70) { SpawnItem(1); }
-        if (rand == 91 || rand == 92) { SpawnItem(2); }
-        if (rand == 93 || rand == 94) { SpawnItem(4); }
-        if (rand == 95 || rand == 96) { SpawnItem(5); }
-        if (rand == 97 || rand == 98) { SpawnItem(6); }
-        if (rand == 99) { SpawnItem(3); }
-        if (rand == 100) { SpawnItem(7); }
+            if (rand < 71) { SpawnItem(0); }
+            if (rand < 91 && rand > 70) { SpawnItem(1); }
+            if (rand == 91 || rand == 92) { SpawnItem(2); }
+            if (rand == 93 || rand == 94) { SpawnItem(4); }
+            if (rand == 95 || rand == 96) { SpawnItem(5); }
+            if (rand == 97 || rand == 98) { SpawnItem(6); }
+            if (rand == 99) { SpawnItem(3); }
+            if (rand == 100) { SpawnItem(7); }
+        }
     }
 
 }

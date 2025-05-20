@@ -134,8 +134,6 @@ public class EnemyHealthManager : MonoBehaviour
             //if there are any stacks of this effect
             if (q.x > 0)
             {
-                //run effects that happen every frame
-
 
                 //progress timer and remove stacks as needed
                 if (q.z > 0f)
@@ -144,11 +142,20 @@ public class EnemyHealthManager : MonoBehaviour
                 }
                 else
                 {
-                    q.x -= 1f;
+                    //If player has anti-antidode do not remove stacks when timer runs out
+                    int antiAnti = player.GetComponent<PlayerItem>().leftItems[41] + player.GetComponent<PlayerItem>().rightItems[41];
+                    if (antiAnti < 1)
+                    {
+                        if (Random.Range(0f, 2f) <= 1f) { q.x -= 1f; }
+                    }
+                    else
+                    {
+                        if(Random.Range(0f, 10f/antiAnti) <= 1f) { q.x -= 1f; }
+                    }
                     if (q.x! > 0f) { q.z = q.y; }
 
                     //run effects that happen when timer ends
-                    if (i == 0 || i == 1 || i == 2) { TakeDamage(q.x + 1f, true, "normalHit", transform.position, "self"); }
+                    if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*10f, true, "normalHit", transform.position, "self"); }
                 }
             }
 
