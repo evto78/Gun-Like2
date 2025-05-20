@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    Rigidbody rb;
+    protected Rigidbody rb;
     public ParticleSystem hitParticle;
     public GameObject mesh;
 
     public GameObject bulletPrefab;
 
-    bool collided = false;
+    protected bool collided = false;
     Vector3 collidedPos;
 
     public Camera mainCamera;
