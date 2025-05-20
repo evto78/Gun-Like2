@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerItem : MonoBehaviour
 {
+    [Header("Item Categories and data")]
     public List<ItemObject> itemData;
 
     public List<int> leftItems;
@@ -59,6 +60,9 @@ public class PlayerItem : MonoBehaviour
 
     public List<List<int>> rarityList = new List<List<int>>();
 
+    public List<int> gunLike1Items = new List<int>();
+    public List<int> sponserItems = new List<int>();
+    [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
     public GunManager gunManager;
@@ -66,13 +70,13 @@ public class PlayerItem : MonoBehaviour
     public Transform playerCamera;
 
     public GameObject itemDisplay;
-
+    [Header("Inventory system :(")]
     public List<Vector4> leftInventory;
     public List<Vector4> rightInventory;
     // X = id of item
     // Y = amount of item
     // z = rarity of item
-
+    [Header("Item Checks")]
     //ItemChecks
     public int leftIFPStatToBuff;
     public int leftIFPStatToDeBuff;
@@ -85,6 +89,7 @@ public class PlayerItem : MonoBehaviour
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
 
         LoadRarites();
+        LoadCategories();
     }
     void LoadRarites()
     {
@@ -99,17 +104,25 @@ public class PlayerItem : MonoBehaviour
         rarityList = new List<List<int>>();
         foreach(ItemObject item in itemData)
         {
-            if(item.rarity == "Common") { commonItems.Add(item.id); }
-            if(item.rarity == "Uncommon") { uncommonItems.Add(item.id); }
-            if(item.rarity == "Rare") { rareItems.Add(item.id); }
-            if(item.rarity == "Legendary") { legendaryItems.Add(item.id); }
-            if(item.rarity == "Mutated") { mutatedItems.Add(item.id); }
-            if(item.rarity == "Haunted") { hauntedItems.Add(item.id); }
-            if(item.rarity == "Irradiated") { irradiatedItems.Add(item.id); }
-            if(item.rarity == "Nuclear") { nuclearItems.Add(item.id); }
-            if(item.rarity == "Unique") { uniqueItems.Add(item.id); }
+            if(item.rarity.ToString() == "Common") { commonItems.Add(item.id); }
+            if(item.rarity.ToString() == "Uncommon") { uncommonItems.Add(item.id); }
+            if(item.rarity.ToString() == "Rare") { rareItems.Add(item.id); }
+            if(item.rarity.ToString() == "Legendary") { legendaryItems.Add(item.id); }
+            if(item.rarity.ToString() == "Mutated") { mutatedItems.Add(item.id); }
+            if(item.rarity.ToString() == "Haunted") { hauntedItems.Add(item.id); }
+            if(item.rarity.ToString() == "Irradiated") { irradiatedItems.Add(item.id); }
+            if(item.rarity.ToString() == "Nuclear") { nuclearItems.Add(item.id); }
+            if(item.rarity.ToString() == "Unique") { uniqueItems.Add(item.id); }
         }
         rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
+    }
+    void LoadCategories()
+    {
+        foreach(ItemObject item in itemData)
+        {
+            if(item.subType.ToString() == "classic") { gunLike1Items.Add(item.id); }
+            if(item.subType.ToString() == "sponser") { sponserItems.Add(item.id); }
+        }
     }
     private void Update()
     {

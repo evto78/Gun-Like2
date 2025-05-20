@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class MutatedKnifeScript : GunScript
 {
-
+    private void LateUpdate()
+    {
+        currentBullets = Mathf.RoundToInt(magSize);
+    }
 }

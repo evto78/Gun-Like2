@@ -114,7 +114,7 @@ public class ItemDisplayScript : MonoBehaviour
 
         itemSprite.sprite = selectedItem.itemSprite;
 
-        SetRarity(selectedItem.rarity);
+        SetRarity(selectedItem.rarity.ToString());
 
     }
     void SetRarity(string rarity)

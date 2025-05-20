@@ -66,6 +66,9 @@ public class GunManager : MonoBehaviour
     public float leftFastSpon;
     public float leftLargeSpon;
     public int leftPossession;
+    public int leftSponDeal;
+    float leftSponTimer;
+    int leftSponItemsMade;
 
     public bool leftRicochet = false;
 
@@ -106,6 +109,9 @@ public class GunManager : MonoBehaviour
     public float rightFastSpon;
     public float rightLargeSpon;
     public int rightPossession;
+    public int rightSponDeal;
+    float rightSponTimer;
+    int rightSponItemsMade;
 
     public bool rightRicochet = false;
 
@@ -232,6 +238,7 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(40f, givenLeftItems[27], leftAcc);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
+        leftDmg = Calc(-10f, givenLeftItems[46], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
@@ -240,6 +247,7 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
+        leftAcc = Calc(-10f, givenLeftItems[46], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
@@ -251,7 +259,7 @@ public class GunManager : MonoBehaviour
         leftBowAct = givenLeftItems[16];
         leftHeavySpirit = givenLeftItems[19];
         leftNuclearBul = givenLeftItems[21];
-        leftHungryParasite = givenRightItems[24];
+        leftHungryParasite = givenLeftItems[24];
         leftIntroTrig = givenLeftItems[25];
         leftAdvTrig = givenLeftItems[26];
         leftMasterTrig = givenLeftItems[27];
@@ -266,6 +274,7 @@ public class GunManager : MonoBehaviour
         leftLargeSpon = givenLeftItems[45];
         leftFastSpon = givenLeftItems[47];
         leftPossession = givenLeftItems[40];
+        leftSponDeal = givenLeftItems[42];
 
         leftRicochet = false;
 
@@ -288,6 +297,7 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(40f, givenRightItems[27], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
+        rightDmg = Calc(-10f, givenRightItems[46], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
@@ -296,6 +306,7 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(40f, givenRightItems[25], rightAcc);
         rightAcc = Calc(40f, givenRightItems[27], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
+        rightAcc = Calc(-10f, givenRightItems[46], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
@@ -322,6 +333,7 @@ public class GunManager : MonoBehaviour
         rightLargeSpon = givenRightItems[45];
         rightFastSpon = givenRightItems[47];
         rightPossession = givenRightItems[40];
+        rightSponDeal = givenRightItems[42];
 
         rightRicochet = false;
 
@@ -529,6 +541,43 @@ public class GunManager : MonoBehaviour
             {
                 rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
                 rightFastInserterTimer = 1 / (0.2f * rightFastInserter);
+            }
+        }
+
+        if(leftSponDeal > 0)
+        {
+            leftSponTimer += Time.deltaTime;
+            if(leftSponTimer > 20f)
+            {
+                int rand = Random.Range(0, playerItem.sponserItems.Count);
+                Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
+                playerItem.leftItems[playerItem.sponserItems[rand]] += 1;
+
+                leftSponItemsMade++;
+                leftSponTimer = 0f;
+                if(leftSponItemsMade >= 5)
+                {
+                    leftSponItemsMade = 0;
+                    playerItem.leftItems[42] -= 1;
+                }
+            }
+        }
+        if (rightSponDeal > 0)
+        {
+            rightSponTimer += Time.deltaTime;
+            if (rightSponTimer > 20f)
+            {
+                int rand = Random.Range(0, playerItem.sponserItems.Count);
+                Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
+                playerItem.rightItems[playerItem.sponserItems[rand]] += 1;
+
+                rightSponItemsMade++;
+                rightSponTimer = 0f;
+                if (rightSponItemsMade >= 5)
+                {
+                    rightSponItemsMade = 0;
+                    playerItem.rightItems[42] -= 1;
+                }
             }
         }
     }

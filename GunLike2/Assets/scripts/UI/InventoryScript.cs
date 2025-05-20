@@ -37,6 +37,12 @@ public class InventoryScript : MonoBehaviour
         
     }
 
+    private void Update()
+    {
+        player.GetComponent<PlayerItem>().UpdateInventory();
+        ArrangeInventory();
+    }
+
     public void ArrangeInventory()
     {
         int leftItemsToBeAdded = leftInventory.Count;
@@ -80,7 +86,7 @@ public class InventoryScript : MonoBehaviour
                 {
                     //0 - BG, 1 - Sprite, 2 - Text
                     rightSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[Mathf.RoundToInt(rightInventory[rightItemsIndex].z)];
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/" + (Mathf.RoundToInt(leftInventory[rightItemsIndex].x)).ToString()).itemSprite;
+                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/" + (Mathf.RoundToInt(rightInventory[rightItemsIndex].x)).ToString()).itemSprite;
                     rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 1);
                     rightSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "" + Mathf.RoundToInt(rightInventory[rightItemsIndex].y);
                     rightItemsToBeAdded--;

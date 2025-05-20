@@ -8,8 +8,12 @@ public class ItemObject : ScriptableObject
     [Header("Functional")]
     public int id;
     public string itemName;
-    public string rarity;
+    public enum rarityType { Common, Uncommon, Rare, Legendary, Mutated, Haunted, Irradiated, Nuclear, Unique }
+    public rarityType rarity;
     public Sprite itemSprite;
+    public enum itemType { basic, sponser, classic }
+    public itemType subType;
+    
     /// <summary>
     /// General Definition of buff symbols
     /// + = 20%

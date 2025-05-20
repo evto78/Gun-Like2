@@ -57,6 +57,8 @@ public class BulletScript : MonoBehaviour
 
     List<Collider> collisions = new List<Collider>();
 
+    public GameObject shockwave;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -71,7 +73,7 @@ public class BulletScript : MonoBehaviour
 
         Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.cyan);
     }
-    public void setStats(float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, 
+    public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd, 
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig, 
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
         float chanceForFastFire, float chanceForLarge, int givenAdvTrig)
@@ -82,7 +84,7 @@ public class BulletScript : MonoBehaviour
         if(Random.Range(1, 100) < chanceForHelping) { isHelpingSpon = true; helpingSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; coolSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; fastSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); }
+        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); } 
 
         whatHandThisComesFrom = whatHand;
 
@@ -92,6 +94,9 @@ public class BulletScript : MonoBehaviour
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
         bulSpd = givenBulSpd;
+        if (isLargeSpon) { bulSpd = bulSpd / 2f; }
+        if (isLargeSpon) { transform.localScale = transform.localScale * 5f; }
+        if (isFastFireSpon && firedFrom != null) { firedFrom.isFastFiring = true; }
 
         heavySpirits = givenHeavySpirits;
         nuclearBullets = givenNuclearBul;
@@ -102,10 +107,10 @@ public class BulletScript : MonoBehaviour
         ricochet = givenRico;
 
         myIsHeavy = isHeavy;
-        if (isHeavy != 0f)
+        if (isHeavy != 0f || isLargeSpon)
         {
             rb.useGravity = true;
-            rb.mass = isHeavy;
+            rb.mass = isHeavy + 1;
         }
         else
         {
@@ -137,9 +142,11 @@ public class BulletScript : MonoBehaviour
     void RunOnHit(GameObject hit)
     {
         hit.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-        if (isFireSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 1f); }
-        if (isSharperSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 1f); }
+        if (isFireSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }
+        if (isSharperSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 3f); }
         if (isSilverSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("lucky", 1f); }
+        if (isHelpingSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
+        if (isCoolSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
     }
 
     private void RunOnCollide(GameObject givenGameObject)
@@ -148,6 +155,18 @@ public class BulletScript : MonoBehaviour
         collidedPos = transform.position;
         //transform.position = collidedPos;
         //transform.position = givenGameObject.transform.position;
+
+        if (!collided && isLargeSpon && (givenGameObject.tag == "Enemy" || givenGameObject.tag == "Ground"))
+        {
+            GameObject spawnedShockwave = Instantiate(shockwave);
+            spawnedShockwave.transform.position = transform.position;
+            spawnedShockwave.GetComponent<Shockwave>().lifetime = transform.localScale.magnitude / 4f;
+            spawnedShockwave.GetComponent<Shockwave>().damage = damage + 25f;
+            spawnedShockwave.GetComponent<Shockwave>().fireSpon = isFireSpon;
+            spawnedShockwave.GetComponent<Shockwave>().coolSpon = isCoolSpon;
+            spawnedShockwave.GetComponent<Shockwave>().bleedSpon = isSharperSpon;
+            spawnedShockwave.GetComponent<Shockwave>().helpingSpon = isHelpingSpon;
+        }
 
         if (givenGameObject.tag == "Enemy")
         {
@@ -269,7 +288,7 @@ public class BulletScript : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -285,7 +304,7 @@ public class BulletScript : MonoBehaviour
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
-                        spawnedBullet.GetComponent<BulletScript>().setStats(damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
+                        spawnedBullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;

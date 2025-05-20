@@ -40,4 +40,12 @@ public class NavAI : MonoBehaviour
             }
         }
     }
+    private void OnEnable()
+    {
+        agent.isStopped = false;
+    }
+    private void OnDisable()
+    {
+        agent.isStopped = true;
+    }
 }

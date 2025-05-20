@@ -58,6 +58,7 @@ public class NEWPlayerMovement : MonoBehaviour
     float planeSpeed = 0.0f;
     bool hasBunny = false;
     int beltFed = 0;
+    bool hasFightingWings;
 
     HealthManager healthMan;
     public PlayerItem playerItem;
@@ -113,6 +114,7 @@ public class NEWPlayerMovement : MonoBehaviour
         numberOfJumps += givenLeftItems[15] + givenRightItems[15];
         numberOfJumps += givenLeftItems[31] + givenRightItems[31];
         numberOfJumps += givenLeftItems[32] + givenRightItems[32];
+        numberOfJumps += (givenLeftItems[46]*2) + (givenRightItems[46]*2);
         gravityModifier = Calc(-10f, givenLeftItems[15] + givenRightItems[15], gravityModifier);
 
         //Item Checks
@@ -143,6 +145,7 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             hasBunny = false;
         }
+        hasFightingWings = (givenLeftItems[46] + givenRightItems[46] > 0);
 
         beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
         if (beltFed > 0) { moveSpeed = moveSpeed / 2f; sprintMoveSpeed = sprintMoveSpeed / 2f; }
@@ -395,9 +398,13 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void Jump()
     {
-        if (jumpsLeft > 0)
+        if (jumpsLeft > 0 || hasFightingWings)
         {
-            
+            if(hasFightingWings && jumpsLeft <= 0)
+            {
+                healthMan.TakeDamage(healthMan.curHp / 10f, false);
+            }
+
             jumpsLeft -= 1;
             rb.AddForce(transform.up * jumpForce, ForceMode.Force);
             if (slamming)

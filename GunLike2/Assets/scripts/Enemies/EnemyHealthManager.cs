@@ -5,6 +5,8 @@ using TMPro;
 
 public class EnemyHealthManager : MonoBehaviour
 {
+	public List<MonoBehaviour> brains;
+    public GameObject frozenEffect;
     public GameObject item;
     public GameObject itemPossibility;
 
@@ -121,6 +123,8 @@ public class EnemyHealthManager : MonoBehaviour
         //Item effects
         if (effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
         if (effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
+        if (effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
+        if (effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
     }
 
     void ManageEffects()
@@ -134,7 +138,22 @@ public class EnemyHealthManager : MonoBehaviour
             //if there are any stacks of this effect
             if (q.x > 0)
             {
-
+                if (i == 6 && q.x > 0)
+                {
+                    foreach(MonoBehaviour brain in brains)
+                    {
+                        brain.enabled = false;
+                    }
+                    frozenEffect.SetActive(true);
+                }
+                else
+                {
+                    foreach (MonoBehaviour brain in brains)
+                    {
+                        brain.enabled = true;
+                    }
+                    frozenEffect.SetActive(false);
+                }
                 //progress timer and remove stacks as needed
                 if (q.z > 0f)
                 {

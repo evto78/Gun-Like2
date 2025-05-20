@@ -9,6 +9,7 @@ using TMPro;
 
 public class HealthManager : MonoBehaviour
 {
+
 	List<List<int>> rarityList = new List<List<int>>();
 
 	public List<Vector4> activeEffects = new List<Vector4>();
@@ -51,6 +52,9 @@ public class HealthManager : MonoBehaviour
 	public int baseCost;
 
 	public bool dead;
+
+	public List<EnemyHealthManager> stichedEnemies = new List<EnemyHealthManager>();
+	public LineRenderer stichedEffect;
 
 	// Start is called before the first frame update
 	void Start()
@@ -285,6 +289,32 @@ public class HealthManager : MonoBehaviour
                 }
             }
         }
+
+		if(playerItem.leftItems[43] + playerItem.rightItems[43] > 0)
+        {
+			stichedEnemies.Clear();
+			foreach(GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+				if(enemy.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager enemyHealthMan))
+                {
+					if(enemyHealthMan.activeEffects[5].x > 0f)
+                    {
+						stichedEnemies.Add(enemyHealthMan);
+                    }
+                }
+            }
+			stichedEffect.positionCount = 1;
+			stichedEffect.SetPosition(0, transform.position - Vector3.up);
+			stichedEffect.positionCount = (stichedEnemies.Count * 2) + 1;
+			int index = 1;
+			foreach(EnemyHealthManager ehm in stichedEnemies)
+            {
+				stichedEffect.SetPosition(index, ehm.transform.position);
+				stichedEffect.SetPosition(index+1, transform.position - Vector3.up);
+				index += 2;
+            }
+
+		}
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
@@ -315,6 +345,14 @@ public class HealthManager : MonoBehaviour
 				GameObject createdGrowthExplosion = Instantiate(expGrowthExplosion, transform.position, transform.rotation);
 				createdGrowthExplosion.GetComponent<ExplosiveGrowthScript>().Explode(expGrowth, damageTaken);
 			}
+
+			if(stichedEnemies.Count > 0)
+            {
+				foreach(EnemyHealthManager ehm in stichedEnemies)
+                {
+					ehm.TakeDamage(damageTaken * (1f/8f), true, "normalHit", ehm.transform.position, "self");
+                }
+            }
 		}
 
 		if (curHp != maxHp && wasAtMax && radioDome > 0)
@@ -374,7 +412,7 @@ public class HealthManager : MonoBehaviour
 			if (q.x > 0)
 			{
 				//run effects that happen every frame
-
+				
 
 				//progress timer and remove stacks as needed
 				if (q.z > 0f)

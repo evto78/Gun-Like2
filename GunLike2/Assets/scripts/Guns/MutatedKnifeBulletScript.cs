@@ -7,7 +7,7 @@ public class MutatedKnifeBulletScript : BulletScript
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        Destroy(gameObject, 0.1f);
+        Destroy(gameObject, 0.2f);
         collided = false;
     }
 }
