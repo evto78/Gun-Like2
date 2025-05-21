@@ -83,6 +83,9 @@ public class PlayerItem : MonoBehaviour
     public int rightIFPStatToBuff;
     public int rightIFPStatToDeBuff;
 
+    List<int> leftSnapshot;
+    List<int> rightSnapshot;
+
     private void Awake()
     {
         itemData = new List<ItemObject>();
@@ -126,6 +129,11 @@ public class PlayerItem : MonoBehaviour
     }
     private void Update()
     {
+        leftSnapshot = new List<int>();
+        leftSnapshot.AddRange(leftItems);
+        rightSnapshot = new List<int>();
+        rightSnapshot.AddRange(rightItems);
+
         playerMvt.StatUpdate(leftItems, rightItems, rarityList);
         healthManager.StatUpdate(leftItems, rightItems, rarityList);
         gunManager.StatUpdate(leftItems, rightItems, rarityList);
@@ -137,7 +145,20 @@ public class PlayerItem : MonoBehaviour
 
         CheckForMerge();
     }
+    private void LateUpdate()
+    {
+        for(int i = 0; i < leftItems.Count; i++)
+        {
+            leftSnapshot[i] = leftItems[i] - leftSnapshot[i];
+            if(leftSnapshot[i] != 0) { Debug.Log("Item["+i+"] + "+leftSnapshot[i]); }
+        }
+        for (int i = 0; i < rightItems.Count; i++)
+        {
+            rightSnapshot[i] = rightItems[i] - rightSnapshot[i];
+            if(rightSnapshot[i] != 0) { Debug.Log("Item["+i+"] + "+ rightSnapshot[i]); }
+        }
 
+    }
     void CheckForMerge()
     {
         //Angel wings / Imp wings

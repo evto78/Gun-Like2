@@ -126,12 +126,7 @@ public class BulletScript : MonoBehaviour
         {
             rb.AddForce(forceDir, ForceMode.VelocityChange);
         }
-        myPos = transform.position;
-        if (Physics.Raycast(myPos, forceDir, out RaycastHit hit, Vector3.Distance(myPos, (myPos + forceDir * Time.fixedDeltaTime))))
-        {
-            transform.position = hit.point - transform.forward;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
-        }
+        DetectCollision(forceDir);
     }
     public void IntroTrigSetUp(GameObject givenPairedBullet, bool isLead)
     {
@@ -149,7 +144,7 @@ public class BulletScript : MonoBehaviour
         if (isCoolSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
     }
 
-    private void RunOnCollide(GameObject givenGameObject)
+    protected void RunOnCollide(GameObject givenGameObject)
     {
         //rb.velocity = Vector3.zero;
         collidedPos = transform.position;
@@ -320,7 +315,7 @@ public class BulletScript : MonoBehaviour
             {
                 if(advTrig > 0) { if(Random.Range(1, 100) > 20) { pierce += 1; } }
 
-                Debug.Log("Begining Rico");
+                //Debug.Log("Begining Rico");
                 Ray ricoRay = new Ray(transform.position, transform.forward);
                 RaycastHit ricoHit;
 
@@ -328,9 +323,9 @@ public class BulletScript : MonoBehaviour
                 //Checkforward
                 if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
                 {
-                    Debug.Log("Rico Hit! FORWARDS");
+                    //Debug.Log("Rico Hit! FORWARDS");
                     Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                    Debug.Log("Reflect Dir found: " + reflectDir);
+                    //Debug.Log("Reflect Dir found: " + reflectDir);
 
                     //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
                     //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
@@ -357,7 +352,7 @@ public class BulletScript : MonoBehaviour
                     myPos = transform.position;
                     if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
                     {
-                        Debug.Log("Rico Hit! BACKWARDS!... Adjusting position for better reflect.");
+                        //Debug.Log("Rico Hit! BACKWARDS!... Adjusting position for better reflect.");
                         transform.position = transform.position - transform.forward * (rb.velocity * Time.deltaTime).magnitude;
                         ricoRay = new Ray(transform.position, transform.forward);
 
@@ -365,7 +360,7 @@ public class BulletScript : MonoBehaviour
                         if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 6f))))
                         {
                             Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                            Debug.Log("Reflect Dir found: " + reflectDir);
+                            //Debug.Log("Reflect Dir found: " + reflectDir);
 
                             //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
                             //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
@@ -406,17 +401,22 @@ public class BulletScript : MonoBehaviour
     private void FixedUpdate()
     {
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
-        myPos = transform.position;
-        if (Physics.Raycast(myPos, rb.velocity, out RaycastHit hit, Vector3.Distance(myPos, (myPos + rb.velocity * 1.5f * Time.fixedDeltaTime))))
-        {
-            transform.position = hit.point - transform.forward;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
-        }
+        DetectCollision(rb.velocity * 1.5f);
 
         if (rb.freezeRotation && rb.velocity.magnitude > Vector3.zero.magnitude)
         {
             //rb.velocity = Vector3.zero;
             //Debug.Log("Set to 0 " + name);
+        }
+    }
+
+    public virtual void DetectCollision(Vector3 force)
+    {
+        myPos = transform.position;
+        if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
+        {
+            transform.position = hit.point - transform.forward;
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
     }
 }

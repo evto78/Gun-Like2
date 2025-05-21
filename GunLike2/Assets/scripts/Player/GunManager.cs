@@ -550,7 +550,7 @@ public class GunManager : MonoBehaviour
             if(leftSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
-                Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
+                //Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
                 playerItem.leftItems[playerItem.sponserItems[rand]] += 1;
 
                 leftSponItemsMade++;
@@ -568,7 +568,7 @@ public class GunManager : MonoBehaviour
             if (rightSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
-                Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
+                //Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
                 playerItem.rightItems[playerItem.sponserItems[rand]] += 1;
 
                 rightSponItemsMade++;

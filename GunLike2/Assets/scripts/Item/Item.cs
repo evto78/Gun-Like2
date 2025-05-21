@@ -34,7 +34,7 @@ public class Item : MonoBehaviour
     public void SetItemID(int givenID)
     {
         //happens b4 start
-        Debug.Log("spawning item: " + givenID);
+        //Debug.Log("spawning item: " + givenID);
         itemObj = Resources.Load<ItemObject>("Items/"+givenID.ToString());
         itemID = givenID;
         sr.sprite = itemObj.itemSprite;
