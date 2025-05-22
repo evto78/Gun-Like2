@@ -80,10 +80,16 @@ public class HealthManager : MonoBehaviour
 		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
 		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
+		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
+		armor = Calc(20f, givenLeftItems[63] + givenRightItems[63], armor);
+		armor = Calc(20f, givenLeftItems[65] + givenRightItems[65], armor);
 		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
+		armor = Calc(-10f, givenLeftItems[66] + givenRightItems[66], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[39] + givenRightItems[39], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[60] + givenRightItems[60], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 
@@ -380,8 +386,25 @@ public class HealthManager : MonoBehaviour
 			radioTimer = 0.5f;
 			radiosQued += radioDome - 1;
 		}
-	}
 
+		if (curHp / maxHp < 0.2f)
+        {
+			if(playerItem.leftItems[65] > 0)
+            {
+				playerItem.leftItems[65] -= 1;
+				playerItem.leftItems[66] += 1;
+				playerItem.OnItemDestroy(65, -1, "left");
+				playerItem.OnItemGain(66, 1, "left");
+            }
+			if (playerItem.rightItems[65] > 0)
+			{
+				playerItem.rightItems[65] -= 1;
+				playerItem.rightItems[66] += 1;
+				playerItem.OnItemDestroy(65, -1, "right");
+				playerItem.OnItemGain(66, 1, "right");
+			}
+		}
+	}
 	public void GiveEffect(string effectGiven, float stacksToAdd)
 	{
 		//damage over time

@@ -24609,6 +24609,7 @@ MonoBehaviour:
   coolSponEffect: {fileID: 6134128916708452596}
   fastSponEffect: {fileID: 3180318761251026746}
   largeSponEffect: {fileID: 6612778798135407848}
+  multistage: 0
   myCollider: {fileID: 2490013306071340432}
   myPos: {x: 0, y: 0, z: 0}
   whatHandThisComesFrom: 
@@ -29816,6 +29817,14 @@ PrefabInstance:
     - target: {fileID: 5170035526399044339, guid: 8ed22f1078c80ac4da4a8f102b4b6e03, type: 3}
       propertyPath: m_Name
       value: Particle System
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839023028993970213, guid: 8ed22f1078c80ac4da4a8f102b4b6e03, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5839023028993970213, guid: 8ed22f1078c80ac4da4a8f102b4b6e03, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

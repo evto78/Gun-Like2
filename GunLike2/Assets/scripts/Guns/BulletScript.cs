@@ -290,10 +290,18 @@ public class BulletScript : MonoBehaviour
         if (!collided && pierce < 1)
         {
             //transform.SetParent(gameObject.transform);
+            //transform.position = hit.point;
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
-            Destroy(mesh);
+            if(gameObject.name == "NerfedBullet" || gameObject.name == "NerfedBullet(Clone)")
+            {
+
+            }
+            else
+            {
+                Destroy(mesh);
+            }
             collided = true;
             gameObject.GetComponent<Collider>().enabled = false;
 
@@ -424,14 +432,15 @@ public class BulletScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if(collided && (gameObject.name == "NerfedBullet" || gameObject.name == "NerfedBullet(Clone)") && Vector3.Distance(GameObject.Find("Player").transform.position, transform.position) < 2f)
+        {
+            GameObject.Find("Player").GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SendMessage("addBullet",SendMessageOptions.DontRequireReceiver);
+            GameObject.Find("Player").GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+            Destroy(gameObject);
+        }
+
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
         DetectCollision(rb.velocity * 1.5f);
-
-        if (rb.freezeRotation && rb.velocity.magnitude > Vector3.zero.magnitude)
-        {
-            //rb.velocity = Vector3.zero;
-            //Debug.Log("Set to 0 " + name);
-        }
     }
 
     public virtual void DetectCollision(Vector3 force)
@@ -439,7 +448,7 @@ public class BulletScript : MonoBehaviour
         myPos = transform.position;
         if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
         {
-            transform.position = hit.point - transform.forward;
+            transform.position = hit.point - transform.forward / 10f;
             if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
     }

@@ -162,11 +162,11 @@ public class PlayerItem : MonoBehaviour
         }
 
     }
-    void OnItemDestroy(int id, int amount, string hand)
+    public void OnItemDestroy(int id, int amount, string hand)
     {
         popupUI.CreateNotif(id, amount);
     }
-    void OnItemGain(int id, int amount, string hand)
+    public void OnItemGain(int id, int amount, string hand)
     {
         popupUI.CreateNotif(id, amount);
     }

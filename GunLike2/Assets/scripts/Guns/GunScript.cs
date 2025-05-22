@@ -56,6 +56,7 @@ public class GunScript : MonoBehaviour
     public float largeSpon;
     public int possession;
     public int multistage;
+    public bool nerfedBul;
 
     public bool isFastFiring;
 
@@ -71,6 +72,7 @@ public class GunScript : MonoBehaviour
 
 
     public GameObject pistolBullet;
+    public GameObject nerfedPistolBullet;
     public Transform firePoint;
 
     public Camera cam;
@@ -132,6 +134,7 @@ public class GunScript : MonoBehaviour
         largeSpon = manager.leftLargeSpon;
         possession = manager.leftPossession;
         multistage = manager.leftMultistage;
+        nerfedBul = manager.leftNerf > 0;
 
         ricochet = manager.leftRicochet;
 
@@ -181,6 +184,7 @@ public class GunScript : MonoBehaviour
         largeSpon = manager.rightLargeSpon;
         possession = manager.rightPossession;
         multistage = manager.rightMultistage;
+        nerfedBul = manager.rightNerf > 0;
 
         ricochet = manager.rightRicochet;
 
@@ -338,9 +342,16 @@ public class GunScript : MonoBehaviour
 
             EarlyShoot();
             currentBullets--;
-
-            GameObject spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
-            if(target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
+            GameObject spawnedBullet;
+            if (nerfedBul)
+            {
+                spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.position, firePoint.rotation);
+            }
+            else
+            {
+                spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
+            }
+            if (target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
             //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);

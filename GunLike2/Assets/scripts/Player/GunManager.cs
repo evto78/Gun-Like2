@@ -71,6 +71,7 @@ public class GunManager : MonoBehaviour
     int leftSponItemsMade;
     public int leftMultistage;
     int leftSurpriseEggLifetime;
+    public int leftNerf;
 
     public bool leftRicochet = false;
 
@@ -116,6 +117,7 @@ public class GunManager : MonoBehaviour
     int rightSponItemsMade;
     public int rightMultistage;
     int rightSurpriseEggLifetime;
+    public int rightNerf;
 
     float surpriseEggTimer;
 
@@ -235,7 +237,10 @@ public class GunManager : MonoBehaviour
         }
 
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
+        leftAtkSpd = Calc(-5f, givenLeftItems[59], leftAtkSpd);
+        leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
         leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
+        leftReSpd = Calc(-5f, givenLeftItems[59], leftReSpd);
         leftDmg = Calc(40f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
@@ -243,26 +248,32 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[26], leftAcc);
         leftDmg = Calc(40f, givenLeftItems[27], leftAcc);
+        leftDmg = Calc(20f, givenLeftItems[66], leftAcc);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[46], leftDmg);
+        leftDmg = Calc(-10f, givenLeftItems[59], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[26], leftMagSize);
+        leftMagSize = Calc(-5f, givenLeftItems[59], leftMagSize);
         leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[46], leftAcc);
+        leftAcc = Calc(-5f, givenLeftItems[59], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
+        leftBulSpd = Calc(-10f, givenLeftItems[59], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
+        leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
         leftBulPir += givenLeftItems[10] + givenLeftItems[26];
 
-        leftHeavyBul = givenLeftItems[11];
+        leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
         leftBowAct = givenLeftItems[16];
         leftHeavySpirit = givenLeftItems[19];
@@ -285,6 +296,7 @@ public class GunManager : MonoBehaviour
         leftSponDeal = givenLeftItems[42];
         leftMultistage = givenLeftItems[57];
         leftSurpriseEggLifetime = givenLeftItems[58];
+        leftNerf = givenLeftItems[59];
 
         leftRicochet = false;
 
@@ -296,8 +308,11 @@ public class GunManager : MonoBehaviour
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
+        rightAtkSpd = Calc(-5f, givenRightItems[59], rightAtkSpd);
+        rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
         rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
         rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
+        rightReSpd = Calc(-5f, givenRightItems[59], rightReSpd);
         rightDmg = Calc(40f, givenRightItems[21], rightDmg);
         rightDmg = Calc(40f, givenRightItems[13], rightDmg);
         rightDmg = Calc(20f, givenRightItems[11], rightDmg);
@@ -305,26 +320,32 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(20f, givenRightItems[40], rightDmg);
         rightDmg = Calc(40f, givenRightItems[26], rightDmg);
         rightDmg = Calc(40f, givenRightItems[27], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[66], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[46], rightDmg);
+        rightDmg = Calc(-10f, givenRightItems[59], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[26], rightMagSize);
+        rightMagSize = Calc(-5f, givenRightItems[59], rightMagSize);
         rightAcc = Calc(20f, givenRightItems[8], rightAcc);
         rightAcc = Calc(40f, givenRightItems[25], rightAcc);
         rightAcc = Calc(40f, givenRightItems[27], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[46], rightAcc);
+        rightAcc = Calc(-5f, givenRightItems[59], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
+        rightBulSpd = Calc(-10f, givenRightItems[59], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
+        rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
         rightBulPir += givenRightItems[10] + givenRightItems[26];
 
-        rightHeavyBul = givenRightItems[11];
+        rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
         rightBowAct = givenRightItems[16];
         rightHeavySpirit = givenRightItems[19];
@@ -347,6 +368,7 @@ public class GunManager : MonoBehaviour
         rightSponDeal = givenRightItems[42];
         rightMultistage = givenRightItems[57];
         rightSurpriseEggLifetime = givenRightItems[58];
+        rightNerf = givenRightItems[59];
 
         rightRicochet = false;
 
