@@ -14,8 +14,12 @@ public class Shockwave : MonoBehaviour
     public bool bleedSpon;
     public bool helpingSpon;
 
+    PlayerItem playerItem;
+
     void Start()
     {
+        playerItem = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItem>();
+
         Destroy(gameObject, lifetime);
         lifetimeTimer = 0;
         //myMeshs.AddRange(gameObject.GetComponentsInChildren<MeshRenderer>());
@@ -25,8 +29,15 @@ public class Shockwave : MonoBehaviour
     void Update()
     {
         lifetimeTimer += Time.deltaTime;
-        transform.localScale = Vector3.one * lifetimeTimer * 8f;
-        if(lifetimeTimer >= lifetime) { lifetimeTimer = lifetime - 0.01f; }
+        if(playerItem.leftItems[53] + playerItem.rightItems[53] > 0)
+        {
+            transform.localScale = Vector3.one * lifetimeTimer * 16f;
+        }
+        else
+        {
+            transform.localScale = Vector3.one * lifetimeTimer * 8f;
+        }
+        if (lifetimeTimer >= lifetime) { lifetimeTimer = lifetime - 0.01f; }
         for(int i = 0; i < myMeshs.Count; i++)
         {
             myMeshs[i].material.color = new Color(myMeshs[i].material.color.r, myMeshs[i].material.color.g, myMeshs[i].material.color.b, ((lifetime - lifetimeTimer) / lifetime) / 2f);

@@ -8,6 +8,9 @@ public class MutatedKnifeBulletScript : BulletScript
 
     private void Awake()
     {
+        hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
+        pi = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItem>();
+
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
         collided = false;

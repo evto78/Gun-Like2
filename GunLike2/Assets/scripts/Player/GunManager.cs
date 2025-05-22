@@ -69,6 +69,8 @@ public class GunManager : MonoBehaviour
     public int leftSponDeal;
     float leftSponTimer;
     int leftSponItemsMade;
+    public int leftMultistage;
+    int leftSurpriseEggLifetime;
 
     public bool leftRicochet = false;
 
@@ -112,6 +114,10 @@ public class GunManager : MonoBehaviour
     public int rightSponDeal;
     float rightSponTimer;
     int rightSponItemsMade;
+    public int rightMultistage;
+    int rightSurpriseEggLifetime;
+
+    float surpriseEggTimer;
 
     public bool rightRicochet = false;
 
@@ -178,6 +184,7 @@ public class GunManager : MonoBehaviour
         if (effectList[12].x > 0f) { masterDmg = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterDmg); }
         if (effectList[13].x > 0f) { masterAtkSpd = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterAtkSpd); }
         if (effectList[18].x > 0f) { masterAtkSpd = masterAtkSpd * 1.5f; }
+        if (effectList[19].x > 0f) { masterAtkSpd = masterAtkSpd * 2f; }
 
         leftAtkSpd = 1f * masterAtkSpd;
         leftReSpd = 1f * masterReSpd;
@@ -249,6 +256,7 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[46], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
+        leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
@@ -275,6 +283,8 @@ public class GunManager : MonoBehaviour
         leftFastSpon = givenLeftItems[47];
         leftPossession = givenLeftItems[40];
         leftSponDeal = givenLeftItems[42];
+        leftMultistage = givenLeftItems[57];
+        leftSurpriseEggLifetime = givenLeftItems[58];
 
         leftRicochet = false;
 
@@ -308,6 +318,7 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[46], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
+        rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
@@ -334,6 +345,8 @@ public class GunManager : MonoBehaviour
         rightFastSpon = givenRightItems[47];
         rightPossession = givenRightItems[40];
         rightSponDeal = givenRightItems[42];
+        rightMultistage = givenRightItems[57];
+        rightSurpriseEggLifetime = givenRightItems[58];
 
         rightRicochet = false;
 
@@ -580,6 +593,23 @@ public class GunManager : MonoBehaviour
                 }
             }
         }
+
+        surpriseEggTimer += Time.deltaTime;
+        if (leftSurpriseEggLifetime > 0)
+        {
+            if(surpriseEggTimer > 120 && healthMan.timeSinceEnemyDied < 120)
+            {
+                playerItem.leftItems[55] += 1;
+            }
+        }
+        if (rightSurpriseEggLifetime > 0)
+        {
+            if (surpriseEggTimer > 120 && healthMan.timeSinceEnemyDied < 120)
+            {
+                playerItem.rightItems[55] += 1;
+            }
+        }
+        if (surpriseEggTimer > 120) { surpriseEggTimer = 0; }
     }
 
     void mutatedCellReroll(List<int> itemList)

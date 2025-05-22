@@ -24,6 +24,8 @@ public class EnemyHealthManager : MonoBehaviour
     public float latestDamage;
 
     GameObject player;
+    PlayerItem playerItem;
+    HealthManager playerHM;
 
     public GameObject effectIcon;
     List<GameObject> icons;
@@ -49,10 +51,9 @@ public class EnemyHealthManager : MonoBehaviour
 
         curHp = maxHp;
 
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
+        player = GameObject.FindWithTag("Player");
+        playerItem = player.GetComponent<PlayerItem>();
+        playerHM = player.GetComponent<HealthManager>();
     }
 
     void Update()
@@ -64,6 +65,11 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
+        if(activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
+        {
+            dmgTaken = dmgTaken * 2f;
+        }
+
         if (ignoreArmor)
         {
             curHp -= dmgTaken;
@@ -83,9 +89,9 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        if (player.GetComponent<HealthManager>().stichedEnemies.Count > 0 && player.GetComponent<PlayerItem>().leftItems[51] + player.GetComponent<PlayerItem>().rightItems[51] > 0)
+        if (playerHM.stichedEnemies.Count > 0 && playerItem.leftItems[51] + playerItem.rightItems[51] > 0)
         {
-            foreach (EnemyHealthManager ehm in player.GetComponent<HealthManager>().stichedEnemies)
+            foreach (EnemyHealthManager ehm in playerHM.stichedEnemies)
             {
                 if(dmgTaken * 0.25f > 1f)
                 {
@@ -148,25 +154,27 @@ public class EnemyHealthManager : MonoBehaviour
         {
             q = activeEffects[i];
 
+            if (i == 6 && q.x > 0)
+            {
+                foreach (MonoBehaviour brain in brains)
+                {
+                    brain.enabled = false;
+                }
+                frozenEffect.SetActive(true);
+            }
+            else if (i == 6 && q.x <= 0)
+            {
+                foreach (MonoBehaviour brain in brains)
+                {
+                    brain.enabled = true;
+                }
+                frozenEffect.SetActive(false);
+            }
+
             //if there are any stacks of this effect
             if (q.x > 0)
             {
-                if (i == 6 && q.x > 0)
-                {
-                    foreach(MonoBehaviour brain in brains)
-                    {
-                        brain.enabled = false;
-                    }
-                    frozenEffect.SetActive(true);
-                }
-                else
-                {
-                    foreach (MonoBehaviour brain in brains)
-                    {
-                        brain.enabled = true;
-                    }
-                    frozenEffect.SetActive(false);
-                }
+                
                 //progress timer and remove stacks as needed
                 if (q.z > 0f)
                 {
@@ -175,7 +183,7 @@ public class EnemyHealthManager : MonoBehaviour
                 else
                 {
                     //If player has anti-antidode do not remove stacks when timer runs out
-                    int antiAnti = player.GetComponent<PlayerItem>().leftItems[41] + player.GetComponent<PlayerItem>().rightItems[41];
+                    int antiAnti = playerItem.leftItems[41] + playerItem.rightItems[41];
                     if (antiAnti < 1)
                     {
                         if (Random.Range(0f, 2f) <= 1f) { q.x -= 1f; }
@@ -189,7 +197,7 @@ public class EnemyHealthManager : MonoBehaviour
                     //run effects that happen when timer ends
                     if (i == 0)
                     { 
-                        if((player.GetComponent<PlayerItem>().leftItems[50] + player.GetComponent<PlayerItem>().rightItems[50]) > 0)
+                        if((playerItem.leftItems[50] + playerItem.rightItems[50]) > 0)
                         {
                             TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
                         }
@@ -201,7 +209,7 @@ public class EnemyHealthManager : MonoBehaviour
                     }
                     if (i == 1) 
                     {
-                        if ((player.GetComponent<PlayerItem>().leftItems[48] + player.GetComponent<PlayerItem>().rightItems[48]) > 0)
+                        if ((playerItem.leftItems[48] + playerItem.rightItems[48]) > 0)
                         {
                             TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
                         }
@@ -247,16 +255,16 @@ public class EnemyHealthManager : MonoBehaviour
     private void OnDeath()
     {
         if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
-        player.GetComponent<HealthManager>().EnemyDied(gameObject, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
+        playerHM.EnemyDied(gameObject, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
 
         //gunlike classic
-        if(player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38] > 0)
+        if(playerItem.leftItems[38] + playerItem.rightItems[38] > 0)
         {
-            dropChance += 25 * (player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]);
-            if (Random.Range(1, 100) <= dropChance + ((player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]) * 10))
+            dropChance += 25 * (playerItem.leftItems[38] + playerItem.rightItems[38]);
+            if (Random.Range(1, 100) <= dropChance + ((playerItem.leftItems[38] + playerItem.rightItems[38]) * 10))
             {
                 int rand = Random.Range(1, 101);
-                List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+                List<List<int>> raritys = playerItem.rarityList;
 
                 if (rand < 71) { SpawnItem(0); }
                 if (rand < 91 && rand > 70) { SpawnItem(1); }
@@ -272,7 +280,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     private void SpawnItem(int iD)
     {
-        List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+        List<List<int>> raritys = playerItem.rarityList;
 
         GameObject spawnedItem;
         spawnedItem = Instantiate(itemPossibility);

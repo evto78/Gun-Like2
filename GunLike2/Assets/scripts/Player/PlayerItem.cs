@@ -66,6 +66,7 @@ public class PlayerItem : MonoBehaviour
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
     public GunManager gunManager;
+    public PopupItemUI popupUI;
 
     public Transform playerCamera;
 
@@ -163,11 +164,11 @@ public class PlayerItem : MonoBehaviour
     }
     void OnItemDestroy(int id, int amount, string hand)
     {
-
+        popupUI.CreateNotif(id, amount);
     }
     void OnItemGain(int id, int amount, string hand)
     {
-
+        popupUI.CreateNotif(id, amount);
     }
     void CheckForMerge()
     {
@@ -203,6 +204,10 @@ public class PlayerItem : MonoBehaviour
         if (rightItems[44] > 20) { rightItems[52] = 1; }//cool
         if (rightItems[45] > 20) { rightItems[53] = 1; }//large
         if (rightItems[47] > 10) { rightItems[54] = 1; }//fast
+
+        //Surprise Egg
+        if(leftItems[55] > 0) { leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[56] += 1; leftItems[55] -= 1; }
+        if(rightItems[55] > 0) { rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[56] += 1; rightItems[55] -= 1; }
     }
 
     void LookForItem()

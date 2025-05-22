@@ -43,6 +43,8 @@ public class HealthManager : MonoBehaviour
 	int experimentalImp;
 	float experTimer;
 
+	public float timeSinceEnemyDied;
+
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
 	public PlayerItem playerItem;
@@ -77,6 +79,7 @@ public class HealthManager : MonoBehaviour
 		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
 		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
 		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
+		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
 		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
@@ -159,6 +162,8 @@ public class HealthManager : MonoBehaviour
 	}
 	void Update()
 	{
+		timeSinceEnemyDied += Time.deltaTime;
+
         if (dead) { return; }
 
 		if(experimentalImp <= 0)
@@ -189,6 +194,8 @@ public class HealthManager : MonoBehaviour
 
 	public void EnemyDied(GameObject enemyThatDied, int moneyDropped)
     {
+		timeSinceEnemyDied = 0;
+
 		if(activeReactor > 0)
         {
 			GiveEffect("active reactor", 1);
@@ -402,10 +409,12 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "pants falling") { activeEffects[17] = new Vector4(stacksToAdd, 0.1f * beltFed, 0.1f * beltFed, 1f); } // belt fed magazine buff
 
 		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, activeReactor * 5f, activeReactor * 5f, 1f); } // active reactor buff
+		if (effectGiven == "fast fire") { activeEffects[19] = new Vector4(stacksToAdd, 1f, 1f, 1f); } // Fast Fire partership buff
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
+		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, 1f, 1f, 1f); }
 	}
 
 	void ManageEffects()
