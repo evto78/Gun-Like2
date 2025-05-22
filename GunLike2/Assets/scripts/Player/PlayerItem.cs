@@ -150,13 +150,23 @@ public class PlayerItem : MonoBehaviour
         for(int i = 0; i < leftItems.Count; i++)
         {
             leftSnapshot[i] = leftItems[i] - leftSnapshot[i];
-            if(leftSnapshot[i] != 0) { Debug.Log("Item["+i+"] + "+leftSnapshot[i]); }
+            if (leftSnapshot[i] < 0) { OnItemDestroy(i, leftSnapshot[i], "left"); }
+            if (leftSnapshot[i] > 0) { OnItemGain(i, leftSnapshot[i], "left"); }
         }
         for (int i = 0; i < rightItems.Count; i++)
         {
             rightSnapshot[i] = rightItems[i] - rightSnapshot[i];
-            if(rightSnapshot[i] != 0) { Debug.Log("Item["+i+"] + "+ rightSnapshot[i]); }
+            if(rightSnapshot[i] < 0) { OnItemDestroy(i, rightSnapshot[i], "right");  }
+            if(rightSnapshot[i] > 0) { OnItemGain(i, rightSnapshot[i], "right");  }
         }
+
+    }
+    void OnItemDestroy(int id, int amount, string hand)
+    {
+
+    }
+    void OnItemGain(int id, int amount, string hand)
+    {
 
     }
     void CheckForMerge()
@@ -176,6 +186,23 @@ public class PlayerItem : MonoBehaviour
             rightItems[31] -= 1;
             rightItems[32] -= 1;
         }
+
+        //partnerships
+        if(leftItems[34] > 20) { leftItems[48] = 1; }//fire
+        if(leftItems[36] > 5) { leftItems[49] = 1; }//silver
+        if(leftItems[35] > 20) { leftItems[50] = 1; }//sharp
+        if(leftItems[43] > 20) { leftItems[51] = 1; }//help
+        if(leftItems[44] > 20) { leftItems[52] = 1; }//cool
+        if(leftItems[45] > 20) { leftItems[53] = 1; }//large
+        if(leftItems[47] > 10) { leftItems[54] = 1; }//fast
+
+        if (rightItems[34] > 20) { rightItems[48] = 1; }//fire
+        if (rightItems[36] > 5) { rightItems[49] = 1; }//silver
+        if (rightItems[35] > 20) { rightItems[50] = 1; }//sharp
+        if (rightItems[43] > 20) { rightItems[51] = 1; }//help
+        if (rightItems[44] > 20) { rightItems[52] = 1; }//cool
+        if (rightItems[45] > 20) { rightItems[53] = 1; }//large
+        if (rightItems[47] > 10) { rightItems[54] = 1; }//fast
     }
 
     void LookForItem()

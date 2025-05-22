@@ -350,7 +350,15 @@ public class HealthManager : MonoBehaviour
             {
 				foreach(EnemyHealthManager ehm in stichedEnemies)
                 {
-					ehm.TakeDamage(damageTaken * (1f/8f), true, "normalHit", ehm.transform.position, "self");
+					if(playerItem.leftItems[51] + playerItem.rightItems[51] > 0)
+                    {
+						ehm.TakeDamage(damageTaken * (1f / 4f), true, "normalHit", ehm.transform.position, "self");
+					}
+                    else
+                    {
+						ehm.TakeDamage(damageTaken * (1f / 8f), true, "normalHit", ehm.transform.position, "self");
+					}
+					
                 }
             }
 		}

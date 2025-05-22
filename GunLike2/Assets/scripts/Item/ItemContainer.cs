@@ -68,7 +68,7 @@ public class ItemContainer : MonoBehaviour
         for(int i = 0; i < numOfItems; i++)
         {
             itemsSpawned++;
-            int rand = Random.Range(1, 100);
+            int rand = Random.Range(1, 101);
             List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
 
             if (rand < 71) { SpawnItem(0); }

@@ -83,8 +83,21 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
+        if (player.GetComponent<HealthManager>().stichedEnemies.Count > 0 && player.GetComponent<PlayerItem>().leftItems[51] + player.GetComponent<PlayerItem>().rightItems[51] > 0)
+        {
+            foreach (EnemyHealthManager ehm in player.GetComponent<HealthManager>().stichedEnemies)
+            {
+                if(dmgTaken * 0.25f > 1f)
+                {
+                    ehm.TakeDamage(dmgTaken * (1f / 4f), true, "normalHit", ehm.transform.position, "self");
+                }
+            }
+        }
+
         PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
         gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
+
+
 
         if (curHp <= 0 && !died) { Die(); died = true; }
     }
@@ -174,7 +187,30 @@ public class EnemyHealthManager : MonoBehaviour
                     if (q.x! > 0f) { q.z = q.y; }
 
                     //run effects that happen when timer ends
-                    if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*10f, true, "normalHit", transform.position, "self"); }
+                    if (i == 0)
+                    { 
+                        if((player.GetComponent<PlayerItem>().leftItems[50] + player.GetComponent<PlayerItem>().rightItems[50]) > 0)
+                        {
+                            TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
+                        }
+                        else
+                        {
+                            TakeDamage((q.x + 1f) * 10f, true, "normalHit", transform.position, "self");
+                        }
+                        
+                    }
+                    if (i == 1) 
+                    {
+                        if ((player.GetComponent<PlayerItem>().leftItems[48] + player.GetComponent<PlayerItem>().rightItems[48]) > 0)
+                        {
+                            TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
+                        }
+                        else
+                        {
+                            TakeDamage((q.x + 1f) * 10f, true, "normalHit", transform.position, "self");
+                        }
+                    }
+                    if (i == 2) { TakeDamage((q.x + 1f)*50f, true, "normalHit", transform.position, "self"); }
                 }
             }
 
@@ -219,7 +255,7 @@ public class EnemyHealthManager : MonoBehaviour
             dropChance += 25 * (player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]);
             if (Random.Range(1, 100) <= dropChance + ((player.GetComponent<PlayerItem>().leftItems[38] + player.GetComponent<PlayerItem>().rightItems[38]) * 10))
             {
-                int rand = Random.Range(1, 100);
+                int rand = Random.Range(1, 101);
                 List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
 
                 if (rand < 71) { SpawnItem(0); }

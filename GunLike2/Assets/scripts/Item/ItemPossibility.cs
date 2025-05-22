@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ItemPossibility : MonoBehaviour
 {
+    public GameObject itemPossibility;
     public GameObject item;
 
     public int rarity;
@@ -25,6 +26,29 @@ public class ItemPossibility : MonoBehaviour
     {
         rarityList = GameObject.Find("Player").GetComponent<PlayerItem>().rarityList;
         timer = 0.5f;
+        if(GameObject.Find("Player").GetComponent<PlayerItem>().rightItems[49]+ GameObject.Find("Player").GetComponent<PlayerItem>().leftItems[49] > 0)
+        {
+            if(Random.Range(1,100) > 80)
+            {
+                int rand = Random.Range(1, 101);
+                int rarityID = 0;
+
+                if (rand < 71) { rarityID = 0; }
+                if (rand < 91 && rand > 70) { rarityID = 1; }
+                if (rand == 91 || rand == 92) { rarityID = 2; }
+                if (rand == 93 || rand == 94) { rarityID = 4; }
+                if (rand == 95 || rand == 96) { rarityID = 5; }
+                if (rand == 97 || rand == 98) { rarityID = 6; }
+                if (rand == 99) { rarityID = 3; }
+                if (rand == 100) { rarityID = 7; }
+
+                GameObject spawnedItem;
+                spawnedItem = Instantiate(itemPossibility);
+                spawnedItem.transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 500f);
+                spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID);
+            }
+        }
     }
 
     public void SetRarity(int givenRarity)
