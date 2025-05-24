@@ -57,6 +57,7 @@ public class GunScript : MonoBehaviour
     public int possession;
     public int multistage;
     public bool nerfedBul;
+    public bool stickTo;
 
     public bool isFastFiring;
 
@@ -93,6 +94,7 @@ public class GunScript : MonoBehaviour
         currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").transform;
+        cam = Camera.main;
 
         LateStart();
     }
@@ -135,6 +137,7 @@ public class GunScript : MonoBehaviour
         possession = manager.leftPossession;
         multistage = manager.leftMultistage;
         nerfedBul = manager.leftNerf > 0;
+        stickTo = manager.leftStickTo > 0;
 
         ricochet = manager.leftRicochet;
 
@@ -185,6 +188,7 @@ public class GunScript : MonoBehaviour
         possession = manager.rightPossession;
         multistage = manager.rightMultistage;
         nerfedBul = manager.rightNerf > 0;
+        stickTo = manager.rightStickTo > 0;
 
         ricochet = manager.rightRicochet;
 
@@ -435,7 +439,8 @@ public class GunScript : MonoBehaviour
             {
                 animator.speed = atkSpd * 3f;
             }
-
+            if(whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
+            if(whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
         }
     }
 

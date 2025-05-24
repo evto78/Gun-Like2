@@ -20,10 +20,17 @@ public class ItemPossibility : MonoBehaviour
     public GameObject nuclearPS;
     public GameObject uniquePS;
 
+    public GameObject shrodingerBox;
+    public GameObject shrodingerOptions;
+    bool isShrodinger;
+
     float timer;
 
     private void Start()
     {
+        if(GameObject.Find("Player").GetComponent<PlayerItem>().rightItems[68] + GameObject.Find("Player").GetComponent<PlayerItem>().leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
+        shrodingerBox.SetActive(isShrodinger);
+
         rarityList = GameObject.Find("Player").GetComponent<PlayerItem>().rarityList;
         timer = 0.5f;
         if(GameObject.Find("Player").GetComponent<PlayerItem>().rightItems[49]+ GameObject.Find("Player").GetComponent<PlayerItem>().leftItems[49] > 0)
@@ -77,23 +84,38 @@ public class ItemPossibility : MonoBehaviour
     {
         if(timer <= 0f)
         {
-            OnInteract();
+            OnInteract("collision");
         }
     }
     private void OnCollisionStay(Collision collision)
     {
         if (timer <= 0f)
         {
-            OnInteract();
+            OnInteract("collision");
         }
     }
 
-    public void OnInteract()
+    public void OnInteract(string source)
     {
-        SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
-        Destroy(gameObject);
+        gameObject.GetComponent<Rigidbody>().freezeRotation = true;
+        if (isShrodinger)
+        {
+            if(source == "player")
+            {
+                shrodingerOptions.SetActive(true);
+                //if(shrodingerOptions.transform.GetChild(0))
+            }
+        }
+        else
+        {
+            SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+            Destroy(gameObject);
+        }
     }
-
+    public void Interact()
+    {
+        OnInteract("player");
+    }
     void SpawnItem(int iD)
     {
         GameObject spawnedItem = Instantiate(item);

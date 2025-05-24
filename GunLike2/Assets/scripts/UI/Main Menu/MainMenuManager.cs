@@ -24,7 +24,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (starting && cam.transform.localScale.x == 2)
         {
-            SceneManager.LoadScene("Sandbox");
+            //
         }
     }
 
@@ -47,5 +47,9 @@ public class MainMenuManager : MonoBehaviour
     public void ExitGameButton()
     {
         Application.Quit();
+    }
+    public void LoadLevel()
+    {
+        SceneManager.LoadScene("Sandbox");
     }
 }

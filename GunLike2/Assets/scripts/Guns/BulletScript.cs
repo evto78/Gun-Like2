@@ -62,11 +62,14 @@ public class BulletScript : MonoBehaviour
 
     protected HealthManager hm;
     protected PlayerItem pi;
+    protected GunManager gm;
+    protected GunScript gunFiredFrom;
 
     void Awake()
     {
         hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
         pi = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItem>();
+        gm = GameObject.FindGameObjectWithTag("Player").GetComponent<GunManager>();
 
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
@@ -94,6 +97,7 @@ public class BulletScript : MonoBehaviour
         if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); } 
 
         whatHandThisComesFrom = whatHand;
+        gunFiredFrom = firedFrom;
 
         damage = givenDmg;
         isCrit = isCritHit;
@@ -151,10 +155,9 @@ public class BulletScript : MonoBehaviour
         if (isHelpingSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
         if (isCoolSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
 
-        if (pi.leftItems[54] + pi.rightItems[54] > 0)
-        {
-            hm.GiveEffect("fast fire", 1f);
-        }
+        if (pi.leftItems[54] + pi.rightItems[54] > 0){ hm.GiveEffect("fast fire", 1f); }
+        if (gunFiredFrom.stickTo && whatHandThisComesFrom == "left") { gm.rightStickToCounters++; }
+        if (gunFiredFrom.stickTo && whatHandThisComesFrom == "right") { gm.leftStickToCounters++; }
     }
 
     protected void RunOnCollide(GameObject givenGameObject)
@@ -289,16 +292,10 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
-            //transform.SetParent(gameObject.transform);
-            //transform.position = hit.point;
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
-            if(gameObject.name == "NerfedBullet" || gameObject.name == "NerfedBullet(Clone)")
-            {
-
-            }
-            else
+            if(gameObject.name != "NerfedBullet" && gameObject.name != "NerfedBullet(Clone)")
             {
                 Destroy(mesh);
             }
@@ -347,24 +344,13 @@ public class BulletScript : MonoBehaviour
             {
                 if(advTrig > 0) { if(Random.Range(1, 100) > 20) { pierce += 1; } }
 
-                //Debug.Log("Begining Rico");
                 Ray ricoRay = new Ray(transform.position, transform.forward);
                 RaycastHit ricoHit;
 
                 myPos = transform.position;
-                //Checkforward
                 if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
                 {
-                    //Debug.Log("Rico Hit! FORWARDS");
                     Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                    //Debug.Log("Reflect Dir found: " + reflectDir);
-
-                    //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
-                    //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
-                    //float ricoRotZ = 90f - Mathf.Atan2(reflectDir.x, reflectDir.y) * Mathf.Rad2Deg;
-
-                    //transform.eulerAngles = new Vector3(ricoRotX, ricoRotY, ricoRotZ);
-
                     Vector3 storedVelocity = rb.velocity;
 
                     rb.velocity = Vector3.zero;
@@ -376,7 +362,6 @@ public class BulletScript : MonoBehaviour
 
                     transform.rotation = Quaternion.LookRotation(rb.velocity);
                 }
-                //Checkbackward
                 else
                 {
                     ricoRay = new Ray(transform.position, -transform.forward);
@@ -392,14 +377,6 @@ public class BulletScript : MonoBehaviour
                         if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 6f))))
                         {
                             Vector3 reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                            //Debug.Log("Reflect Dir found: " + reflectDir);
-
-                            //float ricoRotX = 90f - Mathf.Atan2(reflectDir.z, reflectDir.y) * Mathf.Rad2Deg;
-                            //float ricoRotY = 90f - Mathf.Atan2(reflectDir.x, reflectDir.z) * Mathf.Rad2Deg;
-                            //float ricoRotZ = 90f - Mathf.Atan2(reflectDir.x, reflectDir.y) * Mathf.Rad2Deg;
-
-                            //transform.eulerAngles = new Vector3(ricoRotX, ricoRotY, ricoRotZ);
-
                             Vector3 storedVelocity = rb.velocity;
 
                             rb.velocity = Vector3.zero;

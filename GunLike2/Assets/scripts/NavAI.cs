@@ -42,6 +42,7 @@ public class NavAI : MonoBehaviour
     }
     private void OnEnable()
     {
+        agent = GetComponent<NavMeshAgent>();
         agent.isStopped = false;
     }
     private void OnDisable()

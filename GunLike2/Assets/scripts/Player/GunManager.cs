@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GunManager : MonoBehaviour
 {
+    public List<GameObject> guns;
+
     List<List<int>> rarityList = new List<List<int>>();
     List<int> leftList = new List<int>();
     List<int> rightList = new List<int>();
@@ -72,6 +74,8 @@ public class GunManager : MonoBehaviour
     public int leftMultistage;
     int leftSurpriseEggLifetime;
     public int leftNerf;
+    public int leftStickTo;
+    public int leftStickToCounters;
 
     public bool leftRicochet = false;
 
@@ -118,13 +122,36 @@ public class GunManager : MonoBehaviour
     public int rightMultistage;
     int rightSurpriseEggLifetime;
     public int rightNerf;
+    public int rightStickTo;
+    public int rightStickToCounters;
 
     float surpriseEggTimer;
 
     public bool rightRicochet = false;
+    int leftHandVal;
+    int rightHandVal;
 
     private void Start()
     {
+        leftHandVal = 0;
+        rightHandVal = 1;
+
+        if (PlayerPrefs.HasKey("leftHandGunSelect"))
+        {
+            leftHandVal = PlayerPrefs.GetInt("leftHandGunSelect");
+        }
+        if (PlayerPrefs.HasKey("rightHandGunSelect"))
+        {
+            rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
+        }
+        if(leftHandVal == 9) { leftHandVal = rightHandVal; }
+        if(rightHandVal == 9) { rightHandVal = leftHandVal; }
+
+        if(leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
+        if(rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
+        Instantiate(guns[leftHandVal], leftHand.transform);
+        Instantiate(guns[rightHandVal], rightHand.transform);
+
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;
     }
@@ -297,6 +324,7 @@ public class GunManager : MonoBehaviour
         leftMultistage = givenLeftItems[57];
         leftSurpriseEggLifetime = givenLeftItems[58];
         leftNerf = givenLeftItems[59];
+        leftStickTo = givenLeftItems[67];
 
         leftRicochet = false;
 
@@ -306,6 +334,7 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
+        if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
 
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightAtkSpd = Calc(-5f, givenRightItems[59], rightAtkSpd);
@@ -369,6 +398,7 @@ public class GunManager : MonoBehaviour
         rightMultistage = givenRightItems[57];
         rightSurpriseEggLifetime = givenRightItems[58];
         rightNerf = givenRightItems[59];
+        rightStickTo = givenRightItems[67];
 
         rightRicochet = false;
 
@@ -378,6 +408,7 @@ public class GunManager : MonoBehaviour
         if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
+        if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
 
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
@@ -632,6 +663,9 @@ public class GunManager : MonoBehaviour
             }
         }
         if (surpriseEggTimer > 120) { surpriseEggTimer = 0; }
+
+        if(leftStickToCounters > leftStickTo * 5) { leftStickToCounters = leftStickTo * 5; }
+        if(rightStickToCounters > rightStickTo * 5) { rightStickToCounters = rightStickTo * 5; }
     }
 
     void mutatedCellReroll(List<int> itemList)

@@ -41,7 +41,7 @@ public class KnifeBrain : MonoBehaviour
         preparing = false;
         healthMan = GetComponent<EnemyHealthManager>();
         player = GameObject.Find("Player");
-        mr = transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
+        mr = transform.GetChild(1).gameObject.GetComponent<MeshRenderer>();
 
         moveCurve = Vector3.one * Random.Range(-1f, 1f);
         moveCurve = moveCurve / 2f;
