@@ -31,14 +31,16 @@ public class UIManager : MonoBehaviour
     public GameObject pauseUI;
     public GameObject deathUI;
 
+    public GameObject gunkyPng;
+    float initalGunkyPngPos;
+    float gunkyCounter;
+
     public string state;
     public bool isPaused;
 
     private void Start()
     {
-        //playUI = GameObject.Find("Play UI");
-        //inventoryUI = GameObject.Find("Inventory UI");
-        //pauseUI = GameObject.Find("Pause UI");
+        initalGunkyPngPos = gunkyPng.GetComponent<RectTransform>().position.y;
 
         gunManager = gameObject.GetComponent<GunManager>();
 
@@ -111,5 +113,24 @@ public class UIManager : MonoBehaviour
     void UpdatePauseUI()
     {
         
+    }
+
+    public void VisionOfGunky()
+    {
+        gunkyCounter = 0;
+        StartCoroutine(GunkyFade());
+    }
+    IEnumerator GunkyFade()
+    {
+        gunkyPng.SetActive(true);
+        while(gunkyCounter < 1f)
+        {
+            gunkyCounter += Time.deltaTime / 4f;
+            gunkyPng.GetComponent<Image>().color = new Color(1, 1, 1, gunkyCounter);
+            gunkyPng.transform.position = new Vector3(gunkyPng.transform.position.x, initalGunkyPngPos - (initalGunkyPngPos*1.5f)*gunkyCounter, 0f);
+            yield return null;
+        }
+        gunkyPng.SetActive(false);
+        yield return null;
     }
 }

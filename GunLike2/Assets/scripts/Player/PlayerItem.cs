@@ -66,6 +66,7 @@ public class PlayerItem : MonoBehaviour
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
     public GunManager gunManager;
+    UIManager uiManager;
     public PopupItemUI popupUI;
 
     public Transform playerCamera;
@@ -91,6 +92,8 @@ public class PlayerItem : MonoBehaviour
     {
         itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
+
+        uiManager = gameObject.GetComponent<UIManager>();
 
         LoadRarites();
         LoadCategories();
@@ -169,6 +172,10 @@ public class PlayerItem : MonoBehaviour
     public void OnItemGain(int id, int amount, string hand)
     {
         popupUI.CreateNotif(id, amount);
+        if(id == 69 || id == 70 || id == 71 || id == 72)
+        {
+            uiManager.VisionOfGunky();
+        }
     }
     void CheckForMerge()
     {
