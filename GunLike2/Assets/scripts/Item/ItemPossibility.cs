@@ -23,11 +23,19 @@ public class ItemPossibility : MonoBehaviour
     public GameObject shrodingerBox;
     public GameObject shrodingerOptions;
     bool isShrodinger;
+    GameObject option1;
+    GameObject option2;
+    Vector3 lockedPos;
+    bool locked;
 
     float timer;
 
     private void Start()
     {
+        option1 = null;
+        option2 = null;
+
+        locked = false;
         if(GameObject.Find("Player").GetComponent<PlayerItem>().rightItems[68] + GameObject.Find("Player").GetComponent<PlayerItem>().leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
         shrodingerBox.SetActive(isShrodinger);
 
@@ -78,8 +86,26 @@ public class ItemPossibility : MonoBehaviour
     private void Update()
     {
         timer -= Time.deltaTime;
-    }
+        if (locked) { transform.position = lockedPos; }
 
+        if(option1 != null) { option1.transform.localPosition = Vector3.zero; }
+        if(option2 != null) { option2.transform.localPosition = Vector3.zero; }
+
+        if(option1 != null && option2 == null) { Destroy(option1); ChangeRarity(option1.GetComponent<Item>().itemID); Destroy(gameObject); }
+        if(option2 != null && option1 == null) { Destroy(option2); ChangeRarity(option2.GetComponent<Item>().itemID); Destroy(gameObject); }
+    }
+    void ChangeRarity(int id)
+    {
+        PlayerItem pi = GameObject.Find("Player").GetComponent<PlayerItem>();
+
+        int prevRarity = 0;
+        foreach(List<int> rarity in pi.rarityList)
+        {
+            if (rarity.Contains(id)) { prevRarity = pi.rarityList.IndexOf(rarity); }
+        }
+        pi.rarityList[prevRarity].Remove(id);
+        if(pi.rarityList.Count > prevRarity + 1) { pi.rarityList[prevRarity + 1].Add(id); }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if(timer <= 0f)
@@ -103,7 +129,19 @@ public class ItemPossibility : MonoBehaviour
             if(source == "player")
             {
                 shrodingerOptions.SetActive(true);
-                //if(shrodingerOptions.transform.GetChild(0))
+                if(shrodingerOptions.transform.GetChild(0).childCount == 0)
+                {
+                    gameObject.GetComponent<Collider>().enabled = false;
+                    locked = true;
+                    lockedPos = transform.position;
+                    option1 = Instantiate(item, shrodingerOptions.transform.GetChild(0));
+                    option1.GetComponent<Item>().SetItemID(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+                    option1.GetComponent<Rigidbody>().useGravity = false;
+                    option2 = Instantiate(item, shrodingerOptions.transform.GetChild(1));
+                    option2.GetComponent<Item>().SetItemID(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+                    option2.GetComponent<Rigidbody>().useGravity = false;
+                    Destroy(gameObject, 45f);
+                }
             }
         }
         else

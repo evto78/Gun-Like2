@@ -81,18 +81,16 @@ public class DevItemSpawner : MonoBehaviour
 	{
 		GameObject spawnedItem;
 		spawnedItem = Instantiate(item);
-		spawnedItem.transform.position = transform.position;
+		spawnedItem.transform.position = transform.position + transform.forward * 3f + Vector3.up * 3f;
 		spawnedItem.transform.rotation = transform.rotation;
-		spawnedItem.transform.Translate(0, 2, 4, Space.Self);
 		spawnedItem.GetComponent<Item>().SetItemID(iD);
 	}
 	void SpawnPotential(int iD)
     {
 		GameObject spawnedItem;
 		spawnedItem = Instantiate(itemPotential);
-		spawnedItem.transform.position = transform.position;
+		spawnedItem.transform.position = transform.position + transform.forward * 3f + Vector3.up * 3f;
 		spawnedItem.transform.rotation = transform.rotation;
-		spawnedItem.transform.Translate(0, 2, 4, Space.Self);
 		spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
 	}
 }

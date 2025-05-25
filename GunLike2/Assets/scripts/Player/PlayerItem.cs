@@ -230,12 +230,12 @@ public class PlayerItem : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                    Destroy(hit.collider.gameObject);
+                    hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
-                    Destroy(hit.collider.gameObject);
+                    hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                 }
             }
             else

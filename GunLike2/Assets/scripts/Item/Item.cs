@@ -25,7 +25,7 @@ public class Item : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        rb.useGravity = true;
+        //rb.useGravity = true;
         rb.isKinematic = false;
 
         
@@ -63,7 +63,10 @@ public class Item : MonoBehaviour
             }
         }
     }
-
+    public void Taken()
+    {
+        Destroy(gameObject);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Ground")

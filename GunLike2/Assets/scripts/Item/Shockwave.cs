@@ -20,7 +20,7 @@ public class Shockwave : MonoBehaviour
     {
         playerItem = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItem>();
 
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifetime/2f);
         lifetimeTimer = 0;
         //myMeshs.AddRange(gameObject.GetComponentsInChildren<MeshRenderer>());
     }
@@ -28,7 +28,8 @@ public class Shockwave : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lifetimeTimer += Time.deltaTime;
+        lifetimeTimer += Time.deltaTime*2f;
+
         if(playerItem.leftItems[53] + playerItem.rightItems[53] > 0)
         {
             transform.localScale = Vector3.one * lifetimeTimer * 16f;
