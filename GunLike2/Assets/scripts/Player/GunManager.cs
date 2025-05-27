@@ -76,6 +76,7 @@ public class GunManager : MonoBehaviour
     public int leftNerf;
     public int leftStickTo;
     public int leftStickToCounters;
+    public int leftGunkyBless;
 
     public bool leftRicochet = false;
 
@@ -124,6 +125,7 @@ public class GunManager : MonoBehaviour
     public int rightNerf;
     public int rightStickTo;
     public int rightStickToCounters;
+    public int rightGunkyBless;
 
     float surpriseEggTimer;
 
@@ -325,6 +327,7 @@ public class GunManager : MonoBehaviour
         leftSurpriseEggLifetime = givenLeftItems[58];
         leftNerf = givenLeftItems[59];
         leftStickTo = givenLeftItems[67];
+        leftGunkyBless = givenLeftItems[69];
 
         leftRicochet = false;
 
@@ -399,6 +402,7 @@ public class GunManager : MonoBehaviour
         rightSurpriseEggLifetime = givenRightItems[58];
         rightNerf = givenRightItems[59];
         rightStickTo = givenRightItems[67];
+        rightGunkyBless = givenRightItems[69];
 
         rightRicochet = false;
 
