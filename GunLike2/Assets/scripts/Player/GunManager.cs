@@ -77,6 +77,8 @@ public class GunManager : MonoBehaviour
     public int leftStickTo;
     public int leftStickToCounters;
     public int leftGunkyBless;
+    public int leftGunkyClaw;
+    public int leftGunkyAxe;
 
     public bool leftRicochet = false;
 
@@ -126,12 +128,17 @@ public class GunManager : MonoBehaviour
     public int rightStickTo;
     public int rightStickToCounters;
     public int rightGunkyBless;
+    public int rightGunkyClaw;
+    public int rightGunkyAxe;
 
     float surpriseEggTimer;
 
     public bool rightRicochet = false;
     int leftHandVal;
     int rightHandVal;
+
+    public GameObject gunkyAxe;
+    float axeCooldown;
 
     private void Start()
     {
@@ -328,6 +335,8 @@ public class GunManager : MonoBehaviour
         leftNerf = givenLeftItems[59];
         leftStickTo = givenLeftItems[67];
         leftGunkyBless = givenLeftItems[69];
+        leftGunkyClaw = givenLeftItems[70];
+        leftGunkyAxe = givenLeftItems[71];
 
         leftRicochet = false;
 
@@ -403,6 +412,8 @@ public class GunManager : MonoBehaviour
         rightNerf = givenRightItems[59];
         rightStickTo = givenRightItems[67];
         rightGunkyBless = givenRightItems[69];
+        rightGunkyClaw = givenRightItems[70];
+        rightGunkyAxe = givenRightItems[71];
 
         rightRicochet = false;
 
@@ -516,6 +527,7 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
+        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f);
         if (healthMan.dead) { return; }
 
         leftGunUpdate();
@@ -524,6 +536,16 @@ public class GunManager : MonoBehaviour
         {
             leftHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
             rightHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
+
+            if (axeCooldown <= 0 && leftGunkyAxe + rightGunkyAxe > 0)
+            {
+                GameObject spawnedAxe = Instantiate(gunkyAxe);
+                spawnedAxe.transform.position = transform.position + transform.forward * 2f;
+                spawnedAxe.transform.rotation = transform.rotation;
+                spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg + rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg) / 2f) * 5f;
+                spawnedAxe.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (Camera.main.transform.forward * 20f), ForceMode.Impulse);
+                axeCooldown = 10f;
+            }
         }
 
         itemChecks();
@@ -620,7 +642,6 @@ public class GunManager : MonoBehaviour
             if(leftSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
-                //Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
                 playerItem.leftItems[playerItem.sponserItems[rand]] += 1;
 
                 leftSponItemsMade++;
@@ -638,7 +659,6 @@ public class GunManager : MonoBehaviour
             if (rightSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
-                //Debug.Log("Giving item: " + playerItem.sponserItems[rand]);
                 playerItem.rightItems[playerItem.sponserItems[rand]] += 1;
 
                 rightSponItemsMade++;

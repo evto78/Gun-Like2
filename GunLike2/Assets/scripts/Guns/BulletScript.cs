@@ -50,6 +50,7 @@ public class BulletScript : MonoBehaviour
     bool isLargeSpon;
     public GameObject largeSponEffect;
     public int multistage;
+    public int gunkyClaw;
 
     public Collider myCollider;
 
@@ -87,7 +88,7 @@ public class BulletScript : MonoBehaviour
     public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd,
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
-        float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, bool isGunk)
+        float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, bool isGunk, int givenGunkClaw)
     {
         if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
@@ -117,6 +118,7 @@ public class BulletScript : MonoBehaviour
         advTrig = givenAdvTrig;
         jam = givenJam;
         multistage = givenMultistage;
+        gunkyClaw = givenGunkClaw;
 
         ricochet = givenRico;
 
@@ -165,6 +167,7 @@ public class BulletScript : MonoBehaviour
 
     protected void RunOnCollide(GameObject givenGameObject)
     {
+        if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) < 20f) { damage = damage * (1f + 0.1f * gunkyClaw); } else if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) > 20f) { damage = damage * (1f + 0.1f * gunkyClaw); }
         collidedPos = transform.position;
 
         if (!collided && isLargeSpon && (givenGameObject.tag == "Enemy" || givenGameObject.tag == "Ground" || givenGameObject.tag == "EnemyWeakPoint"))
@@ -312,7 +315,7 @@ public class BulletScript : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
                         spawnedBullet.transform.LookAt(transform);
-                        spawnedBullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0, multistage, isGunky);
+                        SetBulletStats(spawnedBullet);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -328,7 +331,7 @@ public class BulletScript : MonoBehaviour
                         rb.freezeRotation = true;
                         GameObject spawnedBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
                         spawnedBullet.name = "TRIGBULLET";
-                        spawnedBullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce+1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam, 0, 0, 0, 0, 0, 0, 0, 0, multistage, isGunky);
+                        SetBulletStats(spawnedBullet);
                         spawnedBullet.GetComponent<BulletScript>().mainCamera = Camera.main;
 
                         spawnedBullet.GetComponent<BulletScript>().collided = false;
@@ -411,8 +414,8 @@ public class BulletScript : MonoBehaviour
     {
         if(collided && (gameObject.name == "NerfedBullet" || gameObject.name == "NerfedBullet(Clone)") && Vector3.Distance(GameObject.Find("Player").transform.position, transform.position) < 2f)
         {
-            GameObject.Find("Player").GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SendMessage("addBullet",SendMessageOptions.DontRequireReceiver);
-            GameObject.Find("Player").GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+            if(whatHandThisComesFrom == "left") { GameObject.Find("Player").GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
+            if(whatHandThisComesFrom == "right") { GameObject.Find("Player").GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
             Destroy(gameObject);
         }
 
@@ -428,5 +431,11 @@ public class BulletScript : MonoBehaviour
             transform.position = hit.point - transform.forward / 10f;
             if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
         }
+    }
+
+    void SetBulletStats(GameObject bullet)
+    {
+        bullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce + 1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam
+            , 0, 0, 0, 0, 0, 0, 0, 0, multistage, isGunky, gunkyClaw);
     }
 }

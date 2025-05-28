@@ -212,6 +212,11 @@ public class PlayerItem : MonoBehaviour
         if (rightItems[45] > 20) { rightItems[53] = 1; }//large
         if (rightItems[47] > 10) { rightItems[54] = 1; }//fast
 
+        if (rightItems[69] + leftItems[69] > 0 && rightItems[70] + leftItems[70] > 0 && rightItems[71] + leftItems[71] > 0)
+        {
+            leftItems[72] = 1; rightItems[72] = 1;
+        }
+
         //Surprise Egg
         if(leftItems[55] > 0) { leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[56] += 1; leftItems[55] -= 1; }
         if(rightItems[55] > 0) { rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[56] += 1; rightItems[55] -= 1; }

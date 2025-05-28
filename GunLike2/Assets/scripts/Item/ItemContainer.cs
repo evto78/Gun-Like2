@@ -80,6 +80,8 @@ public class ItemContainer : MonoBehaviour
             if (rand == 99) { SpawnItem(3); }
             if (rand == 100) { SpawnItem(7); }
         }
+
+        Destroy(costTxt.transform.gameObject);
     }
 
 }

@@ -90,7 +90,7 @@ public class NEWPlayerMovement : MonoBehaviour
     {
         baseMoveSpeed = 750f;
         baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
-        baseJumpForce = 2000;
+        baseJumpForce = 2000f;
         baseNumberOfJumps = 1;
 
         moveSpeed = baseMoveSpeed;
@@ -110,6 +110,7 @@ public class NEWPlayerMovement : MonoBehaviour
         moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
         moveSpeed = Calc(-10f, givenLeftItems[61] + givenRightItems[61], moveSpeed);
         moveSpeed = Calc(40f, givenLeftItems[59] + givenRightItems[59], moveSpeed);
+        moveSpeed = Calc(40f, givenLeftItems[73] + givenRightItems[73], moveSpeed);
         sprintMoveSpeed = Calc(20f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
         sprintMoveSpeed = Calc(40f, givenLeftItems[59] + givenRightItems[59], sprintMoveSpeed);
         jumpForce = Calc(20f, givenLeftItems[1] + givenRightItems[1], jumpForce);

@@ -31,8 +31,6 @@ public class WeaponSelection : MonoBehaviour
     }
     private void Update()
     {
-        //Debug.Log("Left: "+leftHandVal);
-        //Debug.Log("Right: "+rightHandVal);
         leftHand.sprite = sprites[leftHandVal];
         rightHand.sprite = sprites[rightHandVal];
 

@@ -59,6 +59,7 @@ public class GunScript : MonoBehaviour
     public bool nerfedBul;
     public bool stickTo;
     public bool gunkyBlessed;
+    public int gunkyClaw;
 
     public bool isFastFiring;
 
@@ -140,6 +141,7 @@ public class GunScript : MonoBehaviour
         nerfedBul = manager.leftNerf > 0;
         stickTo = manager.leftStickTo > 0;
         gunkyBlessed = Random.Range(0, 100) < manager.leftGunkyBless * 20f;
+        gunkyClaw = manager.leftGunkyClaw;
 
         ricochet = manager.leftRicochet;
 
@@ -192,6 +194,7 @@ public class GunScript : MonoBehaviour
         nerfedBul = manager.rightNerf > 0;
         stickTo = manager.rightStickTo > 0;
         gunkyBlessed = Random.Range(0, 100) < manager.rightGunkyBless * 20f;
+        gunkyClaw = manager.rightGunkyClaw;
 
         ricochet = manager.rightRicochet;
 
@@ -346,96 +349,33 @@ public class GunScript : MonoBehaviour
         if (currentBullets > 0)
         {
             timeSinceShot = 0f;
-
             EarlyShoot();
             currentBullets--;
             GameObject spawnedBullet;
-            if (nerfedBul)
-            {
-                spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.position, firePoint.rotation);
-            }
-            else
-            {
-                spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
-            }
+            if (nerfedBul) {spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.position, firePoint.rotation); }
+            else{spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);}
             if (target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
-            //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
-
             spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
-
             GameObject spawnedBulletB = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
             if (introTrig > 0)
             {
                 spawnedBullet.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBulletB, true);
                 spawnedBulletB.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBullet, false);
             }
-            else
-            {
-                Destroy(spawnedBulletB);
-            }
+            else{Destroy(spawnedBulletB);}
 
-            if (Random.Range(1, 100) < critChance)
-            {
-                if (Random.Range(1, 100) < weakPointChance)
-                {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(this, dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon*5f, sharperSpon*5f, silverSpon*20f, helpingSpon*5f, coolSpon*5f, fastSpon*10f, largeSpon*5f, advTrig, multistage, gunkyBlessed);
-                }
-                else
-                {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(this, dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                }
-            }
-            else
-            {
-                if (Random.Range(1, 100) < weakPointChance)
-                {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(this, dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                }
-                else
-                {
-                    spawnedBullet.GetComponent<BulletScript>().setStats(this, dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                }
-            }
+            SetBulStats(spawnedBullet, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
 
             if (introTrig > 0)
             {
                 acc = acc / bowChar;
-                if(masterTrig > 0)
-                {
-                    acc += 2f;
-                }
-                else
-                {
-                    acc += 4;
-                }
+                if(masterTrig > 0) {acc += 2f;}
+                else {acc += 4;}
                 spawnedBulletB.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
-                //spawnedBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulSpd, ForceMode.Impulse);
-
                 spawnedBulletB.GetComponent<BulletScript>().mainCamera = cam;
-                if (Random.Range(1, 100) < critChance)
-                {
-                    if (Random.Range(1, 100) < weakPointChance)
-                    {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(this, dmg * critDamage * weakPointDamage * bowChar, true, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                    }
-                    else
-                    {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(this, dmg * critDamage * bowChar, true, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                    }
-                }
-                else
-                {
-                    if (Random.Range(1, 100) < weakPointChance)
-                    {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(this, dmg * weakPointDamage * bowChar, false, bulPir, true, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                    }
-                    else
-                    {
-                        spawnedBulletB.GetComponent<BulletScript>().setStats(this, dmg * bowChar, false, bulPir, false, weakPointDamage, bulSpd * bowChar, bulSize, ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, helpingSpon * 5f, coolSpon*5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed);
-                    }
-                }
+                SetBulStats(spawnedBulletB, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
             }
 
             if (isFastFiring)
@@ -445,6 +385,15 @@ public class GunScript : MonoBehaviour
             if(whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
             if(whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
         }
+    }
+
+    void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)
+    {
+        //"What?"
+        //"Now, I know that sounds bad"
+        givenBullet.GetComponent<BulletScript>().setStats(this, givenDmg, isCrit, bulPir, isWeakpoint, weakPointDamage, bulSpd * givenBowChar, bulSize, 
+            ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, 
+            helpingSpon * 5f, coolSpon * 5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed, gunkyClaw);
     }
 
     public void addBullet()
