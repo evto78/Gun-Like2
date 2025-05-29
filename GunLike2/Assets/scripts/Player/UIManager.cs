@@ -87,8 +87,7 @@ public class UIManager : MonoBehaviour
 
         if (state == "inventory")
         {
-            GetComponent<PlayerItem>().UpdateInventory();
-            GetComponentInChildren<InventoryScript>().ArrangeInventory();
+            inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         }
     }
 
@@ -108,7 +107,7 @@ public class UIManager : MonoBehaviour
     }
     void UpdateInventoryUI()
     {
-        
+       
     }
     void UpdatePauseUI()
     {

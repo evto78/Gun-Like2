@@ -5,102 +5,71 @@ using UnityEngine.UI;
 using TMPro;
 public class InventoryScript : MonoBehaviour
 {
-    GameObject player;
-    public GameObject item;
-
-    public List<Vector4> leftInventory;
-    public List<Vector4> rightInventory;
-
-    public GameObject leftInvObj;
-    public GameObject rightInvObj;
+    public GameObject player;
+    public PlayerItem playerItem;
+    List<ItemObject> idata;
 
     public List<Sprite> itemBg;
 
-    public List<List<GameObject>> leftSlots = new List<List<GameObject>>();
-    public List<List<GameObject>> rightSlots = new List<List<GameObject>>();
+    public GameObject slotPrefab;
+    public Transform leftHolder;
+    public Transform rightHolder;
 
     private void Start()
     {
-        player = GameObject.Find("Player");
-
-        for(int r = 0; r < 20; r++)
-        {
-            leftSlots.Add(new List<GameObject>());
-            rightSlots.Add(new List<GameObject>());
-
-            for (int c = 0; c < 11; c++)
-            {
-                leftSlots[r].Add(leftInvObj.transform.GetChild(0).GetChild(r).GetChild(c).gameObject);
-                rightSlots[r].Add(rightInvObj.transform.GetChild(0).GetChild(r).GetChild(c).gameObject);
-            }
-        }
-        
+        idata = playerItem.itemData;
     }
 
-    private void Update()
+    public void UpdateInventory()
     {
-        player.GetComponent<PlayerItem>().UpdateInventory();
-        ArrangeInventory();
+        //clearslots
+        for(int i = 0; i < leftHolder.childCount; i++)
+        {
+            Destroy(leftHolder.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < rightHolder.childCount; i++)
+        {
+            Destroy(rightHolder.GetChild(i).gameObject);
+        }
+        //prepareinfo
+        List<int> li = playerItem.leftItems; 
+        List<int> ri = playerItem.rightItems; 
+        //addnew
+        GameObject temp;
+        for(int i = 0; i < li.Count; i++)
+        {
+            temp = null;
+            if (li[i] > 0) { temp = Instantiate(slotPrefab, leftHolder); SetUpSlot(temp, i, li[i]); }
+            if (ri[i] > 0) { temp = Instantiate(slotPrefab, rightHolder); SetUpSlot(temp, i, ri[i]); }
+        }
+        //check if scaling needs changing
+        int rightCount = rightHolder.childCount /2;
+        int leftCount = leftHolder.childCount / 2;
+
+        if(leftCount < 31) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if (leftCount < 81) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
+        else if (leftCount < 201) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
+
+        if(rightCount < 31) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if (rightCount < 81) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
+        else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
     }
-
-    public void ArrangeInventory()
+    void SetUpSlot(GameObject invSlot, int id, int amount)
     {
-        int leftItemsToBeAdded = leftInventory.Count;
-        int rightItemsToBeAdded = rightInventory.Count;
-
-        int leftItemsIndex = 0;
-        int rightItemsIndex = 0;
-
-        //left
-        for(int i = 0; i < leftSlots.Count; i++)
-        {
-            for(int q = 0; q < leftSlots[i].Count; q++)
-            {
-                if(leftItemsToBeAdded > 0)
-                {
-                    //0 - BG, 1 - Sprite, 2 - Text
-                    leftSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[Mathf.RoundToInt(leftInventory[leftItemsIndex].z)];
-                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/"+ (Mathf.RoundToInt(leftInventory[leftItemsIndex].x)).ToString()).itemSprite;
-                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                    leftSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = ""+Mathf.RoundToInt(leftInventory[leftItemsIndex].y);
-                    leftItemsToBeAdded--;
-                    leftItemsIndex++;
-                    
-                }
-                else
-                {
-                    leftSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[0];
-                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = null;
-                    leftSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                    leftSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "";
-                }
-            }
-        }
-
-        //right
-        for (int i = 0; i < rightSlots.Count; i++)
-        {
-            for (int q = 0; q < rightSlots[i].Count; q++)
-            {
-                if (rightItemsToBeAdded > 0)
-                {
-                    //0 - BG, 1 - Sprite, 2 - Text
-                    rightSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[Mathf.RoundToInt(rightInventory[rightItemsIndex].z)];
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = Resources.Load<ItemObject>("Items/" + (Mathf.RoundToInt(rightInventory[rightItemsIndex].x)).ToString()).itemSprite;
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                    rightSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "" + Mathf.RoundToInt(rightInventory[rightItemsIndex].y);
-                    rightItemsToBeAdded--;
-                    rightItemsIndex++;
-
-                }
-                else
-                {
-                    rightSlots[i][q].transform.GetChild(0).GetComponent<Image>().sprite = itemBg[0];
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().sprite = null;
-                    rightSlots[i][q].transform.GetChild(1).GetComponent<Image>().color = new Color(1,1,1,0);
-                    rightSlots[i][q].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "";
-                }
-            }
-        }
+        ItemObject data = Resources.Load<ItemObject>("Items/" + id.ToString());
+        int temp = 0;
+        if(data.rarity.ToString() == "Common") { temp = 0; }
+        if(data.rarity.ToString() == "Uncommon") { temp = 1; }
+        if(data.rarity.ToString() == "Rare") { temp = 2; }
+        if(data.rarity.ToString() == "Legendary") { temp = 3; }
+        if(data.rarity.ToString() == "Mutated") { temp = 4; }
+        if(data.rarity.ToString() == "Haunted") { temp = 5; }
+        if(data.rarity.ToString() == "Irradiated") { temp = 6; }
+        if(data.rarity.ToString() == "Nulcear") { temp = 7; }
+        if(data.rarity.ToString() == "Unique") { temp = 8; }
+        invSlot.GetComponent<InventorySlot>().itemSprite.sprite = data.itemSprite;
+        invSlot.GetComponent<InventorySlot>().slotRarityBg.sprite = itemBg[temp];
+        invSlot.GetComponent<InventorySlot>().quantityText.text = amount.ToString();
+        invSlot.GetComponent<InventorySlot>().id = id;
     }
 }
