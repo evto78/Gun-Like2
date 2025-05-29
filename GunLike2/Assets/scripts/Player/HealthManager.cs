@@ -42,6 +42,8 @@ public class HealthManager : MonoBehaviour
 	int radiosQued;
 	int experimentalImp;
 	float experTimer;
+	int partialInt;
+	float evadeChance;
 
 	public float timeSinceEnemyDied;
 
@@ -101,6 +103,7 @@ public class HealthManager : MonoBehaviour
 		activeReactor = 0 + givenLeftItems[30] + givenRightItems[30];
 		radioDome = 0 + givenLeftItems[37] + givenRightItems[37];
 		experimentalImp = 0 + givenLeftItems[39] + givenRightItems[39];
+		partialInt = 0 + givenLeftItems[73] + givenRightItems[73];
 
 		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -328,6 +331,12 @@ public class HealthManager : MonoBehaviour
             }
 
 		}
+
+		if(partialInt > 0)
+        {
+			evadeChance = (playerItem.modifierList[0]/6f) * 100f;
+			if(evadeChance > 75) { evadeChance = 75f; }
+        }
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
@@ -340,6 +349,7 @@ public class HealthManager : MonoBehaviour
 		}
 		else
 		{
+            if (Random.Range(1, 100) < evadeChance) { Debug.Log("Blocked!"); return; }
 			//Damage
 			if (damageTaken <= armor)
 			{

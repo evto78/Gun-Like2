@@ -88,7 +88,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
-        baseMoveSpeed = 750f;
+        baseMoveSpeed = 600f;
         baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
         baseJumpForce = 2000f;
         baseNumberOfJumps = 1;
@@ -109,8 +109,8 @@ public class NEWPlayerMovement : MonoBehaviour
 
         moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
         moveSpeed = Calc(-10f, givenLeftItems[61] + givenRightItems[61], moveSpeed);
-        moveSpeed = Calc(40f, givenLeftItems[59] + givenRightItems[59], moveSpeed);
-        moveSpeed = Calc(40f, givenLeftItems[73] + givenRightItems[73], moveSpeed);
+        moveSpeed = Calc(20f, givenLeftItems[59] + givenRightItems[59], moveSpeed);
+        moveSpeed = Calc(20f, givenLeftItems[73] + givenRightItems[73], moveSpeed);
         sprintMoveSpeed = Calc(20f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
         sprintMoveSpeed = Calc(40f, givenLeftItems[59] + givenRightItems[59], sprintMoveSpeed);
         jumpForce = Calc(20f, givenLeftItems[1] + givenRightItems[1], jumpForce);
@@ -472,6 +472,7 @@ public class NEWPlayerMovement : MonoBehaviour
         if (onGround)
         {
             Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            if(inputDir == Vector3.zero && !sliding) { flatVel = flatVel / (friction * (1 + Time.deltaTime)); }
             flatVel = flatVel / (friction * (1 + Time.deltaTime));
             rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z);
         }
