@@ -173,6 +173,10 @@ public class PlayerItem : MonoBehaviour
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
     }
+    public void ItemPressedInInv(int id, string hand)
+    {
+
+    }
     void CheckForMerge()
     {
         //Angel wings / Imp wings

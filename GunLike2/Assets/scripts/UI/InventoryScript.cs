@@ -39,8 +39,8 @@ public class InventoryScript : MonoBehaviour
         for(int i = 0; i < li.Count; i++)
         {
             temp = null;
-            if (li[i] > 0) { temp = Instantiate(slotPrefab, leftHolder); SetUpSlot(temp, i, li[i]); }
-            if (ri[i] > 0) { temp = Instantiate(slotPrefab, rightHolder); SetUpSlot(temp, i, ri[i]); }
+            if (li[i] > 0) { temp = Instantiate(slotPrefab, leftHolder); SetUpSlot(temp, i, li[i], "left"); }
+            if (ri[i] > 0) { temp = Instantiate(slotPrefab, rightHolder); SetUpSlot(temp, i, ri[i], "right"); }
         }
         //check if scaling needs changing
         int rightCount = rightHolder.childCount /2;
@@ -54,7 +54,7 @@ public class InventoryScript : MonoBehaviour
         else if (rightCount < 81) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
         else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
     }
-    void SetUpSlot(GameObject invSlot, int id, int amount)
+    void SetUpSlot(GameObject invSlot, int id, int amount, string hand)
     {
         ItemObject data = Resources.Load<ItemObject>("Items/" + id.ToString());
         int temp = 0;
@@ -71,5 +71,7 @@ public class InventoryScript : MonoBehaviour
         invSlot.GetComponent<InventorySlot>().slotRarityBg.sprite = itemBg[temp];
         invSlot.GetComponent<InventorySlot>().quantityText.text = amount.ToString();
         invSlot.GetComponent<InventorySlot>().id = id;
+        invSlot.GetComponent<InventorySlot>().hand = hand;
+        invSlot.GetComponent<InventorySlot>().pi = playerItem;
     }
 }

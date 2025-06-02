@@ -263,8 +263,8 @@ public class EnemyHealthManager : MonoBehaviour
         //gunlike classic
         if(playerItem.leftItems[38] + playerItem.rightItems[38] > 0)
         {
-            dropChance += 25 * (playerItem.leftItems[38] + playerItem.rightItems[38]);
-            if (Random.Range(1, 100) <= dropChance + ((playerItem.leftItems[38] + playerItem.rightItems[38]) * 10))
+            dropChance = (playerItem.leftItems[38] + playerItem.rightItems[38])*10f;
+            if (Random.Range(1, 100) <= dropChance)
             {
                 int rand = Random.Range(1, 101);
                 List<List<int>> raritys = playerItem.rarityList;
