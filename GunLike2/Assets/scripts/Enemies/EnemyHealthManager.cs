@@ -10,6 +10,9 @@ public class EnemyHealthManager : MonoBehaviour
     public GameObject item;
     public GameObject itemPossibility;
 
+    public GameObject bloodOrb;
+    public GameObject deadlyOrb;
+
     public int moneyDrop;
     public int dropVariance;
 
@@ -124,6 +127,16 @@ public class EnemyHealthManager : MonoBehaviour
             GiveEffect("jammed", 1);
 
             if(activeEffects[3].x > jam) { activeEffects[3] = new Vector4(jam, activeEffects[3].y, activeEffects[3].z, activeEffects[3].w); }
+        }
+        if(playerItem.leftItems[79] + playerItem.rightItems[79] > 0)
+        {
+            if(Random.Range(1,100) < (playerItem.leftItems[79] + playerItem.rightItems[79]) * 10)
+            {
+                GameObject spawnedOrb;
+                if (Random.Range(1, 100) < 20) { spawnedOrb = Instantiate(deadlyOrb); } else { spawnedOrb = Instantiate(bloodOrb); }
+                spawnedOrb.transform.position = transform.position + Vector3.up;
+                Destroy(spawnedOrb, 60f);
+            }
         }
     }
 

@@ -211,7 +211,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "weakHit", transform.position, whatHandThisComesFrom);
+                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
                         RunOnHit(givenGameObject);
                     }
 
@@ -224,7 +224,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critHit", transform.position, whatHandThisComesFrom);
+                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
                         RunOnHit(givenGameObject);
                     }
 
@@ -234,7 +234,7 @@ public class BulletScript : MonoBehaviour
                 {
                     if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                     {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                         RunOnHit(givenGameObject);
                     }
 
@@ -273,7 +273,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * gunFiredFrom.critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                     RunOnHit(givenGameObject);
                 }
 

@@ -94,6 +94,7 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[79] + givenRightItems[79], maxHp));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];

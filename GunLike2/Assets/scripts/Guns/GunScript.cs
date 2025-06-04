@@ -116,9 +116,9 @@ public class GunScript : MonoBehaviour
         acc = baseAcc / manager.leftAcc;
         bulSize = baseBulSize * manager.leftBulSize;
         bulPir = baseBulPir + manager.leftBulPir;
-        critChance = baseCritChance * manager.leftCritChance;
+        critChance = baseCritChance + manager.leftCritChance;
         critDamage = baseCritDamage * manager.leftCritDamage;
-        weakPointChance = baseWeakPointChance * manager.leftWeakPointChance;
+        weakPointChance = baseWeakPointChance + manager.leftWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.leftWeakPointDamage;
 
         heavyBul = manager.leftHeavyBul;
@@ -169,9 +169,9 @@ public class GunScript : MonoBehaviour
         acc = baseAcc / manager.rightAcc;
         bulSize = baseBulSize * manager.rightBulSize;
         bulPir = baseBulPir + manager.rightBulPir;
-        critChance = baseCritChance * manager.rightCritChance;
+        critChance = baseCritChance + manager.rightCritChance;
         critDamage = baseCritDamage * manager.rightCritDamage;
-        weakPointChance = baseWeakPointChance * manager.rightWeakPointChance;
+        weakPointChance = baseWeakPointChance + manager.rightWeakPointChance;
         weakPointDamage = baseWeakPointDamage * manager.rightWeakPointDamage;
 
         heavyBul = manager.rightHeavyBul;

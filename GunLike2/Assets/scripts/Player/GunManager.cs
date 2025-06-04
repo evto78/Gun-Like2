@@ -302,12 +302,18 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(-5f, givenLeftItems[59], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
+        leftBulSpd = Calc(20f, givenLeftItems[76], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
         leftBulSpd = Calc(-10f, givenLeftItems[59], leftBulSpd);
+        leftBulSpd = Calc(-10f, givenLeftItems[77], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
         leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
         leftBulPir += givenLeftItems[10] + givenLeftItems[26];
+        leftWeakPointDamage = Calc(20f, givenLeftItems[76], leftWeakPointDamage);
+        leftCritChance += 20f * givenLeftItems[77];
+        leftCritChance += 10f * givenLeftItems[78];
+        leftCritDamage = Calc(20f, givenLeftItems[77], leftCritDamage);
 
         leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
@@ -379,12 +385,18 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(-5f, givenRightItems[59], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
+        rightBulSpd = Calc(20f, givenRightItems[76], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
         rightBulSpd = Calc(-10f, givenRightItems[59], rightBulSpd);
+        rightBulSpd = Calc(-10f, givenRightItems[77], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
         rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
         rightBulPir += givenRightItems[10] + givenRightItems[26];
+        rightWeakPointDamage = Calc(20f, givenRightItems[76], rightWeakPointDamage);
+        rightCritChance += 20f * givenRightItems[77];
+        rightCritChance += 10f * givenRightItems[78];
+        rightCritDamage = Calc(20f, givenRightItems[77], rightCritDamage);
 
         rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
