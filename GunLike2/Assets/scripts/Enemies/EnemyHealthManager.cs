@@ -279,6 +279,15 @@ public class EnemyHealthManager : MonoBehaviour
                 if (rand == 100) { SpawnItem(7); }
             }
         }
+        //gotcha machine
+        if (playerItem.leftItems[75] + playerItem.rightItems[75] > 0)
+        {
+            dropChance = 50;
+            if (Random.Range(1, 100) <= dropChance)
+            {
+                playerItem.gotchaTickets += Mathf.RoundToInt(maxHp / 25f);
+            }
+        }
     }
 
     private void SpawnItem(int iD)

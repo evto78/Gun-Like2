@@ -82,6 +82,8 @@ public class PlayerItem : MonoBehaviour
     List<int> leftSnapshot;
     List<int> rightSnapshot;
 
+    public int gotchaTickets;
+
     int lastItemPressed;
     string lastItemPressedHand;
     private void Awake()
