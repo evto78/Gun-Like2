@@ -65,7 +65,7 @@ public class InventoryScript : MonoBehaviour
         if(data.rarity.ToString() == "Mutated") { temp = 4; }
         if(data.rarity.ToString() == "Haunted") { temp = 5; }
         if(data.rarity.ToString() == "Irradiated") { temp = 6; }
-        if(data.rarity.ToString() == "Nulcear") { temp = 7; }
+        if(data.rarity.ToString() == "Nuclear") { temp = 7; }
         if(data.rarity.ToString() == "Unique") { temp = 8; }
         invSlot.GetComponent<InventorySlot>().itemSprite.sprite = data.itemSprite;
         invSlot.GetComponent<InventorySlot>().slotRarityBg.sprite = itemBg[temp];
