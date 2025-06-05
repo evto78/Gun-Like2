@@ -79,6 +79,7 @@ public class GunManager : MonoBehaviour
     public int leftGunkyBless;
     public int leftGunkyClaw;
     public int leftGunkyAxe;
+    public int leftClockwork;
 
     public bool leftRicochet = false;
 
@@ -130,6 +131,7 @@ public class GunManager : MonoBehaviour
     public int rightGunkyBless;
     public int rightGunkyClaw;
     public int rightGunkyAxe;
+    public int rightClockwork;
 
     float surpriseEggTimer;
 
@@ -309,7 +311,7 @@ public class GunManager : MonoBehaviour
         leftBulSpd = Calc(-10f, givenLeftItems[77], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
         leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
-        leftBulPir += givenLeftItems[10] + givenLeftItems[26];
+        leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
         leftWeakPointDamage = Calc(20f, givenLeftItems[76], leftWeakPointDamage);
         leftCritChance += 20f * givenLeftItems[77];
         leftCritChance += 10f * givenLeftItems[78];
@@ -343,12 +345,14 @@ public class GunManager : MonoBehaviour
         leftGunkyBless = givenLeftItems[69];
         leftGunkyClaw = givenLeftItems[70];
         leftGunkyAxe = givenLeftItems[71];
+        leftClockwork = givenLeftItems[81];
 
         leftRicochet = false;
 
         if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
         if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
         if (givenLeftItems[26] > 0f) { leftRicochet = true; }
+        if (givenLeftItems[82] > 0f) { leftRicochet = true; }
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
@@ -392,7 +396,7 @@ public class GunManager : MonoBehaviour
         rightBulSpd = Calc(-10f, givenRightItems[77], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
         rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
-        rightBulPir += givenRightItems[10] + givenRightItems[26];
+        rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
         rightWeakPointDamage = Calc(20f, givenRightItems[76], rightWeakPointDamage);
         rightCritChance += 20f * givenRightItems[77];
         rightCritChance += 10f * givenRightItems[78];
@@ -426,12 +430,14 @@ public class GunManager : MonoBehaviour
         rightGunkyBless = givenRightItems[69];
         rightGunkyClaw = givenRightItems[70];
         rightGunkyAxe = givenRightItems[71];
+        rightClockwork = givenRightItems[81];
 
         rightRicochet = false;
 
         if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
         if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
         if (givenRightItems[26] > 0f) { rightRicochet = true; }
+        if (givenRightItems[82] > 0f) { rightRicochet = true; }
         if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
@@ -539,23 +545,19 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
-        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f);
+        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * ((leftClockwork + rightClockwork)*25f);
         if (healthMan.dead) { return; }
 
-        leftGunUpdate();
-        RightGunUpdate();
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); }
+        if (Cursor.lockState == CursorLockMode.Locked) { RightGunUpdate(); }
+        if (Input.GetKeyDown(KeyCode.R) && Cursor.lockState == CursorLockMode.Locked)
         {
             leftHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
             rightHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
 
             if (axeCooldown <= 0 && leftGunkyAxe + rightGunkyAxe > 0)
             {
-                GameObject spawnedAxe = Instantiate(gunkyAxe);
-                spawnedAxe.transform.position = transform.position + transform.forward * 2f;
-                spawnedAxe.transform.rotation = transform.rotation;
-                spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg + rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg) / 2f) * 5f;
-                spawnedAxe.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (Camera.main.transform.forward * 20f), ForceMode.Impulse);
+                SpawnAxe(Camera.main.transform.forward);
                 axeCooldown = 10f;
             }
         }
@@ -591,7 +593,7 @@ public class GunManager : MonoBehaviour
     {
         if (leftMutatedCell > 0)
         {
-            leftMutatedCellTimer -= Time.deltaTime;
+            leftMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if (leftMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(leftList);
@@ -601,7 +603,7 @@ public class GunManager : MonoBehaviour
 
         if (rightMutatedCell > 0)
         {
-            rightMutatedCellTimer -= Time.deltaTime;
+            rightMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(rightList);
@@ -611,7 +613,7 @@ public class GunManager : MonoBehaviour
 
         if (leftHungryParasite > 0)
         {
-            leftHungryParasiteTimer -= Time.deltaTime;
+            leftHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if (leftHungryParasiteTimer <= 0)
             {
                 HungryParasiteReroll(leftList);
@@ -621,7 +623,7 @@ public class GunManager : MonoBehaviour
 
         if (rightHungryParasite > 0)
         {
-            rightHungryParasiteTimer -= Time.deltaTime;
+            rightHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightHungryParasiteTimer <= 0)
             {
                 HungryParasiteReroll(rightList);
@@ -631,7 +633,7 @@ public class GunManager : MonoBehaviour
 
         if (leftFastInserter > 0)
         {
-            leftFastInserterTimer -= Time.deltaTime;
+            leftFastInserterTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if (leftFastInserterTimer <= 0 && leftHand.GetComponentInChildren<GunScript>().currentBullets < leftHand.GetComponentInChildren<GunScript>().magSize)
             {
                 leftHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
@@ -640,7 +642,7 @@ public class GunManager : MonoBehaviour
         }
         if (rightFastInserter > 0)
         {
-            rightFastInserterTimer -= Time.deltaTime;
+            rightFastInserterTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightFastInserterTimer <= 0 && rightHand.GetComponentInChildren<GunScript>().currentBullets < rightHand.GetComponentInChildren<GunScript>().magSize)
             {
                 rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
@@ -650,7 +652,7 @@ public class GunManager : MonoBehaviour
 
         if(leftSponDeal > 0)
         {
-            leftSponTimer += Time.deltaTime;
+            leftSponTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if(leftSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
@@ -667,7 +669,7 @@ public class GunManager : MonoBehaviour
         }
         if (rightSponDeal > 0)
         {
-            rightSponTimer += Time.deltaTime;
+            rightSponTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightSponTimer > 20f)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
@@ -683,7 +685,7 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        surpriseEggTimer += Time.deltaTime;
+        surpriseEggTimer += Time.deltaTime + (Time.deltaTime * (leftClockwork+rightClockwork) * 0.25f);
         if (leftSurpriseEggLifetime > 0)
         {
             if(surpriseEggTimer > 120 && healthMan.timeSinceEnemyDied < 120)
@@ -758,5 +760,15 @@ public class GunManager : MonoBehaviour
             itemList[rerolledItem]--;
             itemList[rarityList[4][Random.Range(0, rarityList.Count - 1)]]++;
         }
+
+        
+    }
+    public void SpawnAxe(Vector3 dir)
+    {
+        GameObject spawnedAxe = Instantiate(gunkyAxe);
+        spawnedAxe.transform.position = transform.position + (dir + Vector3.up) * 2f;
+        spawnedAxe.transform.rotation = transform.rotation;
+        spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg + rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg) / 2f) * 5f;
+        spawnedAxe.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (dir * 20f), ForceMode.Impulse);
     }
 }

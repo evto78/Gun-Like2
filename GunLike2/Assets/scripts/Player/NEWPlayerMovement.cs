@@ -239,7 +239,7 @@ public class NEWPlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (healthMan.dead) { return; }
-        Move();
+        if (Cursor.lockState == CursorLockMode.Locked) { Move(); } else { Friction(); }
     }
     bool GroundCheck()
     {

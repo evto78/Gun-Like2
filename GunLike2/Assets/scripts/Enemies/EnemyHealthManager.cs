@@ -105,10 +105,33 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
-        gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
-
-
+        if(source == "left")
+        {
+            //irradiated battle plans
+            float chance = playerItem.leftItems[80] * 25f; if(chance > 50) { chance = 50; }
+            if (Random.Range(1,100)<chance)
+            {
+                curHp += latestDamage;
+                playerHM.TakeDamage(-latestDamage,false);
+                latestDamage = 0;
+            }
+        }
+        else if (source == "right")
+        {
+            //irradiated battle plans
+            float chance = playerItem.rightItems[80] * 25f; if(chance > 50) { chance = 50; }
+            if (Random.Range(1, 100) < chance)
+            {
+                curHp += latestDamage;
+                playerHM.TakeDamage(-latestDamage, false);
+                latestDamage = 0;
+            }
+        }
+        if(latestDamage != 0)
+        {
+            PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
+            gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
+        }
 
         if (curHp <= 0 && !died) { Die(); died = true; }
     }
@@ -137,6 +160,10 @@ public class EnemyHealthManager : MonoBehaviour
                 spawnedOrb.transform.position = transform.position + Vector3.up;
                 Destroy(spawnedOrb, 60f);
             }
+        }
+        if(activeEffects[7].x > 0 && playerItem.leftItems[72] + playerItem.rightItems[72] > 0)
+        {
+            player.GetComponent<GunManager>().SpawnAxe((transform.position - player.transform.position).normalized);
         }
     }
 

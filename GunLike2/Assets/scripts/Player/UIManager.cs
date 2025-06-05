@@ -39,6 +39,8 @@ public class UIManager : MonoBehaviour
     public string state;
     public bool isPaused;
 
+    public bool fishing;
+
     private void Start()
     {
         initalGunkyPngPos = gunkyPng.GetComponent<RectTransform>().position.y;
@@ -68,11 +70,18 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(state == "play") { ChangeState("pause"); }
-            else if(state == "inventory") { ChangeState("play"); }
-            else if(state == "pause") { ChangeState("play"); }
+            if (fishing)
+            {
+
+            }
+            else
+            {
+                if (state == "play") { ChangeState("pause"); }
+                else if (state == "inventory") { ChangeState("play"); }
+                else if (state == "pause") { ChangeState("play"); }
+            }
         }
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I))
+        if ((Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I)) && !fishing)
         {
             if (state == "play") { ChangeState("inventory"); }
             else if (state == "inventory") { ChangeState("play"); }

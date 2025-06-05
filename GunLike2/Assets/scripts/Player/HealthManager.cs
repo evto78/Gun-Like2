@@ -44,6 +44,7 @@ public class HealthManager : MonoBehaviour
 	float experTimer;
 	int partialInt;
 	float evadeChance;
+	int clockwork;
 
 	public float timeSinceEnemyDied;
 
@@ -80,6 +81,7 @@ public class HealthManager : MonoBehaviour
 		healthRegen = Calc(20f, givenLeftItems[14] + givenRightItems[14], healthRegen);
 		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
 		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
+		healthRegen = Calc(-20f, givenLeftItems[80] + givenRightItems[80], healthRegen);
 		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
 		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
@@ -105,6 +107,7 @@ public class HealthManager : MonoBehaviour
 		radioDome = 0 + givenLeftItems[37] + givenRightItems[37];
 		experimentalImp = 0 + givenLeftItems[39] + givenRightItems[39];
 		partialInt = 0 + givenLeftItems[73] + givenRightItems[73];
+		clockwork = 0 + givenLeftItems[81] + givenRightItems[81];
 
 		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -218,7 +221,7 @@ public class HealthManager : MonoBehaviour
 	{
 		if (orgGum > 0)
 		{
-			orgGumTimer -= Time.deltaTime;
+			orgGumTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
 			if (orgGumTimer <= 0f)
 			{
 				orgGumTimer = 20f;
@@ -273,7 +276,7 @@ public class HealthManager : MonoBehaviour
 			}
         }
 
-		radioTimer -= Time.deltaTime;
+		radioTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
 		if(radioTimer <= 0 && radiosQued > 0)
         {
 			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
@@ -285,7 +288,7 @@ public class HealthManager : MonoBehaviour
 
 		if(experimentalImp > 0)
         {
-			experTimer -= Time.deltaTime;
+			experTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
 
 			if(experTimer <= 0)
             {

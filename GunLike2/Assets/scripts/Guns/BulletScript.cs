@@ -345,6 +345,9 @@ public class BulletScript : MonoBehaviour
 
             if (ricochet)
             {
+                if(whatHandThisComesFrom == "left" && pi.leftItems[82] > 0) { damage *= 1.25f; }
+                if(whatHandThisComesFrom == "right" && pi.rightItems[82] > 0) { damage *= 1.25f; }
+
                 if(advTrig > 0) { if(Random.Range(1, 100) > 20) { pierce += 1; } }
 
                 Ray ricoRay = new Ray(transform.position, transform.forward);

@@ -302,11 +302,13 @@ public class PlayerItem : MonoBehaviour
                 {
                     rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
+                    if (leftItems[86] > 0) { leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; leftItems[86]--; }
                 }
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
+                    if (rightItems[86] > 0) { rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; rightItems[86]--; }
                 }
             }
             else
