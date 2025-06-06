@@ -297,14 +297,12 @@ public class HealthManager : MonoBehaviour
 				if(Random.Range(1,100) > (53 - experimentalImp * 3))
                 {
 					TakeDamage(-1f * healthRegen, false);
-					Debug.Log("Healing for: " + -1f * healthRegen);
                 }
                 else
                 {
 					if(curHp > 0.5f * healthRegen)
                     {
 						TakeDamage(0.5f * healthRegen, false);
-						Debug.Log("Damaging for: " + 0.5f * healthRegen);
 					}
                 }
             }

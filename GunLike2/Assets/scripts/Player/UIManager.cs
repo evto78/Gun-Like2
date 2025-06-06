@@ -58,9 +58,18 @@ public class UIManager : MonoBehaviour
         if (healthManager.dead) { deathUI.SetActive(true); }
         ManageInput();
 
-        UpdatePlayUI();
-        UpdateInventoryUI();
-        UpdatePauseUI();
+        if (!fishing)
+        {
+            UpdatePlayUI();
+            UpdateInventoryUI();
+            UpdatePauseUI();
+            
+        }
+        else
+        {
+            playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false;
+        }
+        
     }
 
     void ManageInput()
@@ -72,7 +81,7 @@ public class UIManager : MonoBehaviour
         {
             if (fishing)
             {
-
+                //fishing minigame handles it.
             }
             else
             {

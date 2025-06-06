@@ -200,7 +200,7 @@ public class PlayerItem : MonoBehaviour
             if (rarityList[5].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//haunted
             if (rarityList[6].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(1, 0, hand); AddRandItemsFromRarity(1, 4, hand); }//irradiated
             if (rarityList[7].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(3, 6, hand); AddRandItemsFromRarity(1, 5, hand); }//nuclear
-            if (rarityList[8].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(1, 0, hand); }//unique
+            if (rarityList[8].Contains(id)) { leftItems[id]--; }//unique
         }
         else
         {
@@ -212,7 +212,7 @@ public class PlayerItem : MonoBehaviour
             if (rarityList[5].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//haunted
             if (rarityList[6].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(1, 0, hand); AddRandItemsFromRarity(1, 4, hand); }//irradiated
             if (rarityList[7].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(3, 6, hand); AddRandItemsFromRarity(1, 5, hand); }//nuclear
-            if (rarityList[8].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(1, 0, hand); }//unique
+            if (rarityList[8].Contains(id)) { rightItems[id]--; }//unique
         }
     }
     void AddRandItemsFromRarity(int amount, int rarity, string hand)
