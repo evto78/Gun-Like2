@@ -8,6 +8,8 @@ public class ItemPossibility : MonoBehaviour
     public GameObject item;
 
     public int rarity;
+    public int idover;
+    public bool overrideid;
     public List<List<int>> rarityList;
 
     public GameObject commonPS;
@@ -37,6 +39,7 @@ public class ItemPossibility : MonoBehaviour
 
         locked = false;
         if(GameObject.Find("Player").GetComponent<PlayerItem>().rightItems[68] + GameObject.Find("Player").GetComponent<PlayerItem>().leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
+        if (overrideid) { isShrodinger = false; }
         shrodingerBox.SetActive(isShrodinger);
 
         rarityList = GameObject.Find("Player").GetComponent<PlayerItem>().rarityList;
@@ -146,7 +149,15 @@ public class ItemPossibility : MonoBehaviour
         }
         else
         {
-            SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+            if (overrideid)
+            {
+                SpawnItem(idover);
+            }
+            else
+            {
+                SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+            }
+            
             Destroy(gameObject);
         }
     }

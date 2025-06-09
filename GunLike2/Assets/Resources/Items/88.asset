@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 88
+  m_EditorClassIdentifier: 
+  id: 88
+  itemName: Disobedient Printer
+  rarity: 3
+  itemSprite: {fileID: 21300000, guid: 88e667f15abe879488ed91744cd87519, type: 3}
+  subType: 0
+  effect: every minute if you have killed an enemy during that minute, gain a copy
+    of an other random item on this gun. When this copy is made there is a 10% chance
+    this item destroyes itself which increases by 5% each time it doesnt destroy
+    itself. Stacks duplicate it multiple times, but increase the chance to destroy.
+  buff: '-'
+  debuff: '-'
+  effectSum: Makes copies of items you have on this gun, chance it destroys itself.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: The printer has a mind of its own, and its mind is set on revenge.
+  ideaCredit: 
+  flavorCredit: 

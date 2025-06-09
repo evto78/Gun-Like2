@@ -34,7 +34,10 @@ public class EnemyHealthManager : MonoBehaviour
     List<GameObject> icons;
     public Transform effectHolder;
 
+    int featherton;
+
     bool died;
+    public bool didOnDeath;
 
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
@@ -62,8 +65,8 @@ public class EnemyHealthManager : MonoBehaviour
     void Update()
     {
         ManageEffects();
-
-        
+        featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
+        if (curHp <= 0 && !died) { Die(); died = true; }
     }
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
@@ -187,6 +190,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
         if (effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
         if (effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
+        if (effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
     }
 
     void ManageEffects()
@@ -217,7 +221,7 @@ public class EnemyHealthManager : MonoBehaviour
             //if there are any stacks of this effect
             if (q.x > 0)
             {
-                
+
                 //progress timer and remove stacks as needed
                 if (q.z > 0f)
                 {
@@ -295,10 +299,12 @@ public class EnemyHealthManager : MonoBehaviour
         //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }
 
-    private void OnDeath()
+    public void OnDeath()
     {
+        if (didOnDeath) { return; } else { didOnDeath = true; }
+
         if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
-        playerHM.EnemyDied(gameObject, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
+        playerHM.EnemyDied(this, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
 
         //gunlike classic
         if(playerItem.leftItems[38] + playerItem.rightItems[38] > 0)
@@ -327,6 +333,39 @@ public class EnemyHealthManager : MonoBehaviour
             {
                 playerItem.gotchaTickets += Mathf.RoundToInt(maxHp / 25f);
             }
+        }
+        //ton of feathers
+        if(featherton > 0)
+        {
+            float maxDist = 10f + (featherton * 30f);
+            List<EnemyHealthManager> possibleTargets = new List<EnemyHealthManager>();
+            List<float> dist = new List<float>();
+
+            foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                if(enemy.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager healthMan))
+                {
+                    possibleTargets.Add(healthMan);
+                    dist.Add(Vector3.Distance(transform.position, enemy.transform.position));
+                }
+            }
+            float lowestHP = float.PositiveInfinity;
+            int lowestHPIndex = 0;
+            for (int i = 0; i < possibleTargets.Count; i++)
+            {
+                if (possibleTargets[i].curHp < lowestHP && dist[i] <= maxDist && possibleTargets[i] != this && possibleTargets[i].died == false && possibleTargets[i].didOnDeath == false)
+                {
+                    lowestHP = possibleTargets[i].curHp;
+                    lowestHPIndex = i;
+                }
+            }
+            bool playerTargeted = false;
+            if(playerHM.curHp < lowestHP && Vector3.Distance(transform.position, player.transform.position) < maxDist)
+            {
+                if(Random.Range(1,100) < 100 - (featherton * 25)) { playerTargeted = true; }
+            }
+            if(lowestHP != float.PositiveInfinity && !playerTargeted) { possibleTargets[lowestHPIndex].TakeDamage(latestDamage, true, "normalhit", possibleTargets[lowestHPIndex].transform.position, "self"); Debug.DrawLine(transform.position, possibleTargets[lowestHPIndex].transform.position, Color.red, 1f); }
+            else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false); }
         }
     }
 

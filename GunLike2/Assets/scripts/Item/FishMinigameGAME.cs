@@ -75,14 +75,7 @@ public class FishMinigameGAME : MonoBehaviour
                 itemsSpawned++;
                 int rand = Random.Range(1, 101);
 
-                if (rand < 71) { SpawnItem(0); }
-                if (rand < 91 && rand > 70) { SpawnItem(1); }
-                if (rand == 91 || rand == 92) { SpawnItem(2); }
-                if (rand == 93 || rand == 94) { SpawnItem(4); }
-                if (rand == 95 || rand == 96) { SpawnItem(5); }
-                if (rand == 97 || rand == 98) { SpawnItem(6); }
-                if (rand == 99) { SpawnItem(3); }
-                if (rand == 100) { SpawnItem(7); }
+                SpawnItem(8);
             }
         }
     }
@@ -129,6 +122,9 @@ public class FishMinigameGAME : MonoBehaviour
         spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
         spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().overrideid = true;
+        spawnedItem.GetComponent<ItemPossibility>().idover = player.GetComponent<PlayerItem>().fishItems[Random.Range(0, player.GetComponent<PlayerItem>().fishItems.Count)];
+
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
 }

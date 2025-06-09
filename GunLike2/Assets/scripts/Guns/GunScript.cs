@@ -67,7 +67,7 @@ public class GunScript : MonoBehaviour
     protected float reloadTimer = 0;
     protected float attackTimer = 0;
     public int currentBullets;
-    protected bool reloading = false;
+    public bool reloading = false;
     protected bool shooting = false;
     protected float bowCharge;
 
@@ -334,6 +334,21 @@ public class GunScript : MonoBehaviour
     public virtual void LateReload()
     {
 
+    }
+    public void SpawnBulletAtPos(Vector3 pos)
+    {
+        //pretty much just for improvised storage
+        GameObject spawnedBullet;
+        if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet); }
+        else { spawnedBullet = Instantiate(pistolBullet); }
+        spawnedBullet.transform.position = pos;
+        spawnedBullet.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+        spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
+
+        SetBulStats(spawnedBullet, dmg, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
+
+        if (whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
+        if (whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
     }
     public virtual void EarlyShoot()
     {

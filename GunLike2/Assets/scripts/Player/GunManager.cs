@@ -80,6 +80,9 @@ public class GunManager : MonoBehaviour
     public int leftGunkyClaw;
     public int leftGunkyAxe;
     public int leftClockwork;
+    int leftPrinter;
+    int leftMicrowave;
+    float leftMicrowaveTimer;
 
     public bool leftRicochet = false;
 
@@ -132,14 +135,19 @@ public class GunManager : MonoBehaviour
     public int rightGunkyClaw;
     public int rightGunkyAxe;
     public int rightClockwork;
-
+    int rightPrinter;
+    int rightMicrowave;
+    float rightMicrowaveTimer;
     float surpriseEggTimer;
+    float leftPrinterTimer;
+    float rightPrinterTimer;
 
     public bool rightRicochet = false;
     int leftHandVal;
     int rightHandVal;
 
     public GameObject gunkyAxe;
+    public GameObject microwave;
     float axeCooldown;
 
     private void Start()
@@ -274,19 +282,24 @@ public class GunManager : MonoBehaviour
             rightBulSize = Calc(5f, daEagleIgnoredRight, rightBulSize);
         }
 
+        leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
         leftAtkSpd = Calc(-5f, givenLeftItems[59], leftAtkSpd);
-        leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
+        leftAtkSpd = Calc(-40f, givenLeftItems[91], leftAtkSpd);
         leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
         leftReSpd = Calc(-5f, givenLeftItems[59], leftReSpd);
+        leftReSpd = Calc(-40f, givenLeftItems[90], leftReSpd);
         leftDmg = Calc(40f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[11], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[26], leftAcc);
-        leftDmg = Calc(40f, givenLeftItems[27], leftAcc);
-        leftDmg = Calc(20f, givenLeftItems[66], leftAcc);
+        leftDmg = Calc(40f, givenLeftItems[26], leftDmg);
+        leftDmg = Calc(40f, givenLeftItems[27], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[66], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[84], leftDmg);
+        leftDmg = Calc(40f, givenLeftItems[90], leftDmg);
+        leftDmg = Calc(40f, givenLeftItems[91], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[46], leftDmg);
@@ -346,6 +359,8 @@ public class GunManager : MonoBehaviour
         leftGunkyClaw = givenLeftItems[70];
         leftGunkyAxe = givenLeftItems[71];
         leftClockwork = givenLeftItems[81];
+        leftPrinter = givenLeftItems[88];
+        leftMicrowave = givenLeftItems[89];
 
         leftRicochet = false;
 
@@ -358,12 +373,14 @@ public class GunManager : MonoBehaviour
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
         if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
 
+        rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightAtkSpd = Calc(-5f, givenRightItems[59], rightAtkSpd);
-        rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
+        rightAtkSpd = Calc(-40f, givenRightItems[91], rightAtkSpd);
         rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
         rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
         rightReSpd = Calc(-5f, givenRightItems[59], rightReSpd);
+        rightReSpd = Calc(-40f, givenRightItems[90], rightReSpd);
         rightDmg = Calc(40f, givenRightItems[21], rightDmg);
         rightDmg = Calc(40f, givenRightItems[13], rightDmg);
         rightDmg = Calc(20f, givenRightItems[11], rightDmg);
@@ -372,6 +389,9 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(40f, givenRightItems[26], rightDmg);
         rightDmg = Calc(40f, givenRightItems[27], rightDmg);
         rightDmg = Calc(20f, givenRightItems[66], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[84], rightDmg);
+        rightDmg = Calc(40f, givenRightItems[90], rightDmg);
+        rightDmg = Calc(40f, givenRightItems[91], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[46], rightDmg);
@@ -431,6 +451,8 @@ public class GunManager : MonoBehaviour
         rightGunkyClaw = givenRightItems[70];
         rightGunkyAxe = givenRightItems[71];
         rightClockwork = givenRightItems[81];
+        rightPrinter = givenRightItems[88];
+        rightMicrowave = givenRightItems[89];
 
         rightRicochet = false;
 
@@ -702,8 +724,60 @@ public class GunManager : MonoBehaviour
         }
         if (surpriseEggTimer > 120) { surpriseEggTimer = 0; }
 
-        if(leftStickToCounters > leftStickTo * 5) { leftStickToCounters = leftStickTo * 5; }
+        leftPrinterTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+        rightPrinterTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+        if(leftPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && leftPrinterTimer > 60)
+        {
+            leftPrinterTimer = 0;
+            List<int> itemsOwned = new List<int>();
+            for(int i = 0; i < playerItem.leftItems.Count; i++)
+            {
+                if (playerItem.leftItems[i] > 0) { itemsOwned.Add(i); }
+            }
+            playerItem.leftItems[itemsOwned[Random.Range(0, itemsOwned.Count)]]+= leftPrinter;
+            if (Random.Range(1, 100) < leftPrinter * 10) { playerItem.leftItems[88]--; }
+        }
+        if (rightPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && rightPrinterTimer > 60)
+        {
+            rightPrinterTimer = 0;
+            List<int> itemsOwned = new List<int>();
+            for (int i = 0; i < playerItem.rightItems.Count; i++)
+            {
+                if (playerItem.rightItems[i] > 0) { itemsOwned.Add(i); }
+            }
+            playerItem.rightItems[itemsOwned[Random.Range(0, itemsOwned.Count)]]+= rightPrinter;
+            if (Random.Range(1, 100) < rightPrinter * 10) { playerItem.rightItems[88]--; }
+        }
+
+        if (leftStickToCounters > leftStickTo * 5) { leftStickToCounters = leftStickTo * 5; }
         if(rightStickToCounters > rightStickTo * 5) { rightStickToCounters = rightStickTo * 5; }
+
+        if(leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && leftMicrowave > 0)
+        {
+            leftMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            if(leftMicrowaveTimer <= 0)
+            {
+                GameObject spawnedMicrowave = Instantiate(microwave);
+                spawnedMicrowave.transform.position = leftHand.transform.position;
+                spawnedMicrowave.transform.rotation = leftHand.transform.rotation;
+                spawnedMicrowave.GetComponent<Shockwave>().lifetime = 1f;
+                spawnedMicrowave.GetComponent<Shockwave>().damage = 5f * leftMicrowave;
+                leftMicrowaveTimer = leftReSpd / 4f;
+            }
+        }
+        if (rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && rightMicrowave > 0)
+        {
+            rightMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            if (rightMicrowaveTimer <= 0)
+            {
+                GameObject spawnedMicrowave = Instantiate(microwave);
+                spawnedMicrowave.transform.position = rightHand.transform.position;
+                spawnedMicrowave.transform.rotation = rightHand.transform.rotation;
+                spawnedMicrowave.GetComponent<Shockwave>().lifetime = 1f;
+                spawnedMicrowave.GetComponent<Shockwave>().damage = 5f * rightMicrowave;
+                rightMicrowaveTimer = rightReSpd / 4f;
+            }
+        }
     }
 
     void mutatedCellReroll(List<int> itemList)

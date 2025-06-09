@@ -51,6 +51,7 @@ public class BulletScript : MonoBehaviour
     public GameObject largeSponEffect;
     public int multistage;
     public int gunkyClaw;
+    public int storage;
 
     public Collider myCollider;
 
@@ -119,6 +120,8 @@ public class BulletScript : MonoBehaviour
         jam = givenJam;
         multistage = givenMultistage;
         gunkyClaw = givenGunkClaw;
+        if(whatHandThisComesFrom == "left") { storage = pi.leftItems[95]; }
+        if(whatHandThisComesFrom == "right") { storage = pi.rightItems[95]; }
 
         ricochet = givenRico;
 
@@ -152,17 +155,26 @@ public class BulletScript : MonoBehaviour
 
     void RunOnHit(GameObject hit)
     {
-        hit.GetComponentInParent<EnemyHealthManager>().OnHitEffect(jam);
-        if (isFireSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }
-        if (isSharperSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 3f); }
-        if (isSilverSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("lucky", 1f); }
-        if (isHelpingSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
-        if (isCoolSpon) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
-        if (isGunky) { hit.GetComponentInParent<EnemyHealthManager>().GiveEffect("gunked", 1f); }
+        EnemyHealthManager ehm = hit.GetComponentInParent<EnemyHealthManager>();
+       ehm.OnHitEffect(jam);
+        if (isFireSpon) { ehm.GiveEffect("burn", 3f); }
+        if (isSharperSpon) { ehm.GiveEffect("bleed", 3f); }
+        if (isSilverSpon) { ehm.GiveEffect("lucky", 1f); }
+        if (isHelpingSpon) { ehm.GiveEffect("stiched", 1f); }
+        if (isCoolSpon) { ehm.GiveEffect("frozen", 1f); }
+        if (isGunky) { ehm.GiveEffect("gunked", 1f); }
 
         if (pi.leftItems[54] + pi.rightItems[54] > 0){ hm.GiveEffect("fast fire", 1f); }
         if (gunFiredFrom.stickTo && whatHandThisComesFrom == "left") { gm.rightStickToCounters++; }
         if (gunFiredFrom.stickTo && whatHandThisComesFrom == "right") { gm.leftStickToCounters++; }
+
+        if (storage > 0 && ehm.activeEffects[8].x < 20 + 10 * storage) { ehm.GiveEffect("storage", 1f); }
+
+        if(hm.curHp / hm.maxHp <= 0.5f)
+        {
+            if(whatHandThisComesFrom == "left" && pi.leftItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
+            if(whatHandThisComesFrom == "right" && pi.rightItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
+        }
     }
 
     protected void RunOnCollide(GameObject givenGameObject)

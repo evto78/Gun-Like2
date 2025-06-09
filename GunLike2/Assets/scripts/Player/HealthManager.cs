@@ -46,11 +46,14 @@ public class HealthManager : MonoBehaviour
 	float evadeChance;
 	int clockwork;
 
+	public int appleBuff;
+
 	public float timeSinceEnemyDied;
 
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
 	public PlayerItem playerItem;
+	GunManager gunManager;
 
 	public int money;
 
@@ -68,6 +71,7 @@ public class HealthManager : MonoBehaviour
 		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
+		gunManager = gameObject.GetComponent<GunManager>();
 	}
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
@@ -75,13 +79,17 @@ public class HealthManager : MonoBehaviour
 
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
-		maxHp = baseMaxHP;
+		maxHp = baseMaxHP + appleBuff;
 
 		healthRegen = Calc(20f, givenLeftItems[2] + givenRightItems[2], healthRegen);
 		healthRegen = Calc(20f, givenLeftItems[14] + givenRightItems[14], healthRegen);
+		healthRegen = Calc(20f, givenLeftItems[84] + givenRightItems[84], healthRegen);
+		healthRegen = Calc(40f, givenLeftItems[92] + givenRightItems[92], healthRegen);
+		healthRegen = Calc(10f, givenLeftItems[94] + givenRightItems[94], healthRegen);
 		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
 		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
 		healthRegen = Calc(-20f, givenLeftItems[80] + givenRightItems[80], healthRegen);
+		healthRegen = Calc(-10f, givenLeftItems[96] + givenRightItems[96], healthRegen);
 		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
 		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
@@ -94,9 +102,11 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[39] + givenRightItems[39], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[60] + givenRightItems[60], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[85] + givenRightItems[85], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[79] + givenRightItems[79], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[92] + givenRightItems[92], maxHp));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
@@ -205,7 +215,7 @@ public class HealthManager : MonoBehaviour
 		if(curHp <= 0) { dead = true; }
 	}
 
-	public void EnemyDied(GameObject enemyThatDied, int moneyDropped)
+	public void EnemyDied(EnemyHealthManager enemyThatDied, int moneyDropped)
     {
 		timeSinceEnemyDied = 0;
 
@@ -215,6 +225,21 @@ public class HealthManager : MonoBehaviour
         }
 
 		money += moneyDropped;
+
+		if(enemyThatDied.activeEffects[8].x > 0)
+        {
+			for(int i = 0; i < enemyThatDied.activeEffects[8].x; i++)
+            {
+				if(playerItem.leftItems[95] > 0)
+                {
+					gunManager.leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().SpawnBulletAtPos(enemyThatDied.transform.position);
+                }
+				if (playerItem.rightItems[95] > 0)
+				{
+					gunManager.rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().SpawnBulletAtPos(enemyThatDied.transform.position);
+				}
+			}
+        }
     }
 
 	void itemChecks()

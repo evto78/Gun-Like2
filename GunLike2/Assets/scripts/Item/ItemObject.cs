@@ -11,7 +11,7 @@ public class ItemObject : ScriptableObject
     public enum rarityType { Common, Uncommon, Rare, Legendary, Mutated, Haunted, Irradiated, Nuclear, Unique }
     public rarityType rarity;
     public Sprite itemSprite;
-    public enum itemType { basic, sponser, classic }
+    public enum itemType { basic, sponser, classic, fish }
     public itemType subType;
     
     /// <summary>

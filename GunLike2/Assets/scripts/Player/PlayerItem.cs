@@ -62,6 +62,7 @@ public class PlayerItem : MonoBehaviour
 
     public List<int> gunLike1Items = new List<int>();
     public List<int> sponserItems = new List<int>();
+    public List<int> fishItems = new List<int>();
     [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
@@ -127,6 +128,7 @@ public class PlayerItem : MonoBehaviour
         {
             if(item.subType.ToString() == "classic") { gunLike1Items.Add(item.id); }
             if(item.subType.ToString() == "sponser") { sponserItems.Add(item.id); }
+            if(item.subType.ToString() == "fish") { fishItems.Add(item.id); }
         }
     }
     private void Update()
@@ -167,6 +169,7 @@ public class PlayerItem : MonoBehaviour
     {
         popupUI.CreateNotif(id, amount);
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
+        if(id == 94) { healthManager.appleBuff += 20; }
     }
     public void OnItemGain(int id, int amount, string hand)
     {
