@@ -18,6 +18,9 @@ public class FishMinigameGAME : MonoBehaviour
     public bool playing;
     public TextMeshProUGUI scoreTxt;
     public int score;
+    public Image timer;
+    public GameObject itemPossibility;
+    public Transform spawnPos;
 
     public List<Material> fishMatsCommon;
     public List<Material> fishMatsUncommon;
@@ -29,17 +32,18 @@ public class FishMinigameGAME : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        uiman = player.GetComponentInParent<UIManager>();
-        fishingItem = 0 + player.GetComponentInParent<PlayerItem>().leftItems[83] + player.GetComponentInParent<PlayerItem>().rightItems[83];
+        uiman = player.GetComponent<UIManager>();
+        fishingItem = 0 + player.GetComponent<PlayerItem>().leftItems[83] + player.GetComponent<PlayerItem>().rightItems[83];
     }
 
     public void StartMinigame()
     {
+        player = GameObject.Find("Player");
         playing = true;
-        fishingItem = 0 + player.GetComponentInParent<PlayerItem>().leftItems[83] + player.GetComponentInParent<PlayerItem>().rightItems[83];
-        fishingTimeLeft = fishingItem * 10f;
+        fishingItem = 0 + player.GetComponent<PlayerItem>().leftItems[83] + player.GetComponent<PlayerItem>().rightItems[83];
+        fishingTimeLeft = fishingItem * 5f;
         difficulty = fishingItem;
-        spawnInterval = fishingItem;
+        spawnInterval = 1;
         intervalTimer = 0;
         score = 0;
         scoreTxt.text = score.ToString();
@@ -48,21 +52,38 @@ public class FishMinigameGAME : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer.fillAmount = fishingTimeLeft / (fishingItem * 5f);
         fishingTimeLeft -= Time.deltaTime;
-        intervalTimer -= Time.deltaTime;
+        intervalTimer -= Time.deltaTime * difficulty;
         if(fishingTimeLeft > 0)
         {
-            difficulty = fishingItem;
-            spawnInterval = difficulty;
+            difficulty = Mathf.CeilToInt(fishingTimeLeft / 2.5f);
+            spawnInterval = 1;
             if(intervalTimer <= 0)
             {
                 SpawnFish();
                 intervalTimer = spawnInterval;
             }
         }
-        else
+        else if(hostScript.timesUp == false)
         {
             hostScript.timesUp = true;
+            int numOfItems = 1 + Mathf.RoundToInt(score / 40);
+            int itemsSpawned = 0;
+            for (int i = 0; i < numOfItems; i++)
+            {
+                itemsSpawned++;
+                int rand = Random.Range(1, 101);
+
+                if (rand < 71) { SpawnItem(0); }
+                if (rand < 91 && rand > 70) { SpawnItem(1); }
+                if (rand == 91 || rand == 92) { SpawnItem(2); }
+                if (rand == 93 || rand == 94) { SpawnItem(4); }
+                if (rand == 95 || rand == 96) { SpawnItem(5); }
+                if (rand == 97 || rand == 98) { SpawnItem(6); }
+                if (rand == 99) { SpawnItem(3); }
+                if (rand == 100) { SpawnItem(7); }
+            }
         }
     }
 
@@ -97,5 +118,17 @@ public class FishMinigameGAME : MonoBehaviour
     {
         score += rarity*5;
         scoreTxt.text = score.ToString();
+    }
+    private void SpawnItem(int iD)
+    {
+        List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+
+        GameObject spawnedItem;
+        spawnedItem = Instantiate(itemPossibility);
+        spawnedItem.transform.position = spawnPos.position;
+        spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
+        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
 }

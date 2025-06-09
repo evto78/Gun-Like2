@@ -231,7 +231,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
         onGround = GroundCheck();
         if (onGround) { slamming = false; }
-        CameraMove();
+        if (Cursor.lockState == CursorLockMode.Locked) { CameraMove(); }
         GetInputs();
 
         Effects();

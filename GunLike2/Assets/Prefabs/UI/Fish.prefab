@@ -112,7 +112,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 982665962710217642}
   m_Father: {fileID: 0}
@@ -130,8 +130,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rarity: 0
-  speedMAX: 2
-  speedMIN: 0.5
+  speedMAX: 3
+  speedMIN: 2
+  manager: {fileID: 0}
 --- !u!65 &105280837106998140
 BoxCollider:
   m_ObjectHideFlags: 0

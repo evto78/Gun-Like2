@@ -15,7 +15,8 @@ public class GoToCursor : MonoBehaviour
 
     void Update()
     {
-        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Vector3 mouse = Input.mousePosition;
+        Ray ray = mainCamera.ScreenPointToRay(mouse);
         RaycastHit hit;
 
         transform.position = Vector3.zero;

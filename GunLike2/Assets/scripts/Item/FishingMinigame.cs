@@ -14,8 +14,10 @@ public class FishingMinigame : MonoBehaviour
     public GameObject tabletScreen;
     public Texture2D fishingCursor;
     public bool timesUp;
+    bool fished;
     private void Start()
     {
+        fished = false;
         player = GameObject.Find("Player");
         playerFishing = false;
         tabletScreen.SetActive(false);
@@ -25,7 +27,7 @@ public class FishingMinigame : MonoBehaviour
         tabletAnimTimer -= Time.deltaTime;
         if (playerNear && player.GetComponent<PlayerItem>().leftItems[83] + player.GetComponent<PlayerItem>().rightItems[83] > 0)
         {
-            if(!playerFishing && Input.GetKeyDown(KeyCode.E))
+            if (!playerFishing && Input.GetKeyDown(KeyCode.E) && fished == false)
             {
                 playerFishing = true;
                 Cursor.visible = true;
@@ -36,13 +38,14 @@ public class FishingMinigame : MonoBehaviour
                 player.GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SetActive(false);
                 player.GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SetActive(false);
                 tabletAnimTimer = 1.2f;
-                Cursor.SetCursor(fishingCursor, new Vector2(0.5f, 0.5f), CursorMode.ForceSoftware);
+                Cursor.SetCursor(fishingCursor, new Vector2(32f, 32f), CursorMode.ForceSoftware);
                 timesUp = false;
                 tabletScreen.SetActive(true); tabletScreen.GetComponent<FishMinigameGAME>().playing = false;
                 tabletScreen.SetActive(false); 
             }
         }
-        if (tabletAnimTimer <= 0) { timesUp = false; }
+        //Debug.Log("1: "+timesUp);
+        //if (tabletAnimTimer <= 0) { timesUp = false; }
         if (player.GetComponent<UIManager>().fishing && (Input.GetKeyDown(KeyCode.Escape) || timesUp))
         {
             playerFishing = false;
@@ -57,13 +60,14 @@ public class FishingMinigame : MonoBehaviour
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             tabletScreen.GetComponent<FishMinigameGAME>().playing = false;
             tabletScreen.SetActive(false);
-        }
 
+            fished = true;
+        }
+        //Debug.Log ("2: "+timesUp);
         if (playerFishing)
         {
-            player.transform.position = transform.position;
-            Camera.main.transform.LookAt(tablet.transform);
-            Camera.main.fieldOfView = 66f;
+            player.GetComponent<Rigidbody>().velocity /= 2f;
+            if (tabletAnimTimer > 0) { Camera.main.transform.LookAt(tablet.transform); Camera.main.fieldOfView = 66f; }
             if(tabletAnimTimer <= 0 && tabletScreen.GetComponent<FishMinigameGAME>().playing == false) { tabletScreen.SetActive(true); tabletScreen.GetComponent<FishMinigameGAME>().StartMinigame(); }
         }
         tabletHolder.SetBool("Fishing", playerFishing);

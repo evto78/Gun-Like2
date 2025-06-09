@@ -9,10 +9,12 @@ public class FishScript : MonoBehaviour
     public float speedMIN;
     float speed;
     public FishMinigameGAME manager;
+    bool mouseOver;
     // Start is called before the first frame update
     void Start()
     {
-        speed = Random.Range(speedMIN, speedMAX);
+        speed = Random.Range(speedMIN, speedMAX) * (rarity / 5f);
+        transform.localScale = transform.localScale * Random.Range(0.9f, 1.1f);
     }
 
     // Update is called once per frame
@@ -24,6 +26,22 @@ public class FishScript : MonoBehaviour
             //Debug.Log("Goodbye cruel world: "+transform.localPosition);
             Destroy(gameObject);
         }
+        if (mouseOver)
+        {
+            gameObject.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 1, 1);
+        }
+        else
+        {
+            gameObject.GetComponentInChildren<MeshRenderer>().material.color = new Color(0.5f, 0.5f, 0.5f);
+        }
+    }
+    private void OnMouseEnter()
+    {
+        mouseOver = true;
+    }
+    private void OnMouseExit()
+    {
+        mouseOver=false;
     }
     private void OnMouseDown()
     {
