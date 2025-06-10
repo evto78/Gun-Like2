@@ -283,6 +283,7 @@ public class GunManager : MonoBehaviour
         }
 
         leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
+        leftAtkSpd = Calc(10f, givenLeftItems[97], leftAtkSpd);
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
         leftAtkSpd = Calc(-5f, givenLeftItems[59], leftAtkSpd);
         leftAtkSpd = Calc(-40f, givenLeftItems[91], leftAtkSpd);
@@ -300,11 +301,15 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(20f, givenLeftItems[84], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[90], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[91], leftDmg);
+        leftDmg = Calc(40f, givenLeftItems[102], leftDmg);
+        leftDmg = Calc(10f, givenLeftItems[98], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[46], leftDmg);
         leftDmg = Calc(-10f, givenLeftItems[59], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
+        leftMagSize = Calc(10f, givenLeftItems[100], leftMagSize);
+        leftMagSize = Calc(50f, givenLeftItems[101], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
         leftMagSize = Calc(-20f, givenLeftItems[26], leftMagSize);
@@ -369,11 +374,13 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[26] > 0f) { leftRicochet = true; }
         if (givenLeftItems[82] > 0f) { leftRicochet = true; }
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
+        if (givenLeftItems[102] > 0f) { leftBulPir++; }
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
         if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
 
         rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
+        rightAtkSpd = Calc(10f, givenRightItems[97], rightAtkSpd);
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightAtkSpd = Calc(-5f, givenRightItems[59], rightAtkSpd);
         rightAtkSpd = Calc(-40f, givenRightItems[91], rightAtkSpd);
@@ -392,11 +399,15 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(20f, givenRightItems[84], rightDmg);
         rightDmg = Calc(40f, givenRightItems[90], rightDmg);
         rightDmg = Calc(40f, givenRightItems[91], rightDmg);
+        rightDmg = Calc(40f, givenRightItems[102], rightDmg);
+        rightDmg = Calc(10f, givenRightItems[98], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[46], rightDmg);
         rightDmg = Calc(-10f, givenRightItems[59], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
+        rightMagSize = Calc(10f, givenRightItems[100], rightMagSize);
+        rightMagSize = Calc(50f, givenRightItems[101], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
         rightMagSize = Calc(-20f, givenRightItems[26], rightMagSize);
@@ -461,6 +472,7 @@ public class GunManager : MonoBehaviour
         if (givenRightItems[26] > 0f) { rightRicochet = true; }
         if (givenRightItems[82] > 0f) { rightRicochet = true; }
         if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
+        if (givenRightItems[102] > 0f) { rightBulPir++; }
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
         if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
@@ -533,7 +545,6 @@ public class GunManager : MonoBehaviour
             givenRightItems.Clear();
             givenRightItems.AddRange(rightList);
         }
-        
     }
 
     float Calc(float modifier, int amount, float baseVal)

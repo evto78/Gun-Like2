@@ -103,6 +103,7 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[60] + givenRightItems[60], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[85] + givenRightItems[85], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[99] + givenRightItems[99], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[79] + givenRightItems[79], maxHp));

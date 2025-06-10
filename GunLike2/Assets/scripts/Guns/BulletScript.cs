@@ -68,6 +68,8 @@ public class BulletScript : MonoBehaviour
     protected GunManager gm;
     protected GunScript gunFiredFrom;
 
+    public GameObject lavaBlob;
+
     void Awake()
     {
         hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
@@ -354,6 +356,52 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
+
+            //H.E.A.T Rounds
+            if(whatHandThisComesFrom == "left" && pi.leftItems[102] > 0 || whatHandThisComesFrom == "right" && pi.rightItems[102] > 0)
+            {
+                Ray ricoRay = new Ray(transform.position, transform.forward);
+                RaycastHit ricoHit;
+
+                myPos = transform.position;
+                Vector3 reflectDir = Vector3.zero;
+                Vector3 hitPos = Vector3.zero;
+                if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
+                {
+                    reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
+                    hitPos = ricoHit.point;
+                }
+                else
+                {
+                    ricoRay = new Ray(transform.position, -transform.forward);
+
+                    myPos = transform.position;
+                    if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
+                    {
+                        //Debug.Log("Rico Hit! BACKWARDS!... Adjusting position for better reflect.");
+                        myPos = transform.position - transform.forward * (rb.velocity * Time.deltaTime).magnitude;
+                        ricoRay = new Ray(myPos, transform.forward);
+                        if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 6f))))
+                        {
+                            reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
+                            hitPos = ricoHit.point;
+
+                        }
+                    }
+                }
+                if(hitPos != Vector3.zero)
+                {
+                    for (int i = 0; i < Random.Range(1, 2); i++)
+                    {
+                        GameObject spawnedLava = Instantiate(lavaBlob);
+                        //reflectDir += new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1)) * -5f;
+                        spawnedLava.transform.position = hitPos;
+                        spawnedLava.transform.rotation = Quaternion.LookRotation(reflectDir);
+                        spawnedLava.transform.position += spawnedLava.transform.forward;
+                        spawnedLava.GetComponent<Rigidbody>().AddForce(spawnedLava.transform.forward * bulSpd * 2f);
+                    }
+                }
+            }
 
             if (ricochet)
             {

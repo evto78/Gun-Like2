@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 97
+  m_EditorClassIdentifier: 
+  id: 97
+  itemName: Unstable Particle A
+  rarity: 8
+  itemSprite: {fileID: 21300000, guid: fa8ebd326c4f07f468f4d9077324bd8b, type: 3}
+  subType: 4
+  effect: This item has a chance to be created after any item you own is destroyed
+    at a rate of 2.5% with a extra 7.5% for each teir of rarity it is above common.
+    It is created on the same gun where the item was destroyed. This item has a 20%
+    chance of destroying itself whenever a new item is added to this gun. (this chance
+    is applied to the whole stack and only removes one of the particles insteed of
+    applying to or removing the whole stack.)
+  buff: Attack Speed + 10%(+10%)
+  debuff: '-'
+  effectSum: Chance to gain when losing an item, chance to lose when gaining an item.
+  buffSum: Attack Speed+1/2
+  debuffSum: '-'
+  flavor: '"Zip"'
+  ideaCredit: 
+  flavorCredit: 

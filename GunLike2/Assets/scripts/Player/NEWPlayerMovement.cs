@@ -188,6 +188,10 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); sprintMoveSpeed = sprintMoveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); }
         if (effectList[17].x > 0f) { moveSpeed = moveSpeed + (moveSpeed * (effectList[17].x / 50)); sprintMoveSpeed = sprintMoveSpeed + (sprintMoveSpeed * (effectList[17].x / 50)); }
+
+        //stat caps
+        if(moveSpeed > baseMoveSpeed * 10) { moveSpeed = baseMoveSpeed * 10; }
+        if(jumpForce > baseJumpForce * 10) { jumpForce = baseJumpForce * 10; }
     }
 
     float Calc(float modifier, int amount, float baseVal)

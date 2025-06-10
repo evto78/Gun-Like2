@@ -47,10 +47,12 @@ public class InventoryScript : MonoBehaviour
         int leftCount = leftHolder.childCount / 2;
 
         if(leftCount < 31) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if(leftCount < 51) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(125f,125f); }
         else if (leftCount < 81) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
         else if (leftCount < 201) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
 
         if(rightCount < 31) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if(rightCount < 51) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(125f,125f); }
         else if (rightCount < 81) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
         else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
     }

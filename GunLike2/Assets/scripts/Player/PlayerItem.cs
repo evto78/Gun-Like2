@@ -63,6 +63,7 @@ public class PlayerItem : MonoBehaviour
     public List<int> gunLike1Items = new List<int>();
     public List<int> sponserItems = new List<int>();
     public List<int> fishItems = new List<int>();
+    public List<int> unstableItems = new List<int>();
     [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
@@ -129,6 +130,7 @@ public class PlayerItem : MonoBehaviour
             if(item.subType.ToString() == "classic") { gunLike1Items.Add(item.id); }
             if(item.subType.ToString() == "sponser") { sponserItems.Add(item.id); }
             if(item.subType.ToString() == "fish") { fishItems.Add(item.id); }
+            if(item.subType.ToString() == "unstablePart") { unstableItems.Add(item.id); }
         }
     }
     private void Update()
@@ -170,6 +172,15 @@ public class PlayerItem : MonoBehaviour
         popupUI.CreateNotif(id, amount);
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         if(id == 94) { healthManager.appleBuff += 20; }
+        for(int i = 0; i < amount; i++)
+        {
+            if (Random.Range(1, 100) < 5)
+            {
+                int rand = unstableItems[Random.Range(0, unstableItems.Count)];
+                if (hand == "left") { leftItems[rand]++; }
+                if (hand == "right") { rightItems[rand]++; }
+            }
+        }
     }
     public void OnItemGain(int id, int amount, string hand)
     {
@@ -179,6 +190,17 @@ public class PlayerItem : MonoBehaviour
             uiManager.VisionOfGunky();
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
+        for (int i = 0; i < amount; i++)
+        {
+            if (Random.Range(1, 100) < 5 && leftItems[97] > 0 && hand == "left") { leftItems[97]--; }
+            if (Random.Range(1, 100) < 5 && leftItems[98] > 0 && hand == "left") { leftItems[98]--; }
+            if (Random.Range(1, 100) < 5 && leftItems[99] > 0 && hand == "left") { leftItems[99]--; }
+            if (Random.Range(1, 100) < 5 && leftItems[100] > 0 && hand == "left") { leftItems[100]--; }
+            if (Random.Range(1, 100) < 5 && rightItems[97] > 0 && hand == "right") { rightItems[97]--; }
+            if (Random.Range(1, 100) < 5 && rightItems[98] > 0 && hand == "right") { rightItems[98]--; }
+            if (Random.Range(1, 100) < 5 && rightItems[99] > 0 && hand == "right") { rightItems[99]--; }
+            if (Random.Range(1, 100) < 5 && rightItems[100] > 0 && hand == "right") { rightItems[100]--; }
+        }
     }
     public void ItemPressedInInv(int id, string hand)
     {
@@ -193,6 +215,7 @@ public class PlayerItem : MonoBehaviour
     }
     void NuclearFission(int id, string hand)
     {
+        OnItemDestroy(id, 1, hand);
         if(hand == "left")
         {
             if (rarityList[0].Contains(id)) { leftItems[id]--; }//common
