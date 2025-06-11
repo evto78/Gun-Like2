@@ -45,6 +45,7 @@ public class HealthManager : MonoBehaviour
 	int partialInt;
 	float evadeChance;
 	int clockwork;
+	int warcry;
 
 	public int appleBuff;
 
@@ -119,6 +120,7 @@ public class HealthManager : MonoBehaviour
 		experimentalImp = 0 + givenLeftItems[39] + givenRightItems[39];
 		partialInt = 0 + givenLeftItems[73] + givenRightItems[73];
 		clockwork = 0 + givenLeftItems[81] + givenRightItems[81];
+		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
 
 		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -471,6 +473,7 @@ public class HealthManager : MonoBehaviour
 
 		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, activeReactor * 5f, activeReactor * 5f, 1f); } // active reactor buff
 		if (effectGiven == "fast fire") { activeEffects[19] = new Vector4(stacksToAdd, 1f, 1f, 1f); } // Fast Fire partership buff
+		if (effectGiven == "warcry") { activeEffects[20] = new Vector4(stacksToAdd, 1f+warcry, 1f+warcry, 1f); } // warcrybuff
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }

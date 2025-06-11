@@ -83,6 +83,12 @@ public class GunManager : MonoBehaviour
     int leftPrinter;
     int leftMicrowave;
     float leftMicrowaveTimer;
+    public int leftSniperTower;
+    public int leftPerfectedScope;
+    public int leftPumpShotgunAttach;
+    public int leftGrenadeAttach;
+    public int leftGasGrenadeAttach;
+    public int leftWarcry;
 
     public bool leftRicochet = false;
 
@@ -141,6 +147,12 @@ public class GunManager : MonoBehaviour
     float surpriseEggTimer;
     float leftPrinterTimer;
     float rightPrinterTimer;
+    public int rightSniperTower;
+    public int rightPerfectedScope;
+    public int rightPumpShotgunAttach;
+    public int rightGrenadeAttach;
+    public int rightGasGrenadeAttach;
+    public int rightWarcry;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -366,6 +378,12 @@ public class GunManager : MonoBehaviour
         leftClockwork = givenLeftItems[81];
         leftPrinter = givenLeftItems[88];
         leftMicrowave = givenLeftItems[89];
+        leftSniperTower = givenLeftItems[103];
+        leftPerfectedScope = givenLeftItems[104];
+        leftPumpShotgunAttach = givenLeftItems[106];
+        leftGrenadeAttach = givenLeftItems[107];
+        leftGasGrenadeAttach = givenLeftItems[108];
+        leftWarcry = givenLeftItems[110];
 
         leftRicochet = false;
 
@@ -464,6 +482,12 @@ public class GunManager : MonoBehaviour
         rightClockwork = givenRightItems[81];
         rightPrinter = givenRightItems[88];
         rightMicrowave = givenRightItems[89];
+        rightSniperTower = givenRightItems[103];
+        rightPerfectedScope = givenRightItems[104];
+        rightPumpShotgunAttach = givenRightItems[106];
+        rightGrenadeAttach = givenRightItems[107];
+        rightGasGrenadeAttach = givenRightItems[108];
+        rightWarcry = givenRightItems[110];
 
         rightRicochet = false;
 

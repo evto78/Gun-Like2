@@ -47,6 +47,12 @@ public class EnemyHealthManager : MonoBehaviour
 
     void Start()
     {
+        activeEffects = new List<Vector4>();
+        for(int i = 0; i < 10; i++)
+        {
+            activeEffects.Add(Vector4.zero);
+        }
+
         icons = new List<GameObject>();
         foreach(Vector4 effect in activeEffects)
         {
@@ -72,6 +78,7 @@ public class EnemyHealthManager : MonoBehaviour
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
         if(activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
+        if(activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
 
         if(activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
         {
@@ -191,6 +198,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
         if (effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
         if (effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
+        if (effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
     }
 
     void ManageEffects()

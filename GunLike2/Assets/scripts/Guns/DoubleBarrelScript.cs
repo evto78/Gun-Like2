@@ -18,8 +18,50 @@ public class DoubleBarrelScript : GunScript
                 for(int i = 0; i < magSize /2; i++)
                 {
                     Shoot(1f);
+                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
+                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                }
+                if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
+                {
+                    acc = acc * 2f;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        currentBullets++;
+                        Shoot(1f);
+                        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
+                        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                    }
+
+                    pumpShotgunAttachTimer = 30f;
                 }
             }
+        }
+    }
+
+    public override void AttemptShootUp()
+    {
+        if (bowAct > 0)
+        {
+            for (int i = 0; i < magSize / 2; i++)
+            {
+                Shoot(bowCharge);
+                if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
+                if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+            }
+            if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
+            {
+                acc = acc * 2f;
+                for (int i = 0; i < 9; i++)
+                {
+                    currentBullets++;
+                    Shoot(bowCharge);
+                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
+                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                }
+
+                pumpShotgunAttachTimer = 30f;
+            }
+            bowCharge = 0f;
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LittleGunScript : GunScript
 {
-    public float littleCharge;
+    
 
     public override void LateStatUpdate()
     {

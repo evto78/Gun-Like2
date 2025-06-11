@@ -60,6 +60,15 @@ public class GunScript : MonoBehaviour
     public bool stickTo;
     public bool gunkyBlessed;
     public int gunkyClaw;
+    public int sniperTower;
+    public float sniperTowerCooldown;
+    public int perfectedScope;
+    public int pumpShotgunAttach;
+    protected float pumpShotgunAttachTimer;
+    public int grenadeAttach;
+    float grenadeAttachTimer;
+    public int gasGrenadeAttach;
+    float gasGrenadeAttachTimer;
 
     public bool isFastFiring;
 
@@ -78,13 +87,15 @@ public class GunScript : MonoBehaviour
     public GameObject nerfedPistolBullet;
     public Transform firePoint;
 
+    public GameObject grenade;
+
     public Camera cam;
 
     Ray ray;
     RaycastHit hit;
 
     public string whatHandThisIsIn;
-
+    public float littleCharge;
     protected float timeSinceShot;
     public Transform target;
 
@@ -142,8 +153,20 @@ public class GunScript : MonoBehaviour
         stickTo = manager.leftStickTo > 0;
         gunkyBlessed = Random.Range(0, 100) < manager.leftGunkyBless * 20f;
         gunkyClaw = manager.leftGunkyClaw;
+        sniperTower = manager.leftSniperTower;
+        perfectedScope = manager.leftPerfectedScope;
+        pumpShotgunAttach = manager.leftPumpShotgunAttach;
+        grenadeAttach = manager.leftGrenadeAttach;
+        gasGrenadeAttach = manager.leftGasGrenadeAttach;
 
         ricochet = manager.leftRicochet;
+
+        if (perfectedScope > 0 && acc < baseAcc)
+        {
+            acc = 0.001f;
+            critDamage = critDamage * 2f;
+            weakPointDamage = weakPointDamage * 2f;
+        }
 
         //STAT CAPS!
         if (bulSpd > 500f)
@@ -155,6 +178,8 @@ public class GunScript : MonoBehaviour
             acc = 25f;
         }
         LateStatUpdate();
+        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
+        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
     }
 
     public virtual void StatUpdateRight()
@@ -195,8 +220,20 @@ public class GunScript : MonoBehaviour
         stickTo = manager.rightStickTo > 0;
         gunkyBlessed = Random.Range(0, 100) < manager.rightGunkyBless * 20f;
         gunkyClaw = manager.rightGunkyClaw;
+        sniperTower = manager.rightSniperTower;
+        perfectedScope = manager.rightPerfectedScope;
+        pumpShotgunAttach = manager.rightPumpShotgunAttach;
+        grenadeAttach = manager.rightGrenadeAttach;
+        gasGrenadeAttach = manager.rightGasGrenadeAttach;
 
         ricochet = manager.rightRicochet;
+
+        if (perfectedScope > 0 && acc < baseAcc)
+        {
+            acc = 0.001f;
+            critDamage = critDamage * 2f;
+            weakPointDamage = weakPointDamage * 2f;
+        }
 
         //STAT CAPS!
         if (bulSpd > 500f)
@@ -208,11 +245,13 @@ public class GunScript : MonoBehaviour
             acc = 25f;
         }
         LateStatUpdate();
+        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
+        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
     }
 
     public virtual void LateStatUpdate()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -228,7 +267,7 @@ public class GunScript : MonoBehaviour
 
             List<RaycastHit> hits = new List<RaycastHit>();
 
-            hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 25f, Vector3.one * 10f, cam.transform.forward, cam.transform.rotation, 100f));
+            hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 10f, Vector3.one * 10f, cam.transform.forward, cam.transform.rotation, 100f));
 
             EnemyHealthManager eHealthMan;
             target = null;
@@ -251,6 +290,45 @@ public class GunScript : MonoBehaviour
             }
         }
         else { target = null; possessionEffect.SetActive(false); }
+        //laserPointer
+        LineRenderer laser = transform.parent.GetComponent<LineRenderer>();
+        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[105] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[105] > 0))
+        {
+            int laserPointer = 0;
+            if(whatHandThisIsIn == "left" && manager.playerItem.leftItems[105] > 0) { laserPointer = manager.playerItem.leftItems[105]; }
+            if(whatHandThisIsIn == "right" && manager.playerItem.rightItems[105] > 0) { laserPointer = manager.playerItem.rightItems[105]; }
+            laser.enabled = true;
+            laser.SetPosition(0, firePoint.position);
+
+            List<RaycastHit> hits = new List<RaycastHit>();
+
+            hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 5f * laserPointer, Vector3.one * 5f * laserPointer, cam.transform.forward, cam.transform.rotation, 100f));
+            //Debug.Log("Num of hits: " + hits.Count);
+            EnemyHealthManager ehm;
+            target = null;
+            float dist = 99999f;
+            foreach (RaycastHit hit in hits)
+            {
+                ehm = null;
+
+                if(hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out ehm)) { }
+                else if (hit.transform.parent != null) { if (hit.transform.parent.gameObject.TryGetComponent<EnemyHealthManager>(out ehm)) { } }
+
+                if (ehm != null)
+                {
+                    //Debug.Log("Found target with emh : " + ehm.gameObject.name);
+                    if(Vector3.Distance(player.position, ehm.transform.position) < dist)
+                    {
+                        //Debug.Log("Setting target as: " + ehm.gameObject.name);
+                        target = ehm.transform;
+                        dist = Vector3.Distance(player.position, ehm.transform.position);
+                    }
+                }
+            }
+            if(target != null) { laser.SetPosition(1, target.position); }
+            else if(target == null) { laser.SetPosition(1, firePoint.position + firePoint.forward * 20f); }
+        }
+        else { laser.enabled = false; }
 
         if (reloading)
         {
@@ -281,6 +359,33 @@ public class GunScript : MonoBehaviour
             animator.SetBool("NoAmmo", true);
         }
 
+        if(sniperTower > 0)
+        {
+            sniperTowerCooldown -= Time.deltaTime * (1 + (sniperTower * 0.5f));
+            if(whatHandThisIsIn == "left") { sniperTowerCooldown -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
+            if(whatHandThisIsIn == "right") { sniperTowerCooldown -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+        }
+
+        if (pumpShotgunAttach > 0)
+        {
+            pumpShotgunAttachTimer -= Time.deltaTime * (1 + (pumpShotgunAttach * 0.5f));
+            if (whatHandThisIsIn == "left") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "right") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+        }
+
+        if (grenadeAttach > 0)
+        {
+            grenadeAttachTimer -= Time.deltaTime * (1 + (grenadeAttach * 0.5f));
+            if (whatHandThisIsIn == "left") { grenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "right") { grenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+        }
+
+        if (gasGrenadeAttach > 0)
+        {
+            gasGrenadeAttachTimer -= Time.deltaTime * (1 + (gasGrenadeAttach * 0.5f));
+            if (whatHandThisIsIn == "left") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "right") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+        }
     }
 
     public virtual void AttemptShoot()
@@ -295,15 +400,45 @@ public class GunScript : MonoBehaviour
             if (!reloading && !shooting)
             {
                 Shoot(1f);
+                if(pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
+                {
+                    acc = acc * 2f;
+                    for(int i = 0; i < 9; i++)
+                    {
+                        currentBullets++;
+                        Shoot(1f);
+                        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
+                        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                    }
+
+                    pumpShotgunAttachTimer = 30f;
+                }
+                if(whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
+                if(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
             }
         }
     }
 
-    public void AttemptShootUp()
+    public virtual void AttemptShootUp()
     {
         if (bowAct > 0)
         {
             Shoot(bowCharge);
+            if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
+            {
+                acc = acc * 2f;
+                for (int i = 0; i < 9; i++)
+                {
+                    currentBullets++;
+                    Shoot(bowCharge);
+                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
+                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                }
+
+                pumpShotgunAttachTimer = 30f;
+            }
+            if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
+            if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
             bowCharge = 0f;
         }
     }
@@ -329,11 +464,16 @@ public class GunScript : MonoBehaviour
         {
             manager.healthMan.GiveEffect("pants falling", 50);
         }
+
+        if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect("warcry", 1f); }
+        if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect("warcry", 1f); }
+
         LateReload();
     }
     public virtual void LateReload()
     {
-
+        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge = 0f; }
+        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge = 0f; }
     }
     public void SpawnBulletAtPos(Vector3 pos)
     {
@@ -352,7 +492,8 @@ public class GunScript : MonoBehaviour
     }
     public virtual void EarlyShoot()
     {
-
+        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge+=0.2f; }
+        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
     }
     public virtual void Shoot(float bowChar)
     {
@@ -399,6 +540,32 @@ public class GunScript : MonoBehaviour
             }
             if(whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
             if(whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
+
+            if(manager.healthMan.activeEffects[20].x > 0)
+            {
+                currentBullets = Mathf.RoundToInt(magSize);
+            }
+
+            if(grenadeAttach > 0 && grenadeAttachTimer < 0)
+            {
+                GameObject spawnedGrenade = Instantiate(grenade);
+                spawnedGrenade.transform.position = firePoint.transform.position + firePoint.transform.forward;
+                spawnedGrenade.GetComponent<GrenadeAttachment>().damage = dmg * 10f;
+                spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = false;
+                spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
+                spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
+                grenadeAttachTimer = 30f;
+            }
+            if (gasGrenadeAttach > 0 && gasGrenadeAttachTimer < 0)
+            {
+                GameObject spawnedGrenade = Instantiate(grenade);
+                spawnedGrenade.transform.position = firePoint.transform.position + firePoint.transform.up / 2f + firePoint.transform.forward;
+                spawnedGrenade.GetComponent<GrenadeAttachment>().damage = dmg * 10f;
+                spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = true;
+                spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 6f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
+                spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
+                gasGrenadeAttachTimer = 30f;
+            }
         }
     }
 

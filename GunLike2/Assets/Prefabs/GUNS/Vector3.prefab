@@ -97,11 +97,21 @@ MonoBehaviour:
   possession: 0
   multistage: 0
   nerfedBul: 0
+  stickTo: 0
+  gunkyBlessed: 0
+  gunkyClaw: 0
+  sniperTower: 0
+  sniperTowerCooldown: 0
+  perfectedScope: 0
+  pumpShotgunAttach: 0
+  grenadeAttach: 0
   isFastFiring: 0
   currentBullets: 0
+  reloading: 0
   pistolBullet: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
   nerfedPistolBullet: {fileID: 6495255335360224864, guid: 8ae753fb0de8c4048a649a53bcd0b17d, type: 3}
   firePoint: {fileID: 1088671533673481303}
+  grenade: {fileID: 7517361348596027643, guid: c680973e17bc8b44c903d1dd36c7c81c, type: 3}
   cam: {fileID: 0}
   whatHandThisIsIn: 
   target: {fileID: 0}
@@ -5062,7 +5072,6 @@ GameObject:
   - component: {fileID: 2375682626231131763}
   - component: {fileID: 3688761914116894403}
   - component: {fileID: 6846449939662198055}
-  - component: {fileID: 715725177968732361}
   m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
@@ -5135,27 +5144,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &715725177968732361
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5067067849529058682}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7689528453388297357
 GameObject:
   m_ObjectHideFlags: 0
@@ -5167,7 +5155,6 @@ GameObject:
   - component: {fileID: 3578036171189264578}
   - component: {fileID: 2224404586297323765}
   - component: {fileID: 2255210884216784706}
-  - component: {fileID: 6053536448841592574}
   m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -5240,24 +5227,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6053536448841592574
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7689528453388297357}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

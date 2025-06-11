@@ -69,6 +69,7 @@ public class BulletScript : MonoBehaviour
     protected GunScript gunFiredFrom;
 
     public GameObject lavaBlob;
+    public GameObject sniperTowerAlly;
 
     void Awake()
     {
@@ -176,6 +177,15 @@ public class BulletScript : MonoBehaviour
         {
             if(whatHandThisComesFrom == "left" && pi.leftItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
             if(whatHandThisComesFrom == "right" && pi.rightItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
+        }
+
+        if(gunFiredFrom.sniperTower > 0 && gunFiredFrom.sniperTowerCooldown <= 0)
+        {
+            GameObject spawnedSniperTower = Instantiate(sniperTowerAlly);
+            spawnedSniperTower.transform.position = pi.transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 3f;
+            spawnedSniperTower.GetComponent<SniperTurretAlly>().damage = damage * 10f;
+            spawnedSniperTower.GetComponent<SniperTurretAlly>().target = ehm;
+            gunFiredFrom.sniperTowerCooldown = 60f;
         }
     }
 

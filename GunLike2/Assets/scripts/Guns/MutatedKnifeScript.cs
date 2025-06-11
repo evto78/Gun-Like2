@@ -7,5 +7,6 @@ public class MutatedKnifeScript : GunScript
     private void LateUpdate()
     {
         currentBullets = Mathf.RoundToInt(magSize);
+        littleCharge = 0f;
     }
 }
