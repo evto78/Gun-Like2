@@ -1,0 +1,151 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+public class InvItemDisplay : MonoBehaviour
+{
+    GameObject player;
+    PlayerItem playerItemScript;
+
+    public List<Sprite> backgroundList = new List<Sprite>();
+
+    public TextMeshProUGUI nameTxt;
+    public TextMeshProUGUI buffTxt;
+    public TextMeshProUGUI debuffTxt;
+    public TextMeshProUGUI effectTxt;
+    public TextMeshProUGUI flavorTxt;
+
+    public Image bgItem;
+    public Image bgFlavor;
+    public Image bgOutline;
+    public Image bgDesc;
+    public Image bgTitle;
+    public Image itemSprite;
+
+    public float timeSinceUpdate;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+        playerItemScript = player.GetComponent<PlayerItem>();
+    }
+
+    private void Update()
+    {
+        RectTransform rect = gameObject.GetComponent<RectTransform>();
+        rect.position = Input.mousePosition;
+        rect.position -= Vector3.up * 200f;
+        Debug.Log(rect.position.x);
+        if(rect.position.y - (rect.rect.height / 1.5f) <= 0) { rect.position += Vector3.up * 500f; }
+        //if(rect.position.y < 260) { rect.position += Vector3.up * 500f; }
+        //if(rect.position.x < -530) { rect.position = new Vector3(-380, rect.position.y, 0); }
+        //if(rect.position.x > 530) { rect.position = new Vector3(380, rect.position.y, 0); }
+        timeSinceUpdate += 1f;
+    }
+    private void LateUpdate()
+    {
+        gameObject.SetActive(timeSinceUpdate <= 2f);
+    }
+    public void InfoUpdate(int id)
+    {
+        timeSinceUpdate = 0f;
+        ItemObject selectedItem = Resources.Load<ItemObject>("Items/" + id.ToString());
+
+        nameTxt.text = selectedItem.itemName;
+        if (Input.GetKey(KeyCode.C))
+        {
+            //id 22 is the irradiated french pastry
+            if (selectedItem.id == 22)
+            {
+                //irradiated french pastry
+                string lftBff = "NA";
+                string lftDeBff = "NA";
+                string rigBff = "NA";
+                string rigDeBff = "NA";
+
+                string statToChange = "NA";
+
+                for (int i = 0; i < 29; i++)
+                {
+                    if (i == 0) { statToChange = "Speed"; }
+                    if (i == 1) { statToChange = "Sprint Speed"; }
+                    if (i == 2) { statToChange = "Jump Height"; }
+                    if (i == 3) { statToChange = "Number Of Jumps"; }
+                    if (i == 4) { statToChange = "Crit Chance"; }
+                    if (i == 5) { statToChange = "Crit Damage"; }
+                    if (i == 6) { statToChange = "Weak Spot Damage"; }
+                    if (i == 7) { statToChange = "Damage"; }
+                    if (i == 8) { statToChange = "Attack Speed"; }
+                    if (i == 9) { statToChange = "Reload Speed"; }
+                    if (i == 10) { statToChange = "Magazine Size"; }
+                    if (i == 11) { statToChange = "Accuracy"; }
+                    if (i == 12) { statToChange = "Bullet Speed"; }
+                    if (i == 13) { statToChange = "Bullet Size"; }
+                    if (i == 14) { statToChange = "Pierce"; }
+                    if (i == 15) { statToChange = "Crit Chance"; }
+                    if (i == 16) { statToChange = "Crit Damage"; }
+                    if (i == 17) { statToChange = "Weak Spot Damage"; }
+                    if (i == 18) { statToChange = "Damage"; }
+                    if (i == 19) { statToChange = "Attack Speed"; }
+                    if (i == 20) { statToChange = "Reload Speed"; }
+                    if (i == 21) { statToChange = "Magazine Size"; }
+                    if (i == 22) { statToChange = "Accuracy"; }
+                    if (i == 23) { statToChange = "Bullet Speed"; }
+                    if (i == 24) { statToChange = "Bullet Size"; }
+                    if (i == 25) { statToChange = "Pierce"; }
+                    if (i == 26) { statToChange = "Max HP"; }
+                    if (i == 27) { statToChange = "Passive HP Regen"; }
+                    if (i == 28) { statToChange = "Armor"; }
+
+                    if (playerItemScript.leftIFPStatToBuff == i) { lftBff = statToChange; }
+                    if (playerItemScript.leftIFPStatToDeBuff == i) { lftDeBff = statToChange; }
+                    if (playerItemScript.rightIFPStatToBuff == i) { rigBff = statToChange; }
+                    if (playerItemScript.rightIFPStatToDeBuff == i) { rigDeBff = statToChange; }
+                }
+
+                buffTxt.text = "Left Buff: " + lftBff + " X 2(X2)" + " Right Buff: " + rigBff + " X 2(X2)";
+                debuffTxt.text = "Left Debuff: " + lftDeBff + " X 0.9(X0.9)" + " Right Debuff: " + rigDeBff + " X 0.9(X0.9)";
+                effectTxt.text = "Locks in on pick up.";
+            }
+            else
+            {
+                buffTxt.text = selectedItem.buff;
+                debuffTxt.text = selectedItem.debuff;
+                effectTxt.text = selectedItem.effect;
+            }
+        }
+        else
+        {
+            buffTxt.text = selectedItem.buffSum;
+            debuffTxt.text = selectedItem.debuffSum;
+            effectTxt.text = selectedItem.effectSum;
+        }
+
+        flavorTxt.text = selectedItem.flavor;
+
+        itemSprite.sprite = selectedItem.itemSprite;
+
+        SetRarity(selectedItem.rarity.ToString());
+
+    }
+    void SetRarity(string rarity)
+    {
+        int temp = 0;
+        if (rarity == "Common") { temp = 0; }
+        else if (rarity == "Uncommon") { temp = 1; }
+        else if (rarity == "Rare") { temp = 2; }
+        else if (rarity == "Legendary") { temp = 3; }
+        else if (rarity == "Mutated") { temp = 4; }
+        else if (rarity == "Haunted") { temp = 5; }
+        else if (rarity == "Irradiated") { temp = 6; }
+        else if (rarity == "Nuclear") { temp = 7; }
+        else if (rarity == "Unique") { temp = 8; }
+
+        bgFlavor.sprite = backgroundList[temp];
+        bgItem.sprite = backgroundList[temp];
+        bgOutline.sprite = backgroundList[temp];
+        bgDesc.sprite = backgroundList[temp];
+        bgTitle.sprite = backgroundList[temp];
+    }
+}

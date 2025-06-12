@@ -15,6 +15,8 @@ public class InventoryScript : MonoBehaviour
     public Transform leftHolder;
     public Transform rightHolder;
 
+    public InvItemDisplay display;
+
     private void Start()
     {
         idata = playerItem.itemData;
@@ -46,14 +48,16 @@ public class InventoryScript : MonoBehaviour
         int rightCount = rightHolder.childCount /2;
         int leftCount = leftHolder.childCount / 2;
 
-        if(leftCount < 31) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
-        else if(leftCount < 51) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(125f,125f); }
-        else if (leftCount < 81) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
+        if(leftCount < 36) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if(leftCount < 49) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(130f,130f); }
+        else if (leftCount < 62) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(110f, 110f); }
+        else if (leftCount < 100) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(90f, 90f); }
         else if (leftCount < 201) { leftHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
 
-        if(rightCount < 31) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
-        else if(rightCount < 51) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(125f,125f); }
-        else if (rightCount < 81) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100f, 100f); }
+        if(rightCount < 36) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(150f,150f); }
+        else if(rightCount < 49) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(130f,130f); }
+        else if (rightCount < 62) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(110f, 110f); }
+        else if (rightCount < 100) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(90f, 90f); }
         else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
     }
     void SetUpSlot(GameObject invSlot, int id, int amount, string hand)
@@ -75,5 +79,12 @@ public class InventoryScript : MonoBehaviour
         invSlot.GetComponent<InventorySlot>().id = id;
         invSlot.GetComponent<InventorySlot>().hand = hand;
         invSlot.GetComponent<InventorySlot>().pi = playerItem;
+        invSlot.GetComponent<InventorySlot>().invScript = this;
+    }
+
+    public void DisplaySetUp(int id)
+    {
+        display.gameObject.SetActive(true);
+        display.InfoUpdate(id);
     }
 }

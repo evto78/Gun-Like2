@@ -42,23 +42,24 @@ public class DevItemSpawner : MonoBehaviour
 		{
 			consoleText.text = numberTyped;
 
-			if (Input.GetKeyDown(KeyCode.Backspace))
+			if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKey(KeyCode.Backspace))
 			{
 				numberTyped = numberTyped.Substring(0, numberTyped.Length - 1);
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
 			{	
 				if(numberTyped == "$") { GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; }
-				if(numberTyped == "c") { SpawnPotential(0); }
-				if(numberTyped == "u") { SpawnPotential(1); }
-				if(numberTyped == "r") { SpawnPotential(2); }
-				if(numberTyped == "l") { SpawnPotential(3); }
-				if(numberTyped == "m") { SpawnPotential(4); }
-				if(numberTyped == "h") { SpawnPotential(5); }
-				if(numberTyped == "i") { SpawnPotential(6); }
-				if(numberTyped == "n") { SpawnPotential(7); }
-				if(numberTyped == "o") { SpawnPotential(8); }
-				if(numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
+				else if(numberTyped == "c") { SpawnPotential(0); }
+				else if (numberTyped == "u") { SpawnPotential(1); }
+				else if (numberTyped == "r") { SpawnPotential(2); }
+				else if (numberTyped == "l") { SpawnPotential(3); }
+				else if (numberTyped == "m") { SpawnPotential(4); }
+				else if (numberTyped == "h") { SpawnPotential(5); }
+				else if (numberTyped == "i") { SpawnPotential(6); }
+				else if (numberTyped == "n") { SpawnPotential(7); }
+				else if (numberTyped == "o") { SpawnPotential(8); }
+				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
+				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
                 else
                 {
 					SpawnItem(System.Int32.Parse(numberTyped.Trim()));
