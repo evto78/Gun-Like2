@@ -47,19 +47,19 @@ public class GunManager : MonoBehaviour
     // left item checks
     public float leftHeavyBul = 0f;
     public int leftMutatedCell = 0;
-    float leftMutatedCellTimer = 0f;
+    public float leftMutatedCellTimer = 0f;
     public float leftBowAct = 0f;
     public int leftHeavySpirit = 0;
     public int leftNuclearBul = 0;
     public int leftHungryParasite = 0;
-    float leftHungryParasiteTimer = 0f;
+    public float leftHungryParasiteTimer = 0f;
     public int leftIntroTrig = 0;
     public int leftAdvTrig = 0;
     public int leftMasterTrig = 0;
     public int leftJam = 0;
     public int leftBeltFed = 0;
     public float leftFastInserter = 0;
-    float leftFastInserterTimer = 0f;
+    public float leftFastInserterTimer = 0f;
     public float leftFireSpon;
     public float leftSharperSpon;
     public float leftSilverSpon;
@@ -70,7 +70,7 @@ public class GunManager : MonoBehaviour
     public int leftPossession;
     public int leftSponDeal;
     float leftSponTimer;
-    int leftSponItemsMade;
+    public int leftSponItemsMade;
     public int leftMultistage;
     int leftSurpriseEggLifetime;
     public int leftNerf;
@@ -108,19 +108,19 @@ public class GunManager : MonoBehaviour
     // right item checks
     public float rightHeavyBul = 0f;
     public int rightMutatedCell = 0;
-    float rightMutatedCellTimer = 0f;
+    public float rightMutatedCellTimer = 0f;
     public float rightBowAct = 0f;
     public int rightHeavySpirit = 0;
     public int rightNuclearBul = 0;
     public int rightHungryParasite = 0;
-    float rightHungryParasiteTimer = 0f;
+    public float rightHungryParasiteTimer = 0f;
     public int rightIntroTrig = 0;
     public int rightAdvTrig = 0;
     public int rightMasterTrig = 0;
     public int rightJam = 0;
     public int rightBeltFed = 0;
     public int rightFastInserter = 0;
-    float rightFastInserterTimer = 0f;
+    public float rightFastInserterTimer = 0f;
     public float rightFireSpon;
     public float rightSharperSpon;
     public float rightSilverSpon;
@@ -130,7 +130,7 @@ public class GunManager : MonoBehaviour
     public float rightLargeSpon;
     public int rightPossession;
     public int rightSponDeal;
-    float rightSponTimer;
+    public float rightSponTimer;
     int rightSponItemsMade;
     public int rightMultistage;
     int rightSurpriseEggLifetime;
@@ -144,9 +144,9 @@ public class GunManager : MonoBehaviour
     int rightPrinter;
     int rightMicrowave;
     float rightMicrowaveTimer;
-    float surpriseEggTimer;
-    float leftPrinterTimer;
-    float rightPrinterTimer;
+    public float surpriseEggTimer;
+    public float leftPrinterTimer;
+    public float rightPrinterTimer;
     public int rightSniperTower;
     public int rightPerfectedScope;
     public int rightPumpShotgunAttach;
@@ -160,7 +160,7 @@ public class GunManager : MonoBehaviour
 
     public GameObject gunkyAxe;
     public GameObject microwave;
-    float axeCooldown;
+    public float axeCooldown;
 
     private void Start()
     {
@@ -654,7 +654,7 @@ public class GunManager : MonoBehaviour
             if (leftMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(leftList);
-                leftMutatedCellTimer = 500 / (leftMutatedCell / 10f + 1f);
+                leftMutatedCellTimer = 120 / (leftMutatedCell / 10f + 1f);
             }
         }
 
@@ -664,7 +664,7 @@ public class GunManager : MonoBehaviour
             if (rightMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(rightList);
-                rightMutatedCellTimer = 500 / (rightMutatedCell / 10f + 1f);
+                rightMutatedCellTimer = 120 / (rightMutatedCell / 10f + 1f);
             }
         }
 

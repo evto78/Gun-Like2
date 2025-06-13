@@ -5,6 +5,7 @@ using UnityEngine;
 public class LookAtCamera : MonoBehaviour
 {
     Camera cam;
+    public Vector3 offset;
 
     void Start()
     {
@@ -12,6 +13,6 @@ public class LookAtCamera : MonoBehaviour
     }
     void Update()
     {
-        transform.LookAt(cam.transform.position + Vector3.up);
+        transform.LookAt(cam.transform.position + offset);
     }
 }

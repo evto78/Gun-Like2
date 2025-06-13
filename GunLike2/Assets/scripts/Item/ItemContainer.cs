@@ -16,6 +16,7 @@ public class ItemContainer : MonoBehaviour
     public bool animatie;
     public int numOfItems;
     int itemsSpawned;
+    public float priceModifier = 1;
 
     public TextMeshProUGUI costTxt;
     void Start()
@@ -47,9 +48,9 @@ public class ItemContainer : MonoBehaviour
     public void Interact()
     {
         if (interacted) { return; }
-        if (player.GetComponent<HealthManager>().money < cost) { return; }
+        if (player.GetComponent<HealthManager>().money < Mathf.RoundToInt(cost * priceModifier)) { return; }
 
-        player.GetComponent<HealthManager>().money -= cost;
+        player.GetComponent<HealthManager>().money -= Mathf.RoundToInt(cost * priceModifier);
 
         gameObject.GetComponent<Rigidbody>().useGravity = false;
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -82,6 +83,11 @@ public class ItemContainer : MonoBehaviour
         }
 
         Destroy(costTxt.transform.gameObject);
+    }
+    private void Update()
+    {
+        costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
+
     }
 
 }

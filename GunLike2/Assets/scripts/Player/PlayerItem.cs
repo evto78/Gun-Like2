@@ -457,5 +457,19 @@ public class PlayerItem : MonoBehaviour
         }
 
     }
+    public ItemObject FindObjByID(int id)
+    {
+        return Resources.Load<ItemObject>("Items/" + id.ToString());
+    }
+    public Vector2 GetCooldownInfo(int id, string hand)
+    {
+        //x is cur y is max
+        Vector2 info = Vector2.zero;
+
+        if(id == 14 && hand == "left") { info = new Vector2(gunManager.leftMutatedCellTimer, 120 / (gunManager.leftMutatedCell / 10f + 1f)); }//mutatedCell
+        if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, 120 / (gunManager.rightMutatedCell / 10f + 1f)); }//mutatedCell
+
+        return info;
+    }
 }
 

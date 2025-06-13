@@ -147,7 +147,7 @@ public class ItemPossibility : MonoBehaviour
                 }
             }
         }
-        else
+        else if (source == "collision")
         {
             if (overrideid)
             {
