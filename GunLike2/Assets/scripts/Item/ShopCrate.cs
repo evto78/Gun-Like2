@@ -83,5 +83,12 @@ public class ShopCrate : MonoBehaviour
     {
         timer -= Time.deltaTime;
         costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
+        int i = 0;
+        foreach (List<int> rarList in pi.rarityList)
+        {
+            if (pi.rarityList[i].Contains(id)) { rarity = i; }
+            i++;
+        }
+        rarityBG.sprite = rarityBGs[rarity];
     }
 }

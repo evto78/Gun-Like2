@@ -16,17 +16,19 @@ MonoBehaviour:
   itemName: Active Reactor
   rarity: 7
   itemSprite: {fileID: 21300000, guid: fe40024fe6b438e45aad3020ce583139, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
   effect: Your health deteriorates at a rate of 1% per second, or 3% per second when
     under 33% health. Killing an enemy causes the self damage to become healing at
     a doubled rate and increases movement speed and firerate by 50% for 5 (+5 per
     stack) seconds.
   buff: Max HP + 50%(+50%)
-  debuff: Passive Hp Regen - 20%(-20%)
+  debuff: Passive Hp Regen - 40%(-40%)
   effectSum: Your health drains at a constant rate. Killing an enemy turns this drain
     into healing at a faster rate while buffing your attack speed and movement speed.
   buffSum: Max HP +++
-  debuffSum: Passive Hp Regen -
+  debuffSum: Passive Hp Regen --
   flavor: Don't hold near any vital organs or limbs for a period of more than 10
     seconds.
   ideaCredit: 

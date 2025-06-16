@@ -64,6 +64,7 @@ public class PlayerItem : MonoBehaviour
     public List<int> sponserItems = new List<int>();
     public List<int> fishItems = new List<int>();
     public List<int> unstableItems = new List<int>();
+    public List<int> cooldownItems = new List<int>();
     [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
@@ -86,8 +87,8 @@ public class PlayerItem : MonoBehaviour
 
     public int gotchaTickets;
 
-    int lastItemPressed;
-    string lastItemPressedHand;
+    public int lastItemPressed;
+    public string lastItemPressedHand;
     private void Awake()
     {
         itemData = new List<ItemObject>();
@@ -131,6 +132,7 @@ public class PlayerItem : MonoBehaviour
             if(item.subType.ToString() == "sponser") { sponserItems.Add(item.id); }
             if(item.subType.ToString() == "fish") { fishItems.Add(item.id); }
             if(item.subType.ToString() == "unstablePart") { unstableItems.Add(item.id); }
+            if (item.cooldownItem) { cooldownItems.Add(item.id); }
         }
     }
     private void Update()
@@ -206,12 +208,14 @@ public class PlayerItem : MonoBehaviour
     {
         if(lastItemPressed == 74 && lastItemPressedHand == hand)
         {
+            if(hand == "left" && leftItems[74] < 1) { return; }
+            if(hand == "right" && rightItems[74] < 1) { return; }
             NuclearFission(id, hand);
-            uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         }
 
         lastItemPressed = id;
         lastItemPressedHand = hand;
+        uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
     }
     void NuclearFission(int id, string hand)
     {
@@ -466,8 +470,30 @@ public class PlayerItem : MonoBehaviour
         //x is cur y is max
         Vector2 info = Vector2.zero;
 
-        if(id == 14 && hand == "left") { info = new Vector2(gunManager.leftMutatedCellTimer, 120 / (gunManager.leftMutatedCell / 10f + 1f)); }//mutatedCell
-        if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, 120 / (gunManager.rightMutatedCell / 10f + 1f)); }//mutatedCell
+        //gun manager
+        if(id == 14 && hand == "left") { info = new Vector2(gunManager.leftMutatedCellTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 10f + 1f)); }//mutatedCell
+        if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 10f + 1f)); }//mutatedCell
+        if(id == 24 && hand == "left") { info = new Vector2(gunManager.leftHungryParasiteTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 2f + 1f)); }//hungryhungryparasite
+        if(id == 24 && hand == "right") { info = new Vector2(gunManager.rightHungryParasiteTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 2f + 1f)); }//hungryhungryparasite
+        if(id == 33 && hand == "left") { info = new Vector2(gunManager.leftFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * leftItems[id])); }//fastinserter
+        if(id == 33 && hand == "right") { info = new Vector2(gunManager.rightFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * rightItems[id])); }//fastinserter
+        if(id == 42 && hand == "left") { info = new Vector2(gunManager.leftSponTimer, FindObjByID(id).baseCooldown); }//spondeal
+        if(id == 42 && hand == "right") { info = new Vector2(gunManager.rightSponTimer, FindObjByID(id).baseCooldown); }//spondeal
+        if(id == 58) { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown); }//lifetime egg
+        if(id == 71) { info = new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown); }//gunky axe
+        if(id == 88 && hand == "left") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown); }//printer
+        if(id == 88 && hand == "right") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown); }//printer
+        if(id == 103 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 103 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        // health manager
+        if(id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
+        if(id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
 
         return info;
     }

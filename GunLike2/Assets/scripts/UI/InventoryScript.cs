@@ -59,20 +59,19 @@ public class InventoryScript : MonoBehaviour
         else if (rightCount < 62) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(110f, 110f); }
         else if (rightCount < 100) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(90f, 90f); }
         else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
+
+        Debug.Log("left: " + leftCount + " | right: " + rightCount);
     }
     void SetUpSlot(GameObject invSlot, int id, int amount, string hand)
     {
         ItemObject data = Resources.Load<ItemObject>("Items/" + id.ToString());
         int temp = 0;
-        if(data.rarity.ToString() == "Common") { temp = 0; }
-        if(data.rarity.ToString() == "Uncommon") { temp = 1; }
-        if(data.rarity.ToString() == "Rare") { temp = 2; }
-        if(data.rarity.ToString() == "Legendary") { temp = 3; }
-        if(data.rarity.ToString() == "Mutated") { temp = 4; }
-        if(data.rarity.ToString() == "Haunted") { temp = 5; }
-        if(data.rarity.ToString() == "Irradiated") { temp = 6; }
-        if(data.rarity.ToString() == "Nuclear") { temp = 7; }
-        if(data.rarity.ToString() == "Unique") { temp = 8; }
+        int i = 0;
+        foreach (List<int> rarList in playerItem.rarityList)
+        {
+            if (playerItem.rarityList[i].Contains(id)) { temp = i; }
+            i++;
+        }
         invSlot.GetComponent<InventorySlot>().itemSprite.sprite = data.itemSprite;
         invSlot.GetComponent<InventorySlot>().slotRarityBg.sprite = itemBg[temp];
         invSlot.GetComponent<InventorySlot>().quantityText.text = amount.ToString();

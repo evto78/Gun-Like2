@@ -114,22 +114,18 @@ public class ItemDisplayScript : MonoBehaviour
 
         itemSprite.sprite = selectedItem.itemSprite;
 
-        SetRarity(selectedItem.rarity.ToString());
+        SetRarity(selectedItem.id);
 
     }
-    void SetRarity(string rarity)
+    void SetRarity(int id)
     {
         int temp = 0;
-        if(rarity == "Common") { temp = 0; }
-        else if (rarity == "Uncommon") { temp= 1; }
-        else if (rarity == "Rare") { temp= 2; }
-        else if (rarity == "Legendary") { temp= 3; }
-        else if (rarity == "Mutated") { temp= 4; }
-        else if (rarity == "Haunted") { temp= 5; }
-        else if (rarity == "Irradiated") { temp= 6; }
-        else if (rarity == "Nuclear") { temp= 7; }
-        else if (rarity == "Unique") { temp= 8; }
-
+        int i = 0;
+        foreach(List<int> rarList in playerItemScript.rarityList)
+        {
+            if (playerItemScript.rarityList[i].Contains(id)) { temp = i; }
+            i++;
+        }
         bgFlavor.sprite = backgroundList[temp]; 
         bgItem.sprite = backgroundList[temp]; 
         bgOutline.sprite = backgroundList[temp]; 

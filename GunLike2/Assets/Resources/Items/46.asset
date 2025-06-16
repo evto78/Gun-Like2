@@ -16,6 +16,8 @@ MonoBehaviour:
   itemName: Fighting Wings
   rarity: 8
   itemSprite: {fileID: 21300000, guid: c301c9d51ff00484dad831e566f8d09e, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
   effect: made automaticly in your inventory when you have a angel wing(31) and a
     imp wing(32), they both are removed and replaced with a copy of this item. You
@@ -23,7 +25,7 @@ MonoBehaviour:
     given to you deal damage to you equal to 10% of your current health, this effect
     cannot kill you.
   buff: Jumps + 2(+2)
-  debuff: Damage - 10%(-10%), Accuracy - 10%(-10%)
+  debuff: Damage - 20%(-20%), Accuracy - 20%(-20%)
   effectSum: You can jump as many times as you want but each extra jump provided
     beyond the ones given to you deal damage to you equal to 10% of your current
     health, this effect cannot kill you.

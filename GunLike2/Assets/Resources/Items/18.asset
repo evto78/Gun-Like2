@@ -16,15 +16,17 @@ MonoBehaviour:
   itemName: Explosive Growth
   rarity: 4
   itemSprite: {fileID: 21300000, guid: 2948ed5e6a3a47749b5c604b8e6d0389, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
   effect: When damaged, let out a explosion that does damage relative to the amount
     of damage that you took. This explosion has a 15% chance to damage you, causing
     the explosion again. Stacking increases the radias and the damage.
   buff: '-'
-  debuff: Max HP - 20%(-20%)
+  debuff: Max HP - 40%(-40%)
   effectSum: Taking damage causes an explosion, with a chance to cause another explosion.
   buffSum: '-'
-  debuffSum: Max HP -
+  debuffSum: Max HP --
   flavor: '"Aw man."'
   ideaCredit: 
   flavorCredit: 

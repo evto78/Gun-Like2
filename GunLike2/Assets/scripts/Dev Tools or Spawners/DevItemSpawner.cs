@@ -42,7 +42,7 @@ public class DevItemSpawner : MonoBehaviour
 		{
 			consoleText.text = numberTyped;
 
-			if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKey(KeyCode.Backspace))
+			if ((Input.GetKeyDown(KeyCode.Backspace) || Input.GetKey(KeyCode.Backspace)) && numberTyped.Length > 0)
 			{
 				numberTyped = numberTyped.Substring(0, numberTyped.Length - 1);
 			}

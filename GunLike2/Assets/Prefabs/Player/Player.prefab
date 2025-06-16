@@ -1518,16 +1518,19 @@ MonoBehaviour:
   leftWeakPointDamage: 1
   leftHeavyBul: 0
   leftMutatedCell: 0
+  leftMutatedCellTimer: 0
   leftBowAct: 0
   leftHeavySpirit: 0
   leftNuclearBul: 0
   leftHungryParasite: 0
+  leftHungryParasiteTimer: 0
   leftIntroTrig: 0
   leftAdvTrig: 0
   leftMasterTrig: 0
   leftJam: 0
   leftBeltFed: 0
   leftFastInserter: 0
+  leftFastInserterTimer: 0
   leftFireSpon: 0
   leftSharperSpon: 0
   leftSilverSpon: 0
@@ -1537,6 +1540,8 @@ MonoBehaviour:
   leftLargeSpon: 0
   leftPossession: 0
   leftSponDeal: 0
+  leftSponTimer: 0
+  leftSponItemsMade: 0
   leftMultistage: 0
   leftNerf: 0
   leftStickTo: 0
@@ -1551,6 +1556,7 @@ MonoBehaviour:
   leftGrenadeAttach: 0
   leftGasGrenadeAttach: 0
   leftWarcry: 0
+  leftTactReload: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -1566,16 +1572,19 @@ MonoBehaviour:
   rightWeakPointDamage: 1
   rightHeavyBul: 0
   rightMutatedCell: 0
+  rightMutatedCellTimer: 0
   rightBowAct: 0
   rightHeavySpirit: 0
   rightNuclearBul: 0
   rightHungryParasite: 0
+  rightHungryParasiteTimer: 0
   rightIntroTrig: 0
   rightAdvTrig: 0
   rightMasterTrig: 0
   rightJam: 0
   rightBeltFed: 0
   rightFastInserter: 0
+  rightFastInserterTimer: 0
   rightFireSpon: 0
   rightSharperSpon: 0
   rightSilverSpon: 0
@@ -1585,6 +1594,7 @@ MonoBehaviour:
   rightLargeSpon: 0
   rightPossession: 0
   rightSponDeal: 0
+  rightSponTimer: 0
   rightMultistage: 0
   rightNerf: 0
   rightStickTo: 0
@@ -1593,15 +1603,20 @@ MonoBehaviour:
   rightGunkyClaw: 0
   rightGunkyAxe: 0
   rightClockwork: 0
+  surpriseEggTimer: 0
+  leftPrinterTimer: 0
+  rightPrinterTimer: 0
   rightSniperTower: 0
   rightPerfectedScope: 0
   rightPumpShotgunAttach: 0
   rightGrenadeAttach: 0
   rightGasGrenadeAttach: 0
   rightWarcry: 0
+  rightTactReload: 0
   rightRicochet: 0
   gunkyAxe: {fileID: 1846831637977737591, guid: 59bfadda3e8590e42bc773450106de82, type: 3}
   microwave: {fileID: 4375448883670722993, guid: 75c8b4280fb62cd4caf59f0ef6d01826, type: 3}
+  axeCooldown: 0
 --- !u!114 &1652207953152809334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1631,6 +1646,7 @@ MonoBehaviour:
   sponserItems: 
   fishItems: 
   unstableItems: 
+  cooldownItems: 
   playerMvt: {fileID: 4410490756112149481}
   healthManager: {fileID: 3056162612049833695}
   gunManager: {fileID: 645800364383380793}
@@ -1642,6 +1658,8 @@ MonoBehaviour:
   rightIFPStatToBuff: 0
   rightIFPStatToDeBuff: 0
   gotchaTickets: 0
+  lastItemPressed: 0
+  lastItemPressedHand: 
 --- !u!114 &1491785402882082601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1721,8 +1739,12 @@ MonoBehaviour:
   curHp: 0
   armor: 5
   healthRegen: 1
+  orgGum: 0
+  orgGumTimer: 0
   expGrowthExplosion: {fileID: 2674171787951693383, guid: 007a22d7f5864c6468ca10a57910d2e3, type: 3}
   radioactiveDomesExplosion: {fileID: 6362377824467231415, guid: 9152f75da381eec45ac9806e13584dd1, type: 3}
+  chickenCoopTimer: 0
+  egg: {fileID: 5547987818857772889, guid: 43ae8778ea2f662458ada846294eac18, type: 3}
   appleBuff: 0
   timeSinceEnemyDied: 0
   uiMan: {fileID: 7461507813950395447}

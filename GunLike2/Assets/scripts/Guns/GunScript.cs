@@ -64,11 +64,13 @@ public class GunScript : MonoBehaviour
     public float sniperTowerCooldown;
     public int perfectedScope;
     public int pumpShotgunAttach;
-    protected float pumpShotgunAttachTimer;
+    public float pumpShotgunAttachTimer;
     public int grenadeAttach;
-    float grenadeAttachTimer;
+    public float grenadeAttachTimer;
     public int gasGrenadeAttach;
-    float gasGrenadeAttachTimer;
+    public float gasGrenadeAttachTimer;
+    public int tacticalReload;
+    int tacticalCompress;
 
     public bool isFastFiring;
 
@@ -158,6 +160,7 @@ public class GunScript : MonoBehaviour
         pumpShotgunAttach = manager.leftPumpShotgunAttach;
         grenadeAttach = manager.leftGrenadeAttach;
         gasGrenadeAttach = manager.leftGasGrenadeAttach;
+        tacticalReload = manager.leftTactReload;
 
         ricochet = manager.leftRicochet;
 
@@ -225,6 +228,7 @@ public class GunScript : MonoBehaviour
         pumpShotgunAttach = manager.rightPumpShotgunAttach;
         grenadeAttach = manager.rightGrenadeAttach;
         gasGrenadeAttach = manager.rightGasGrenadeAttach;
+        tacticalReload = manager.rightTactReload;
 
         ricochet = manager.rightRicochet;
 
@@ -411,7 +415,7 @@ public class GunScript : MonoBehaviour
                         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
                     }
 
-                    pumpShotgunAttachTimer = 30f;
+                    pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
                 }
                 if(whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
                 if(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
@@ -435,7 +439,7 @@ public class GunScript : MonoBehaviour
                     if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
                 }
 
-                pumpShotgunAttachTimer = 30f;
+                pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
             }
             if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
             if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
@@ -445,7 +449,7 @@ public class GunScript : MonoBehaviour
 
     public void AttemptReload()
     {
-        if (!reloading && currentBullets != magSize)
+        if (!reloading && (currentBullets != magSize || tacticalReload > 0))
         {
             Reload();
         }
@@ -459,6 +463,8 @@ public class GunScript : MonoBehaviour
         reloadTimer = 1;
         shooting = false;
         attackTimer = 0;
+
+        if(tacticalReload > 0) { tacticalCompress = currentBullets; currentBullets = 1; }
 
         if(manager.leftBeltFed + manager.rightBeltFed > 0)
         {
@@ -494,6 +500,7 @@ public class GunScript : MonoBehaviour
     {
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge+=0.2f; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
+        if (tacticalCompress > 0 && tacticalReload > 0) { dmg = dmg * (1 + (tacticalCompress / (10f / tacticalCompress))); tacticalCompress = 0; }
     }
     public virtual void Shoot(float bowChar)
     {
@@ -554,7 +561,7 @@ public class GunScript : MonoBehaviour
                 spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = false;
                 spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
                 spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
-                grenadeAttachTimer = 30f;
+                grenadeAttachTimer = manager.playerItem.FindObjByID(107).baseCooldown;
             }
             if (gasGrenadeAttach > 0 && gasGrenadeAttachTimer < 0)
             {
@@ -564,7 +571,7 @@ public class GunScript : MonoBehaviour
                 spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = true;
                 spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 6f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
                 spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
-                gasGrenadeAttachTimer = 30f;
+                gasGrenadeAttachTimer = manager.playerItem.FindObjByID(108).baseCooldown; ;
             }
         }
     }

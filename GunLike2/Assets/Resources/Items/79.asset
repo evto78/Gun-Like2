@@ -16,12 +16,14 @@ MonoBehaviour:
   itemName: Hungry Shot
   rarity: 4
   itemSprite: {fileID: 21300000, guid: b7cab78848838b143aee0a3f6c126362, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
   effect: When you shoot an enemy, they have a 10% chance of dropping a small red
     ball that heals you 25 hp when you pick it up. This also has a smaller chance
     of spawning a slower orb that damages you instead.
   buff: '-'
-  debuff: Max Hp - 20%(-20%)
+  debuff: Max Hp - 40%(-40%)
   effectSum: When you shoot an enemy, they have a chance of dropping a small red
     ball that heals you when you pick it up. This also has a smaller chance of spawning
     a slower orb that damages you instead.

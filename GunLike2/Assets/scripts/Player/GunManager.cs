@@ -69,7 +69,7 @@ public class GunManager : MonoBehaviour
     public float leftLargeSpon;
     public int leftPossession;
     public int leftSponDeal;
-    float leftSponTimer;
+    public float leftSponTimer;
     public int leftSponItemsMade;
     public int leftMultistage;
     int leftSurpriseEggLifetime;
@@ -89,6 +89,7 @@ public class GunManager : MonoBehaviour
     public int leftGrenadeAttach;
     public int leftGasGrenadeAttach;
     public int leftWarcry;
+    public int leftTactReload;
 
     public bool leftRicochet = false;
 
@@ -153,6 +154,7 @@ public class GunManager : MonoBehaviour
     public int rightGrenadeAttach;
     public int rightGasGrenadeAttach;
     public int rightWarcry;
+    public int rightTactReload;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -297,11 +299,12 @@ public class GunManager : MonoBehaviour
         leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
         leftAtkSpd = Calc(10f, givenLeftItems[97], leftAtkSpd);
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
-        leftAtkSpd = Calc(-5f, givenLeftItems[59], leftAtkSpd);
-        leftAtkSpd = Calc(-40f, givenLeftItems[91], leftAtkSpd);
+        leftAtkSpd = Calc(-10f, givenLeftItems[59], leftAtkSpd);
+        leftAtkSpd = Calc(-60f, givenLeftItems[91], leftAtkSpd);
         leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
-        leftReSpd = Calc(-5f, givenLeftItems[59], leftReSpd);
-        leftReSpd = Calc(-40f, givenLeftItems[90], leftReSpd);
+        leftReSpd = Calc(-10f, givenLeftItems[59], leftReSpd);
+        leftReSpd = Calc(-60f, givenLeftItems[90], leftReSpd);
+        leftReSpd = Calc(-20f, givenLeftItems[113], leftReSpd);
         leftDmg = Calc(40f, givenLeftItems[21], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[13], leftDmg);
         leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
@@ -315,30 +318,32 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(40f, givenLeftItems[91], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[102], leftDmg);
         leftDmg = Calc(10f, givenLeftItems[98], leftDmg);
-        leftDmg = Calc(-10f, givenLeftItems[12], leftDmg);
-        leftDmg = Calc(-10f, givenLeftItems[31], leftDmg);
-        leftDmg = Calc(-10f, givenLeftItems[46], leftDmg);
-        leftDmg = Calc(-10f, givenLeftItems[59], leftDmg);
+        leftDmg = Calc(-20f, givenLeftItems[12], leftDmg);
+        leftDmg = Calc(-20f, givenLeftItems[31], leftDmg);
+        leftDmg = Calc(-20f, givenLeftItems[46], leftDmg);
+        leftDmg = Calc(-20f, givenLeftItems[59], leftDmg);
+        leftDmg = Calc(-20f, givenLeftItems[113], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(10f, givenLeftItems[100], leftMagSize);
         leftMagSize = Calc(50f, givenLeftItems[101], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
-        leftMagSize = Calc(-20f, givenLeftItems[25], leftMagSize);
-        leftMagSize = Calc(-20f, givenLeftItems[26], leftMagSize);
-        leftMagSize = Calc(-5f, givenLeftItems[59], leftMagSize);
+        leftMagSize = Calc(-40f, givenLeftItems[25], leftMagSize);
+        leftMagSize = Calc(-40f, givenLeftItems[26], leftMagSize);
+        leftMagSize = Calc(-10f, givenLeftItems[59], leftMagSize);
+        leftMagSize = Calc(-20f, givenLeftItems[113], leftMagSize);
         leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
-        leftAcc = Calc(-10f, givenLeftItems[32], leftAcc);
-        leftAcc = Calc(-10f, givenLeftItems[46], leftAcc);
-        leftAcc = Calc(-5f, givenLeftItems[59], leftAcc);
+        leftAcc = Calc(-20f, givenLeftItems[32], leftAcc);
+        leftAcc = Calc(-20f, givenLeftItems[46], leftAcc);
+        leftAcc = Calc(-10f, givenLeftItems[59], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[76], leftBulSpd);
-        leftBulSpd = Calc(-10f, givenLeftItems[11], leftBulSpd);
-        leftBulSpd = Calc(-10f, givenLeftItems[12], leftBulSpd);
-        leftBulSpd = Calc(-10f, givenLeftItems[59], leftBulSpd);
-        leftBulSpd = Calc(-10f, givenLeftItems[77], leftBulSpd);
+        leftBulSpd = Calc(-20f, givenLeftItems[11], leftBulSpd);
+        leftBulSpd = Calc(-20f, givenLeftItems[12], leftBulSpd);
+        leftBulSpd = Calc(-20f, givenLeftItems[59], leftBulSpd);
+        leftBulSpd = Calc(-20f, givenLeftItems[77], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
         leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
         leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
@@ -384,6 +389,7 @@ public class GunManager : MonoBehaviour
         leftGrenadeAttach = givenLeftItems[107];
         leftGasGrenadeAttach = givenLeftItems[108];
         leftWarcry = givenLeftItems[110];
+        leftTactReload = givenLeftItems[113];
 
         leftRicochet = false;
 
@@ -400,12 +406,13 @@ public class GunManager : MonoBehaviour
         rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
         rightAtkSpd = Calc(10f, givenRightItems[97], rightAtkSpd);
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
-        rightAtkSpd = Calc(-5f, givenRightItems[59], rightAtkSpd);
-        rightAtkSpd = Calc(-40f, givenRightItems[91], rightAtkSpd);
+        rightAtkSpd = Calc(-10f, givenRightItems[59], rightAtkSpd);
+        rightAtkSpd = Calc(-60f, givenRightItems[91], rightAtkSpd);
         rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
         rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
-        rightReSpd = Calc(-5f, givenRightItems[59], rightReSpd);
-        rightReSpd = Calc(-40f, givenRightItems[90], rightReSpd);
+        rightReSpd = Calc(-20f, givenRightItems[59], rightReSpd);
+        rightReSpd = Calc(-60f, givenRightItems[90], rightReSpd);
+        rightReSpd = Calc(-20f, givenRightItems[113], rightReSpd);
         rightDmg = Calc(40f, givenRightItems[21], rightDmg);
         rightDmg = Calc(40f, givenRightItems[13], rightDmg);
         rightDmg = Calc(20f, givenRightItems[11], rightDmg);
@@ -419,30 +426,32 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(40f, givenRightItems[91], rightDmg);
         rightDmg = Calc(40f, givenRightItems[102], rightDmg);
         rightDmg = Calc(10f, givenRightItems[98], rightDmg);
-        rightDmg = Calc(-10f, givenRightItems[12], rightDmg);
-        rightDmg = Calc(-10f, givenRightItems[31], rightDmg);
-        rightDmg = Calc(-10f, givenRightItems[46], rightDmg);
-        rightDmg = Calc(-10f, givenRightItems[59], rightDmg);
+        rightDmg = Calc(-20f, givenRightItems[12], rightDmg);
+        rightDmg = Calc(-20f, givenRightItems[31], rightDmg);
+        rightDmg = Calc(-20f, givenRightItems[46], rightDmg);
+        rightDmg = Calc(-20f, givenRightItems[59], rightDmg);
+        rightDmg = Calc(-20f, givenRightItems[113], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(10f, givenRightItems[100], rightMagSize);
         rightMagSize = Calc(50f, givenRightItems[101], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
-        rightMagSize = Calc(-20f, givenRightItems[25], rightMagSize);
-        rightMagSize = Calc(-20f, givenRightItems[26], rightMagSize);
-        rightMagSize = Calc(-5f, givenRightItems[59], rightMagSize);
+        rightMagSize = Calc(-40f, givenRightItems[25], rightMagSize);
+        rightMagSize = Calc(-40f, givenRightItems[26], rightMagSize);
+        rightMagSize = Calc(-10f, givenRightItems[59], rightMagSize);
+        rightMagSize = Calc(-20f, givenRightItems[113], rightMagSize);
         rightAcc = Calc(20f, givenRightItems[8], rightAcc);
         rightAcc = Calc(40f, givenRightItems[25], rightAcc);
         rightAcc = Calc(40f, givenRightItems[27], rightAcc);
-        rightAcc = Calc(-10f, givenRightItems[32], rightAcc);
-        rightAcc = Calc(-10f, givenRightItems[46], rightAcc);
-        rightAcc = Calc(-5f, givenRightItems[59], rightAcc);
+        rightAcc = Calc(-20f, givenRightItems[32], rightAcc);
+        rightAcc = Calc(-20f, givenRightItems[46], rightAcc);
+        rightAcc = Calc(-10f, givenRightItems[59], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[76], rightBulSpd);
-        rightBulSpd = Calc(-10f, givenRightItems[11], rightBulSpd);
-        rightBulSpd = Calc(-10f, givenRightItems[12], rightBulSpd);
-        rightBulSpd = Calc(-10f, givenRightItems[59], rightBulSpd);
-        rightBulSpd = Calc(-10f, givenRightItems[77], rightBulSpd);
+        rightBulSpd = Calc(-20f, givenRightItems[11], rightBulSpd);
+        rightBulSpd = Calc(-20f, givenRightItems[12], rightBulSpd);
+        rightBulSpd = Calc(-20f, givenRightItems[59], rightBulSpd);
+        rightBulSpd = Calc(-20f, givenRightItems[77], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
         rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
         rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
@@ -488,6 +497,7 @@ public class GunManager : MonoBehaviour
         rightGrenadeAttach = givenRightItems[107];
         rightGasGrenadeAttach = givenRightItems[108];
         rightWarcry = givenRightItems[110];
+        rightTactReload = givenRightItems[113];
 
         rightRicochet = false;
 
@@ -602,7 +612,7 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
-        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * ((leftClockwork + rightClockwork)*25f);
+        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * (1+(leftClockwork + rightClockwork)*0.25f);
         if (healthMan.dead) { return; }
 
         if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); }
@@ -653,8 +663,8 @@ public class GunManager : MonoBehaviour
             leftMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if (leftMutatedCellTimer <= 0)
             {
-                mutatedCellReroll(leftList);
-                leftMutatedCellTimer = 120 / (leftMutatedCell / 10f + 1f);
+                mutatedCellReroll(playerItem.leftItems);
+                leftMutatedCellTimer = playerItem.FindObjByID(14).baseCooldown / (leftMutatedCell / 10f + 1f);
             }
         }
 
@@ -663,8 +673,8 @@ public class GunManager : MonoBehaviour
             rightMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightMutatedCellTimer <= 0)
             {
-                mutatedCellReroll(rightList);
-                rightMutatedCellTimer = 120 / (rightMutatedCell / 10f + 1f);
+                mutatedCellReroll(playerItem.rightItems);
+                rightMutatedCellTimer = playerItem.FindObjByID(14).baseCooldown / (rightMutatedCell / 10f + 1f);
             }
         }
 
@@ -673,8 +683,8 @@ public class GunManager : MonoBehaviour
             leftHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
             if (leftHungryParasiteTimer <= 0)
             {
-                HungryParasiteReroll(leftList);
-                leftHungryParasiteTimer = 60 / (leftHungryParasite / 2f + 1f);
+                HungryParasiteReroll(playerItem.leftItems);
+                leftHungryParasiteTimer = playerItem.FindObjByID(24).baseCooldown / (leftHungryParasite / 2f + 1f);
             }
         }
 
@@ -683,8 +693,8 @@ public class GunManager : MonoBehaviour
             rightHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
             if (rightHungryParasiteTimer <= 0)
             {
-                HungryParasiteReroll(rightList);
-                rightHungryParasiteTimer = 60 / (rightHungryParasite / 2f + 1f);
+                HungryParasiteReroll(playerItem.rightItems);
+                rightHungryParasiteTimer = playerItem.FindObjByID(24).baseCooldown / (rightHungryParasite / 2f + 1f);
             }
         }
 
@@ -694,7 +704,7 @@ public class GunManager : MonoBehaviour
             if (leftFastInserterTimer <= 0 && leftHand.GetComponentInChildren<GunScript>().currentBullets < leftHand.GetComponentInChildren<GunScript>().magSize)
             {
                 leftHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
-                leftFastInserterTimer = 1 / (0.2f * leftFastInserter);
+                leftFastInserterTimer = playerItem.FindObjByID(33).baseCooldown / (0.2f * leftFastInserter);
             }
         }
         if (rightFastInserter > 0)
@@ -703,14 +713,14 @@ public class GunManager : MonoBehaviour
             if (rightFastInserterTimer <= 0 && rightHand.GetComponentInChildren<GunScript>().currentBullets < rightHand.GetComponentInChildren<GunScript>().magSize)
             {
                 rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
-                rightFastInserterTimer = 1 / (0.2f * rightFastInserter);
+                rightFastInserterTimer = playerItem.FindObjByID(33).baseCooldown / (0.2f * rightFastInserter);
             }
         }
 
         if(leftSponDeal > 0)
         {
             leftSponTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
-            if(leftSponTimer > 20f)
+            if(leftSponTimer > playerItem.FindObjByID(42).baseCooldown)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
                 playerItem.leftItems[playerItem.sponserItems[rand]] += 1;
@@ -727,7 +737,7 @@ public class GunManager : MonoBehaviour
         if (rightSponDeal > 0)
         {
             rightSponTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
-            if (rightSponTimer > 20f)
+            if (rightSponTimer > playerItem.FindObjByID(42).baseCooldown)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
                 playerItem.rightItems[playerItem.sponserItems[rand]] += 1;
@@ -745,23 +755,23 @@ public class GunManager : MonoBehaviour
         surpriseEggTimer += Time.deltaTime + (Time.deltaTime * (leftClockwork+rightClockwork) * 0.25f);
         if (leftSurpriseEggLifetime > 0)
         {
-            if(surpriseEggTimer > 120 && healthMan.timeSinceEnemyDied < 120)
+            if(surpriseEggTimer > playerItem.FindObjByID(58).baseCooldown && healthMan.timeSinceEnemyDied < 120)
             {
                 playerItem.leftItems[55] += 1;
             }
         }
         if (rightSurpriseEggLifetime > 0)
         {
-            if (surpriseEggTimer > 120 && healthMan.timeSinceEnemyDied < 120)
+            if (surpriseEggTimer > playerItem.FindObjByID(58).baseCooldown && healthMan.timeSinceEnemyDied < 120)
             {
                 playerItem.rightItems[55] += 1;
             }
         }
-        if (surpriseEggTimer > 120) { surpriseEggTimer = 0; }
+        if (surpriseEggTimer > playerItem.FindObjByID(55).baseCooldown) { surpriseEggTimer = 0; }
 
         leftPrinterTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
         rightPrinterTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
-        if(leftPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && leftPrinterTimer > 60)
+        if(leftPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && leftPrinterTimer > playerItem.FindObjByID(88).baseCooldown)
         {
             leftPrinterTimer = 0;
             List<int> itemsOwned = new List<int>();
@@ -772,7 +782,7 @@ public class GunManager : MonoBehaviour
             playerItem.leftItems[itemsOwned[Random.Range(0, itemsOwned.Count)]]+= leftPrinter;
             if (Random.Range(1, 100) < leftPrinter * 10) { playerItem.leftItems[88]--; }
         }
-        if (rightPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && rightPrinterTimer > 60)
+        if (rightPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && rightPrinterTimer > playerItem.FindObjByID(88).baseCooldown)
         {
             rightPrinterTimer = 0;
             List<int> itemsOwned = new List<int>();
@@ -832,7 +842,6 @@ public class GunManager : MonoBehaviour
         {
             itemsToReroll++;
         }
-
         for (int q = 0; q <= itemsToReroll; q++)
         {
             int rand = Random.Range(0, rarityList[4].Count);

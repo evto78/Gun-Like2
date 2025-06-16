@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 114
+  m_EditorClassIdentifier: 
+  id: 114
+  itemName: Chicken Coop
+  rarity: 1
+  itemSprite: {fileID: 21300000, guid: b0db1115832829e41a4d395b51f899d7, type: 3}
+  cooldownItem: 1
+  baseCooldown: 10
+  subType: 0
+  effect: Every 10 seconds, spawn a chiken egg somewhat nearby. When you get close
+    to this egg you pick it up and heal 5% of your max hp. stacks increase healing.
+  buff: '-'
+  debuff: '-'
+  effectSum: Occasionaly lay eggs behind you that heal you when you walk over them.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: this chicken coop was also a bomb shelter.
+  ideaCredit: Bulwark(in a farming outfit)
+  flavorCredit: 

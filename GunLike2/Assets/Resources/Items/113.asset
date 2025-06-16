@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 113
+  m_EditorClassIdentifier: 
+  id: 113
+  itemName: Tactical Reload
+  rarity: 6
+  itemSprite: {fileID: 21300000, guid: b9f2785496941bc44a34b7c7ba997b46, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
+  subType: 0
+  effect: Reloading with bullets left in your magazine compress into a super bullet,
+    making your first shot of this magazine deal x1.1 damage per compressed bullet.
+    you cannot compress the super bullet further. Stacks make bullets scale better
+    with mag size.
+  buff: '-'
+  debuff: Reload Speed - 20%(-20%), Mag Size - 20%(-20%), Damage - 20%(-20%)
+  effectSum: Reload with bullets left in your magazine to compress them, making your
+    next shot more potent.
+  buffSum: '-'
+  debuffSum: Reload Speed- , Mag Size- , Damage-
+  flavor: Why use small bullet when can use big?
+  ideaCredit: Riene
+  flavorCredit: Riene >:3

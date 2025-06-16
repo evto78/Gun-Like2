@@ -16,14 +16,16 @@ MonoBehaviour:
   itemName: Intro To Triggernometry
   rarity: 2
   itemSprite: {fileID: 21300000, guid: e40b05db80fb14e43ac7d41c301853e5, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
   effect: Fire an additional bullet when you shoot. A bullet is then also fired from
     where the first bullet hit, towards the second bullet.
   buff: Accuracy + 40%(+40%)
-  debuff: Magazine Size - 20%(-20%)
+  debuff: Magazine Size - 40%(-40%)
   effectSum: Every minute convert a random common item into a mutated item.
   buffSum: Accuracy ++
-  debuffSum: Magazine Size -
+  debuffSum: Magazine Size --
   flavor: This appears to be a textbook printed onto standard paper and stapled together,
     reasonable looking the the current prices...
   ideaCredit: Riene

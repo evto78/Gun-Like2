@@ -26,7 +26,9 @@ public class ItemPossibility : MonoBehaviour
     public GameObject shrodingerOptions;
     bool isShrodinger;
     GameObject option1;
+    int oid1;
     GameObject option2;
+    int oid2;
     Vector3 lockedPos;
     bool locked;
 
@@ -94,8 +96,8 @@ public class ItemPossibility : MonoBehaviour
         if(option1 != null) { option1.transform.localPosition = Vector3.zero; }
         if(option2 != null) { option2.transform.localPosition = Vector3.zero; }
 
-        if(option1 != null && option2 == null) { Destroy(option1); ChangeRarity(option1.GetComponent<Item>().itemID); Destroy(gameObject); }
-        if(option2 != null && option1 == null) { Destroy(option2); ChangeRarity(option2.GetComponent<Item>().itemID); Destroy(gameObject); }
+        if(option1 != null && option2 == null) { if (oid1 != oid2) { ChangeRarity(oid1); } Destroy(option1); Destroy(gameObject); }
+        if(option2 != null && option1 == null) { if (oid1 != oid2) { ChangeRarity(oid2); } Destroy(option2); Destroy(gameObject); }
     }
     void ChangeRarity(int id)
     {
@@ -143,6 +145,9 @@ public class ItemPossibility : MonoBehaviour
                     option2 = Instantiate(item, shrodingerOptions.transform.GetChild(1));
                     option2.GetComponent<Item>().SetItemID(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
                     option2.GetComponent<Rigidbody>().useGravity = false;
+                    oid1 = option1.GetComponent<Item>().itemID;
+                    oid2 = option2.GetComponent<Item>().itemID;
+
                     Destroy(gameObject, 45f);
                 }
             }

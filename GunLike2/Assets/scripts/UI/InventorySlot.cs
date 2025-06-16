@@ -17,6 +17,7 @@ public class InventorySlot : MonoBehaviour
     bool isCooldown;
     public GameObject cooldownUI;
     public Image cooldownFill;
+    public GameObject selected;
     public void Pressed()
     {
         pi.ItemPressedInInv(id, hand);
@@ -31,6 +32,15 @@ public class InventorySlot : MonoBehaviour
         if (hovering)
         {
             invScript.DisplaySetUp(id);
+        }
+        if (pi.lastItemPressed == 74 && id == 74 && pi.lastItemPressedHand == hand)
+        {
+            selected.SetActive(true);
+            selected.transform.Rotate(Vector3.forward * 60 * Time.deltaTime);
+        }
+        else
+        {
+            selected.SetActive(false);
         }
         Vector2 cooldownInfo = pi.GetCooldownInfo(id, hand);
         cooldownFill.fillAmount = cooldownInfo.x / cooldownInfo.y;

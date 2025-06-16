@@ -185,7 +185,7 @@ public class BulletScript : MonoBehaviour
             spawnedSniperTower.transform.position = pi.transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 3f;
             spawnedSniperTower.GetComponent<SniperTurretAlly>().damage = damage * 10f;
             spawnedSniperTower.GetComponent<SniperTurretAlly>().target = ehm;
-            gunFiredFrom.sniperTowerCooldown = 60f;
+            gunFiredFrom.sniperTowerCooldown = pi.FindObjByID(103).baseCooldown;
         }
     }
 

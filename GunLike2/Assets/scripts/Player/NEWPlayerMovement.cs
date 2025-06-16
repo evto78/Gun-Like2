@@ -107,8 +107,8 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
 
-        moveSpeed = Calc(-10f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
-        moveSpeed = Calc(-10f, givenLeftItems[61] + givenRightItems[61], moveSpeed);
+        moveSpeed = Calc(-20f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
+        moveSpeed = Calc(-20f, givenLeftItems[61] + givenRightItems[61], moveSpeed);
         moveSpeed = Calc(20f, givenLeftItems[59] + givenRightItems[59], moveSpeed);
         moveSpeed = Calc(20f, givenLeftItems[73] + givenRightItems[73], moveSpeed);
         sprintMoveSpeed = Calc(20f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
@@ -116,7 +116,7 @@ public class NEWPlayerMovement : MonoBehaviour
         jumpForce = Calc(20f, givenLeftItems[1] + givenRightItems[1], jumpForce);
         jumpForce = Calc(20f, givenLeftItems[20] + givenRightItems[20], jumpForce);
         jumpForce = Calc(20f, givenLeftItems[59] + givenRightItems[59], jumpForce);
-        jumpForce = Calc(-10f, givenLeftItems[23] + givenRightItems[23], jumpForce);
+        jumpForce = Calc(-20f, givenLeftItems[23] + givenRightItems[23], jumpForce);
         numberOfJumps += givenLeftItems[15] + givenRightItems[15];
         numberOfJumps += givenLeftItems[31] + givenRightItems[31];
         numberOfJumps += givenLeftItems[32] + givenRightItems[32];

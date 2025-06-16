@@ -28,8 +28,8 @@ public class HealthManager : MonoBehaviour
 	public float healthRegen;
 	float regenTimer;
 
-	float orgGum;
-	float orgGumTimer;
+	public float orgGum;
+	public float orgGumTimer;
 	float expGrowth;
 	public GameObject expGrowthExplosion;
 	public GameObject radioactiveDomesExplosion;
@@ -46,6 +46,9 @@ public class HealthManager : MonoBehaviour
 	float evadeChance;
 	int clockwork;
 	int warcry;
+	int chickenCoop;
+	public float chickenCoopTimer;
+	public GameObject egg;
 
 	public int appleBuff;
 
@@ -87,17 +90,17 @@ public class HealthManager : MonoBehaviour
 		healthRegen = Calc(20f, givenLeftItems[84] + givenRightItems[84], healthRegen);
 		healthRegen = Calc(40f, givenLeftItems[92] + givenRightItems[92], healthRegen);
 		healthRegen = Calc(10f, givenLeftItems[94] + givenRightItems[94], healthRegen);
-		healthRegen = Calc(-10f, givenLeftItems[24] + givenRightItems[24], healthRegen);
-		healthRegen = Calc(-20f, givenLeftItems[30] + givenRightItems[30], healthRegen);
-		healthRegen = Calc(-20f, givenLeftItems[80] + givenRightItems[80], healthRegen);
-		healthRegen = Calc(-10f, givenLeftItems[96] + givenRightItems[96], healthRegen);
+		healthRegen = Calc(-20f, givenLeftItems[24] + givenRightItems[24], healthRegen);
+		healthRegen = Calc(-40f, givenLeftItems[30] + givenRightItems[30], healthRegen);
+		healthRegen = Calc(-40f, givenLeftItems[80] + givenRightItems[80], healthRegen);
+		healthRegen = Calc(-20f, givenLeftItems[96] + givenRightItems[96], healthRegen);
 		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
 		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
 		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
 		armor = Calc(20f, givenLeftItems[63] + givenRightItems[63], armor);
 		armor = Calc(20f, givenLeftItems[65] + givenRightItems[65], armor);
-		armor = Calc(-10f, givenLeftItems[12] + givenRightItems[12], armor);
-		armor = Calc(-10f, givenLeftItems[66] + givenRightItems[66], armor);
+		armor = Calc(-20f, givenLeftItems[12] + givenRightItems[12], armor);
+		armor = Calc(-20f, givenLeftItems[66] + givenRightItems[66], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[39] + givenRightItems[39], maxHp));
@@ -105,10 +108,10 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[85] + givenRightItems[85], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[99] + givenRightItems[99], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[13] + givenRightItems[13], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[18] + givenRightItems[18], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-20f, givenLeftItems[79] + givenRightItems[79], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[92] + givenRightItems[92], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[13] + givenRightItems[13], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[18] + givenRightItems[18], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[79] + givenRightItems[79], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(-60f, givenLeftItems[92] + givenRightItems[92], maxHp));
 
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
@@ -121,6 +124,7 @@ public class HealthManager : MonoBehaviour
 		partialInt = 0 + givenLeftItems[73] + givenRightItems[73];
 		clockwork = 0 + givenLeftItems[81] + givenRightItems[81];
 		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
+		chickenCoop = 0 + givenLeftItems[114] + givenRightItems[114];
 
 		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -252,7 +256,7 @@ public class HealthManager : MonoBehaviour
 			orgGumTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
 			if (orgGumTimer <= 0f)
 			{
-				orgGumTimer = 20f;
+				orgGumTimer = playerItem.FindObjByID(17).baseCooldown;
 
 				if (Random.Range(1, 100) > (20 - (2f * orgGum)))
 				{
@@ -367,6 +371,22 @@ public class HealthManager : MonoBehaviour
 			evadeChance = (playerItem.modifierList[0]/6f) * 100f;
 			if(evadeChance > 75) { evadeChance = 75f; }
         }
+
+		if(chickenCoop > 0)
+        {
+			chickenCoopTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
+
+			if(chickenCoopTimer < 0)
+            {
+				GameObject spawnedEgg = Instantiate(egg);
+				spawnedEgg.transform.position = transform.position;
+				spawnedEgg.transform.position += Vector3.up;
+				spawnedEgg.transform.position += transform.forward * -3f;
+				spawnedEgg.GetComponent<Egg>().healPer = 5f + (2.25f * chickenCoop);
+
+				chickenCoopTimer = playerItem.FindObjByID(114).baseCooldown;
+            }
+		}
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)

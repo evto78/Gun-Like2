@@ -36,7 +36,7 @@ public class InvItemDisplay : MonoBehaviour
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         rect.position = Input.mousePosition;
         rect.position -= Vector3.up * 200f;
-        Debug.Log(rect.position.x);
+        //Debug.Log(rect.position.x);
         if(rect.position.y - (rect.rect.height / 1.5f) <= 0) { rect.position += Vector3.up * 500f; }
         //if(rect.position.y < 260) { rect.position += Vector3.up * 500f; }
         //if(rect.position.x < -530) { rect.position = new Vector3(-380, rect.position.y, 0); }
