@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class SettingsScript : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class SettingsScript : MonoBehaviour
     public List<Slider> sliders;
     public Toggle fullscreen;
     public Toggle vsync;
+    public TMP_Dropdown resolution;
     private void Start()
     {
         BuildKeys();
@@ -34,6 +36,9 @@ public class SettingsScript : MonoBehaviour
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
         fullscreen.isOn = Screen.fullScreen;
         vsync.isOn = PlayerPrefs.GetInt("VSYNC") == 1;
+        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 0) { Screen.SetResolution(1920, 1080, Screen.fullScreen); resolution.value = 0; }
+        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 1) { Screen.SetResolution(2560, 1080, Screen.fullScreen); resolution.value = 1; }
+        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 2) { Screen.SetResolution(2560, 1440, Screen.fullScreen); resolution.value = 2; }
         //Debug.Log("Applying Settings...");
         Apply();
         if (SceneManager.GetActiveScene().name == "Main Menu") { tab.SetActive(false); }
@@ -48,6 +53,8 @@ public class SettingsScript : MonoBehaviour
             PlayerPrefs.SetFloat(keys[index], slider.value * 100f);
             index++;
         }
+        Application.targetFrameRate= Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS"));
+        if(Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS")) == 120) { Application.targetFrameRate = -1; }
     }
     private void Update()
     {
@@ -66,6 +73,13 @@ public class SettingsScript : MonoBehaviour
     public void DynamicFov(bool input)
     {
         if (input) { PlayerPrefs.SetInt("DFOV", 1); } else { PlayerPrefs.SetInt("DFOV", 0); }
+    }
+    public void ChangeResolution(int input)
+    {
+        PlayerPrefs.SetInt("RES", resolution.value);
+        if(resolution.value == 0) { Screen.SetResolution(1920, 1080, Screen.fullScreen); }
+        if(resolution.value == 1) { Screen.SetResolution(2560, 1080, Screen.fullScreen); }
+        if(resolution.value == 2) { Screen.SetResolution(2560, 1440, Screen.fullScreen); }
     }
     void BuildKeys()
     {
@@ -104,5 +118,7 @@ public class SettingsScript : MonoBehaviour
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
         fullscreen.isOn = Screen.fullScreen;
         vsync.isOn = PlayerPrefs.GetInt("VSYNC") == 1;
+        PlayerPrefs.SetInt("RES", 0);
+        Screen.SetResolution(1920, 1080, Screen.fullScreen);
     }
 }

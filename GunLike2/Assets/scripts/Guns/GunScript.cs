@@ -574,6 +574,10 @@ public class GunScript : MonoBehaviour
                 gasGrenadeAttachTimer = manager.playerItem.FindObjByID(108).baseCooldown; ;
             }
         }
+        else if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[117]>0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[117] > 0))
+        {
+            manager.Kick(whatHandThisIsIn);
+        }
     }
 
     void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)

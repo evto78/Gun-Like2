@@ -99,6 +99,7 @@ public class HealthManager : MonoBehaviour
 		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
 		armor = Calc(20f, givenLeftItems[63] + givenRightItems[63], armor);
 		armor = Calc(20f, givenLeftItems[65] + givenRightItems[65], armor);
+		armor = Calc(60f, givenLeftItems[115] + givenRightItems[115], armor);
 		armor = Calc(-20f, givenLeftItems[12] + givenRightItems[12], armor);
 		armor = Calc(-20f, givenLeftItems[66] + givenRightItems[66], armor);
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
@@ -203,7 +204,9 @@ public class HealthManager : MonoBehaviour
 			{
 				if (symGrowth > 0 && curHp / maxHp > 0.8f)
 				{
-					curHp -= healthRegen * Time.deltaTime;
+					
+					if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { curHp -= (healthRegen / armor) * Time.deltaTime; }
+                    else { curHp -= (healthRegen) * Time.deltaTime; }
 				}
 				else
 				{
@@ -219,11 +222,30 @@ public class HealthManager : MonoBehaviour
 		ManageEffects();
 		DisplayEffects();
 
-		if(curHp <= 0) { dead = true; }
+		if(curHp <= 0 && activeEffects[21].x < 1) 
+		{ 
+			if(playerItem.leftItems[116] > 0)
+            {
+				GiveEffect("invaun", 1f);
+				curHp = maxHp;
+				playerItem.leftItems[116]--;
+            }
+			else if (playerItem.rightItems[116] > 0)
+            {
+				GiveEffect("invaun", 1f);
+				curHp = maxHp;
+				playerItem.rightItems[116]--;
+			}
+            else
+            {
+				dead = true;
+			}
+		}
 	}
 
 	public void EnemyDied(EnemyHealthManager enemyThatDied, int moneyDropped)
     {
+		Debug.Log("Enemy died");
 		timeSinceEnemyDied = 0;
 
 		if(activeReactor > 0)
@@ -299,11 +321,13 @@ public class HealthManager : MonoBehaviour
             {
 				if (curHp / maxHp > 0.33f)
 				{
-					curHp -= (maxHp / 100) * Time.deltaTime;
+					if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { curHp -= ((maxHp / 100) / armor) * Time.deltaTime; }
+                    else { curHp -= (maxHp / 100) * Time.deltaTime; }
 				}
 				else
 				{
-					curHp -= ((maxHp / 100) * 3f) * Time.deltaTime;
+					if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { curHp -= (((maxHp / 100) * 3f) / armor) * Time.deltaTime; }
+					else { curHp -= ((maxHp / 100) * 3f) * Time.deltaTime; }
 				}
 			}
         }
@@ -494,6 +518,7 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "active reactor") { activeEffects[18] = new Vector4(stacksToAdd, activeReactor * 5f, activeReactor * 5f, 1f); } // active reactor buff
 		if (effectGiven == "fast fire") { activeEffects[19] = new Vector4(stacksToAdd, 1f, 1f, 1f); } // Fast Fire partership buff
 		if (effectGiven == "warcry") { activeEffects[20] = new Vector4(stacksToAdd, 1f+warcry, 1f+warcry, 1f); } // warcrybuff
+		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
@@ -512,8 +537,8 @@ public class HealthManager : MonoBehaviour
 			//if there are any stacks of this effect
 			if (q.x > 0)
 			{
-				//run effects that happen every frame
-				
+                //run effects that happen every frame
+                if (i == 21) { curHp = maxHp; }
 
 				//progress timer and remove stacks as needed
 				if (q.z > 0f)

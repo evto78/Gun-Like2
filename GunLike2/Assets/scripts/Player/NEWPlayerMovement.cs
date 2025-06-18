@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NEWPlayerMovement : MonoBehaviour
 {
-    Rigidbody rb;
+    public Rigidbody rb;
 
     // Particle Effects
     public GameObject slamEffect;
@@ -63,6 +63,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
     HealthManager healthMan;
     public PlayerItem playerItem;
+    public GameObject shockwave;
 
     List<Vector4> effectList;
 
@@ -242,6 +243,19 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (!onGround) 
+        {
+            if (playerItem.leftItems[93] + playerItem.rightItems[93] > 0)
+            {
+                //Debug.Log("Force: " + -Vector3.up * 10 * Time.deltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
+                rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
+            }
+            else
+            {
+                //Debug.Log(-Vector3.up * 10 * Time.deltaTime * gravityModifier);
+                rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier);
+            }
+        }
         if (healthMan.dead) { return; }
         if (Cursor.lockState == CursorLockMode.Locked) { Move(); } else { Friction(); }
     }
@@ -254,6 +268,13 @@ public class NEWPlayerMovement : MonoBehaviour
                 if (hasBunny && !onGround) { healthMan.GiveEffect("bunny hop buff", 1f); }
                 jumpsLeft = numberOfJumps;
                 timeSinceGrounded = 0f;
+                if(playerItem.leftItems[93] + playerItem.rightItems[93] > 0 && rb.velocity.y < -25)
+                {
+                    GameObject spawnedShockwave = Instantiate(shockwave);
+                    spawnedShockwave.transform.position = transform.position;
+                    spawnedShockwave.GetComponent<Shockwave>().lifetime = 0.5f * (rb.velocity.y / -25f);
+                    spawnedShockwave.GetComponent<Shockwave>().damage = 25f * (rb.velocity.y / -25f);
+                }
                 return true;
             }
         }
@@ -428,7 +449,7 @@ public class NEWPlayerMovement : MonoBehaviour
     void Slam()
     {
         slamming = true;
-        rb.velocity = new Vector3(rb.velocity.x, -50f, rb.velocity.z);
+        if (rb.velocity.y > -50f) { rb.velocity = new Vector3(rb.velocity.x, -50f, rb.velocity.z); }
     }
     void Slide()
     {
@@ -443,7 +464,7 @@ public class NEWPlayerMovement : MonoBehaviour
         if(rb.velocity.magnitude > 10)
         {
             float t = rb.velocity.magnitude / maxVelFov;
-            Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t);
+            if(PlayerPrefs.GetInt("DFOV") == 1) { Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t); }
         }
         
 

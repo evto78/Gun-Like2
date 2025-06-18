@@ -175,8 +175,8 @@ public class BulletScript : MonoBehaviour
 
         if(hm.curHp / hm.maxHp <= 0.5f)
         {
-            if(whatHandThisComesFrom == "left" && pi.leftItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
-            if(whatHandThisComesFrom == "right" && pi.rightItems[96] > 1) { ehm.OnDeath(); ehm.didOnDeath = false; }
+            if(whatHandThisComesFrom == "left" && pi.leftItems[96] > 0) { ehm.didOnDeath = false; ehm.OnDeath(); ehm.didOnDeath = false; }
+            if(whatHandThisComesFrom == "right" && pi.rightItems[96] > 0) { ehm.didOnDeath = false; ehm.OnDeath(); ehm.didOnDeath = false; }
         }
 
         if(gunFiredFrom.sniperTower > 0 && gunFiredFrom.sniperTowerCooldown <= 0)

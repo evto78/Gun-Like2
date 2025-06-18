@@ -164,6 +164,11 @@ public class GunManager : MonoBehaviour
     public GameObject microwave;
     public float axeCooldown;
 
+    public GameObject leftLeg;
+    public GameObject rightLeg;
+    float leftKickCooldown;
+    float rightKickCooldown;
+
     private void Start()
     {
         leftHandVal = 0;
@@ -823,6 +828,9 @@ public class GunManager : MonoBehaviour
                 rightMicrowaveTimer = rightReSpd / 4f;
             }
         }
+
+        leftKickCooldown -= Time.deltaTime; if(leftKickCooldown <= 0) { leftLeg.SetActive(false); }
+        rightKickCooldown -= Time.deltaTime; if (rightKickCooldown <= 0) { rightLeg.SetActive(false); }
     }
 
     void mutatedCellReroll(List<int> itemList)
@@ -888,5 +896,61 @@ public class GunManager : MonoBehaviour
         spawnedAxe.transform.rotation = transform.rotation;
         spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg + rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg) / 2f) * 5f;
         spawnedAxe.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (dir * 20f), ForceMode.Impulse);
+    }
+    public void Kick(string hand)
+    {
+        Vector3 camPos = Camera.main.transform.position;
+        Ray ray = new Ray(camPos, Camera.main.transform.forward);
+        RaycastHit hit;
+        if (hand == "left" && leftKickCooldown <= 0) 
+        { 
+            leftLeg.SetActive(true); leftLeg.GetComponentInChildren<Animator>().speed = leftAtkSpd/2f; leftKickCooldown = leftAtkSpd * 2f;
+            if (Physics.Raycast(ray, out hit, 3f))
+            {
+                string hitTag = hit.collider.gameObject.tag;
+                if(hitTag == "Untagged" || hitTag == "Ground")
+                {
+                    //knockback
+                    playerItem.playerMvt.rb.AddForce(-Camera.main.transform.forward * leftDmg * 30, ForceMode.Impulse);
+                }
+                else if(hitTag == "Enemy" || hitTag == "EnemyWeakPoint")
+                {
+                    //damage and knockback them
+                    if(hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                    {
+                        ehm.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                    }
+                    if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                    {
+                        erb.AddForce(Camera.main.transform.forward * leftDmg * 30, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
+        if(hand == "right" && rightKickCooldown <= 0)
+        { 
+            rightLeg.SetActive(true); rightLeg.GetComponentInChildren<Animator>().speed = rightAtkSpd/2f; rightKickCooldown = rightAtkSpd * 2f;
+            if (Physics.Raycast(ray, out hit, 3f))
+            {
+                string hitTag = hit.collider.gameObject.tag;
+                if (hitTag == "Untagged" || hitTag == "Ground")
+                {
+                    //knockback
+                    playerItem.playerMvt.rb.AddForce(-Camera.main.transform.forward * rightDmg * 30, ForceMode.Impulse);
+                }
+                else if (hitTag == "Enemy" || hitTag == "EnemyWeakPoint")
+                {
+                    //damage and knockback them
+                    if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                    {
+                        ehm.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                    }
+                    if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                    {
+                        erb.AddForce(Camera.main.transform.forward * rightDmg * 30, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
     }
 }

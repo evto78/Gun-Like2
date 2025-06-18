@@ -495,6 +495,7 @@ public class PlayerItem : MonoBehaviour
         if(id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
         if(id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
 
+        //Debug.Log("ID: " + id + " | " + info);
         return info;
     }
 }
