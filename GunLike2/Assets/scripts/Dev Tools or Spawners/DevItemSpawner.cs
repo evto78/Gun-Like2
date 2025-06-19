@@ -16,9 +16,11 @@ public class DevItemSpawner : MonoBehaviour
 
 	bool typing;
 	string numberTyped;
+	int modifier;
 
 	private void Start()
 	{
+		modifier = 0;
 		itemData = new List<ItemObject>();
 		itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
 		typing = false;
@@ -60,8 +62,16 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "o") { SpawnPotential(8); }
 				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
 				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
-                else
+				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = System.Int32.Parse(numberTyped.Trim()); }
+				else
                 {
+					if(modifier > 0)
+                    {
+						for(int i = 0; i < modifier; i++)
+                        {
+							SpawnItem(System.Int32.Parse(numberTyped.Trim()));
+						}
+                    }
 					SpawnItem(System.Int32.Parse(numberTyped.Trim()));
 				}
 
@@ -81,17 +91,13 @@ public class DevItemSpawner : MonoBehaviour
 	private void SpawnItem(int iD)
 	{
 		GameObject spawnedItem;
-		spawnedItem = Instantiate(item);
-		spawnedItem.transform.position = transform.position + transform.forward * 3f + Vector3.up * 3f;
-		spawnedItem.transform.rotation = transform.rotation;
+		spawnedItem = Instantiate(item, transform.position + transform.forward * 3f + Vector3.up * 3f, transform.rotation);
 		spawnedItem.GetComponent<Item>().SetItemID(iD);
 	}
 	void SpawnPotential(int iD)
     {
 		GameObject spawnedItem;
-		spawnedItem = Instantiate(itemPotential);
-		spawnedItem.transform.position = transform.position + transform.forward * 3f + Vector3.up * 3f;
-		spawnedItem.transform.rotation = transform.rotation;
+		spawnedItem = Instantiate(itemPotential, transform.position + transform.forward * 3f + Vector3.up * 3f, transform.rotation);
 		spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
 	}
 }

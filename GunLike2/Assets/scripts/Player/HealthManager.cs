@@ -275,7 +275,7 @@ public class HealthManager : MonoBehaviour
 	{
 		if (orgGum > 0)
 		{
-			orgGumTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
+			orgGumTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
 			if (orgGumTimer <= 0f)
 			{
 				orgGumTimer = playerItem.FindObjByID(17).baseCooldown;
@@ -332,7 +332,7 @@ public class HealthManager : MonoBehaviour
 			}
         }
 
-		radioTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
+		radioTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
 		if(radioTimer <= 0 && radiosQued > 0)
         {
 			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
@@ -344,7 +344,7 @@ public class HealthManager : MonoBehaviour
 
 		if(experimentalImp > 0)
         {
-			experTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
+			experTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
 
 			if(experTimer <= 0)
             {
@@ -398,7 +398,7 @@ public class HealthManager : MonoBehaviour
 
 		if(chickenCoop > 0)
         {
-			chickenCoopTimer -= Time.deltaTime + (Time.deltaTime * clockwork * 0.25f);
+			chickenCoopTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
 
 			if(chickenCoopTimer < 0)
             {
@@ -449,14 +449,14 @@ public class HealthManager : MonoBehaviour
                 {
 					if(playerItem.leftItems[51] + playerItem.rightItems[51] > 0)
                     {
-						ehm.TakeDamage(damageTaken * (1f / 4f), true, "normalHit", ehm.transform.position, "self");
+						ehm.QueStandardDamage(damageTaken * (1f / 4f));
 					}
                     else
                     {
-						ehm.TakeDamage(damageTaken * (1f / 8f), true, "normalHit", ehm.transform.position, "self");
+						ehm.QueStandardDamage(damageTaken * (1f / 8f));
 					}
-					
-                }
+
+				}
             }
 		}
 

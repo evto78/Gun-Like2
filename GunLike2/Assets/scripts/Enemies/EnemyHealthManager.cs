@@ -45,6 +45,8 @@ public class EnemyHealthManager : MonoBehaviour
     // z == Timeleft until 1 stack is removed
     // w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
+    List<float> dmgQued = new List<float>();
+
     void Start()
     {
         activeEffects = new List<Vector4>();
@@ -73,6 +75,19 @@ public class EnemyHealthManager : MonoBehaviour
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
         if (curHp <= 0 && !died) { Die(); died = true; }
+        
+        if(dmgQued.Count > 0)
+        {
+            Debug.Log(dmgQued.Count);
+            for (int i = 0; i < 5; i++)
+            {
+                if(dmgQued.Count > 0)
+                {
+                    TakeDamage(dmgQued[0], true, "normalHit", transform.position, "self");
+                    dmgQued.RemoveAt(0);
+                }
+            }
+        }
     }
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
@@ -111,7 +126,7 @@ public class EnemyHealthManager : MonoBehaviour
             {
                 if(dmgTaken * 0.25f > 1f)
                 {
-                    ehm.TakeDamage(dmgTaken * (1f / 4f), true, "normalHit", ehm.transform.position, "self");
+                    ehm.QueStandardDamage(dmgTaken * (1f / 4f));
                 }
             }
         }
@@ -153,7 +168,10 @@ public class EnemyHealthManager : MonoBehaviour
 
         if (curHp <= 0) { Die(); }
     }
-
+    public void QueStandardDamage(float damage)
+    {
+        dmgQued.Add(damage);
+    }
     public void OnHitEffect(int jam)
     {
         if(jam > 0 && Random.Range(1, 100) <= 10 + (5 * jam))

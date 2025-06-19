@@ -328,13 +328,13 @@ public class PlayerItem : MonoBehaviour
 
                 hit.collider.gameObject.GetComponentInParent<Item>().StayStill();
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) || (Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.LeftShift)))
                 {
                     rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (leftItems[86] > 0) { leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; leftItems[86]--; }
                 }
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(KeyCode.Q) || (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift)))
                 {
                     leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();

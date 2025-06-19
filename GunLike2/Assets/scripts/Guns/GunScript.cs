@@ -87,6 +87,7 @@ public class GunScript : MonoBehaviour
 
     public GameObject pistolBullet;
     public GameObject nerfedPistolBullet;
+    public GameObject oilBullet;
     public Transform firePoint;
 
     public GameObject grenade;
@@ -366,29 +367,29 @@ public class GunScript : MonoBehaviour
         if(sniperTower > 0)
         {
             sniperTowerCooldown -= Time.deltaTime * (1 + (sniperTower * 0.5f));
-            if(whatHandThisIsIn == "left") { sniperTowerCooldown -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
-            if(whatHandThisIsIn == "right") { sniperTowerCooldown -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+            if(whatHandThisIsIn == "left") { sniperTowerCooldown -= Time.deltaTime * (manager.leftClockwork); }
+            if(whatHandThisIsIn == "right") { sniperTowerCooldown -= Time.deltaTime * (manager.rightClockwork); }
         }
 
         if (pumpShotgunAttach > 0)
         {
             pumpShotgunAttachTimer -= Time.deltaTime * (1 + (pumpShotgunAttach * 0.5f));
-            if (whatHandThisIsIn == "left") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
-            if (whatHandThisIsIn == "right") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "left") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.leftClockwork); }
+            if (whatHandThisIsIn == "right") { pumpShotgunAttachTimer -= Time.deltaTime * (manager.rightClockwork); }
         }
 
         if (grenadeAttach > 0)
         {
             grenadeAttachTimer -= Time.deltaTime * (1 + (grenadeAttach * 0.5f));
-            if (whatHandThisIsIn == "left") { grenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
-            if (whatHandThisIsIn == "right") { grenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "left") { grenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork); }
+            if (whatHandThisIsIn == "right") { grenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork); }
         }
 
         if (gasGrenadeAttach > 0)
         {
             gasGrenadeAttachTimer -= Time.deltaTime * (1 + (gasGrenadeAttach * 0.5f));
-            if (whatHandThisIsIn == "left") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork) * 0.25f; }
-            if (whatHandThisIsIn == "right") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork) * 0.25f; }
+            if (whatHandThisIsIn == "left") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork); }
+            if (whatHandThisIsIn == "right") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork); }
         }
     }
 
@@ -485,7 +486,8 @@ public class GunScript : MonoBehaviour
     {
         //pretty much just for improvised storage
         GameObject spawnedBullet;
-        if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet); }
+        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet); }
+        else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet); }
         else { spawnedBullet = Instantiate(pistolBullet); }
         spawnedBullet.transform.position = pos;
         spawnedBullet.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
@@ -515,8 +517,9 @@ public class GunScript : MonoBehaviour
             EarlyShoot();
             currentBullets--;
             GameObject spawnedBullet;
-            if (nerfedBul) {spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.position, firePoint.rotation); }
-            else{spawnedBullet = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);}
+            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
+            else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
+            else { spawnedBullet = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
             if (target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));

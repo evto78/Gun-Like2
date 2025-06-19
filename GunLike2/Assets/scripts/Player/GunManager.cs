@@ -169,8 +169,12 @@ public class GunManager : MonoBehaviour
     float leftKickCooldown;
     float rightKickCooldown;
 
+    public int totalLiveBullets;
+    public int maximumLiveBullets;
+
     private void Start()
     {
+        totalLiveBullets = 0;
         leftHandVal = 0;
         rightHandVal = 1;
 
@@ -303,6 +307,7 @@ public class GunManager : MonoBehaviour
 
         leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
         leftAtkSpd = Calc(10f, givenLeftItems[97], leftAtkSpd);
+        leftAtkSpd = Calc(60f, givenLeftItems[118], leftAtkSpd);
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
         leftAtkSpd = Calc(-10f, givenLeftItems[59], leftAtkSpd);
         leftAtkSpd = Calc(-60f, givenLeftItems[91], leftAtkSpd);
@@ -328,9 +333,11 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(-20f, givenLeftItems[46], leftDmg);
         leftDmg = Calc(-20f, givenLeftItems[59], leftDmg);
         leftDmg = Calc(-20f, givenLeftItems[113], leftDmg);
+        leftDmg = Calc(-80f, givenLeftItems[118], leftDmg);
         leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
         leftMagSize = Calc(10f, givenLeftItems[100], leftMagSize);
         leftMagSize = Calc(50f, givenLeftItems[101], leftMagSize);
+        leftMagSize = Calc(60f, givenLeftItems[118], leftMagSize);
         leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
         leftMagSize = Calc(-40f, givenLeftItems[25], leftMagSize);
         leftMagSize = Calc(-40f, givenLeftItems[26], leftMagSize);
@@ -342,13 +349,16 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(-20f, givenLeftItems[32], leftAcc);
         leftAcc = Calc(-20f, givenLeftItems[46], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[59], leftAcc);
+        leftAcc = Calc(-60f, givenLeftItems[118], leftAcc);
         leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
         leftBulSpd = Calc(20f, givenLeftItems[76], leftBulSpd);
+        leftBulSpd = Calc(20f, givenLeftItems[119], leftBulSpd);
         leftBulSpd = Calc(-20f, givenLeftItems[11], leftBulSpd);
         leftBulSpd = Calc(-20f, givenLeftItems[12], leftBulSpd);
         leftBulSpd = Calc(-20f, givenLeftItems[59], leftBulSpd);
         leftBulSpd = Calc(-20f, givenLeftItems[77], leftBulSpd);
+        leftBulSpd = Calc(-60f, givenLeftItems[118], leftBulSpd);
         leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
         leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
         leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
@@ -410,6 +420,7 @@ public class GunManager : MonoBehaviour
 
         rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
         rightAtkSpd = Calc(10f, givenRightItems[97], rightAtkSpd);
+        rightAtkSpd = Calc(60f, givenRightItems[118], rightAtkSpd);
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightAtkSpd = Calc(-10f, givenRightItems[59], rightAtkSpd);
         rightAtkSpd = Calc(-60f, givenRightItems[91], rightAtkSpd);
@@ -436,9 +447,11 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(-20f, givenRightItems[46], rightDmg);
         rightDmg = Calc(-20f, givenRightItems[59], rightDmg);
         rightDmg = Calc(-20f, givenRightItems[113], rightDmg);
+        rightDmg = Calc(-80f, givenRightItems[118], rightDmg);
         rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
         rightMagSize = Calc(10f, givenRightItems[100], rightMagSize);
         rightMagSize = Calc(50f, givenRightItems[101], rightMagSize);
+        rightMagSize = Calc(60f, givenRightItems[118], rightMagSize);
         rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
         rightMagSize = Calc(-40f, givenRightItems[25], rightMagSize);
         rightMagSize = Calc(-40f, givenRightItems[26], rightMagSize);
@@ -450,13 +463,16 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(-20f, givenRightItems[32], rightAcc);
         rightAcc = Calc(-20f, givenRightItems[46], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[59], rightAcc);
+        rightAcc = Calc(-60f, givenRightItems[118], rightAcc);
         rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
         rightBulSpd = Calc(20f, givenRightItems[76], rightBulSpd);
+        rightBulSpd = Calc(20f, givenRightItems[119], rightBulSpd);
         rightBulSpd = Calc(-20f, givenRightItems[11], rightBulSpd);
         rightBulSpd = Calc(-20f, givenRightItems[12], rightBulSpd);
         rightBulSpd = Calc(-20f, givenRightItems[59], rightBulSpd);
         rightBulSpd = Calc(-20f, givenRightItems[77], rightBulSpd);
+        rightBulSpd = Calc(-60f, givenRightItems[118], rightBulSpd);
         rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
         rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
         rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
@@ -617,7 +633,7 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
-        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * (1+(leftClockwork + rightClockwork)*0.25f);
+        axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * (1 + leftClockwork + rightClockwork);
         if (healthMan.dead) { return; }
 
         if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); }
@@ -665,7 +681,7 @@ public class GunManager : MonoBehaviour
     {
         if (leftMutatedCell > 0)
         {
-            leftMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            leftMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
             if (leftMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(playerItem.leftItems);
@@ -675,7 +691,7 @@ public class GunManager : MonoBehaviour
 
         if (rightMutatedCell > 0)
         {
-            rightMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            rightMutatedCellTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightMutatedCellTimer <= 0)
             {
                 mutatedCellReroll(playerItem.rightItems);
@@ -685,7 +701,7 @@ public class GunManager : MonoBehaviour
 
         if (leftHungryParasite > 0)
         {
-            leftHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            leftHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
             if (leftHungryParasiteTimer <= 0)
             {
                 HungryParasiteReroll(playerItem.leftItems);
@@ -695,7 +711,7 @@ public class GunManager : MonoBehaviour
 
         if (rightHungryParasite > 0)
         {
-            rightHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            rightHungryParasiteTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightHungryParasiteTimer <= 0)
             {
                 HungryParasiteReroll(playerItem.rightItems);
@@ -705,7 +721,7 @@ public class GunManager : MonoBehaviour
 
         if (leftFastInserter > 0)
         {
-            leftFastInserterTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            leftFastInserterTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
             if (leftFastInserterTimer <= 0 && leftHand.GetComponentInChildren<GunScript>().currentBullets < leftHand.GetComponentInChildren<GunScript>().magSize)
             {
                 leftHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
@@ -714,7 +730,7 @@ public class GunManager : MonoBehaviour
         }
         if (rightFastInserter > 0)
         {
-            rightFastInserterTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            rightFastInserterTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightFastInserterTimer <= 0 && rightHand.GetComponentInChildren<GunScript>().currentBullets < rightHand.GetComponentInChildren<GunScript>().magSize)
             {
                 rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
@@ -724,7 +740,7 @@ public class GunManager : MonoBehaviour
 
         if(leftSponDeal > 0)
         {
-            leftSponTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            leftSponTimer += Time.deltaTime + (Time.deltaTime * leftClockwork);
             if(leftSponTimer > playerItem.FindObjByID(42).baseCooldown)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
@@ -741,7 +757,7 @@ public class GunManager : MonoBehaviour
         }
         if (rightSponDeal > 0)
         {
-            rightSponTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            rightSponTimer += Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightSponTimer > playerItem.FindObjByID(42).baseCooldown)
             {
                 int rand = Random.Range(0, playerItem.sponserItems.Count);
@@ -757,7 +773,7 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        surpriseEggTimer += Time.deltaTime + (Time.deltaTime * (leftClockwork+rightClockwork) * 0.25f);
+        surpriseEggTimer += Time.deltaTime + (Time.deltaTime * (leftClockwork+rightClockwork));
         if (leftSurpriseEggLifetime > 0)
         {
             if(surpriseEggTimer > playerItem.FindObjByID(58).baseCooldown && healthMan.timeSinceEnemyDied < 120)
@@ -774,8 +790,8 @@ public class GunManager : MonoBehaviour
         }
         if (surpriseEggTimer > playerItem.FindObjByID(55).baseCooldown) { surpriseEggTimer = 0; }
 
-        leftPrinterTimer += Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
-        rightPrinterTimer += Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+        leftPrinterTimer += Time.deltaTime + (Time.deltaTime * leftClockwork);
+        rightPrinterTimer += Time.deltaTime + (Time.deltaTime * rightClockwork);
         if(leftPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && leftPrinterTimer > playerItem.FindObjByID(88).baseCooldown)
         {
             leftPrinterTimer = 0;
@@ -804,7 +820,7 @@ public class GunManager : MonoBehaviour
 
         if(leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && leftMicrowave > 0)
         {
-            leftMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork * 0.25f);
+            leftMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
             if(leftMicrowaveTimer <= 0)
             {
                 GameObject spawnedMicrowave = Instantiate(microwave);
@@ -817,7 +833,7 @@ public class GunManager : MonoBehaviour
         }
         if (rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && rightMicrowave > 0)
         {
-            rightMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork * 0.25f);
+            rightMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightMicrowaveTimer <= 0)
             {
                 GameObject spawnedMicrowave = Instantiate(microwave);
@@ -899,30 +915,49 @@ public class GunManager : MonoBehaviour
     }
     public void Kick(string hand)
     {
+
         Vector3 camPos = Camera.main.transform.position;
         Ray ray = new Ray(camPos, Camera.main.transform.forward);
         RaycastHit hit;
         if (hand == "left" && leftKickCooldown <= 0) 
         { 
             leftLeg.SetActive(true); leftLeg.GetComponentInChildren<Animator>().speed = leftAtkSpd/2f; leftKickCooldown = leftAtkSpd * 2f;
-            if (Physics.Raycast(ray, out hit, 3f))
+            if (Physics.Raycast(ray, out hit, 6f))
             {
                 string hitTag = hit.collider.gameObject.tag;
+
+                Vector3 force = Camera.main.transform.forward * (leftDmg/2f) * 90f;
+                if (force.magnitude > 300f) { force = force.normalized * 300f; }
+
                 if(hitTag == "Untagged" || hitTag == "Ground")
                 {
                     //knockback
-                    playerItem.playerMvt.rb.AddForce(-Camera.main.transform.forward * leftDmg * 30, ForceMode.Impulse);
+                    playerItem.playerMvt.rb.AddForce(-force, ForceMode.Impulse);
                 }
                 else if(hitTag == "Enemy" || hitTag == "EnemyWeakPoint")
                 {
                     //damage and knockback them
-                    if(hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                    if(hit.transform.parent != null)
                     {
-                        ehm.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                        if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                        {
+                            ehm.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                        }
+                        if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                        {
+                            erb.AddForce(force, ForceMode.Impulse);
+                        }
                     }
-                    if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                    else
                     {
-                        erb.AddForce(Camera.main.transform.forward * leftDmg * 30, ForceMode.Impulse);
+                        if (hit.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
+                        {
+                            ehm2.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                        }
+                        if (hit.transform.TryGetComponent<Rigidbody>(out Rigidbody erb2))
+                        {
+                            erb2.AddForce(force, ForceMode.Impulse);
+                        }
                     }
                 }
             }
@@ -930,24 +965,42 @@ public class GunManager : MonoBehaviour
         if(hand == "right" && rightKickCooldown <= 0)
         { 
             rightLeg.SetActive(true); rightLeg.GetComponentInChildren<Animator>().speed = rightAtkSpd/2f; rightKickCooldown = rightAtkSpd * 2f;
-            if (Physics.Raycast(ray, out hit, 3f))
+            if (Physics.Raycast(ray, out hit, 6f))
             {
                 string hitTag = hit.collider.gameObject.tag;
+
+                Vector3 force = Camera.main.transform.forward * (rightDmg / 2f) * 90f;
+                if (force.magnitude > 300f) { force = force.normalized * 300f; }
+
                 if (hitTag == "Untagged" || hitTag == "Ground")
                 {
                     //knockback
-                    playerItem.playerMvt.rb.AddForce(-Camera.main.transform.forward * rightDmg * 30, ForceMode.Impulse);
+                    playerItem.playerMvt.rb.AddForce(-force, ForceMode.Impulse);
                 }
                 else if (hitTag == "Enemy" || hitTag == "EnemyWeakPoint")
                 {
                     //damage and knockback them
-                    if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                    if (hit.transform.parent != null)
                     {
-                        ehm.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                        if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+                        {
+                            ehm.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                        }
+                        if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                        {
+                            erb.AddForce(force, ForceMode.Impulse);
+                        }
                     }
-                    if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
+                    else
                     {
-                        erb.AddForce(Camera.main.transform.forward * rightDmg * 30, ForceMode.Impulse);
+                        if (hit.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
+                        {
+                            ehm2.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                        }
+                        if (hit.transform.TryGetComponent<Rigidbody>(out Rigidbody erb2))
+                        {
+                            erb2.AddForce(force, ForceMode.Impulse);
+                        }
                     }
                 }
             }

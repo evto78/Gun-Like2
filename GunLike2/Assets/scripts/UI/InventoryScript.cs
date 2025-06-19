@@ -60,7 +60,7 @@ public class InventoryScript : MonoBehaviour
         else if (rightCount < 100) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(90f, 90f); }
         else if (rightCount < 201) { rightHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(60f, 60f); }
 
-        Debug.Log("left: " + leftCount + " | right: " + rightCount);
+        //Debug.Log("left: " + leftCount + " | right: " + rightCount);
     }
     void SetUpSlot(GameObject invSlot, int id, int amount, string hand)
     {

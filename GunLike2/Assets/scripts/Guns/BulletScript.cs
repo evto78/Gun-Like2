@@ -52,6 +52,7 @@ public class BulletScript : MonoBehaviour
     public int multistage;
     public int gunkyClaw;
     public int storage;
+    float turbineCharge;
 
     public Collider myCollider;
 
@@ -80,14 +81,23 @@ public class BulletScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
         collided = false;
-    }
+        turbineCharge = 0;
 
+        gm.totalLiveBullets++;
+    }
+    private void OnDestroy()
+    {
+        gm.totalLiveBullets--;
+    }
     private void Update()
     {
+        if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
         if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
 
         Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.cyan);
+
+        if((whatHandThisComesFrom == "left" && pi.leftItems[119] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[119] > 0)) { if (rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); } turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f; }
     }
     public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd,
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
@@ -113,7 +123,7 @@ public class BulletScript : MonoBehaviour
         weakDamage = givenWeakDmg;
         bulSpd = givenBulSpd;
         if (isLargeSpon) { bulSpd = bulSpd / 2f; }
-        if (isLargeSpon) { transform.localScale = transform.localScale * 5f; }
+        if (isLargeSpon) { transform.localScale = transform.localScale * 3f; }
         if (isFastFireSpon && firedFrom != null) { firedFrom.isFastFiring = true; }
 
         heavySpirits = givenHeavySpirits;
@@ -127,9 +137,9 @@ public class BulletScript : MonoBehaviour
         if(whatHandThisComesFrom == "right") { storage = pi.rightItems[95]; }
 
         ricochet = givenRico;
-
+        bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
         myIsHeavy = isHeavy;
-        if (isHeavy != 0f || isLargeSpon)
+        if (isHeavy != 0f || isLargeSpon || isOil)
         {
             rb.useGravity = true;
             rb.mass = isHeavy + 1;
@@ -194,12 +204,14 @@ public class BulletScript : MonoBehaviour
         if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) < 20f) { damage = damage * (1f + 0.1f * gunkyClaw); } else if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) > 20f) { damage = damage * (1f + 0.1f * gunkyClaw); }
         collidedPos = transform.position;
 
+        damage = damage * (1+(turbineCharge/4f));
+
         if (!collided && isLargeSpon && (givenGameObject.tag == "Enemy" || givenGameObject.tag == "Ground" || givenGameObject.tag == "EnemyWeakPoint"))
         {
             GameObject spawnedShockwave = Instantiate(shockwave);
             spawnedShockwave.transform.position = transform.position;
-            spawnedShockwave.GetComponent<Shockwave>().lifetime = transform.localScale.magnitude / 4f;
-            spawnedShockwave.GetComponent<Shockwave>().damage = damage + 25f;
+            spawnedShockwave.GetComponent<Shockwave>().lifetime = transform.localScale.magnitude / 5f;
+            spawnedShockwave.GetComponent<Shockwave>().damage = damage * 2f;
             spawnedShockwave.GetComponent<Shockwave>().fireSpon = isFireSpon;
             spawnedShockwave.GetComponent<Shockwave>().coolSpon = isCoolSpon;
             spawnedShockwave.GetComponent<Shockwave>().bleedSpon = isSharperSpon;
@@ -472,6 +484,7 @@ public class BulletScript : MonoBehaviour
 
             }
         }
+        damage = damage / (1 + (turbineCharge/4f));
     }
 
     private void OnCollisionEnter(Collision collision)
