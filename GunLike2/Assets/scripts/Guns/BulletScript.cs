@@ -71,6 +71,7 @@ public class BulletScript : MonoBehaviour
 
     public GameObject lavaBlob;
     public GameObject sniperTowerAlly;
+    public GameObject zipMissle;
 
     void Awake()
     {
@@ -168,8 +169,16 @@ public class BulletScript : MonoBehaviour
 
     void RunOnHit(GameObject hit)
     {
-        EnemyHealthManager ehm = hit.GetComponentInParent<EnemyHealthManager>();
-       ehm.OnHitEffect(jam);
+        EnemyHealthManager ehm;
+        if (hit.transform.parent != null)
+        {
+            ehm = hit.GetComponentInParent<EnemyHealthManager>();
+        }
+        else
+        {
+            ehm = hit.GetComponent<EnemyHealthManager>();
+        }
+        ehm.OnHitEffect(jam);
         if (isFireSpon) { ehm.GiveEffect("burn", 3f); }
         if (isSharperSpon) { ehm.GiveEffect("bleed", 3f); }
         if (isSilverSpon) { ehm.GiveEffect("lucky", 1f); }
@@ -196,6 +205,18 @@ public class BulletScript : MonoBehaviour
             spawnedSniperTower.GetComponent<SniperTurretAlly>().damage = damage * 10f;
             spawnedSniperTower.GetComponent<SniperTurretAlly>().target = ehm;
             gunFiredFrom.sniperTowerCooldown = pi.FindObjByID(103).baseCooldown;
+        }
+
+        if((whatHandThisComesFrom == "left" && pi.leftItems[122] > 0) ||(whatHandThisComesFrom == "right" && pi.rightItems[122] > 0))
+        {
+            int temp = Random.Range(1, 100);
+            if(temp < 11)
+            {
+                GameObject spawnedZipMissle = Instantiate(zipMissle, gm.transform.position + Vector3.up - gm.transform.forward, gm.transform.rotation);
+                spawnedZipMissle.GetComponent<ZipMissle>().damage = damage * 1.5f;
+                spawnedZipMissle.GetComponent<ZipMissle>().targetEhm = ehm;
+            }
+            
         }
     }
 
