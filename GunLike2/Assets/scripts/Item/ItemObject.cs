@@ -13,7 +13,7 @@ public class ItemObject : ScriptableObject
     public Sprite itemSprite;
     public bool cooldownItem;
     public float baseCooldown;
-    public enum itemType { basic, sponser, classic, fish, unstablePart, boss }
+    public enum itemType { basic, sponser, classic, fish, unstablePart, boss, horror }
     public itemType subType;
     
     /// <summary>

@@ -167,6 +167,7 @@ MonoBehaviour:
   itemPossibility: {fileID: 2157979777283688088, guid: 5cc2937a662841a4e89357de5d7ac507, type: 3}
   bloodOrb: {fileID: 2385403154690248642, guid: 137c4015d68484d4690cd0ce86b6959d, type: 3}
   deadlyOrb: {fileID: 2385403154690248642, guid: b49ae551cef23564ab991e1254d26477, type: 3}
+  burnedPapers: {fileID: 280613747430402011, guid: 071629e032bf5784c9ee33b555aadb6b, type: 3}
   moneyDrop: 5
   dropVariance: 5
   dropChance: 1
@@ -176,7 +177,8 @@ MonoBehaviour:
   damageText: {fileID: 5471558382887693187, guid: 82cd74ae1539dd84a8ead7f9d43cd72e, type: 3}
   latestDamage: 0
   effectIcon: {fileID: 9009043241827680975, guid: 2481330a5c7ce0c49ba5763d98f990d8, type: 3}
-  effectHolder: {fileID: 1168218593677502556}
+  effectHolder: {fileID: 3406704756611516266}
+  didOnDeath: 0
   activeEffects:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
@@ -282,6 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e053fe5553cf3f489c5729fb2054c04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &2243913874837893015
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,6 +49,7 @@ public class HealthManager : MonoBehaviour
 	int chickenCoop;
 	public float chickenCoopTimer;
 	public GameObject egg;
+	public GameObject fly;
 
 	public int appleBuff;
 
@@ -109,6 +110,7 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[85] + givenRightItems[85], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[99] + givenRightItems[99], maxHp));
+		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[124] + givenRightItems[124], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[13] + givenRightItems[13], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[18] + givenRightItems[18], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[79] + givenRightItems[79], maxHp));
@@ -245,7 +247,6 @@ public class HealthManager : MonoBehaviour
 
 	public void EnemyDied(EnemyHealthManager enemyThatDied, int moneyDropped)
     {
-		Debug.Log("Enemy died");
 		timeSinceEnemyDied = 0;
 
 		if(activeReactor > 0)
@@ -423,7 +424,7 @@ public class HealthManager : MonoBehaviour
 		}
 		else
 		{
-            if (Random.Range(1, 100) < evadeChance) { Debug.Log("Blocked!"); return; }
+            if (Random.Range(1, 100) < evadeChance) { return; }
 			//Damage
 			if (damageTaken <= armor)
 			{
@@ -457,6 +458,18 @@ public class HealthManager : MonoBehaviour
 					}
 
 				}
+            }
+
+			if(playerItem.leftItems[124] + playerItem.rightItems[124] > 0)
+            {
+				for(int i = 0; i < (damageTaken * 100) / maxHp; i++)
+                {
+					GameObject spawnedFly = Instantiate(fly);
+					spawnedFly.transform.position = transform.position + new Vector3(Random.Range(-1f,1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+					spawnedFly.transform.rotation = transform.rotation;
+					spawnedFly.GetComponent<ZipMissle>().damage = (maxHp / 100f);
+					spawnedFly.GetComponent<ZipMissle>().thrust *= Random.Range(2f, 4f);
+                }
             }
 		}
 

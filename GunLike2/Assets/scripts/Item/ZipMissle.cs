@@ -13,15 +13,43 @@ public class ZipMissle : MonoBehaviour
     {
         player = GameObject.Find("Player");
         rb = gameObject.GetComponent<Rigidbody>();
+        if (rb.useGravity) { rb.AddForce(Vector3.up * 10f, ForceMode.Impulse); }
+        if (targetEhm == null)
+        {
+            float tempDist = 999999f;
+            foreach (GameObject ehm in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                if (Vector3.Distance(ehm.transform.position, transform.position) < tempDist && ehm.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
+                {
+                    tempDist = Vector3.Distance(ehm.transform.position, transform.position);
+                    targetEhm = ehm2;
+                }
+            }
+            if(targetEhm == null) { Destroy(gameObject); }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (targetEhm == null)
+        {
+            float tempDist = 999999f;
+            foreach (GameObject ehm in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                if (Vector3.Distance(ehm.transform.position, transform.position) < tempDist && ehm.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
+                {
+                    tempDist = Vector3.Distance(ehm.transform.position, transform.position);
+                    targetEhm = ehm2;
+                }
+            }
+            if (targetEhm == null) { Destroy(gameObject); }
+        }
+
         if (rb.velocity.magnitude > 0) { transform.rotation.SetLookRotation(rb.velocity); }
 
         rb.AddForce(( targetEhm.transform.position- transform.position).normalized * thrust * Time.deltaTime);
-        rb.AddForce(Vector3.up * Time.deltaTime * 60f);
+        if (rb.useGravity) { rb.AddForce(Vector3.up * Time.deltaTime * 60f); }
 
         if(Vector3.Distance(transform.position + rb.velocity, targetEhm.transform.position) > Vector3.Distance(transform.position, targetEhm.transform.position))
         {

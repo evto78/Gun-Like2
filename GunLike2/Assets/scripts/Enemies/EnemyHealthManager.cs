@@ -12,6 +12,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public GameObject bloodOrb;
     public GameObject deadlyOrb;
+    public GameObject burnedPapers;
 
     public int moneyDrop;
     public int dropVariance;
@@ -50,7 +51,7 @@ public class EnemyHealthManager : MonoBehaviour
     void Start()
     {
         activeEffects = new List<Vector4>();
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < 11; i++)
         {
             activeEffects.Add(Vector4.zero);
         }
@@ -78,15 +79,8 @@ public class EnemyHealthManager : MonoBehaviour
         
         if(dmgQued.Count > 0)
         {
-            Debug.Log(dmgQued.Count);
-            for (int i = 0; i < 5; i++)
-            {
-                if(dmgQued.Count > 0)
-                {
-                    TakeDamage(dmgQued[0], true, "normalHit", transform.position, "self");
-                    dmgQued.RemoveAt(0);
-                }
-            }
+            TakeDamage(dmgQued[0], true, "normalHit", transform.position, "self");
+            dmgQued.RemoveAt(0);
         }
     }
 
@@ -129,6 +123,14 @@ public class EnemyHealthManager : MonoBehaviour
                     ehm.QueStandardDamage(dmgTaken * (1f / 4f));
                 }
             }
+        }
+
+        if(playerItem.leftItems[126] + playerItem.rightItems[126] > 0 && dmgTaken >= 2f)
+        {
+            GameObject spawnedPapers = Instantiate(burnedPapers, transform.position, transform.rotation);
+            spawnedPapers.GetComponent<BurnedPapers>().damage = dmgTaken;
+            spawnedPapers.GetComponent<BurnedPapers>().collidedWith.Add(gameObject);
+            spawnedPapers.transform.localScale = Vector3.one * ((playerItem.leftItems[126] + playerItem.rightItems[126])/2f);
         }
 
         if(source == "left")
@@ -218,6 +220,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
         if (effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
         if (effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
+        if (effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
     }
 
     void ManageEffects()
@@ -243,6 +246,20 @@ public class EnemyHealthManager : MonoBehaviour
                     brain.enabled = true;
                 }
                 frozenEffect.SetActive(false);
+            }
+            if (i == 10 && q.x > 0)
+            {
+                foreach (MonoBehaviour brain in brains)
+                {
+                    brain.enabled = false;
+                }
+            }
+            else if (i == 10 && q.x <= 0 && activeEffects[6].x<1f)
+            {
+                foreach (MonoBehaviour brain in brains)
+                {
+                    brain.enabled = true;
+                }
             }
 
             //if there are any stacks of this effect

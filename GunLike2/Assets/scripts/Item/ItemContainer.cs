@@ -17,6 +17,7 @@ public class ItemContainer : MonoBehaviour
     public int numOfItems;
     int itemsSpawned;
     public float priceModifier = 1;
+    public bool free;
 
     public TextMeshProUGUI costTxt;
     void Start()
@@ -28,6 +29,7 @@ public class ItemContainer : MonoBehaviour
         player = GameObject.Find("Player");
 
         cost = player.GetComponent<HealthManager>().baseCost;
+        if (free) { cost = 0; }
 
         costTxt.text = cost.ToString() + "$";
     }
@@ -86,6 +88,7 @@ public class ItemContainer : MonoBehaviour
     }
     private void Update()
     {
+        if (free) { cost = 0; }
         costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
 
     }

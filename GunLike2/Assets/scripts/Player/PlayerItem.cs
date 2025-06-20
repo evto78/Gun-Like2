@@ -65,6 +65,7 @@ public class PlayerItem : MonoBehaviour
     public List<int> fishItems = new List<int>();
     public List<int> unstableItems = new List<int>();
     public List<int> cooldownItems = new List<int>();
+    public List<int> horrorItems = new List<int>();
     [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
@@ -133,6 +134,7 @@ public class PlayerItem : MonoBehaviour
             if(item.subType.ToString() == "fish") { fishItems.Add(item.id); }
             if(item.subType.ToString() == "unstablePart") { unstableItems.Add(item.id); }
             if (item.cooldownItem) { cooldownItems.Add(item.id); }
+            if(item.subType.ToString() == "horror") { horrorItems.Add(item.id); }
         }
     }
     private void Update()

@@ -162,6 +162,8 @@ public class GunManager : MonoBehaviour
 
     public GameObject gunkyAxe;
     public GameObject microwave;
+    public GameObject darkwave;
+    float darkwaveTimer;
     public float axeCooldown;
 
     public GameObject leftLeg;
@@ -416,6 +418,7 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[82] > 0f) { leftRicochet = true; }
         if (givenLeftItems[29] > 0f) { leftMagSize = (leftMagSize * 3f) * (givenLeftItems[29] * 1.2f); leftReSpd = leftReSpd / 2f; }
         if (givenLeftItems[102] > 0f) { leftBulPir++; }
+        if (givenLeftItems[126] > 0f) { leftDmg = Calc(-40f, 1, leftDmg); }
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
         if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
@@ -532,6 +535,7 @@ public class GunManager : MonoBehaviour
         if (givenRightItems[82] > 0f) { rightRicochet = true; }
         if (givenRightItems[29] > 0f) { rightMagSize = (rightMagSize * 3f) * (givenRightItems[29] * 1.2f); rightReSpd = rightReSpd / 2f; }
         if (givenRightItems[102] > 0f) { rightBulPir++; }
+        if (givenRightItems[126] > 0f) { rightDmg = Calc(-40f, 1, rightDmg); }
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
         if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
@@ -847,6 +851,39 @@ public class GunManager : MonoBehaviour
                 spawnedMicrowave.GetComponent<Shockwave>().damage = 5f * rightMicrowave;
                 rightMicrowaveTimer = rightReSpd / 4f;
             }
+        }
+
+        if (playerItem.leftItems[125] > 0)
+        {
+            if (leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading)
+            {
+                if (darkwaveTimer <= 0)
+                {
+                    GameObject spawnedMicrowave = Instantiate(darkwave);
+                    spawnedMicrowave.transform.position = leftHand.transform.position;
+                    spawnedMicrowave.transform.rotation = leftHand.transform.rotation;
+                    spawnedMicrowave.GetComponent<Shockwave>().lifetime = 2f;
+                    spawnedMicrowave.GetComponent<Shockwave>().damage = 0f;
+                    darkwaveTimer = leftReSpd * 2f;
+                }
+            }
+            darkwaveTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
+        }
+        if (playerItem.rightItems[125] > 0)
+        {
+            if (rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading)
+            {
+                if (darkwaveTimer <= 0)
+                {
+                    GameObject spawnedMicrowave = Instantiate(darkwave);
+                    spawnedMicrowave.transform.position = rightHand.transform.position;
+                    spawnedMicrowave.transform.rotation = rightHand.transform.rotation;
+                    spawnedMicrowave.GetComponent<Shockwave>().lifetime = 2f;
+                    spawnedMicrowave.GetComponent<Shockwave>().damage = 0f;
+                    darkwaveTimer = rightReSpd * 2f;
+                }
+            }
+            darkwaveTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
         }
 
         leftKickCooldown -= Time.deltaTime; if(leftKickCooldown <= 0) { leftLeg.SetActive(false); }
