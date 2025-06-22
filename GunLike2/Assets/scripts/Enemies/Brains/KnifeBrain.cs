@@ -40,6 +40,7 @@ public class KnifeBrain : MonoBehaviour
         player = GameObject.Find("Player");
         preparing = false;
         healthMan = GetComponent<EnemyHealthManager>();
+        dmg = healthMan.baseDamage * healthMan.gdm.difficulty * healthMan.difficultyScale;
         player = GameObject.Find("Player");
         mr = transform.GetChild(1).gameObject.GetComponent<MeshRenderer>();
 

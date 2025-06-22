@@ -19,13 +19,15 @@ public class NukeSpiderBrain : MonoBehaviour
     public float nukeDmg;
     public GameObject tail;
     public GameObject shine;
-    
+    EnemyHealthManager healthMan;
     void Start()
     {
         player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody>();
         nav = GetComponent<NavAI>();
         agent = GetComponent<NavMeshAgent>();
+        healthMan = GetComponent<EnemyHealthManager>();
+        nukeDmg = healthMan.baseDamage * healthMan.difficultyScale * healthMan.gdm.difficulty;
     }
 
     // Update is called once per frame

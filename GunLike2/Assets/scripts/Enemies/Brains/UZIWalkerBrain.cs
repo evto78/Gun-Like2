@@ -27,6 +27,7 @@ public class UZIWalkerBrain : MonoBehaviour
     {
         player = GameObject.Find("Player");
         healthMan = GetComponent<EnemyHealthManager>();
+        dmg = healthMan.baseDamage * healthMan.difficultyScale * healthMan.gdm.difficulty;
         turretAnim = turrethead.GetComponentInChildren<Animator>();
     }
 

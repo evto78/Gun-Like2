@@ -12,6 +12,7 @@ public class GrenadeBrain : MonoBehaviour
     float tickTimer = 3;
     public GameObject explo;
     float bounceTimer;
+    public EnemyHealthManager hm;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +50,7 @@ public class GrenadeBrain : MonoBehaviour
             {
                 explo.SetActive(true);
                 explo.transform.SetParent(null);
+                explo.GetComponent<ExplosionHitbox>().damage = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
                 Destroy(gameObject);
             }
         }

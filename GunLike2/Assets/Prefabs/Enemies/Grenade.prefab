@@ -313,6 +313,7 @@ MonoBehaviour:
   Ticking: 0
   rb: {fileID: 5660681091387613645}
   explo: {fileID: 173680958716029385}
+  hm: {fileID: 4877264939609183616}
 --- !u!114 &4877264939609183616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,6 +326,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6757d9a4480f834aa715941c39121ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseMaxHp: 5
+  baseArmor: 0
+  baseDamage: 25
+  difficultyStatScaling: 1
+  difficultyScale: 1
   brains:
   - {fileID: 3787506136365362405}
   frozenEffect: {fileID: 8400421594049037593}
@@ -341,6 +347,7 @@ MonoBehaviour:
   armor: 0
   damageText: {fileID: 5471558382887693187, guid: 82cd74ae1539dd84a8ead7f9d43cd72e, type: 3}
   latestDamage: 0
+  gdm: {fileID: 0}
   effectIcon: {fileID: 9009043241827680975, guid: 2481330a5c7ce0c49ba5763d98f990d8, type: 3}
   effectHolder: {fileID: 7578830136711252450}
   didOnDeath: 0

@@ -5,7 +5,18 @@ using TMPro;
 
 public class EnemyHealthManager : MonoBehaviour
 {
-	public List<MonoBehaviour> brains;
+    [Header("BASE STATS:")]
+    public float baseMaxHp;
+    public float baseArmor;
+    public float baseDamage;
+
+    [Header("SCALING:")]
+    public float difficultyStatScaling;
+    public float difficultyScale;
+
+    [Header("OTHER:")]
+
+    public List<MonoBehaviour> brains;
     public GameObject frozenEffect;
     public GameObject item;
     public GameObject itemPossibility;
@@ -31,6 +42,8 @@ public class EnemyHealthManager : MonoBehaviour
     PlayerItem playerItem;
     HealthManager playerHM;
 
+    public GameDataManager gdm;
+
     public GameObject effectIcon;
     List<GameObject> icons;
     public Transform effectHolder;
@@ -50,6 +63,10 @@ public class EnemyHealthManager : MonoBehaviour
 
     void Start()
     {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        gdm.activeEhms.Add(this);
+        maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
+        armor = baseArmor * difficultyScale * gdm.difficulty;
         activeEffects = new List<Vector4>();
         for(int i = 0; i < 11; i++)
         {
@@ -204,7 +221,10 @@ public class EnemyHealthManager : MonoBehaviour
 
         Destroy(gameObject);
     }
-
+    private void OnDestroy()
+    {
+        if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); }
+    }
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {
         //Genaric DOT
@@ -384,14 +404,10 @@ public class EnemyHealthManager : MonoBehaviour
             float maxDist = 10f + (featherton * 30f);
             List<EnemyHealthManager> possibleTargets = new List<EnemyHealthManager>();
             List<float> dist = new List<float>();
-
-            foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+            foreach(EnemyHealthManager ehm in gdm.activeEhms)
             {
-                if(enemy.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager healthMan))
-                {
-                    possibleTargets.Add(healthMan);
-                    dist.Add(Vector3.Distance(transform.position, enemy.transform.position));
-                }
+                possibleTargets.Add(ehm);
+                dist.Add(Vector3.Distance(transform.position, ehm.transform.position));
             }
             float lowestHP = float.PositiveInfinity;
             int lowestHPIndex = 0;

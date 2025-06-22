@@ -69,9 +69,12 @@ public class HealthManager : MonoBehaviour
 	public List<EnemyHealthManager> stichedEnemies = new List<EnemyHealthManager>();
 	public LineRenderer stichedEffect;
 
+	GameDataManager gdm;
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
 		money = 0;
 		dead = false;
 		maxHp = baseMaxHP;
@@ -368,16 +371,13 @@ public class HealthManager : MonoBehaviour
 		if(playerItem.leftItems[43] + playerItem.rightItems[43] > 0)
         {
 			stichedEnemies.Clear();
-			foreach(GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
-            {
-				if(enemy.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager enemyHealthMan))
-                {
-					if(enemyHealthMan.activeEffects[5].x > 0f)
-                    {
-						stichedEnemies.Add(enemyHealthMan);
-                    }
-                }
-            }
+			foreach (EnemyHealthManager ehm in gdm.activeEhms)
+			{
+				if (ehm.activeEffects[5].x > 0f)
+				{
+					stichedEnemies.Add(ehm);
+				}
+			}
 			stichedEffect.positionCount = 1;
 			stichedEffect.SetPosition(0, transform.position - Vector3.up);
 			stichedEffect.positionCount = (stichedEnemies.Count * 2) + 1;
