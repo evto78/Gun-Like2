@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1989216710087479132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7616714742337788241}
+  - component: {fileID: 4588679429331339495}
+  m_Layer: 7
+  m_Name: DoorKnobSpiral
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7616714742337788241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989216710087479132}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5144119963798750497}
+  m_Father: {fileID: 1088671533673481303}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4588679429331339495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989216710087479132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cb1b4915317a442abea58ae0a677c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinAmount: 200
 --- !u!1 &2411502404954114123
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +155,9 @@ MonoBehaviour:
   gasGrenadeAttach: 0
   gasGrenadeAttachTimer: 0
   tacticalReload: 0
+  carvedBone: 0
+  canineTooth: 0
+  doorKnob: 0
   isFastFiring: 0
   currentBullets: 0
   reloading: 0
@@ -116,6 +165,8 @@ MonoBehaviour:
   nerfedPistolBullet: {fileID: 6495255335360224864, guid: 2439375c39068034881334669f1b0f7a, type: 3}
   oilBullet: {fileID: 6495255335360224864, guid: 2439375c39068034881334669f1b0f7a, type: 3}
   firePoint: {fileID: 1088671533673481303}
+  normalFirePoint: {fileID: 1088671533673481303}
+  doorKnobFirePoint: {fileID: 5144119963798750497}
   grenade: {fileID: 7517361348596027643, guid: c680973e17bc8b44c903d1dd36c7c81c, type: 3}
   cam: {fileID: 0}
   whatHandThisIsIn: 
@@ -236,7 +287,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: -0.0403}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7616714742337788241}
   m_Father: {fileID: 6856463522256569034}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &4229387458415660356
@@ -5067,6 +5119,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &4944927516719414387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5144119963798750497}
+  m_Layer: 7
+  m_Name: DoorKnob FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5144119963798750497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4944927516719414387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.01745245, y: 0, z: 0, w: 0.99984777}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7616714742337788241}
+  m_LocalEulerAnglesHint: {x: 2, y: 0, z: 0}
 --- !u!1001 &6319439902133500323
 PrefabInstance:
   m_ObjectHideFlags: 0

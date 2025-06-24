@@ -48,6 +48,10 @@ public class HealthManager : MonoBehaviour
 	int warcry;
 	int chickenCoop;
 	public float chickenCoopTimer;
+	int canineTooth;
+	float canineToothTimer;
+	EnemyHealthManager markedEnemy;
+	public bool attackedThisRoom;
 	public GameObject egg;
 	public GameObject fly;
 
@@ -65,6 +69,7 @@ public class HealthManager : MonoBehaviour
 	public int baseCost;
 
 	public bool dead;
+	public bool brokenSpeakerItemDropped;
 
 	public List<EnemyHealthManager> stichedEnemies = new List<EnemyHealthManager>();
 	public LineRenderer stichedEffect;
@@ -84,16 +89,22 @@ public class HealthManager : MonoBehaviour
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
 		rarityList = givenRarityList;
+		float healthRegenMult = 1; float healthRegenDiv = 1;
+		float armorMult = 1; float armorDiv = 1;
+		float maxHpMult = 1; float maxHpDiv = 1;
 
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
 		maxHp = baseMaxHP + appleBuff;
 
-		healthRegen = Calc(20f, givenLeftItems[2] + givenRightItems[2], healthRegen);
+		healthRegenMult += MultAdder(20, givenLeftItems[2] + givenRightItems[2]);
 		healthRegen = Calc(20f, givenLeftItems[14] + givenRightItems[14], healthRegen);
 		healthRegen = Calc(20f, givenLeftItems[84] + givenRightItems[84], healthRegen);
 		healthRegen = Calc(40f, givenLeftItems[92] + givenRightItems[92], healthRegen);
 		healthRegen = Calc(10f, givenLeftItems[94] + givenRightItems[94], healthRegen);
+		healthRegen = Calc(40f, givenLeftItems[129] + givenRightItems[129], healthRegen);
+		healthRegen = Calc(40f, givenLeftItems[131] + givenRightItems[131], healthRegen);
+		healthRegenDiv += MultAdder(-20, givenLeftItems[24] + givenRightItems[24]);
 		healthRegen = Calc(-20f, givenLeftItems[24] + givenRightItems[24], healthRegen);
 		healthRegen = Calc(-40f, givenLeftItems[30] + givenRightItems[30], healthRegen);
 		healthRegen = Calc(-40f, givenLeftItems[80] + givenRightItems[80], healthRegen);
@@ -119,6 +130,10 @@ public class HealthManager : MonoBehaviour
 		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[79] + givenRightItems[79], maxHp));
 		maxHp = Mathf.FloorToInt(Calc(-60f, givenLeftItems[92] + givenRightItems[92], maxHp));
 
+		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
+		armor *= healthRegenMult; healthRegen /= healthRegenDiv;
+		maxHp *= healthRegenMult; healthRegen /= healthRegenDiv;
+
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
 		numOfBunnies = 0 + givenLeftItems[20] + givenRightItems[20];
@@ -131,6 +146,7 @@ public class HealthManager : MonoBehaviour
 		clockwork = 0 + givenLeftItems[81] + givenRightItems[81];
 		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
 		chickenCoop = 0 + givenLeftItems[114] + givenRightItems[114];
+		canineTooth = 0 + givenLeftItems[130] + givenRightItems[130];
 
 		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
 
@@ -162,7 +178,12 @@ public class HealthManager : MonoBehaviour
 		if (activeEffects[6].x > 0f) { armor = armor * (orgGum / 10f + 1f); }
 		if (activeEffects[8].x > 0f) { healthRegen = healthRegen * (orgGum / 10f + 1f); }
 	}
-
+	float MultAdder(float mult, int amount)
+    {
+		if(mult > 0) { return mult * (1f / 100f) * amount; }
+		if(mult < 0) { return -mult * (1f / 100f) * amount; }
+		return 0;
+	}
 	float Calc(float modifier, int amount, float baseVal)
 	{
 		float result = baseVal;
@@ -412,6 +433,43 @@ public class HealthManager : MonoBehaviour
 				chickenCoopTimer = playerItem.FindObjByID(114).baseCooldown;
             }
 		}
+
+		if(canineTooth > 0)
+        {
+			canineToothTimer -= Time.deltaTime;
+			if (markedEnemy == null && canineToothTimer <= 0f)
+            {
+				markedEnemy = gdm.activeEhms[Random.Range(0, gdm.activeEhms.Count)];
+				markedEnemy.GiveEffect("marked", 1f);
+            }
+			if (markedEnemy != null && markedEnemy.activeEffects[11].x < 1 && canineToothTimer <= 0)
+            {
+				markedEnemy = null;
+				canineToothTimer = 25f;
+            }
+        }
+
+		if(playerItem.leftItems[131] + playerItem.rightItems[131] > 0)
+        {
+			if(gdm.activeEhms.Count == 0)
+            {
+				regenTimer = -1f;
+                if (!brokenSpeakerItemDropped)
+                {
+					for(int i = 0; i < playerItem.leftItems[131] + playerItem.rightItems[131]; i++)
+                    {
+						playerItem.SpawnItem(0, false, 0, false);
+					}
+					brokenSpeakerItemDropped = true;
+                }
+            }
+        }
+
+		if(playerItem.leftItems[134] + playerItem.rightItems[134] > 0)
+        {
+            if (!attackedThisRoom && activeEffects[22].x < 2) { GiveEffect("invis", 1); }
+			if (attackedThisRoom) { activeEffects[22] = new Vector4(0, activeEffects[22].y, activeEffects[22].z, activeEffects[22].w); }
+        }
 	}
 
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
@@ -532,6 +590,7 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "fast fire") { activeEffects[19] = new Vector4(stacksToAdd, 1f, 1f, 1f); } // Fast Fire partership buff
 		if (effectGiven == "warcry") { activeEffects[20] = new Vector4(stacksToAdd, 1f+warcry, 1f+warcry, 1f); } // warcrybuff
 		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
+		if (effectGiven == "invis") { activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }

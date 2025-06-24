@@ -7,6 +7,14 @@ public class AeroRifleScript : GunScript
     public override void EarlyShoot()
     {
         base.EarlyShoot();
+        if (carvedBone > 0 && currentBullets < magSize)
+        {
+            for(int i = 0; i < (magSize - currentBullets); i++)
+            {
+                manager.healthMan.TakeDamage(1, false);
+                currentBullets++;
+            }
+        }
         int bulConsumed;
         bulConsumed = currentBullets;
         currentBullets = 1;

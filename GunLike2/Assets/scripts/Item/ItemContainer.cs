@@ -18,6 +18,11 @@ public class ItemContainer : MonoBehaviour
     int itemsSpawned;
     public float priceModifier = 1;
     public bool free;
+    public int rarity;
+    public GameObject internalItemPos;
+    List<MeshRenderer> meshes = new List<MeshRenderer>();
+    public bool eyeballLooking;
+    public float timeSinceEye;
 
     public TextMeshProUGUI costTxt;
     void Start()
@@ -32,6 +37,19 @@ public class ItemContainer : MonoBehaviour
         if (free) { cost = 0; }
 
         costTxt.text = cost.ToString() + "$";
+
+        int rand = Random.Range(1, 101);
+
+        if (rand < 71) { rarity = 0; }
+        if (rand < 91 && rand > 70) { rarity = 1; }
+        if (rand == 91 || rand == 92) { rarity = 2; }
+        if (rand == 93 || rand == 94) { rarity = 4; }
+        if (rand == 95 || rand == 96) { rarity = 5; }
+        if (rand == 97 || rand == 98) { rarity = 6; }
+        if (rand == 99) { rarity = 3; }
+        if (rand == 100) { rarity = 7; }
+
+        meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
     }
 
     private void SpawnItem(int iD)
@@ -45,13 +63,13 @@ public class ItemContainer : MonoBehaviour
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
         spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
+        
     }
-
     public void Interact()
     {
         if (interacted) { return; }
         if (player.GetComponent<HealthManager>().money < Mathf.RoundToInt(cost * priceModifier)) { return; }
-
+        Destroy(internalItemPos);
         player.GetComponent<HealthManager>().money -= Mathf.RoundToInt(cost * priceModifier);
 
         gameObject.GetComponent<Rigidbody>().useGravity = false;
@@ -73,7 +91,7 @@ public class ItemContainer : MonoBehaviour
             itemsSpawned++;
             int rand = Random.Range(1, 101);
             List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
-
+            if (i == 0) { SpawnItem(rarity); rand = 999; }
             if (rand < 71) { SpawnItem(0); }
             if (rand < 91 && rand > 70) { SpawnItem(1); }
             if (rand == 91 || rand == 92) { SpawnItem(2); }
@@ -90,7 +108,28 @@ public class ItemContainer : MonoBehaviour
     {
         if (free) { cost = 0; }
         costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
-
+        timeSinceEye += Time.deltaTime;
+        if(timeSinceEye > 0.25f)
+        {
+            eyeballLooking = false;
+            internalItemPos.transform.GetChild(rarity).gameObject.SetActive(false);
+            foreach (MeshRenderer mr in meshes)
+            {
+                mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 1f);
+            }
+        }
+        
+    }
+    private void LateUpdate()
+    {
+        if (eyeballLooking)
+        {
+            internalItemPos.transform.GetChild(rarity).gameObject.SetActive(true);
+            foreach (MeshRenderer mr in meshes)
+            {
+                mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 0.2f);
+            }
+        }
     }
 
 }

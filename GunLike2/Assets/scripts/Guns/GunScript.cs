@@ -71,6 +71,11 @@ public class GunScript : MonoBehaviour
     public float gasGrenadeAttachTimer;
     public int tacticalReload;
     int tacticalCompress;
+    public int carvedBone;
+    public int canineTooth;
+    public int doorKnob;
+
+    public float echoDmg;
 
     public bool isFastFiring;
 
@@ -89,6 +94,8 @@ public class GunScript : MonoBehaviour
     public GameObject nerfedPistolBullet;
     public GameObject oilBullet;
     public Transform firePoint;
+    public Transform normalFirePoint;
+    public Transform doorKnobFirePoint;
 
     public GameObject grenade;
 
@@ -162,6 +169,9 @@ public class GunScript : MonoBehaviour
         grenadeAttach = manager.leftGrenadeAttach;
         gasGrenadeAttach = manager.leftGasGrenadeAttach;
         tacticalReload = manager.leftTactReload;
+        carvedBone = manager.leftCarvedBone;
+        canineTooth = manager.leftCanineTooth;
+        doorKnob = manager.leftDoorKnob;
 
         ricochet = manager.leftRicochet;
 
@@ -180,6 +190,10 @@ public class GunScript : MonoBehaviour
         if (acc > 25f)
         {
             acc = 25f;
+        }
+        if(bulSize > 10f)
+        {
+            bulSize = 10f;
         }
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
@@ -230,6 +244,9 @@ public class GunScript : MonoBehaviour
         grenadeAttach = manager.rightGrenadeAttach;
         gasGrenadeAttach = manager.rightGasGrenadeAttach;
         tacticalReload = manager.rightTactReload;
+        carvedBone = manager.rightCarvedBone;
+        canineTooth = manager.rightCanineTooth;
+        doorKnob = manager.rightDoorKnob;
 
         ricochet = manager.rightRicochet;
 
@@ -249,6 +266,10 @@ public class GunScript : MonoBehaviour
         {
             acc = 25f;
         }
+        if (bulSize > 10f)
+        {
+            bulSize = 10f;
+        }
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
@@ -262,6 +283,8 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
+        if(doorKnob > 0) { firePoint = doorKnobFirePoint; } else { firePoint = normalFirePoint; }
+
         timeSinceShot += Time.deltaTime;
 
         if(possession > 0 && timeSinceShot > 5f)
@@ -359,7 +382,7 @@ public class GunScript : MonoBehaviour
         {
             animator.SetBool("NoAmmo", false);
         }
-        else
+        else if (carvedBone < 1)
         {
             animator.SetBool("NoAmmo", true);
         }
@@ -511,11 +534,17 @@ public class GunScript : MonoBehaviour
         isFastFiring = false;
         shooting = true;
         attackTimer = 1;
+        if(carvedBone > 0 && currentBullets < 1)
+        {
+            manager.healthMan.TakeDamage(1, false);
+            currentBullets++;
+        }
         if (currentBullets > 0)
         {
             timeSinceShot = 0f;
             EarlyShoot();
             currentBullets--;
+            if(echoDmg > 0) { dmg += echoDmg; echoDmg = 0; }
             GameObject spawnedBullet;
             if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
             else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }

@@ -29,7 +29,7 @@ public class KnifeBrain : MonoBehaviour
     float cooldownTimer;
     public GameObject knifePrefab;
 
-    EnemyHealthManager healthMan;
+    EnemyHealthManager hm;
 
     bool pauseNagivation;
     bool speedingUp;
@@ -39,8 +39,8 @@ public class KnifeBrain : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
         preparing = false;
-        healthMan = GetComponent<EnemyHealthManager>();
-        dmg = healthMan.baseDamage * healthMan.gdm.difficulty * healthMan.difficultyScale;
+        hm = GetComponent<EnemyHealthManager>();
+        dmg = hm.baseDamage * hm.gdm.difficulty * hm.difficultyScale;
         player = GameObject.Find("Player");
         mr = transform.GetChild(1).gameObject.GetComponent<MeshRenderer>();
 
@@ -72,26 +72,32 @@ public class KnifeBrain : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.transform.position) < strikeRange && !preparing && !striking && cooldownTimer <= 0f)
         {
-            preparing = true;
-            pauseNagivation = true;
-            rb.velocity = rb.velocity / 10f;
-            transform.LookAt(player.transform.position);
+            if (!(hm.playerHM.activeEffects[22].x < 0)) 
+            {
+                preparing = true;
+                pauseNagivation = true;
+                rb.velocity = rb.velocity / 10f;
+                transform.LookAt(player.transform.position);
 
-            rb.freezeRotation = true;
+                rb.freezeRotation = true;
 
-            shimmerEffect.Play();
+                shimmerEffect.Play();
 
-            strikeTimer = 0.5f;
+                strikeTimer = 0.5f;
+            }
         }
 
         if (preparing)
         {
-            transform.LookAt(player.transform.position);
+            if (!(hm.playerHM.activeEffects[22].x < 0))
+            {
+                transform.LookAt(player.transform.position);
 
-            strikeTimer -= Time.deltaTime;
-            rb.velocity = rb.velocity / 1.1f;
+                strikeTimer -= Time.deltaTime;
+                rb.velocity = rb.velocity / 1.1f;
 
-            if(strikeTimer <= 0f) { striking = true; preparing = false; strikeTimer = 2f; }
+                if (strikeTimer <= 0f) { striking = true; preparing = false; strikeTimer = 2f; }
+            }
         }
 
         if (striking)
@@ -163,6 +169,7 @@ public class KnifeBrain : MonoBehaviour
 
     void Movement()
     {
+        if(hm.playerHM.activeEffects[22].x > 0) { return; }
         Vector3 moveDir;
 
         moveDir = target.transform.position - transform.position;

@@ -8,7 +8,7 @@ public class UZIWalkerBrain : MonoBehaviour
     public GameObject turrethead;
     public GameObject firepoint;
     Animator turretAnim;
-    EnemyHealthManager healthMan;
+    EnemyHealthManager hm;
 
     public GameObject bullet;
     public float shotCooldown;
@@ -26,16 +26,17 @@ public class UZIWalkerBrain : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        healthMan = GetComponent<EnemyHealthManager>();
-        dmg = healthMan.baseDamage * healthMan.difficultyScale * healthMan.gdm.difficulty;
+        hm = GetComponent<EnemyHealthManager>();
+        dmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
         turretAnim = turrethead.GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        jammed = healthMan.activeEffects[3].x > 0;
+        jammed = hm.activeEffects[3].x > 0;
 
+        if(hm.playerHM.activeEffects[22].x > 0) { return; }
         turrethead.transform.LookAt(player.transform.position);
 
         if (Physics.Raycast(turrethead.transform.position, turrethead.transform.forward, out RaycastHit hit, 100f))
@@ -55,7 +56,7 @@ public class UZIWalkerBrain : MonoBehaviour
                     {
                         if (jammed)
                         {
-                            healthMan.activeEffects[3] = new Vector4(healthMan.activeEffects[3].x - 1, healthMan.activeEffects[3].y, healthMan.activeEffects[3].z, healthMan.activeEffects[3].w);
+                            hm.activeEffects[3] = new Vector4(hm.activeEffects[3].x - 1, hm.activeEffects[3].y, hm.activeEffects[3].z, hm.activeEffects[3].w);
                         }
                         cooldownTimer = shotCooldown;
                         turretAnim.speed = 1f / cooldownTimer;

@@ -90,6 +90,9 @@ public class GunManager : MonoBehaviour
     public int leftGasGrenadeAttach;
     public int leftWarcry;
     public int leftTactReload;
+    public int leftCarvedBone;
+    public int leftCanineTooth;
+    public int leftDoorKnob;
 
     public bool leftRicochet = false;
 
@@ -155,6 +158,9 @@ public class GunManager : MonoBehaviour
     public int rightGasGrenadeAttach;
     public int rightWarcry;
     public int rightTactReload;
+    public int rightCarvedBone;
+    public int rightCanineTooth;
+    public int rightDoorKnob;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -310,6 +316,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
         leftAtkSpd = Calc(10f, givenLeftItems[97], leftAtkSpd);
         leftAtkSpd = Calc(60f, givenLeftItems[118], leftAtkSpd);
+        leftAtkSpd = Calc(60f, givenLeftItems[132], leftAtkSpd);
         leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
         leftAtkSpd = Calc(-10f, givenLeftItems[59], leftAtkSpd);
         leftAtkSpd = Calc(-60f, givenLeftItems[91], leftAtkSpd);
@@ -331,6 +338,7 @@ public class GunManager : MonoBehaviour
         leftDmg = Calc(40f, givenLeftItems[102], leftDmg);
         leftDmg = Calc(10f, givenLeftItems[98], leftDmg);
         leftDmg = Calc(40f, givenLeftItems[121], leftDmg);
+        leftDmg = Calc(20f, givenLeftItems[133], leftDmg);
         leftDmg = Calc(-20f, givenLeftItems[12], leftDmg);
         leftDmg = Calc(-20f, givenLeftItems[31], leftDmg);
         leftDmg = Calc(-20f, givenLeftItems[46], leftDmg);
@@ -349,6 +357,7 @@ public class GunManager : MonoBehaviour
         leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
         leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
+        leftAcc = Calc(40f, givenLeftItems[128], leftAcc);
         leftAcc = Calc(-20f, givenLeftItems[32], leftAcc);
         leftAcc = Calc(-20f, givenLeftItems[46], leftAcc);
         leftAcc = Calc(-10f, givenLeftItems[59], leftAcc);
@@ -409,6 +418,9 @@ public class GunManager : MonoBehaviour
         leftGasGrenadeAttach = givenLeftItems[108];
         leftWarcry = givenLeftItems[110];
         leftTactReload = givenLeftItems[113];
+        leftCarvedBone = givenLeftItems[129];
+        leftCanineTooth = givenLeftItems[130];
+        leftDoorKnob = givenLeftItems[132];
 
         leftRicochet = false;
 
@@ -426,6 +438,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
         rightAtkSpd = Calc(10f, givenRightItems[97], rightAtkSpd);
         rightAtkSpd = Calc(60f, givenRightItems[118], rightAtkSpd);
+        rightAtkSpd = Calc(60f, givenRightItems[132], rightAtkSpd);
         rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
         rightAtkSpd = Calc(-10f, givenRightItems[59], rightAtkSpd);
         rightAtkSpd = Calc(-60f, givenRightItems[91], rightAtkSpd);
@@ -448,6 +461,7 @@ public class GunManager : MonoBehaviour
         rightDmg = Calc(40f, givenRightItems[102], rightDmg);
         rightDmg = Calc(10f, givenRightItems[98], rightDmg);
         rightDmg = Calc(40f, givenRightItems[121], rightDmg);
+        rightDmg = Calc(20f, givenRightItems[133], rightDmg);
         rightDmg = Calc(-20f, givenRightItems[12], rightDmg);
         rightDmg = Calc(-20f, givenRightItems[31], rightDmg);
         rightDmg = Calc(-20f, givenRightItems[46], rightDmg);
@@ -466,6 +480,7 @@ public class GunManager : MonoBehaviour
         rightAcc = Calc(20f, givenRightItems[8], rightAcc);
         rightAcc = Calc(40f, givenRightItems[25], rightAcc);
         rightAcc = Calc(40f, givenRightItems[27], rightAcc);
+        rightAcc = Calc(40f, givenRightItems[128], rightAcc);
         rightAcc = Calc(-20f, givenRightItems[32], rightAcc);
         rightAcc = Calc(-20f, givenRightItems[46], rightAcc);
         rightAcc = Calc(-10f, givenRightItems[59], rightAcc);
@@ -526,6 +541,9 @@ public class GunManager : MonoBehaviour
         rightGasGrenadeAttach = givenRightItems[108];
         rightWarcry = givenRightItems[110];
         rightTactReload = givenRightItems[113];
+        rightCarvedBone = givenRightItems[129];
+        rightCanineTooth = givenRightItems[130];
+        rightDoorKnob = givenRightItems[132];
 
         rightRicochet = false;
 

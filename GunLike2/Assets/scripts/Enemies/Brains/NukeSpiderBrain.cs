@@ -19,21 +19,21 @@ public class NukeSpiderBrain : MonoBehaviour
     public float nukeDmg;
     public GameObject tail;
     public GameObject shine;
-    EnemyHealthManager healthMan;
+    EnemyHealthManager hm;
     void Start()
     {
         player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody>();
         nav = GetComponent<NavAI>();
         agent = GetComponent<NavMeshAgent>();
-        healthMan = GetComponent<EnemyHealthManager>();
-        nukeDmg = healthMan.baseDamage * healthMan.difficultyScale * healthMan.gdm.difficulty;
+        hm = GetComponent<EnemyHealthManager>();
+        nukeDmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!jumping && Vector3.Distance(player.transform.position, transform.position) < jumpDistance)
+        if(!jumping && Vector3.Distance(player.transform.position, transform.position) < jumpDistance && !(hm.playerHM.activeEffects[22].x > 0))
         {
             jumping = true;
             nav.enabled = false;
@@ -44,7 +44,7 @@ public class NukeSpiderBrain : MonoBehaviour
         agent.enabled = !jumping;
         tail.SetActive(jumping);
         shine.SetActive(diving);
-        if(jumping && rb.velocity.y < 0 && !diving)
+        if(jumping && rb.velocity.y < 0 && !diving && !(hm.playerHM.activeEffects[22].x > 0))
         {
             diving = true;
             Dive();

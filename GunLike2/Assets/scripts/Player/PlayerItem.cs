@@ -90,6 +90,8 @@ public class PlayerItem : MonoBehaviour
 
     public int lastItemPressed;
     public string lastItemPressedHand;
+
+    public GameObject itemPos;
     private void Awake()
     {
         itemData = new List<ItemObject>();
@@ -353,6 +355,14 @@ public class PlayerItem : MonoBehaviour
                 {
                     hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
                 }
+                if(hit.collider.gameObject.TryGetComponent<ItemContainer>(out ItemContainer ic))
+                {
+                    if (leftItems[128] + rightItems[128] > 0)
+                    {
+                        ic.eyeballLooking = true;
+                        ic.timeSinceEye = 0;
+                    }
+                }
             }
         }
         else
@@ -462,6 +472,37 @@ public class PlayerItem : MonoBehaviour
             }
         }
 
+    }
+    public void SpawnItem(int id, bool overrideID, int rarity, bool overrideRarity)
+    {
+        int spawnedRarity = 0;
+        if(!overrideID && !overrideRarity)
+        {
+            int rand = Random.Range(1, 101);
+            if (rand < 71) { spawnedRarity = 0; }
+            if (rand < 91 && rand > 70) { spawnedRarity = 0; }
+            if (rand == 91 || rand == 92) { spawnedRarity = 2; }
+            if (rand == 93 || rand == 94) { spawnedRarity = 4; }
+            if (rand == 95 || rand == 96) { spawnedRarity = 5; }
+            if (rand == 97 || rand == 98) { spawnedRarity = 6; }
+            if (rand == 99) { spawnedRarity = 3; }
+            if (rand == 100) { spawnedRarity = 7; }
+        }
+        else if (overrideRarity) { spawnedRarity = rarity; }
+
+        GameObject spawnedItem = Instantiate(itemPos);
+        spawnedItem.transform.position = transform.position + transform.forward * 1.2f;
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(spawnedRarity);
+        if (overrideID) 
+        { 
+            spawnedItem.GetComponent<ItemPossibility>().overrideid = true; 
+            spawnedItem.GetComponent<ItemPossibility>().idover = id;
+            for(int i = 0; i < rarityList.Count; i++)
+            {
+                if (rarityList[i].Contains(id)) { spawnedItem.GetComponent<ItemPossibility>().SetRarity(i); }
+            }
+        }
+        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }
     public ItemObject FindObjByID(int id)
     {

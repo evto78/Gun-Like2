@@ -26,10 +26,10 @@ public class GrenadeBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        followPlayer();
+        if(hm.playerHM.activeEffects[22].x < 0) { followPlayer(); }
         if (!Ticking)
         {
-            Bounce();
+            if (hm.playerHM.activeEffects[22].x < 0) { Bounce(); }
         }
         else
         {

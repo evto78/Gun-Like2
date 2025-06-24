@@ -18,6 +18,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public List<MonoBehaviour> brains;
     public GameObject frozenEffect;
+    public GameObject markedEffect;
     public GameObject item;
     public GameObject itemPossibility;
 
@@ -40,7 +41,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     GameObject player;
     PlayerItem playerItem;
-    HealthManager playerHM;
+    public HealthManager playerHM;
 
     public GameDataManager gdm;
 
@@ -68,7 +69,7 @@ public class EnemyHealthManager : MonoBehaviour
         maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
         armor = baseArmor * difficultyScale * gdm.difficulty;
         activeEffects = new List<Vector4>();
-        for(int i = 0; i < 11; i++)
+        for(int i = 0; i < 12; i++)
         {
             activeEffects.Add(Vector4.zero);
         }
@@ -106,6 +107,49 @@ public class EnemyHealthManager : MonoBehaviour
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
         if (activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
         if(activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
+        if(playerHM.activeEffects[22].x > 0 && playerItem.leftItems[134]+playerItem.rightItems[134]>1) { dmgTaken *= 1.25f * (playerItem.leftItems[134] + playerItem.rightItems[134] - 1); }
+
+        if (!textColor.Contains("crit"))
+        {
+            if (activeEffects[11].x > 0 && Random.Range(0,2) == 0) { 
+                if(textColor == "normalHit") { textColor = "critHit"; }
+                if(textColor == "weakHit") { textColor = "critWeakHit"; }
+                if (source == "left") { dmgTaken *= playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
+                if (source == "right") { dmgTaken *= playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
+                if(playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
+            }
+        }
+        else if(activeEffects[11].x > 0 && playerItem.leftItems[130] + playerItem.rightItems[130] > 1)
+        {
+            dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1));
+        }
+
+        if((source == "left" && playerItem.leftItems[127] > 0))
+        {
+            if(curHp >= maxHp)
+            {
+                if(Random.Range(1,100) < (playerItem.leftItems[127] * 2.5f) + 5f)
+                {
+                    curHp = -100f;
+                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    Die();
+                }
+            }
+        }
+        if((source == "right" && playerItem.rightItems[127] > 0))
+        {
+            if (curHp >= maxHp)
+            {
+                if (Random.Range(1, 100) < (playerItem.rightItems[127] * 2.5f) + 5f)
+                {
+                    curHp = -100f;
+                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    Die();
+                }
+            }
+        }
 
         if(activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
         {
@@ -178,7 +222,11 @@ public class EnemyHealthManager : MonoBehaviour
             gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
         }
 
-        if (curHp <= 0 && !died) { Die(); died = true; }
+        if (curHp <= 0 && !died) { died = true; 
+            if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+            if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+            Die();
+        }
     }
 
     public void TakePercentDamage(float pDmgTaken)
@@ -241,6 +289,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
         if (effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
         if (effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
+        if (effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
     }
 
     void ManageEffects()
@@ -280,6 +329,14 @@ public class EnemyHealthManager : MonoBehaviour
                 {
                     brain.enabled = true;
                 }
+            }
+            if(i == 11 && q.x > 0)
+            {
+                markedEffect.SetActive(true);
+            }
+            else if(i == 11 && q.x < 1)
+            {
+                markedEffect.SetActive(false);
             }
 
             //if there are any stacks of this effect
