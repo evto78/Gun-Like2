@@ -16,10 +16,10 @@ public class DoubleBarrelScript : GunScript
         {
             if (!reloading && !shooting)
             {
-                if(magSize / 2 > 25) { bulletsQued = Mathf.RoundToInt(magSize / 2); }
+                if(Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
                 else
                 {
-                    for (int i = 0; i < magSize / 2; i++)
+                    for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                     {
                         Shoot(1f);
                         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
@@ -47,10 +47,10 @@ public class DoubleBarrelScript : GunScript
     {
         if (bowAct > 0)
         {
-            if (magSize / 2 > 25) { bulletsQued = Mathf.RoundToInt(magSize / 2); }
+            if (Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
             else
             {
-                for (int i = 0; i < magSize / 2; i++)
+                for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                 {
                     Shoot(bowCharge);
                     if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
