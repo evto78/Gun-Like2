@@ -89,6 +89,12 @@ public class NEWPlayerMovement : MonoBehaviour
 
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
+        //base stats
+        float moveSpeedMult = 1f; float moveSpeedDiv = 1f;
+        float sprintMoveSpeedMult = 1f; float sprintMoveSpeedDiv = 1f;
+        float jumpForceMult = 1f; float jumpForceDiv = 1f;
+        float gravityMult = 1f; float gravityDiv = 1f;
+
         baseMoveSpeed = 600f;
         baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
         baseJumpForce = 2000f;
@@ -107,23 +113,33 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[10].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
+        //Move Speed
+        moveSpeedMult += MultAdder(20f, givenLeftItems[59] + givenRightItems[59]);
+        moveSpeedMult += MultAdder(20f, givenLeftItems[73] + givenRightItems[73]);
 
-        moveSpeed = Calc(-20f, givenLeftItems[20] + givenRightItems[20], moveSpeed);
-        moveSpeed = Calc(-20f, givenLeftItems[61] + givenRightItems[61], moveSpeed);
-        moveSpeed = Calc(20f, givenLeftItems[59] + givenRightItems[59], moveSpeed);
-        moveSpeed = Calc(20f, givenLeftItems[73] + givenRightItems[73], moveSpeed);
-        sprintMoveSpeed = Calc(20f, givenLeftItems[0] + givenRightItems[0], sprintMoveSpeed);
-        sprintMoveSpeed = Calc(40f, givenLeftItems[59] + givenRightItems[59], sprintMoveSpeed);
-        jumpForce = Calc(20f, givenLeftItems[1] + givenRightItems[1], jumpForce);
-        jumpForce = Calc(20f, givenLeftItems[20] + givenRightItems[20], jumpForce);
-        jumpForce = Calc(20f, givenLeftItems[59] + givenRightItems[59], jumpForce);
-        jumpForce = Calc(-20f, givenLeftItems[23] + givenRightItems[23], jumpForce);
+        moveSpeedDiv += MultAdder(-20f, givenLeftItems[20] + givenRightItems[20]);
+        moveSpeedDiv += MultAdder(-20f, givenLeftItems[61] + givenRightItems[61]);
+        //Sprint Speed
+        sprintMoveSpeedMult += MultAdder(20f, givenLeftItems[0] + givenRightItems[0]);
+        sprintMoveSpeedMult += MultAdder(40f, givenLeftItems[59] + givenRightItems[59]);
+        //Jump Force
+        jumpForceMult += MultAdder(20f, givenLeftItems[1] + givenRightItems[1]);
+        jumpForceMult += MultAdder(20f, givenLeftItems[20] + givenRightItems[20]);
+        jumpForceMult += MultAdder(20f, givenLeftItems[59] + givenRightItems[59]);
+
+        jumpForceDiv += MultAdder(-20f, givenLeftItems[23] + givenRightItems[23]);
+        //Num of Jumps
         numberOfJumps += givenLeftItems[15] + givenRightItems[15];
         numberOfJumps += givenLeftItems[31] + givenRightItems[31];
         numberOfJumps += givenLeftItems[32] + givenRightItems[32];
         numberOfJumps += (givenLeftItems[46]*2) + (givenRightItems[46]*2);
-        gravityModifier = Calc(-10f, givenLeftItems[15] + givenRightItems[15], gravityModifier);
-
+        //Gravity
+        gravityDiv += MultAdder(-10f, givenLeftItems[15] + givenRightItems[15]);
+        //Apply mult
+        moveSpeed *= moveSpeedMult; moveSpeed /= moveSpeedDiv;
+        sprintMoveSpeed *= sprintMoveSpeedMult; sprintMoveSpeed /= sprintMoveSpeedDiv;
+        jumpForce *= jumpForceMult; jumpForce /= jumpForceDiv;
+        gravityModifier *= gravityMult; gravityModifier /= gravityDiv;
         //Item Checks
         if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
         {
@@ -195,39 +211,11 @@ public class NEWPlayerMovement : MonoBehaviour
         if(sprintMoveSpeed > baseSprintMoveSpeed * 5) { sprintMoveSpeed = baseSprintMoveSpeed * 5; }
         if(jumpForce > baseJumpForce * 5) { jumpForce = baseJumpForce * 5; }
     }
-
-    float Calc(float modifier, int amount, float baseVal)
+    float MultAdder(float mult, int amount)
     {
-        float result = baseVal;
-
-        if (amount <= 0) { return result; }
-
-        if (modifier > 0)
-        {
-            //Buff
-
-            for (int i = 0; i <= amount; i++)
-            {
-                result = result + result * (modifier / 100);
-            }
-        }
-        else if (modifier < 0)
-        {
-            //Debuff
-            modifier = modifier * -1f;
-
-            for (int i = 0; i <= amount; i++)
-            {
-                result = result - result * (modifier / 100);
-            }
-        }
-
-        if (Mathf.FloorToInt(result) <= 0)
-        {
-            result = Mathf.CeilToInt(result);
-        }
-
-        return result;
+        if (mult > 0) { return mult * (1f / 100f) * amount; }
+        if (mult < 0) { return -mult * (1f / 100f) * amount; }
+        return 0;
     }
     // Update is called once per frame
     void Update()

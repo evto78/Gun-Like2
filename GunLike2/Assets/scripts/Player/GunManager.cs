@@ -265,6 +265,17 @@ public class GunManager : MonoBehaviour
         if (effectList[18].x > 0f) { masterAtkSpd = masterAtkSpd * 1.5f; }
         if (effectList[19].x > 0f) { masterAtkSpd = masterAtkSpd * 2f; }
 
+        //Base Stats
+        float leftAtkSpdMult = 1f; float leftAtkSpdDiv = 1f; float rightAtkSpdMult = 1f; float rightAtkSpdDiv = 1f;
+        float leftReSpdMult = 1f; float leftReSpdDiv = 1f; float rightReSpdMult = 1f; float rightReSpdDiv = 1f;
+        float leftDmgMult = 1f; float leftDmgDiv = 1f; float rightDmgMult = 1f; float rightDmgDiv = 1f;
+        float leftMagSizeMult = 1f; float leftMagSizeDiv = 1f; float rightMagSizeMult = 1f; float rightMagSizeDiv = 1f;
+        float leftAccMult = 1f; float leftAccDiv = 1f; float rightAccMult = 1f; float rightAccDiv = 1f;
+        float leftBulSpdMult = 1f; float leftBulSpdDiv = 1f; float rightBulSpdMult = 1f; float rightBulSpdDiv = 1f;
+        float leftBulSizeMult = 1f; float leftBulSizeDiv = 1f; float rightBulSizeMult = 1f; float rightBulSizeDiv = 1f;
+        float leftCritDamageMult = 1f; float leftCritDamageDiv = 1f; float rightCritDamageMult = 1f; float rightCritDamageDiv = 1f;
+        float leftWeakPointDamageMult = 1f; float leftWeakPointDamageDiv = 1f; float rightWeakPointDamageMult = 1f; float rightWeakPointDamageDiv = 1f;
+
         leftAtkSpd = 1f * masterAtkSpd;
         leftReSpd = 1f * masterReSpd;
         leftDmg = 1f * masterDmg;
@@ -312,74 +323,91 @@ public class GunManager : MonoBehaviour
             rightBulSpd = Calc(5f, daEagleIgnoredRight, rightBulSpd);
             rightBulSize = Calc(5f, daEagleIgnoredRight, rightBulSize);
         }
+        //Left Attack Speed
+        leftAtkSpdMult += MultAdder(20f, givenLeftItems[62]);
+        leftAtkSpdMult += MultAdder(10f, givenLeftItems[97]);
+        leftAtkSpdMult += MultAdder(60f, givenLeftItems[118]);
+        leftAtkSpdMult += MultAdder(60f, givenLeftItems[132]);
 
-        leftAtkSpd = Calc(20f, givenLeftItems[62], leftAtkSpd);
-        leftAtkSpd = Calc(10f, givenLeftItems[97], leftAtkSpd);
-        leftAtkSpd = Calc(60f, givenLeftItems[118], leftAtkSpd);
-        leftAtkSpd = Calc(60f, givenLeftItems[132], leftAtkSpd);
-        leftAtkSpd = Calc(-50f, givenLeftItems[21], leftAtkSpd);
-        leftAtkSpd = Calc(-10f, givenLeftItems[59], leftAtkSpd);
-        leftAtkSpd = Calc(-60f, givenLeftItems[91], leftAtkSpd);
-        leftReSpd = Calc(20f, givenLeftItems[7], leftReSpd);
-        leftReSpd = Calc(-10f, givenLeftItems[59], leftReSpd);
-        leftReSpd = Calc(-60f, givenLeftItems[90], leftReSpd);
-        leftReSpd = Calc(-20f, givenLeftItems[113], leftReSpd);
-        leftDmg = Calc(40f, givenLeftItems[21], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[13], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[4], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[11], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[40], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[26], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[27], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[66], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[84], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[90], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[91], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[102], leftDmg);
-        leftDmg = Calc(10f, givenLeftItems[98], leftDmg);
-        leftDmg = Calc(40f, givenLeftItems[121], leftDmg);
-        leftDmg = Calc(20f, givenLeftItems[133], leftDmg);
-        leftDmg = Calc(-20f, givenLeftItems[12], leftDmg);
-        leftDmg = Calc(-20f, givenLeftItems[31], leftDmg);
-        leftDmg = Calc(-20f, givenLeftItems[46], leftDmg);
-        leftDmg = Calc(-20f, givenLeftItems[59], leftDmg);
-        leftDmg = Calc(-20f, givenLeftItems[113], leftDmg);
-        leftDmg = Calc(-80f, givenLeftItems[118], leftDmg);
-        leftMagSize = Calc(20f, givenLeftItems[6], leftMagSize);
-        leftMagSize = Calc(10f, givenLeftItems[100], leftMagSize);
-        leftMagSize = Calc(50f, givenLeftItems[101], leftMagSize);
-        leftMagSize = Calc(60f, givenLeftItems[118], leftMagSize);
-        leftMagSize = Calc(-50f, givenLeftItems[21], leftMagSize);
-        leftMagSize = Calc(-40f, givenLeftItems[25], leftMagSize);
-        leftMagSize = Calc(-40f, givenLeftItems[26], leftMagSize);
-        leftMagSize = Calc(-10f, givenLeftItems[59], leftMagSize);
-        leftMagSize = Calc(-20f, givenLeftItems[113], leftMagSize);
-        leftAcc = Calc(20f, givenLeftItems[8], leftAcc);
-        leftAcc = Calc(40f, givenLeftItems[25], leftAcc);
-        leftAcc = Calc(40f, givenLeftItems[27], leftAcc);
-        leftAcc = Calc(40f, givenLeftItems[128], leftAcc);
-        leftAcc = Calc(-20f, givenLeftItems[32], leftAcc);
-        leftAcc = Calc(-20f, givenLeftItems[46], leftAcc);
-        leftAcc = Calc(-10f, givenLeftItems[59], leftAcc);
-        leftAcc = Calc(-60f, givenLeftItems[118], leftAcc);
-        leftAcc = Calc(-40f, givenLeftItems[121], leftAcc);
-        leftBulSpd = Calc(20f, givenLeftItems[9], leftBulSpd);
-        leftBulSpd = Calc(20f, givenLeftItems[57], leftBulSpd);
-        leftBulSpd = Calc(20f, givenLeftItems[76], leftBulSpd);
-        leftBulSpd = Calc(20f, givenLeftItems[119], leftBulSpd);
-        leftBulSpd = Calc(-20f, givenLeftItems[11], leftBulSpd);
-        leftBulSpd = Calc(-20f, givenLeftItems[12], leftBulSpd);
-        leftBulSpd = Calc(-20f, givenLeftItems[59], leftBulSpd);
-        leftBulSpd = Calc(-20f, givenLeftItems[77], leftBulSpd);
-        leftBulSpd = Calc(-60f, givenLeftItems[118], leftBulSpd);
-        leftBulSize = Calc(20f, givenLeftItems[11], leftBulSize);
-        leftBulSize = Calc(20f, givenLeftItems[64], leftBulSize);
+        leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
+        leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
+        leftAtkSpdDiv += MultAdder(-60f, givenLeftItems[91]);
+        //Left Reload Speed
+        leftReSpdMult += MultAdder(20f, givenLeftItems[7]);
+
+        leftReSpdDiv += MultAdder(-10f, givenLeftItems[59]);
+        leftReSpdDiv += MultAdder(-60f, givenLeftItems[90]);
+        leftReSpdDiv += MultAdder(-20f, givenLeftItems[113]);
+        //Left Damage
+        leftDmgMult += MultAdder(40f, givenLeftItems[21]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[13]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[4]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[11]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[40]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[26]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[27]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[66]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[84]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[90]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[91]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[102]);
+        leftDmgMult += MultAdder(10f, givenLeftItems[98]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[121]);
+        leftDmgMult += MultAdder(20f, givenLeftItems[133]);
+        
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[12]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[31]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[46]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[59]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[113]);
+        leftDmgDiv += MultAdder(-80f, givenLeftItems[118]);
+        //Left Magazine Size
+        leftMagSizeMult += MultAdder(20f, givenLeftItems[6]);
+        leftMagSizeMult += MultAdder(10f, givenLeftItems[100]);
+        leftMagSizeMult += MultAdder(50f, givenLeftItems[101]);
+        leftMagSizeMult += MultAdder(60f, givenLeftItems[118]);
+
+        leftMagSizeDiv += MultAdder(-50f, givenLeftItems[21]);
+        leftMagSizeDiv += MultAdder(-40f, givenLeftItems[25]);
+        leftMagSizeDiv += MultAdder(-40f, givenLeftItems[26]);
+        leftMagSizeDiv += MultAdder(-10f, givenLeftItems[59]);
+        leftMagSizeDiv += MultAdder(-20f, givenLeftItems[113]);
+        //Left Accuracy
+        leftAccMult += MultAdder(20f, givenLeftItems[8]);
+        leftAccMult += MultAdder(40f, givenLeftItems[25]);
+        leftAccMult += MultAdder(40f, givenLeftItems[27]);
+        leftAccMult += MultAdder(40f, givenLeftItems[128]);
+
+        leftAccDiv += MultAdder(-20f, givenLeftItems[32]);
+        leftAccDiv += MultAdder(-20f, givenLeftItems[46]);
+        leftAccDiv += MultAdder(-10f, givenLeftItems[59]);
+        leftAccDiv += MultAdder(-60f, givenLeftItems[118]);
+        leftAccDiv += MultAdder(-40f, givenLeftItems[121]);
+        //Left Bullet Speed
+        leftBulSpdMult += MultAdder(20f, givenLeftItems[9]);
+        leftBulSpdMult += MultAdder(20f, givenLeftItems[57]);
+        leftBulSpdMult += MultAdder(20f, givenLeftItems[76]);
+        leftBulSpdMult += MultAdder(20f, givenLeftItems[119]);
+
+        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[11]);
+        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[12]);
+        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[59]);
+        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[77]);
+        leftBulSpdDiv += MultAdder(-60f, givenLeftItems[118]);
+        //Left Bullet Size
+        leftBulSizeMult += MultAdder(20f, givenLeftItems[11]);
+        leftBulSizeMult += MultAdder(20f, givenLeftItems[64]);
+        //Left Bullet Pierce
         leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
-        leftWeakPointDamage = Calc(20f, givenLeftItems[76], leftWeakPointDamage);
+        //Left Weak Point Chance
+        //Left Weak Point Damage
+        leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[76]);
+        //Left Crit Chance
         leftCritChance += 20f * givenLeftItems[77];
         leftCritChance += 10f * givenLeftItems[78];
-        leftCritDamage = Calc(20f, givenLeftItems[77], leftCritDamage);
-
+        //Left Crit Damage
+        leftCritDamageMult += MultAdder(20f, givenLeftItems[77]);
+        //Left Other
         leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
         leftBowAct = givenLeftItems[16];
@@ -435,74 +463,91 @@ public class GunManager : MonoBehaviour
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
         if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
 
-        rightAtkSpd = Calc(20f, givenRightItems[62], rightAtkSpd);
-        rightAtkSpd = Calc(10f, givenRightItems[97], rightAtkSpd);
-        rightAtkSpd = Calc(60f, givenRightItems[118], rightAtkSpd);
-        rightAtkSpd = Calc(60f, givenRightItems[132], rightAtkSpd);
-        rightAtkSpd = Calc(-50f, givenRightItems[21], rightAtkSpd);
-        rightAtkSpd = Calc(-10f, givenRightItems[59], rightAtkSpd);
-        rightAtkSpd = Calc(-60f, givenRightItems[91], rightAtkSpd);
-        rightReSpd = Calc(20f, givenRightItems[7], rightReSpd);
-        rightReSpd = Calc(20f, givenRightItems[33], rightReSpd);
-        rightReSpd = Calc(-20f, givenRightItems[59], rightReSpd);
-        rightReSpd = Calc(-60f, givenRightItems[90], rightReSpd);
-        rightReSpd = Calc(-20f, givenRightItems[113], rightReSpd);
-        rightDmg = Calc(40f, givenRightItems[21], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[13], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[11], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[4], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[40], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[26], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[27], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[66], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[84], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[90], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[91], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[102], rightDmg);
-        rightDmg = Calc(10f, givenRightItems[98], rightDmg);
-        rightDmg = Calc(40f, givenRightItems[121], rightDmg);
-        rightDmg = Calc(20f, givenRightItems[133], rightDmg);
-        rightDmg = Calc(-20f, givenRightItems[12], rightDmg);
-        rightDmg = Calc(-20f, givenRightItems[31], rightDmg);
-        rightDmg = Calc(-20f, givenRightItems[46], rightDmg);
-        rightDmg = Calc(-20f, givenRightItems[59], rightDmg);
-        rightDmg = Calc(-20f, givenRightItems[113], rightDmg);
-        rightDmg = Calc(-80f, givenRightItems[118], rightDmg);
-        rightMagSize = Calc(20f, givenRightItems[6], rightMagSize);
-        rightMagSize = Calc(10f, givenRightItems[100], rightMagSize);
-        rightMagSize = Calc(50f, givenRightItems[101], rightMagSize);
-        rightMagSize = Calc(60f, givenRightItems[118], rightMagSize);
-        rightMagSize = Calc(-50f, givenRightItems[21], rightMagSize);
-        rightMagSize = Calc(-40f, givenRightItems[25], rightMagSize);
-        rightMagSize = Calc(-40f, givenRightItems[26], rightMagSize);
-        rightMagSize = Calc(-10f, givenRightItems[59], rightMagSize);
-        rightMagSize = Calc(-20f, givenRightItems[113], rightMagSize);
-        rightAcc = Calc(20f, givenRightItems[8], rightAcc);
-        rightAcc = Calc(40f, givenRightItems[25], rightAcc);
-        rightAcc = Calc(40f, givenRightItems[27], rightAcc);
-        rightAcc = Calc(40f, givenRightItems[128], rightAcc);
-        rightAcc = Calc(-20f, givenRightItems[32], rightAcc);
-        rightAcc = Calc(-20f, givenRightItems[46], rightAcc);
-        rightAcc = Calc(-10f, givenRightItems[59], rightAcc);
-        rightAcc = Calc(-60f, givenRightItems[118], rightAcc);
-        rightAcc = Calc(-40f, givenRightItems[121], rightAcc);
-        rightBulSpd = Calc(20f, givenRightItems[9], rightBulSpd);
-        rightBulSpd = Calc(20f, givenRightItems[57], rightBulSpd);
-        rightBulSpd = Calc(20f, givenRightItems[76], rightBulSpd);
-        rightBulSpd = Calc(20f, givenRightItems[119], rightBulSpd);
-        rightBulSpd = Calc(-20f, givenRightItems[11], rightBulSpd);
-        rightBulSpd = Calc(-20f, givenRightItems[12], rightBulSpd);
-        rightBulSpd = Calc(-20f, givenRightItems[59], rightBulSpd);
-        rightBulSpd = Calc(-20f, givenRightItems[77], rightBulSpd);
-        rightBulSpd = Calc(-60f, givenRightItems[118], rightBulSpd);
-        rightBulSize = Calc(20f, givenRightItems[11], rightBulSize);
-        rightBulSize = Calc(20f, givenRightItems[64], rightBulSize);
+        //Right Attack Speed
+        rightAtkSpdMult += MultAdder(20f, givenRightItems[62]);
+        rightAtkSpdMult += MultAdder(10f, givenRightItems[97]);
+        rightAtkSpdMult += MultAdder(60f, givenRightItems[118]);
+        rightAtkSpdMult += MultAdder(60f, givenRightItems[132]);
+
+        rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
+        rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
+        rightAtkSpdDiv += MultAdder(-60f, givenRightItems[91]);
+        //Right Reload Speed
+        rightReSpdMult += MultAdder(20f, givenRightItems[7]);
+        rightReSpdMult += MultAdder(20f, givenRightItems[33]);
+
+        rightReSpdDiv += MultAdder(-20f, givenRightItems[59]);
+        rightReSpdDiv += MultAdder(-60f, givenRightItems[90]);
+        rightReSpdDiv += MultAdder(-20f, givenRightItems[113]);
+        //Right Damage
+        rightDmgMult += MultAdder(40f, givenRightItems[21]);
+        rightDmgMult += MultAdder(40f, givenRightItems[13]);
+        rightDmgMult += MultAdder(20f, givenRightItems[11]);
+        rightDmgMult += MultAdder(20f, givenRightItems[4]);
+        rightDmgMult += MultAdder(20f, givenRightItems[40]);
+        rightDmgMult += MultAdder(40f, givenRightItems[26]);
+        rightDmgMult += MultAdder(40f, givenRightItems[27]);
+        rightDmgMult += MultAdder(20f, givenRightItems[66]);
+        rightDmgMult += MultAdder(40f, givenRightItems[90]);
+        rightDmgMult += MultAdder(40f, givenRightItems[91]);
+        rightDmgMult += MultAdder(40f, givenRightItems[102]);
+        rightDmgMult += MultAdder(10f, givenRightItems[98]);
+        rightDmgMult += MultAdder(40f, givenRightItems[121]);
+        rightDmgMult += MultAdder(20f, givenRightItems[133]);
+
+        rightDmgDiv += MultAdder(-20f, givenRightItems[12]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[31]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[46]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[59]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[113]);
+        rightDmgDiv += MultAdder(-80f, givenRightItems[118]);
+        //Right Magazine Size
+        rightMagSizeMult += MultAdder(20f, givenRightItems[6]);
+        rightMagSizeMult += MultAdder(10f, givenRightItems[100]);
+        rightMagSizeMult += MultAdder(50f, givenRightItems[101]);
+        rightMagSizeMult += MultAdder(60f, givenRightItems[118]);
+
+        rightMagSizeDiv += MultAdder(-50f, givenRightItems[21]);
+        rightMagSizeDiv += MultAdder(-40f, givenRightItems[25]);
+        rightMagSizeDiv += MultAdder(-40f, givenRightItems[26]);
+        rightMagSizeDiv += MultAdder(-10f, givenRightItems[59]);
+        rightMagSizeDiv += MultAdder(-20f, givenRightItems[113]);
+        //Right Accuracy
+        rightAccMult += MultAdder(20f, givenRightItems[8]);
+        rightAccMult += MultAdder(40f, givenRightItems[25]);
+        rightAccMult += MultAdder(40f, givenRightItems[27]);
+        rightAccMult += MultAdder(40f, givenRightItems[128]);
+
+        rightAccDiv += MultAdder(-20f, givenRightItems[32]);
+        rightAccDiv += MultAdder(-20f, givenRightItems[46]);
+        rightAccDiv += MultAdder(-10f, givenRightItems[59]);
+        rightAccDiv += MultAdder(-60f, givenRightItems[118]);
+        rightAccDiv += MultAdder(-40f, givenRightItems[121]);
+        //Right Bullet Speed
+        rightBulSpdMult += MultAdder(20f, givenRightItems[9]);
+        rightBulSpdMult += MultAdder(20f, givenRightItems[57]);
+        rightBulSpdMult += MultAdder(20f, givenRightItems[76]);
+        rightBulSpdMult += MultAdder(20f, givenRightItems[119]);
+
+        rightBulSpdDiv += MultAdder(-20f, givenRightItems[11]);
+        rightBulSpdDiv += MultAdder(-20f, givenRightItems[12]);
+        rightBulSpdDiv += MultAdder(-20f, givenRightItems[59]);
+        rightBulSpdDiv += MultAdder(-20f, givenRightItems[77]);
+        rightBulSpdDiv += MultAdder(-60f, givenRightItems[118]);
+        //Right Bullet Size
+        rightBulSizeMult += MultAdder(20f, givenRightItems[11]);
+        rightBulSizeMult += MultAdder(20f, givenRightItems[64]);
+        //Right Pierce
         rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
-        rightWeakPointDamage = Calc(20f, givenRightItems[76], rightWeakPointDamage);
+        //Right Weak Point Chance
+        //Right Weak Point Damage
+        rightWeakPointDamageMult += MultAdder(20f, givenRightItems[76]);
+        //Right Crit Chance
         rightCritChance += 20f * givenRightItems[77];
         rightCritChance += 10f * givenRightItems[78];
-        rightCritDamage = Calc(20f, givenRightItems[77], rightCritDamage);
-
+        //Right Crit Damage
+        rightCritDamageMult += MultAdder(20f, givenRightItems[77]);
+        //Right Other
         rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
         rightBowAct = givenRightItems[16];
@@ -557,7 +602,16 @@ public class GunManager : MonoBehaviour
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
         if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
-
+        //Apply Mult
+        leftAtkSpd *= leftAtkSpdMult; leftAtkSpd /= leftAtkSpdDiv; rightAtkSpd *= rightAtkSpdMult; rightAtkSpd /= rightAtkSpdDiv;
+        leftReSpd *= leftReSpdMult; leftReSpd /= leftReSpdDiv; rightReSpd *= rightReSpdMult; rightReSpd /= rightReSpdDiv;
+        leftDmg *= leftDmgMult; leftDmg /= leftDmgDiv; rightDmg *= rightDmgMult; rightDmg /= rightDmgDiv;
+        leftMagSize *= leftMagSizeMult; leftMagSize /= leftMagSizeDiv; rightMagSize *= rightMagSizeMult; rightMagSize /= rightMagSizeDiv;
+        leftAcc *= leftAccMult; leftAcc /= leftAccDiv; rightAcc *= rightAccMult; rightAcc /= rightAccDiv;
+        leftBulSpd *= leftBulSpdMult; leftBulSpd /= leftBulSpdDiv; rightBulSpd *= rightBulSpdMult; rightBulSpd /= rightBulSpdDiv;
+        leftBulSize *= leftBulSizeMult; leftBulSize /= leftBulSizeDiv; rightBulSize *= rightBulSizeMult; rightBulSize /= rightBulSizeDiv;
+        leftCritDamage *= leftCritDamageMult; leftCritDamage /= leftCritDamageDiv; rightCritDamage *= rightCritDamageMult; rightCritDamage /= rightCritDamageDiv;
+        leftWeakPointDamage *= leftWeakPointDamageMult; leftWeakPointDamage /= leftWeakPointDamageDiv; rightWeakPointDamage *= rightWeakPointDamageMult; rightWeakPointDamage /= rightWeakPointDamageDiv;
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
         {
@@ -627,7 +681,12 @@ public class GunManager : MonoBehaviour
             givenRightItems.AddRange(rightList);
         }
     }
-
+    float MultAdder(float mult, int amount)
+    {
+        if (mult > 0) { return mult * (1f / 100f) * amount; }
+        if (mult < 0) { return -mult * (1f / 100f) * amount; }
+        return 0;
+    }
     float Calc(float modifier, int amount, float baseVal)
     {
         float result = baseVal;

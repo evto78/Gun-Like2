@@ -89,51 +89,53 @@ public class HealthManager : MonoBehaviour
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
 		rarityList = givenRarityList;
-		float healthRegenMult = 1; float healthRegenDiv = 1;
-		float armorMult = 1; float armorDiv = 1;
-		float maxHpMult = 1; float maxHpDiv = 1;
+		//Base Stats
+		float healthRegenMult = 1f; float healthRegenDiv = 1f;
+		float armorMult = 1f; float armorDiv = 1f;
+		float maxHpMult = 1f; float maxHpDiv = 1f;
 
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
 		maxHp = baseMaxHP + appleBuff;
+		//Health Regen
+		healthRegenMult += MultAdder(20f, givenLeftItems[2] + givenRightItems[2]);
+		healthRegenMult += MultAdder(20f, givenLeftItems[14] + givenRightItems[14]);
+		healthRegenMult += MultAdder(20f, givenLeftItems[84] + givenRightItems[84]);
+		healthRegenMult += MultAdder(40f, givenLeftItems[92] + givenRightItems[92]);
+		healthRegenMult += MultAdder(10f, givenLeftItems[94] + givenRightItems[94]);
+		healthRegenMult += MultAdder(40f, givenLeftItems[129] + givenRightItems[129]);
+		healthRegenMult += MultAdder(40f, givenLeftItems[131] + givenRightItems[131]);
 
-		healthRegenMult += MultAdder(20, givenLeftItems[2] + givenRightItems[2]);
-		healthRegen = Calc(20f, givenLeftItems[14] + givenRightItems[14], healthRegen);
-		healthRegen = Calc(20f, givenLeftItems[84] + givenRightItems[84], healthRegen);
-		healthRegen = Calc(40f, givenLeftItems[92] + givenRightItems[92], healthRegen);
-		healthRegen = Calc(10f, givenLeftItems[94] + givenRightItems[94], healthRegen);
-		healthRegen = Calc(40f, givenLeftItems[129] + givenRightItems[129], healthRegen);
-		healthRegen = Calc(40f, givenLeftItems[131] + givenRightItems[131], healthRegen);
-		healthRegenDiv += MultAdder(-20, givenLeftItems[24] + givenRightItems[24]);
-		healthRegen = Calc(-20f, givenLeftItems[24] + givenRightItems[24], healthRegen);
-		healthRegen = Calc(-40f, givenLeftItems[30] + givenRightItems[30], healthRegen);
-		healthRegen = Calc(-40f, givenLeftItems[80] + givenRightItems[80], healthRegen);
-		healthRegen = Calc(-20f, givenLeftItems[96] + givenRightItems[96], healthRegen);
-		armor = Calc(10f, givenLeftItems[3] + givenRightItems[3], armor);
-		armor = Calc(10f, givenLeftItems[56] + givenRightItems[56], armor);
-		armor = Calc(20f, givenLeftItems[61] + givenRightItems[61], armor);
-		armor = Calc(20f, givenLeftItems[63] + givenRightItems[63], armor);
-		armor = Calc(20f, givenLeftItems[65] + givenRightItems[65], armor);
-		armor = Calc(60f, givenLeftItems[115] + givenRightItems[115], armor);
-		armor = Calc(-20f, givenLeftItems[12] + givenRightItems[12], armor);
-		armor = Calc(-20f, givenLeftItems[66] + givenRightItems[66], armor);
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[12] + givenRightItems[12], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(40f, givenLeftItems[23] + givenRightItems[23], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[39] + givenRightItems[39], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[60] + givenRightItems[60], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[61] + givenRightItems[61], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[85] + givenRightItems[85], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(10f, givenLeftItems[99] + givenRightItems[99], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(20f, givenLeftItems[124] + givenRightItems[124], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[13] + givenRightItems[13], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[18] + givenRightItems[18], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-40f, givenLeftItems[79] + givenRightItems[79], maxHp));
-		maxHp = Mathf.FloorToInt(Calc(-60f, givenLeftItems[92] + givenRightItems[92], maxHp));
+		healthRegenDiv += MultAdder(-20f, givenLeftItems[24] + givenRightItems[24]);
+		healthRegenDiv += MultAdder(-40f, givenLeftItems[30] + givenRightItems[30]);
+		healthRegenDiv += MultAdder(-40f, givenLeftItems[80] + givenRightItems[80]);
+		healthRegenDiv += MultAdder(-20f, givenLeftItems[96] + givenRightItems[96]);
+		//Armor
+		armorMult += MultAdder(10f, givenLeftItems[3] + givenRightItems[3]);
+		armorMult += MultAdder(10f, givenLeftItems[56] + givenRightItems[56]);
+		armorMult += MultAdder(20f, givenLeftItems[61] + givenRightItems[61]);
+		armorMult += MultAdder(20f, givenLeftItems[63] + givenRightItems[63]);
+		armorMult += MultAdder(20f, givenLeftItems[65] + givenRightItems[65]);
+		armorMult += MultAdder(60f, givenLeftItems[115] + givenRightItems[115]);
 
-		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
-		armor *= healthRegenMult; healthRegen /= healthRegenDiv;
-		maxHp *= healthRegenMult; healthRegen /= healthRegenDiv;
+		armorDiv += MultAdder(-20f, givenLeftItems[12] + givenRightItems[12]);
+		armorDiv += MultAdder(-20f, givenLeftItems[66] + givenRightItems[66]);
+		//Max Hp
+		maxHpMult += MultAdder(20f, givenLeftItems[12] + givenRightItems[12]);
+		maxHpMult += MultAdder(40f, givenLeftItems[23] + givenRightItems[23]);
+		maxHpMult += MultAdder(50f, givenLeftItems[30] + givenRightItems[30]);
+		maxHpMult += MultAdder(20f, givenLeftItems[39] + givenRightItems[39]);
+		maxHpMult += MultAdder(20f, givenLeftItems[60] + givenRightItems[60]);
+		maxHpMult += MultAdder(20f, givenLeftItems[61] + givenRightItems[61]);
+		maxHpMult += MultAdder(20f, givenLeftItems[85] + givenRightItems[85]);
+		maxHpMult += MultAdder(10f, givenLeftItems[99] + givenRightItems[99]);
+		maxHpMult += MultAdder(20f, givenLeftItems[124] + givenRightItems[124]);
 
+		maxHpDiv += MultAdder(-40f, givenLeftItems[13] + givenRightItems[13]);
+		maxHpDiv += MultAdder(-40f, givenLeftItems[18] + givenRightItems[18]);
+		maxHpDiv += MultAdder(-40f, givenLeftItems[79] + givenRightItems[79]);
+		maxHpDiv += MultAdder(-60f, givenLeftItems[92] + givenRightItems[92]);
+		//Other
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
 		numOfBunnies = 0 + givenLeftItems[20] + givenRightItems[20];
@@ -147,9 +149,10 @@ public class HealthManager : MonoBehaviour
 		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
 		chickenCoop = 0 + givenLeftItems[114] + givenRightItems[114];
 		canineTooth = 0 + givenLeftItems[130] + givenRightItems[130];
-
-		if (activeReactor > 0) { maxHp = Mathf.FloorToInt(Calc(50f, givenLeftItems[30] + givenRightItems[30], maxHp)); }
-
+		//Applying Mult
+		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
+		armor *= armorMult; armor /= armorDiv;
+		maxHp *= maxHpMult; maxHp /= maxHpDiv;
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
         {
@@ -183,39 +186,6 @@ public class HealthManager : MonoBehaviour
 		if(mult > 0) { return mult * (1f / 100f) * amount; }
 		if(mult < 0) { return -mult * (1f / 100f) * amount; }
 		return 0;
-	}
-	float Calc(float modifier, int amount, float baseVal)
-	{
-		float result = baseVal;
-
-        if (amount <= 0) { return result; }
-
-		if (modifier > 0)
-		{
-			//Buff
-
-			for (int i = 0; i < amount; i++)
-			{
-				result = result + result * (modifier / 100);
-			}
-		}
-		else if (modifier < 0)
-		{
-			//Debuff
-			modifier = modifier * -1f;
-
-			for (int i = 0; i < amount; i++)
-			{
-				result = result - result * (modifier / 100);
-			}
-		}
-
-		if(Mathf.FloorToInt(result) <= 0)
-        {
-			result = Mathf.CeilToInt(result);
-        }
-
-		return result;
 	}
 	void Update()
 	{
