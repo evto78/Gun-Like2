@@ -462,6 +462,7 @@ public class GunManager : MonoBehaviour
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
         if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
         if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
+        if (givenLeftItems[135] > 0f) { float upBuff = 1 + ((transform.position.y / 50f) * 2f); if (upBuff > 2f) { upBuff = 2f; }; leftDmg *= upBuff; }
 
         //Right Attack Speed
         rightAtkSpdMult += MultAdder(20f, givenRightItems[62]);
@@ -602,6 +603,7 @@ public class GunManager : MonoBehaviour
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
         if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
+        if (givenRightItems[135] > 0f) { float upBuff = 1 + ((transform.position.y / 50f) * 2f); if (upBuff > 2f) { upBuff = 2f; } ; rightDmg *= upBuff; }
         //Apply Mult
         leftAtkSpd *= leftAtkSpdMult; leftAtkSpd /= leftAtkSpdDiv; rightAtkSpd *= rightAtkSpdMult; rightAtkSpd /= rightAtkSpdDiv;
         leftReSpd *= leftReSpdMult; leftReSpd /= leftReSpdDiv; rightReSpd *= rightReSpdMult; rightReSpd /= rightReSpdDiv;

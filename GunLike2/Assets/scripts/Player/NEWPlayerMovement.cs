@@ -133,6 +133,7 @@ public class NEWPlayerMovement : MonoBehaviour
         numberOfJumps += givenLeftItems[31] + givenRightItems[31];
         numberOfJumps += givenLeftItems[32] + givenRightItems[32];
         numberOfJumps += (givenLeftItems[46]*2) + (givenRightItems[46]*2);
+        numberOfJumps += givenLeftItems[135] + givenRightItems[135];
         //Gravity
         gravityDiv += MultAdder(-10f, givenLeftItems[15] + givenRightItems[15]);
         //Apply mult
