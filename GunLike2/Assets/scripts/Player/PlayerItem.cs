@@ -345,6 +345,13 @@ public class PlayerItem : MonoBehaviour
                     if (rightItems[86] > 0) { rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; rightItems[86]--; }
                 }
             }
+            else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))
+            {
+                Vector3 hitItem = hit.collider.gameObject.transform.position;
+
+                itemDisplay.SetActive(true);
+                itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(FindObjByID(sc.id), hitItem);
+            }
             else
             {
                 itemDisplay.SetActive(false);
@@ -506,6 +513,7 @@ public class PlayerItem : MonoBehaviour
     }
     public ItemObject FindObjByID(int id)
     {
+        //itemData.IndexOf()
         return Resources.Load<ItemObject>("Items/" + id.ToString());
     }
     public Vector2 GetCooldownInfo(int id, string hand)

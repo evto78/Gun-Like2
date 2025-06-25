@@ -48,7 +48,7 @@ public class ItemContainer : MonoBehaviour
         if (rand == 97 || rand == 98) { rarity = 6; }
         if (rand == 99) { rarity = 3; }
         if (rand == 100) { rarity = 7; }
-
+        meshes.Clear();
         meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
     }
 
@@ -83,6 +83,7 @@ public class ItemContainer : MonoBehaviour
         hatch.GetComponent<Rigidbody>().AddForce((spawnPos.transform.forward * 1000f) + (Vector3.one * Random.Range(-100f,100f)));
         hatch.GetComponent<Rigidbody>().AddTorque(Vector3.one * Random.Range(-100f,100f));
         hatch.transform.SetParent(null);
+        meshes.Remove(hatch.GetComponent<MeshRenderer>());
         Destroy(hatch, 10f);
 
         itemsSpawned = 0;
@@ -111,8 +112,10 @@ public class ItemContainer : MonoBehaviour
         timeSinceEye += Time.deltaTime;
         if(timeSinceEye > 0.25f)
         {
+            meshes.Clear();
+            meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
             eyeballLooking = false;
-            internalItemPos.transform.GetChild(rarity).gameObject.SetActive(false);
+            if (internalItemPos != null) { internalItemPos.transform.GetChild(rarity).gameObject.SetActive(false); }
             foreach (MeshRenderer mr in meshes)
             {
                 mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 1f);
@@ -124,7 +127,9 @@ public class ItemContainer : MonoBehaviour
     {
         if (eyeballLooking)
         {
-            internalItemPos.transform.GetChild(rarity).gameObject.SetActive(true);
+            meshes.Clear();
+            meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
+            if (internalItemPos != null) { internalItemPos.transform.GetChild(rarity).gameObject.SetActive(true); }
             foreach (MeshRenderer mr in meshes)
             {
                 mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 0.2f);

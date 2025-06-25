@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 4002787222840925564}
   - component: {fileID: 4425600075989655748}
   - component: {fileID: 7934581687029031043}
+  - component: {fileID: 4109239636159160942}
   m_Layer: 0
   m_Name: ShopBox
   m_TagString: Interactable
@@ -259,6 +260,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 71500695d8acc7b4a8fe54168956d507, type: 3}
   - {fileID: 21300000, guid: 8fc151c562f54574582cdf18a30f4c5b, type: 3}
   - {fileID: 21300000, guid: a0c53306a0ac94043867e125a7b38213, type: 3}
+  priceModifier: 1
 --- !u!65 &7934581687029031043
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -280,6 +282,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5, y: 2.5, z: 2.5}
   m_Center: {x: 0, y: 1.16, z: 0}
+--- !u!114 &4109239636159160942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402574986913293854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7715a01f171e12e43ab9f907f3ec8a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedObject: {fileID: 8870223166628129681}
+  renDistance: 10
 --- !u!1 &497345911394891030
 GameObject:
   m_ObjectHideFlags: 0
