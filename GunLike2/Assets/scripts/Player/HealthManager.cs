@@ -561,6 +561,7 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "warcry") { activeEffects[20] = new Vector4(stacksToAdd, 1f+warcry, 1f+warcry, 1f); } // warcrybuff
 		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
 		if (effectGiven == "invis") { activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
+		
 
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }

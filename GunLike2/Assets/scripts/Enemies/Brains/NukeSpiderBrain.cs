@@ -53,7 +53,9 @@ public class NukeSpiderBrain : MonoBehaviour
         {
             transform.eulerAngles = divingAngle;
         }
-        
+
+        if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        else { agent.speed = 7f; }
     }
     void Jump()
     {

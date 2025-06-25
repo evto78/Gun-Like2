@@ -24,6 +24,13 @@ public class gasGrenadeAttach : MonoBehaviour
                 if (effecting) { ehm.GiveEffect("gas", 1f); }
             }
         }
+        else
+        {
+            if(other.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+            {
+                if (effecting) { ehm.GiveEffect("gas", 1f); }
+            }
+        }
         
     }
 }

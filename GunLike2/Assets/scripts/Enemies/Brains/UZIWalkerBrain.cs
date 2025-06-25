@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class UZIWalkerBrain : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class UZIWalkerBrain : MonoBehaviour
     public GameObject firepoint;
     Animator turretAnim;
     EnemyHealthManager hm;
+    NavMeshAgent agent;
 
     public GameObject bullet;
     public float shotCooldown;
@@ -23,12 +25,14 @@ public class UZIWalkerBrain : MonoBehaviour
 
     bool jammed;
     public ParticleSystem jamEffect;
+
     void Start()
     {
         player = GameObject.Find("Player");
         hm = GetComponent<EnemyHealthManager>();
         dmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
         turretAnim = turrethead.GetComponentInChildren<Animator>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -76,7 +80,9 @@ public class UZIWalkerBrain : MonoBehaviour
         }
         fireTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
         cooldownTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
-        
+
+        if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f*(hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        else { agent.speed = 7f; }
     }
 
     void Shoot()

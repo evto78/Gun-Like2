@@ -69,7 +69,7 @@ public class EnemyHealthManager : MonoBehaviour
         maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
         armor = baseArmor * difficultyScale * gdm.difficulty;
         activeEffects = new List<Vector4>();
-        for(int i = 0; i < 12; i++)
+        for(int i = 0; i < 13; i++)
         {
             activeEffects.Add(Vector4.zero);
         }
@@ -290,6 +290,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
         if (effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
         if (effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
+        if (effectGiven == "webbed") { activeEffects[12] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
     }
 
     void ManageEffects()

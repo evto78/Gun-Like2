@@ -98,6 +98,7 @@ public class GunScript : MonoBehaviour
     public Transform doorKnobFirePoint;
 
     public GameObject grenade;
+    public GameObject placedWeb;
 
     public Camera cam;
 

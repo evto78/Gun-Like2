@@ -15,6 +15,7 @@ public class KnifeBrain : MonoBehaviour
     public Material followMat;
 
     public float speed;
+    float baseSpeed;
     public Vector3 moveCurve;
     Rigidbody rb;
 
@@ -36,10 +37,12 @@ public class KnifeBrain : MonoBehaviour
 
     void Start()
     {
+        baseSpeed = speed;
         rb = gameObject.GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
         preparing = false;
         hm = GetComponent<EnemyHealthManager>();
+        hm.gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         dmg = hm.baseDamage * hm.gdm.difficulty * hm.difficultyScale;
         player = GameObject.Find("Player");
         mr = transform.GetChild(1).gameObject.GetComponent<MeshRenderer>();
@@ -108,8 +111,9 @@ public class KnifeBrain : MonoBehaviour
             {
                 strikeTimer -= Time.deltaTime * 3f;
             }
+            if (hm.activeEffects[12].x > 0) { rb.AddForce(transform.forward * ((50f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])))) * Time.deltaTime), ForceMode.Impulse); }
+            else { rb.AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse); }
             
-            rb.AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse);
 
             if(strikeTimer <= 0f)
             {
@@ -118,6 +122,9 @@ public class KnifeBrain : MonoBehaviour
         }
 
         cooldownTimer -= Time.deltaTime;
+
+        if (hm.activeEffects[12].x > 0) { speed = baseSpeed / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        else { speed = baseSpeed; }
     }
     private void FixedUpdate()
     {
@@ -169,7 +176,7 @@ public class KnifeBrain : MonoBehaviour
 
     void Movement()
     {
-        if(hm.playerHM.activeEffects[22].x > 0) { return; }
+        if (hm.playerHM != null && hm.playerHM.activeEffects[22].x > 0) { return; }
         Vector3 moveDir;
 
         moveDir = target.transform.position - transform.position;

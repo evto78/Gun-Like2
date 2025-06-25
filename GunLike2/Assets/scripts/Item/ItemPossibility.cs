@@ -45,7 +45,19 @@ public class ItemPossibility : MonoBehaviour
         option2 = null;
 
         locked = false;
-        if(pi.rightItems[68] + pi.leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
+
+        if (pi.rightItems[137] + pi.leftItems[137] > 0)
+        {
+            if (Random.Range(1, 100) < 50 + (25 * pi.rightItems[137] + pi.leftItems[137]))
+            {
+                overrideid = true; idover = pi.horrorItems[Random.Range(0, pi.horrorItems.Count)];
+                for(int i = 0; i < pi.rarityList.Count; i++)
+                {
+                    if (pi.rarityList[i].Contains(idover)) { SetRarity(i); } 
+                }
+            }
+        }
+        if (pi.rightItems[68] + pi.leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
         if (overrideid) { isShrodinger = false; }
         shrodingerBox.SetActive(isShrodinger);
 
@@ -74,6 +86,7 @@ public class ItemPossibility : MonoBehaviour
                 spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID);
             }
         }
+        
         int doubleOrNothing = pi.rightItems[120] + pi.leftItems[120];
         if (doubleOrNothing > 0 && !isDoubled)
         {
@@ -140,7 +153,17 @@ public class ItemPossibility : MonoBehaviour
 
         rarity = givenRarity;
 
-        if(rarity == 0) { commonPS.SetActive(true);}
+        commonPS.SetActive(false);
+        uncommonPS.SetActive(false);
+        rarePS.SetActive(false); 
+        legendaryPS.SetActive(false); 
+        mutatedPS.SetActive(false); 
+        hauntedPS.SetActive(false); 
+        irradiadedPS.SetActive(false); 
+        nuclearPS.SetActive(false); 
+        uniquePS.SetActive(false); 
+
+        if (rarity == 0) { commonPS.SetActive(true);}
         if(rarity == 1) { uncommonPS.SetActive(true);}
         if(rarity == 2) { rarePS.SetActive(true);}
         if(rarity == 3) { legendaryPS.SetActive(true);}

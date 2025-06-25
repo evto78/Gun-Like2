@@ -72,6 +72,7 @@ public class BulletScript : MonoBehaviour
     public GameObject lavaBlob;
     public GameObject sniperTowerAlly;
     public GameObject zipMissle;
+    public GameObject web;
 
     void Awake()
     {
@@ -218,6 +219,8 @@ public class BulletScript : MonoBehaviour
             }
             
         }
+
+        
     }
 
     protected void RunOnCollide(GameObject givenGameObject)
@@ -503,6 +506,15 @@ public class BulletScript : MonoBehaviour
             else
             {
 
+            }
+        }
+        if ((whatHandThisComesFrom == "left" && pi.leftItems[136] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[136] > 0))
+        {
+            if (gunFiredFrom.placedWeb == null)
+            {
+                GameObject spawnedWeb = Instantiate(web);
+                spawnedWeb.transform.position = transform.position;
+                gunFiredFrom.placedWeb = spawnedWeb;
             }
         }
         damage = damage / (1 + (turbineCharge/4f));
