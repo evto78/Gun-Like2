@@ -93,6 +93,7 @@ public class GunManager : MonoBehaviour
     public int leftCarvedBone;
     public int leftCanineTooth;
     public int leftDoorKnob;
+    public int leftHaunt;
 
     public bool leftRicochet = false;
 
@@ -161,6 +162,7 @@ public class GunManager : MonoBehaviour
     public int rightCarvedBone;
     public int rightCanineTooth;
     public int rightDoorKnob;
+    public int rightHaunt;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -332,6 +334,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
         leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
         leftAtkSpdDiv += MultAdder(-60f, givenLeftItems[91]);
+        leftAtkSpdDiv += MultAdder(-40f, givenLeftItems[138]);
         //Left Reload Speed
         leftReSpdMult += MultAdder(20f, givenLeftItems[7]);
 
@@ -361,6 +364,7 @@ public class GunManager : MonoBehaviour
         leftDmgDiv += MultAdder(-20f, givenLeftItems[59]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[113]);
         leftDmgDiv += MultAdder(-80f, givenLeftItems[118]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[138]);
         //Left Magazine Size
         leftMagSizeMult += MultAdder(20f, givenLeftItems[6]);
         leftMagSizeMult += MultAdder(10f, givenLeftItems[100]);
@@ -449,6 +453,7 @@ public class GunManager : MonoBehaviour
         leftCarvedBone = givenLeftItems[129];
         leftCanineTooth = givenLeftItems[130];
         leftDoorKnob = givenLeftItems[132];
+        leftHaunt = givenLeftItems[138];
 
         leftRicochet = false;
 
@@ -473,6 +478,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
         rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
         rightAtkSpdDiv += MultAdder(-60f, givenRightItems[91]);
+        rightAtkSpdDiv += MultAdder(-40f, givenRightItems[138]);
         //Right Reload Speed
         rightReSpdMult += MultAdder(20f, givenRightItems[7]);
         rightReSpdMult += MultAdder(20f, givenRightItems[33]);
@@ -502,6 +508,7 @@ public class GunManager : MonoBehaviour
         rightDmgDiv += MultAdder(-20f, givenRightItems[59]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[113]);
         rightDmgDiv += MultAdder(-80f, givenRightItems[118]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[138]);
         //Right Magazine Size
         rightMagSizeMult += MultAdder(20f, givenRightItems[6]);
         rightMagSizeMult += MultAdder(10f, givenRightItems[100]);
@@ -590,6 +597,7 @@ public class GunManager : MonoBehaviour
         rightCarvedBone = givenRightItems[129];
         rightCanineTooth = givenRightItems[130];
         rightDoorKnob = givenRightItems[132];
+        rightHaunt = givenRightItems[138];
 
         rightRicochet = false;
 

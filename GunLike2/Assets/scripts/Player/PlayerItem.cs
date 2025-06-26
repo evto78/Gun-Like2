@@ -513,7 +513,7 @@ public class PlayerItem : MonoBehaviour
     }
     public ItemObject FindObjByID(int id)
     {
-        //itemData.IndexOf()
+        //itemData.IndexOf(itemData[0].na)
         return Resources.Load<ItemObject>("Items/" + id.ToString());
     }
     public Vector2 GetCooldownInfo(int id, string hand)

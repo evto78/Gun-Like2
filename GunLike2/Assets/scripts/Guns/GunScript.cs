@@ -74,6 +74,7 @@ public class GunScript : MonoBehaviour
     public int carvedBone;
     public int canineTooth;
     public int doorKnob;
+    public int haunt;
 
     public float echoDmg;
 
@@ -173,6 +174,7 @@ public class GunScript : MonoBehaviour
         carvedBone = manager.leftCarvedBone;
         canineTooth = manager.leftCanineTooth;
         doorKnob = manager.leftDoorKnob;
+        haunt = manager.leftHaunt;
 
         ricochet = manager.leftRicochet;
 
@@ -248,6 +250,7 @@ public class GunScript : MonoBehaviour
         carvedBone = manager.rightCarvedBone;
         canineTooth = manager.rightCanineTooth;
         doorKnob = manager.rightDoorKnob;
+        haunt = manager.rightHaunt;
 
         ricochet = manager.rightRicochet;
 
