@@ -20,6 +20,8 @@ public class ShopCrate : MonoBehaviour
     public Image rarityBG;
     public List<Sprite> rarityBGs;
     public float priceModifier = 1;
+
+    bool overrideId; int idOver;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,12 +44,16 @@ public class ShopCrate : MonoBehaviour
         if (rand == 99) { temp = 3; }
         if (rand == 100) { temp = 7; }
 
+        if (pi.leftItems[142] + pi.rightItems[142] > 0) { temp = 8; overrideId = true; idOver = 143; }
+
         cost = Mathf.RoundToInt(player.GetComponent<HealthManager>().baseCost * (1.2f + temp * 2f));
         if(temp == 3 || temp == 7) { cost *= 3; }
+        if(temp == 8) { cost /= Mathf.RoundToInt(1.2f + temp); }
 
         costTxt.text = cost.ToString() + "$";
 
         id = raritys[temp][Random.Range(0, raritys[temp].Count)];
+        if (overrideId) { id = idOver; }
         rarity = temp;
         rarityBG.sprite = rarityBGs[rarity];
         img.sprite = pi.FindObjByID(id).itemSprite;
@@ -81,6 +87,12 @@ public class ShopCrate : MonoBehaviour
     }
     private void Update()
     {
+        if(pi.leftItems[142] + pi.rightItems[142] > 0)
+        {
+            if (id != 143) { id = 143;  img.sprite = pi.FindObjByID(id).itemSprite; }
+            overrideId = true; idOver = 143; rarity = 8; rarityBG.sprite = rarityBGs[rarity];
+        }
+
         timer -= Time.deltaTime;
         costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
         int i = 0;

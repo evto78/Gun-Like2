@@ -57,6 +57,10 @@ public class ItemPossibility : MonoBehaviour
                 }
             }
         }
+        if (pi.leftItems[142] + pi.rightItems[142] > 0)
+        {
+            overrideid = true; idover = 143; SetRarity(8);
+        }
         if (pi.rightItems[68] + pi.leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
         if (overrideid) { isShrodinger = false; }
         shrodingerBox.SetActive(isShrodinger);

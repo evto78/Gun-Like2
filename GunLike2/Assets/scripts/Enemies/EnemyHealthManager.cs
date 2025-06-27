@@ -72,6 +72,7 @@ public class EnemyHealthManager : MonoBehaviour
         for(int i = 0; i < 13; i++)
         {
             activeEffects.Add(Vector4.zero);
+            GiveEffect(i.ToString(), 0f);
         }
 
         icons = new List<GameObject>();
@@ -275,24 +276,35 @@ public class EnemyHealthManager : MonoBehaviour
     }
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {
+        int effectID = -1;
+        if(int.TryParse(effectGiven, out effectID)) { }
         //Genaric DOT
-        if (effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 3f, 3f, -1f); }
-        if (effectGiven == "burn") { activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); }
-        if (effectGiven == "radiation") { activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); }
+        if (effectID == 0 || effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 3f, 3f, -1f); }
+        if (effectID == 1 || effectGiven == "burn") { activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); }
+        if (effectID == 2 || effectGiven == "radiation") { activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); }
 
         //Item effects
-        if (effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
-        if (effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
-        if (effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
-        if (effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
-        if (effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
-        if (effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
-        if (effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
-        if (effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
-        if (effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
-        if (effectGiven == "webbed") { activeEffects[12] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
+        if (effectID == 3 || effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
+        if (effectID == 4 || effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
+        if (effectID == 5 || effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
+        if (effectID == 6 || effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
+        if (effectID == 7 || effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
+        if (effectID == 8 || effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
+        if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
+        if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
+        if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
+        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
     }
-
+    public void RandomDebuff()
+    {
+        List<int> debuffs = new List<int>();
+        foreach(Vector4 effect in activeEffects)
+        {
+            if(effect.w == -1f) { debuffs.Add(activeEffects.IndexOf(effect)); }
+        }
+        int temp = debuffs[Random.Range(0, debuffs.Count)];
+        GiveEffect(temp.ToString(), 1f);
+    }
     void ManageEffects()
     {
         Vector4 q = new Vector4(0, 0, 0, 0);

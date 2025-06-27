@@ -48,6 +48,9 @@ public class ItemContainer : MonoBehaviour
         if (rand == 97 || rand == 98) { rarity = 6; }
         if (rand == 99) { rarity = 3; }
         if (rand == 100) { rarity = 7; }
+
+        if (player.GetComponent<PlayerItem>().leftItems[142] + player.GetComponent<PlayerItem>().rightItems[142] > 0) { rarity = 8; }
+
         meshes.Clear();
         meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
     }
@@ -107,6 +110,7 @@ public class ItemContainer : MonoBehaviour
     }
     private void Update()
     {
+        if (player.GetComponent<PlayerItem>().leftItems[142] + player.GetComponent<PlayerItem>().rightItems[142] > 0) { rarity = 8; }
         if (free) { cost = 0; }
         costTxt.text = Mathf.RoundToInt(cost * priceModifier).ToString() + "$";
         timeSinceEye += Time.deltaTime;

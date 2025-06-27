@@ -220,7 +220,10 @@ public class BulletScript : MonoBehaviour
             
         }
 
-        
+        if(gunFiredFrom.goodies > 0)
+        {
+            if (Random.Range(1, 100) < 8 + (4 * (gunFiredFrom.goodies - 1))) { ehm.RandomDebuff(); }
+        }
     }
 
     protected void RunOnCollide(GameObject givenGameObject)
@@ -255,7 +258,7 @@ public class BulletScript : MonoBehaviour
         if(gunFiredFrom.haunt > 0)
         {
             damage /= gunFiredFrom.haunt + 1;
-            for(int i = 0; i > gunFiredFrom.haunt; i++)
+            for(int i = 0; i < gunFiredFrom.haunt+1; i++)
             {
                 EnemyCollision(givenGameObject);
             }
@@ -434,73 +437,80 @@ public class BulletScript : MonoBehaviour
 
     void EnemyCollision(GameObject givenGameObject)
     {
-        if (givenGameObject.tag == "Enemy")
+        if (gunFiredFrom.anatomy > 0)
         {
-            if (!isCrit)
+            if (givenGameObject.tag == "Enemy")
             {
-                if (!isAutoWeak)
-                {
-                    if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                    {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
-                        RunOnHit(givenGameObject);
-                    }
+                WeakPointHit(givenGameObject);
+            }
+            if (givenGameObject.tag == "EnemyWeakPoint")
+            {
+                NormalHit(givenGameObject);
+            }
+        }
+        else
+        {
+            if(givenGameObject.tag == "Enemy")
+            {
+                NormalHit(givenGameObject);
+            }
+            if (givenGameObject.tag == "EnemyWeakPoint")
+            {
+                WeakPointHit(givenGameObject);
+            }
+        }
+    }
+    void WeakPointHit(GameObject givenGameObject)
+    {
+        if (!isCrit)
+        {
+            if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
+            {
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
+                RunOnHit(givenGameObject);
+            }
 
-                    givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                    {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
-                        RunOnHit(givenGameObject);
-                    }
+            givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+        }
+        else
+        {
+            if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
+            {
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * gunFiredFrom.critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                RunOnHit(givenGameObject);
+            }
 
-                    givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+            givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+        }
+
+        if ((givenGameObject.GetComponentInParent<EnemyHealthManager>().curHp / givenGameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+        {
+            givenGameObject.GetComponentInParent<EnemyHealthManager>().Die();
+        }
+
+        if (nuclearBullets > 0)
+        {
+            if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
+            {
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+            }
+        }
+    }
+    void NormalHit(GameObject givenGameObject)
+    {
+        if (!isCrit)
+        {
+            if (!isAutoWeak)
+            {
+                if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                {
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
+                    RunOnHit(givenGameObject);
                 }
+
+                givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
             else
-            {
-                if (!isAutoWeak)
-                {
-                    if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                    {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
-                        RunOnHit(givenGameObject);
-                    }
-
-                    givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                }
-                else
-                {
-                    if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
-                    {
-                        givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
-                        RunOnHit(givenGameObject);
-                    }
-
-                    givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
-                }
-
-            }
-
-            if ((givenGameObject.GetComponentInParent<EnemyHealthManager>().curHp / givenGameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-            {
-                givenGameObject.GetComponentInParent<EnemyHealthManager>().Die();
-            }
-
-            if (nuclearBullets > 0)
-            {
-                if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
-                {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                }
-            }
-
-        }
-        if (givenGameObject.tag == "EnemyWeakPoint")
-        {
-            if (!isCrit)
             {
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
@@ -510,32 +520,45 @@ public class BulletScript : MonoBehaviour
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
+        }
+        else
+        {
+            if (!isAutoWeak)
+            {
+                if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
+                {
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
+                    RunOnHit(givenGameObject);
+                }
+
+                givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
+            }
             else
             {
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * gunFiredFrom.critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                     RunOnHit(givenGameObject);
                 }
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
             }
 
-            if ((givenGameObject.GetComponentInParent<EnemyHealthManager>().curHp / givenGameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-            {
-                givenGameObject.GetComponentInParent<EnemyHealthManager>().Die();
-            }
+        }
 
-            if (nuclearBullets > 0)
+        if ((givenGameObject.GetComponentInParent<EnemyHealthManager>().curHp / givenGameObject.GetComponentInParent<EnemyHealthManager>().maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
+        {
+            givenGameObject.GetComponentInParent<EnemyHealthManager>().Die();
+        }
+
+        if (nuclearBullets > 0)
+        {
+            if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
             {
-                if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
-                {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
-                }
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
             }
         }
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (!collided) { RunOnCollide(collision.gameObject); }

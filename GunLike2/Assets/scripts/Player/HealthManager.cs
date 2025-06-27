@@ -105,6 +105,7 @@ public class HealthManager : MonoBehaviour
 		healthRegenMult += MultAdder(10f, givenLeftItems[94] + givenRightItems[94]);
 		healthRegenMult += MultAdder(40f, givenLeftItems[129] + givenRightItems[129]);
 		healthRegenMult += MultAdder(40f, givenLeftItems[131] + givenRightItems[131]);
+		healthRegenMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
 
 		healthRegenDiv += MultAdder(-20f, givenLeftItems[24] + givenRightItems[24]);
 		healthRegenDiv += MultAdder(-40f, givenLeftItems[30] + givenRightItems[30]);
@@ -117,6 +118,8 @@ public class HealthManager : MonoBehaviour
 		armorMult += MultAdder(20f, givenLeftItems[63] + givenRightItems[63]);
 		armorMult += MultAdder(20f, givenLeftItems[65] + givenRightItems[65]);
 		armorMult += MultAdder(60f, givenLeftItems[115] + givenRightItems[115]);
+		armorMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
+		armorMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
 
 		armorDiv += MultAdder(-20f, givenLeftItems[12] + givenRightItems[12]);
 		armorDiv += MultAdder(-20f, givenLeftItems[66] + givenRightItems[66]);
@@ -130,6 +133,8 @@ public class HealthManager : MonoBehaviour
 		maxHpMult += MultAdder(20f, givenLeftItems[85] + givenRightItems[85]);
 		maxHpMult += MultAdder(10f, givenLeftItems[99] + givenRightItems[99]);
 		maxHpMult += MultAdder(20f, givenLeftItems[124] + givenRightItems[124]);
+		maxHpMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
+		maxHpMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
 
 		maxHpDiv += MultAdder(-40f, givenLeftItems[13] + givenRightItems[13]);
 		maxHpDiv += MultAdder(-40f, givenLeftItems[18] + givenRightItems[18]);
@@ -152,6 +157,9 @@ public class HealthManager : MonoBehaviour
 		//Applying Mult
 		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
 		armor *= armorMult; armor /= armorDiv;
+		//Bio armor
+		if (givenLeftItems[140] + givenRightItems[140] > 0) { maxHp += armor*5f; }
+		//Back to Applying Mult
 		maxHp *= maxHpMult; maxHp /= maxHpDiv;
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
@@ -445,6 +453,11 @@ public class HealthManager : MonoBehaviour
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
 	{
 		bool wasAtMax = (curHp == maxHp);
+		float tempArmor = armor;
+        if (playerItem.leftItems[140] + playerItem.rightItems[140] > 0)
+        {
+			tempArmor *= (curHp / maxHp);
+        }
 		if (damageTaken <= 0)
 		{
 			//Heal
@@ -454,7 +467,7 @@ public class HealthManager : MonoBehaviour
 		{
             if (Random.Range(1, 100) < evadeChance) { return; }
 			//Damage
-			if (damageTaken <= armor)
+			if (damageTaken <= tempArmor)
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
@@ -462,7 +475,7 @@ public class HealthManager : MonoBehaviour
 			else
 			{
 				//return new hp with dmg reduced by armor
-				curHp -= (damageTaken - armor);
+				curHp -= (damageTaken - tempArmor);
 			}
 			regenTimer = 2f;
 

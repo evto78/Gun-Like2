@@ -28,7 +28,9 @@ public class Item : MonoBehaviour
         //rb.useGravity = true;
         rb.isKinematic = false;
 
-        
+        player = GameObject.FindWithTag("Player");
+        playerItem = player.GetComponent<PlayerItem>();
+        if (playerItem.leftItems[142] + playerItem.rightItems[142] > 0) { SetItemID(143); }
     }
 
     public void SetItemID(int givenID)

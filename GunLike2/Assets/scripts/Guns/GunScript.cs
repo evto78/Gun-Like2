@@ -75,6 +75,8 @@ public class GunScript : MonoBehaviour
     public int canineTooth;
     public int doorKnob;
     public int haunt;
+    public int goodies;
+    public int anatomy;
 
     public float echoDmg;
 
@@ -175,6 +177,8 @@ public class GunScript : MonoBehaviour
         canineTooth = manager.leftCanineTooth;
         doorKnob = manager.leftDoorKnob;
         haunt = manager.leftHaunt;
+        goodies = manager.leftGoodies;
+        anatomy = manager.leftAnatomy;
 
         ricochet = manager.leftRicochet;
 
@@ -251,6 +255,8 @@ public class GunScript : MonoBehaviour
         canineTooth = manager.rightCanineTooth;
         doorKnob = manager.rightDoorKnob;
         haunt = manager.rightHaunt;
+        goodies = manager.rightGoodies;
+        anatomy = manager.rightAnatomy;
 
         ricochet = manager.rightRicochet;
 
@@ -533,6 +539,7 @@ public class GunScript : MonoBehaviour
     }
     public virtual void Shoot(float bowChar)
     {
+        if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
         animator.SetTrigger("Shooting");
         animator.speed = atkSpd * 1.5f;
         isFastFiring = false;
