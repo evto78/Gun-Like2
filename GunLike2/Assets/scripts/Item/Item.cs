@@ -40,6 +40,13 @@ public class Item : MonoBehaviour
         itemObj = Resources.Load<ItemObject>("Items/"+givenID.ToString());
         itemID = givenID;
         sr.sprite = itemObj.itemSprite;
+        if (player == null){player = GameObject.FindWithTag("Player");}
+        playerItem = player.GetComponent<PlayerItem>();
+
+        for (int i = 0; i < playerItem.rarityList.Count; i++)
+        {
+            if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; }
+        }
     }
 
     public int WhatItem()

@@ -96,6 +96,7 @@ public class GunManager : MonoBehaviour
     public int leftHaunt;
     public int leftGoodies;
     public int leftAnatomy;
+    public int leftEnzymes;
 
     public bool leftRicochet = false;
 
@@ -167,6 +168,7 @@ public class GunManager : MonoBehaviour
     public int rightHaunt;
     public int rightGoodies;
     public int rightAnatomy;
+    public int rightEnzymes;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -374,6 +376,7 @@ public class GunManager : MonoBehaviour
         leftDmgDiv += MultAdder(-80f, givenLeftItems[118]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[138]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[139]);
+        leftDmgDiv += MultAdder(-20f, givenLeftItems[149]);
         //Left Magazine Size
         leftMagSizeMult += MultAdder(20f, givenLeftItems[6]);
         leftMagSizeMult += MultAdder(10f, givenLeftItems[100]);
@@ -417,14 +420,18 @@ public class GunManager : MonoBehaviour
         leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
         //Left Weak Point Chance
         leftWeakPointChance += 10f * givenLeftItems[141];
+        leftWeakPointChance += 10f * givenLeftItems[150];
         //Left Weak Point Damage
         leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[76]);
         leftWeakPointDamageMult += MultAdder(10f, givenLeftItems[141]);
+        leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[149]);
         //Left Crit Chance
         leftCritChance += 20f * givenLeftItems[77];
         leftCritChance += 10f * givenLeftItems[78];
+        leftCritChance += 20f * givenLeftItems[148];
         //Left Crit Damage
         leftCritDamageMult += MultAdder(20f, givenLeftItems[77]);
+        leftCritDamageMult += MultAdder(100f, givenLeftItems[147]);
         //Left Other
         leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
@@ -470,7 +477,8 @@ public class GunManager : MonoBehaviour
         leftHaunt = givenLeftItems[138];
         leftGoodies = givenLeftItems[139];
         leftAnatomy = givenLeftItems[141];
-
+        leftEnzymes = givenLeftItems[145];
+        
         leftRicochet = false;
 
         if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
@@ -529,6 +537,7 @@ public class GunManager : MonoBehaviour
         rightDmgDiv += MultAdder(-80f, givenRightItems[118]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[138]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[139]);
+        rightDmgDiv += MultAdder(-20f, givenRightItems[149]);
         //Right Magazine Size
         rightMagSizeMult += MultAdder(20f, givenRightItems[6]);
         rightMagSizeMult += MultAdder(10f, givenRightItems[100]);
@@ -572,14 +581,18 @@ public class GunManager : MonoBehaviour
         rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
         //Right Weak Point Chance
         rightWeakPointChance += 10f * givenRightItems[141];
+        rightWeakPointChance += 10f * givenRightItems[150];
         //Right Weak Point Damage
         rightWeakPointDamageMult += MultAdder(20f, givenRightItems[76]);
         rightWeakPointDamageMult += MultAdder(10f, givenRightItems[141]);
+        rightWeakPointDamageMult += MultAdder(20f, givenRightItems[149]);
         //Right Crit Chance
         rightCritChance += 20f * givenRightItems[77];
         rightCritChance += 10f * givenRightItems[78];
+        rightCritChance += 20f * givenRightItems[148];
         //Right Crit Damage
         rightCritDamageMult += MultAdder(20f, givenRightItems[77]);
+        rightCritDamageMult += MultAdder(100f, givenRightItems[147]);
         //Right Other
         rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
@@ -625,6 +638,7 @@ public class GunManager : MonoBehaviour
         rightHaunt = givenRightItems[138];
         rightGoodies = givenRightItems[139];
         rightAnatomy = givenRightItems[141];
+        rightEnzymes = givenRightItems[145];
 
         rightRicochet = false;
 
@@ -649,6 +663,9 @@ public class GunManager : MonoBehaviour
         leftBulSize *= leftBulSizeMult; leftBulSize /= leftBulSizeDiv; rightBulSize *= rightBulSizeMult; rightBulSize /= rightBulSizeDiv;
         leftCritDamage *= leftCritDamageMult; leftCritDamage /= leftCritDamageDiv; rightCritDamage *= rightCritDamageMult; rightCritDamage /= rightCritDamageDiv;
         leftWeakPointDamage *= leftWeakPointDamageMult; leftWeakPointDamage /= leftWeakPointDamageDiv; rightWeakPointDamage *= rightWeakPointDamageMult; rightWeakPointDamage /= rightWeakPointDamageDiv;
+        //Thumb Tack
+        if (givenLeftItems[59] > 0 && givenLeftItems[149] > 0) { leftDmg *= 3f; }
+        if (givenRightItems[59] > 0 && givenRightItems[149] > 0) { rightDmg *= 3f; }
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
         {

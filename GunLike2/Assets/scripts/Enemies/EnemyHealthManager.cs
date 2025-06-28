@@ -54,6 +54,7 @@ public class EnemyHealthManager : MonoBehaviour
     bool died;
     public bool didOnDeath;
 
+    int numOfActiveEffects;
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -61,37 +62,43 @@ public class EnemyHealthManager : MonoBehaviour
     // w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
     List<float> dmgQued = new List<float>();
+    float burnTimer;
 
     void Start()
     {
+        //Gather references
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         gdm.activeEhms.Add(this);
+        player = GameObject.FindWithTag("Player");
+        playerItem = player.GetComponent<PlayerItem>();
+        playerHM = player.GetComponent<HealthManager>();
+        //Base Stat setup
         maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
         armor = baseArmor * difficultyScale * gdm.difficulty;
+        //Effect Setup
         activeEffects = new List<Vector4>();
-        for(int i = 0; i < 13; i++)
+        icons = new List<GameObject>();
+        int effectsToAdd = 14;
+        for(int i = 0; i < effectsToAdd; i++)
         {
             activeEffects.Add(Vector4.zero);
-            GiveEffect(i.ToString(), 0f);
         }
-
-        icons = new List<GameObject>();
-        foreach(Vector4 effect in activeEffects)
+        for(int i = 0; i < effectsToAdd; i++)
         {
+            GiveEffect(i.ToString(), 0f);
             GameObject spawnedIcon = Instantiate(effectIcon);
             spawnedIcon.transform.SetParent(effectHolder, false);
             icons.Add(spawnedIcon);
         }
-
+        //Make sure is at fullHP
         curHp = maxHp;
-
-        player = GameObject.FindWithTag("Player");
-        playerItem = player.GetComponent<PlayerItem>();
-        playerHM = player.GetComponent<HealthManager>();
+        //NOW GO GET EM SOILDER!!!
     }
 
     void Update()
     {
+        burnTimer += Time.deltaTime;
+        numOfActiveEffects = 0;
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
         if (curHp <= 0 && !died) { Die(); died = true; }
@@ -105,10 +112,14 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
+        float tempArmor = armor;
+        if (activeEffects[0].x > 0) { tempArmor *= 0.25f; }
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
         if (activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
         if(activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
         if(playerHM.activeEffects[22].x > 0 && playerItem.leftItems[134]+playerItem.rightItems[134]>1) { dmgTaken *= 1.25f * (playerItem.leftItems[134] + playerItem.rightItems[134] - 1); }
+        if(playerItem.leftItems[146]>0 && source == "left") { dmgTaken *= (1.05f+0.05f * playerItem.leftItems[146])*numOfActiveEffects; }
+        if(playerItem.rightItems[146]>0 && source == "right") { dmgTaken *= (1.05f+0.05f * playerItem.rightItems[146])*numOfActiveEffects; }
 
         if (!textColor.Contains("crit"))
         {
@@ -164,15 +175,15 @@ public class EnemyHealthManager : MonoBehaviour
         }
         else
         {
-            if (armor >= dmgTaken)
+            if (tempArmor >= dmgTaken)
             {
                 curHp -= 1f;
                 latestDamage = 1f;
             }
             else
             {
-                curHp -= (dmgTaken - armor);
-                latestDamage = dmgTaken - armor;
+                curHp -= (dmgTaken - tempArmor);
+                latestDamage = dmgTaken - tempArmor;
             }
         }
 
@@ -273,15 +284,28 @@ public class EnemyHealthManager : MonoBehaviour
     private void OnDestroy()
     {
         if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); }
+        foreach(BulletScript bullet in transform.GetComponentsInChildren<BulletScript>())
+        {
+            bullet.transform.parent = null; bullet.anchored = false;
+        }
     }
+
+    //GiveEffect("radiation", 1f)
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {
         int effectID = -1;
-        if(int.TryParse(effectGiven, out effectID)) { }
+        if(int.TryParse(effectGiven, out int id)) { effectID = id; }
         //Genaric DOT
-        if (effectID == 0 || effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 3f, 3f, -1f); }
+        if (effectID == 0 || effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 4f, 4f, -1f);
+            float dotDmgModifer = 1; if (activeEffects[13].x > 0) { dotDmgModifer *= 2; }
+            if ((playerItem.leftItems[50] + playerItem.rightItems[50]) > 0) { dotDmgModifer *= 2; }
+            if (activeEffects[0].x % 5 == 0) { QueStandardDamage(activeEffects[0].x*20f*dotDmgModifer); }
+        }
         if (effectID == 1 || effectGiven == "burn") { activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); }
-        if (effectID == 2 || effectGiven == "radiation") { activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); }
+        if (effectID == 2 || effectGiven == "radiation") {  
+            if(activeEffects[2].x == 1) { activeEffects[2] = new Vector4(stacksToAdd * 2f, 6f, 6f, -1f); }
+            else { activeEffects[2] = new Vector4(activeEffects[2].x + (stacksToAdd * 2f), 6f, 6f, -1f); }
+        }
 
         //Item effects
         if (effectID == 3 || effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
@@ -293,7 +317,8 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
         if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
         if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
-        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
+        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
+        if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }
     }
     public void RandomDebuff()
     {
@@ -355,6 +380,15 @@ public class EnemyHealthManager : MonoBehaviour
             //if there are any stacks of this effect
             if (q.x > 0)
             {
+                numOfActiveEffects++;
+                float dotDmgModifer = 1; if (activeEffects[13].x > 0) { dotDmgModifer *= 2; }
+                //burn
+                if (i == 1 && burnTimer >= 0.2f)
+                {
+                    if ((playerItem.leftItems[48] + playerItem.rightItems[48]) > 0) { dotDmgModifer *= 2; }
+                    QueStandardDamage(1f * dotDmgModifer);
+                    burnTimer = 0;
+                }
 
                 //progress timer and remove stacks as needed
                 if (q.z > 0f)
@@ -363,43 +397,30 @@ public class EnemyHealthManager : MonoBehaviour
                 }
                 else
                 {
-                    //If player has anti-antidode do not remove stacks when timer runs out
-                    int antiAnti = playerItem.leftItems[41] + playerItem.rightItems[41];
-                    if (antiAnti < 1)
+                    //run effects that happen when timer ends
+                    if (i == 2)
                     {
-                        if (Random.Range(0f, 2f) <= 1f) { q.x -= 1f; }
+                        QueStandardDamage(q.x * 50f * dotDmgModifer);
+                    }
+                    //If player has anti-antidode chance to not remove stacks when timer runs out
+                    int antiAnti = playerItem.leftItems[41] + playerItem.rightItems[41];
+                    if (antiAnti > 0)
+                    {
+                        if (Random.Range(0, 9+antiAnti) == 0)
+                        {
+                            q.x -= 1f;
+                            if (i == 2) { q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; } }
+                        }
                     }
                     else
                     {
-                        if(Random.Range(0f, 10f/antiAnti) <= 1f) { q.x -= 1f; }
+                        q.x -= 1f;
+                        if (i == 2)
+                        {
+                            q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; }
+                        }
                     }
                     if (q.x! > 0f) { q.z = q.y; }
-
-                    //run effects that happen when timer ends
-                    if (i == 0)
-                    { 
-                        if((playerItem.leftItems[50] + playerItem.rightItems[50]) > 0)
-                        {
-                            TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
-                        }
-                        else
-                        {
-                            TakeDamage((q.x + 1f) * 10f, true, "normalHit", transform.position, "self");
-                        }
-                        
-                    }
-                    if (i == 1) 
-                    {
-                        if ((playerItem.leftItems[48] + playerItem.rightItems[48]) > 0)
-                        {
-                            TakeDamage((q.x + 1f) * 20f, true, "normalHit", transform.position, "self");
-                        }
-                        else
-                        {
-                            TakeDamage((q.x + 1f) * 10f, true, "normalHit", transform.position, "self");
-                        }
-                    }
-                    if (i == 2) { TakeDamage((q.x + 1f)*50f, true, "normalHit", transform.position, "self"); }
                 }
             }
 

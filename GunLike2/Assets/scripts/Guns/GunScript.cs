@@ -77,6 +77,7 @@ public class GunScript : MonoBehaviour
     public int haunt;
     public int goodies;
     public int anatomy;
+    public int enzymes;
 
     public float echoDmg;
 
@@ -179,6 +180,7 @@ public class GunScript : MonoBehaviour
         haunt = manager.leftHaunt;
         goodies = manager.leftGoodies;
         anatomy = manager.leftAnatomy;
+        enzymes = manager.leftEnzymes;
 
         ricochet = manager.leftRicochet;
 
@@ -257,6 +259,7 @@ public class GunScript : MonoBehaviour
         haunt = manager.rightHaunt;
         goodies = manager.rightGoodies;
         anatomy = manager.rightAnatomy;
+        enzymes = manager.rightEnzymes;
 
         ricochet = manager.rightRicochet;
 

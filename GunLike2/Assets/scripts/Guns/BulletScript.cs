@@ -74,6 +74,10 @@ public class BulletScript : MonoBehaviour
     public GameObject zipMissle;
     public GameObject web;
 
+    public bool anchored;
+    Transform anchorTar;
+    Vector3 relativePos;
+
     void Awake()
     {
         hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
@@ -94,8 +98,9 @@ public class BulletScript : MonoBehaviour
     private void Update()
     {
         if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
-        if(rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
-        if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
+        if (rb.velocity != Vector3.zero && !anchored) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
+        if (collided && !gunFiredFrom.nerfedBul) { rb.velocity = Vector3.zero; if (!anchored) { transform.position = collidedPos; } }
+        if (anchored) { rb.velocity = Vector3.zero; transform.localPosition = relativePos; }
 
         Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.cyan);
 
@@ -180,8 +185,8 @@ public class BulletScript : MonoBehaviour
             ehm = hit.GetComponent<EnemyHealthManager>();
         }
         ehm.OnHitEffect(jam);
-        if (isFireSpon) { ehm.GiveEffect("burn", 3f); }
-        if (isSharperSpon) { ehm.GiveEffect("bleed", 3f); }
+        if (isFireSpon) { ehm.GiveEffect("burn", 1f); }
+        if (isSharperSpon) { ehm.GiveEffect("bleed", 1f); }
         if (isSilverSpon) { ehm.GiveEffect("lucky", 1f); }
         if (isHelpingSpon) { ehm.GiveEffect("stiched", 1f); }
         if (isCoolSpon) { ehm.GiveEffect("frozen", 1f); }
@@ -223,6 +228,10 @@ public class BulletScript : MonoBehaviour
         if(gunFiredFrom.goodies > 0)
         {
             if (Random.Range(1, 100) < 8 + (4 * (gunFiredFrom.goodies - 1))) { ehm.RandomDebuff(); }
+        }
+        if(gunFiredFrom.enzymes > 0)
+        {
+            if (Random.Range(1,100)<10*gunFiredFrom.enzymes) { ehm.GiveEffect("enzymes", 1); }
         }
     }
 
@@ -271,11 +280,20 @@ public class BulletScript : MonoBehaviour
         if (!collided && pierce < 1)
         {
             rb.velocity = Vector3.zero;
-            rb.freezeRotation = true;
             hitParticle.Play();
-            if(gameObject.name != "NerfedBullet" && gameObject.name != "NerfedBullet(Clone)")
+            if(!gunFiredFrom.nerfedBul)
             {
+                rb.freezeRotation = true;
                 Destroy(mesh);
+                anchored = true;
+                anchorTar = givenGameObject.transform;
+                transform.SetParent(anchorTar);
+                relativePos = transform.localPosition;
+            }
+            else
+            {
+                rb.AddForce(-transform.forward / 4f,ForceMode.Impulse);
+                rb.AddForce(Vector3.up / 2f,ForceMode.Impulse);
             }
             collided = true;
             gameObject.GetComponent<Collider>().enabled = false;
@@ -492,7 +510,8 @@ public class BulletScript : MonoBehaviour
         {
             if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
             {
-                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                //givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f); // OLD NUCLEAR BULLETS
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("radiation", 1);
             }
         }
     }
@@ -555,18 +574,14 @@ public class BulletScript : MonoBehaviour
         {
             if (Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
             {
-                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f);
+                //givenGameObject.GetComponentInParent<EnemyHealthManager>().TakePercentDamage(0.15f); // OLD NUCLEAR BULLETS
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("radiation", 1);
             }
         }
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (!collided) { RunOnCollide(collision.gameObject); }
-    }
-
-    private void OnTriggerEnter(Collider collision)
-    {
-        //if (!collided) { RunOnCollide(collision.gameObject); }
     }
     private void FixedUpdate()
     {
@@ -577,7 +592,7 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
+        if (collided && !anchored && !gunFiredFrom.nerfedBul) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
         DetectCollision(rb.velocity * 1.5f);
     }
 

@@ -16,13 +16,17 @@ MonoBehaviour:
   itemName: Anti-Antidote
   rarity: 3
   itemSprite: {fileID: 21300000, guid: 64eb91276757bac47a0dbf57852b8a80, type: 3}
+  cooldownItem: 0
+  baseCooldown: 0
   subType: 0
-  effect: Debuffs on enemies don't go away overtime, instead they have a 10% chance
-    to be removed when they are hit. Stacking lowers this chance by 50%.
+  effect: When a debuff on an enemy is going to be removed due to the effect expiring,
+    it has a 10% chance of doing so instead, while still triggering the normal on
+    removed effect. Stacks increase these chances by 10% hyperbolicly (never reaching
+    0%).
   buff: '-'
   debuff: '-'
-  effectSum: Debuffs on enemies don't go away overtime, instead they have a small
-    chance to be removed when they are hit.
+  effectSum: When a stack of a debuff on an enemy expires, it has a high chance of
+    coming back.
   buffSum: '-'
   debuffSum: '-'
   flavor: The cure-all to all cure-alls.
