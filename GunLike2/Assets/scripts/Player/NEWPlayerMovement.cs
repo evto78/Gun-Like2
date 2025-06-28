@@ -62,6 +62,7 @@ public class NEWPlayerMovement : MonoBehaviour
     bool hasFightingWings;
 
     HealthManager healthMan;
+    GunManager gunMan;
     public PlayerItem playerItem;
     public GameObject shockwave;
 
@@ -78,6 +79,7 @@ public class NEWPlayerMovement : MonoBehaviour
         jumpsLeft = numberOfJumps;
         rb = GetComponent<Rigidbody>();
         healthMan = GetComponent<HealthManager>();
+        gunMan = GetComponent<GunManager>();
         effectList = healthMan.activeEffects;
         sliding = false;
         slamming = false;
@@ -127,6 +129,7 @@ public class NEWPlayerMovement : MonoBehaviour
         jumpForceMult += MultAdder(20f, givenLeftItems[1] + givenRightItems[1]);
         jumpForceMult += MultAdder(20f, givenLeftItems[20] + givenRightItems[20]);
         jumpForceMult += MultAdder(20f, givenLeftItems[59] + givenRightItems[59]);
+        jumpForceMult += MultAdder(40f, givenLeftItems[144] + givenRightItems[144]);
 
         jumpForceDiv += MultAdder(-20f, givenLeftItems[23] + givenRightItems[23]);
         //Num of Jumps
@@ -435,6 +438,16 @@ public class NEWPlayerMovement : MonoBehaviour
             }
             if (slamming) { rb.AddForce(transform.up * jumpForce, ForceMode.Force); }
             slamming = false;
+
+            if (playerItem.leftItems[144] + playerItem.rightItems[144] > 0)
+            {
+                GameObject spawnedShockwave = Instantiate(shockwave);
+                spawnedShockwave.transform.position = transform.position;
+                spawnedShockwave.GetComponent<Shockwave>().damage = 0f;
+                spawnedShockwave.GetComponent<Shockwave>().lifetime = 0.25f;
+                if (playerItem.leftItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg * playerItem.leftItems[144]; }
+                if (playerItem.rightItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg * playerItem.rightItems[144]; }
+            }
         }
     }
     void Slam()
