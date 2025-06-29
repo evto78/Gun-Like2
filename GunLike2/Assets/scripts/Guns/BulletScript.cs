@@ -289,14 +289,37 @@ public class BulletScript : MonoBehaviour
                 anchorTar = givenGameObject.transform;
                 transform.SetParent(anchorTar);
                 relativePos = transform.localPosition;
+                gameObject.GetComponent<Collider>().enabled = false;
             }
             else
             {
-                rb.AddForce(-transform.forward / 4f,ForceMode.Impulse);
-                rb.AddForce(Vector3.up / 2f,ForceMode.Impulse);
+                if(givenGameObject.tag == "Untagged" || givenGameObject.tag == "Ground")
+                {
+                    rb.freezeRotation = true;
+                    anchored = true;
+                    anchorTar = givenGameObject.transform;
+                    transform.SetParent(anchorTar);
+                    relativePos = transform.localPosition;
+                    gameObject.GetComponent<Collider>().enabled = false;
+                }
+                else
+                {
+                    rb.AddForce(-transform.forward / 4f, ForceMode.Impulse);
+                    rb.AddForce(Vector3.up / 2f, ForceMode.Impulse);
+                }
+            }
+            if(anchored == true && (anchorTar.gameObject.tag != "Enemy" || anchorTar.gameObject.tag != "EnemyWeakPoint"))
+            {
+                anchored = false;
+                rb.freezeRotation = true;
+                anchored = true;
+                anchorTar = givenGameObject.transform;
+                transform.SetParent(anchorTar);
+                relativePos = transform.localPosition;
+                gameObject.GetComponent<Collider>().enabled = false;
             }
             collided = true;
-            gameObject.GetComponent<Collider>().enabled = false;
+            
 
             if(introTrig > 0)
             {
