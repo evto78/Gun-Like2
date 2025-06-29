@@ -52,7 +52,7 @@ public class BulletScript : MonoBehaviour
     public int multistage;
     public int gunkyClaw;
     public int storage;
-    float turbineCharge;
+    protected float turbineCharge;
 
     public Collider myCollider;
 
@@ -63,6 +63,7 @@ public class BulletScript : MonoBehaviour
     List<Collider> collisions = new List<Collider>();
 
     public GameObject shockwave;
+    public GameObject droppedNerfedBullet;
 
     protected HealthManager hm;
     protected PlayerItem pi;
@@ -74,11 +75,20 @@ public class BulletScript : MonoBehaviour
     public GameObject zipMissle;
     public GameObject web;
 
-    void Awake()
+    public virtual void Awake()
     {
-        hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
-        pi = hm.gameObject.GetComponent<PlayerItem>();
-        gm = hm.gameObject.GetComponent<GunManager>();
+        if(gunFiredFrom != null)
+        {
+            hm = gunFiredFrom.manager.healthMan;
+            pi = gunFiredFrom.manager.playerItem;
+            gm = gunFiredFrom.manager;
+        }
+        else
+        {
+            hm = GameObject.Find("Player").GetComponent<HealthManager>();
+            pi = hm.playerItem;
+            gm = pi.gunManager;
+        }
 
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
@@ -277,14 +287,23 @@ public class BulletScript : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
-            if (!gunFiredFrom.nerfedBul)
-            {
-                Destroy(mesh);
-                fireSponEffect.transform.parent.transform.SetParent(givenGameObject.transform);
-                Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f,3f));
-            }
+            Destroy(mesh);
             collided = true;
             gameObject.GetComponent<Collider>().enabled = false;
+            fireSponEffect.transform.parent.transform.SetParent(givenGameObject.transform);
+            Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f, 3f));
+            if (gunFiredFrom.nerfedBul)
+            {
+                GameObject dropped = Instantiate(droppedNerfedBullet);
+                dropped.transform.position = transform.position;
+                dropped.transform.rotation = transform.rotation;
+                dropped.GetComponent<DroppedNerfBul>().player = gunFiredFrom.manager.transform;
+                dropped.GetComponent<DroppedNerfBul>().firedFrom = gunFiredFrom;
+                dropped.GetComponent<DroppedNerfBul>().whatHandThisComesFrom = whatHandThisComesFrom;
+                dropped.GetComponent<Rigidbody>().AddForce(-dropped.transform.forward*2f, ForceMode.Impulse);
+                dropped.GetComponent<Rigidbody>().AddForce(Vector3.up*4f, ForceMode.Impulse);
+                Destroy(dropped, 60f);
+            }
 
 
             if (introTrig > 0)
@@ -574,13 +593,6 @@ public class BulletScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(collided && (gameObject.name == "NerfedBullet" || gameObject.name == "NerfedBullet(Clone)") && Vector3.Distance(GameObject.Find("Player").transform.position, transform.position) < 2f)
-        {
-            if(whatHandThisComesFrom == "left") { GameObject.Find("Player").GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
-            if(whatHandThisComesFrom == "right") { GameObject.Find("Player").GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
-            Destroy(gameObject);
-        }
-
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
         DetectCollision(rb.velocity * 1.5f);
     }

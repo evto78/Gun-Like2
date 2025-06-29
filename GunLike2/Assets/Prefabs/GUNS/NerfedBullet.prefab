@@ -24494,9 +24494,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4592498206712830327}
+  - component: {fileID: 6156675367513177345}
   - component: {fileID: 8807503915297432072}
   - component: {fileID: 2490013306071340432}
-  - component: {fileID: 6156675367513177345}
   m_Layer: 6
   m_Name: NerfedBullet
   m_TagString: bullet
@@ -24523,6 +24523,56 @@ Transform:
   - {fileID: 6101090643804762675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6156675367513177345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6495255335360224864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13af9f308eedf4a40930b50bec445a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitParticle: {fileID: 8508251543275345263}
+  mesh: {fileID: 3934384899381169877}
+  bulletPrefab: {fileID: 6495255335360224864}
+  mainCamera: {fileID: 0}
+  damage: 0
+  isCrit: 0
+  isAutoWeak: 0
+  weakDamage: 0
+  bulSpd: 0
+  pierce: 0
+  ricochet: 1
+  heavySpirits: 0
+  nuclearBullets: 0
+  introTrig: 0
+  advTrig: 0
+  pairedBullet: {fileID: 0}
+  isTrigLead: 0
+  myIsHeavy: 0
+  jam: 0
+  fireSponEffect: {fileID: 1147910438752181047}
+  sharperSponEffect: {fileID: 1507525466931622917}
+  silverSponEffect: {fileID: 1242733624932335160}
+  helpingSponEffect: {fileID: 7587628087442424875}
+  coolSponEffect: {fileID: 6134128916708452596}
+  fastSponEffect: {fileID: 3180318761251026746}
+  largeSponEffect: {fileID: 6612778798135407848}
+  multistage: 0
+  gunkyClaw: 0
+  storage: 0
+  myCollider: {fileID: 2490013306071340432}
+  myPos: {x: 0, y: 0, z: 0}
+  whatHandThisComesFrom: 
+  shockwave: {fileID: 2550807905415200008, guid: ce8bdb4a01367db4baf4233a81e2a2b5, type: 3}
+  droppedNerfedBullet: {fileID: 5707690133665621131, guid: 6f6c47c26a401c04fbbb142fc0e69cb8, type: 3}
+  lavaBlob: {fileID: 3942878847808459278, guid: 0d28d6126c1347640a582849023d84f0, type: 3}
+  sniperTowerAlly: {fileID: 3830075297302595315, guid: 1c1e4270ede868f49b9c146162069df6, type: 3}
+  zipMissle: {fileID: 4644725047424944300, guid: a9b9cc3d819a1ba4b87da868000bdebf, type: 3}
+  web: {fileID: 1547401116769222481, guid: fb31adf49b5027d488b1ef3d42421004, type: 3}
 --- !u!54 &8807503915297432072
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24571,55 +24621,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.09, z: 0.3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6156675367513177345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6495255335360224864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13af9f308eedf4a40930b50bec445a49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitParticle: {fileID: 8508251543275345263}
-  mesh: {fileID: 3934384899381169877}
-  bulletPrefab: {fileID: 6495255335360224864}
-  mainCamera: {fileID: 0}
-  damage: 0
-  isCrit: 0
-  isAutoWeak: 0
-  weakDamage: 0
-  bulSpd: 0
-  pierce: 0
-  ricochet: 1
-  heavySpirits: 0
-  nuclearBullets: 0
-  introTrig: 0
-  advTrig: 0
-  pairedBullet: {fileID: 0}
-  isTrigLead: 0
-  myIsHeavy: 0
-  jam: 0
-  fireSponEffect: {fileID: 1147910438752181047}
-  sharperSponEffect: {fileID: 1507525466931622917}
-  silverSponEffect: {fileID: 1242733624932335160}
-  helpingSponEffect: {fileID: 7587628087442424875}
-  coolSponEffect: {fileID: 6134128916708452596}
-  fastSponEffect: {fileID: 3180318761251026746}
-  largeSponEffect: {fileID: 6612778798135407848}
-  multistage: 0
-  gunkyClaw: 0
-  storage: 0
-  myCollider: {fileID: 2490013306071340432}
-  myPos: {x: 0, y: 0, z: 0}
-  whatHandThisComesFrom: 
-  shockwave: {fileID: 2550807905415200008, guid: ce8bdb4a01367db4baf4233a81e2a2b5, type: 3}
-  lavaBlob: {fileID: 3942878847808459278, guid: 0d28d6126c1347640a582849023d84f0, type: 3}
-  sniperTowerAlly: {fileID: 3830075297302595315, guid: 1c1e4270ede868f49b9c146162069df6, type: 3}
-  zipMissle: {fileID: 4644725047424944300, guid: a9b9cc3d819a1ba4b87da868000bdebf, type: 3}
-  web: {fileID: 1547401116769222481, guid: fb31adf49b5027d488b1ef3d42421004, type: 3}
 --- !u!1 &6612778798135407848
 GameObject:
   m_ObjectHideFlags: 0
