@@ -97,7 +97,7 @@ public class UZIWalkerBrain : MonoBehaviour
         spawnedBullet.transform.position = firepoint.transform.position;
         spawnedBullet.transform.LookAt(player.transform.position + player.GetComponent<Rigidbody>().velocity / 3f);
         spawnedBullet.transform.Rotate(new Vector3(Random.Range(-1f,1f), Random.Range(-1f,1f), 0) * accuracy);
-        spawnedBullet.GetComponent<EnemyBullet>().SetStats(dmg);
+        spawnedBullet.GetComponent<EnemyBullet>().SetStats(dmg, hm);
         
         spawnedBullet.GetComponent<Rigidbody>().AddForce(spawnedBullet.transform.forward * bulSpeed, ForceMode.Impulse);
     }

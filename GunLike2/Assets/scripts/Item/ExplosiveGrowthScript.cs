@@ -31,7 +31,7 @@ public class ExplosiveGrowthScript : MonoBehaviour
 		}
 		if (collision.gameObject.tag == "Player")
 		{
-			collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, true);
+			collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, true, null);
 		}
 	}
 

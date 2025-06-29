@@ -43,7 +43,7 @@ public class NuclearExplosion : MonoBehaviour
         }
         if (collision.gameObject.tag == "Player")
         {
-            collision.GetComponent<HealthManager>().TakeDamage(damage, false);
+            collision.GetComponent<HealthManager>().TakeDamage(damage, false, null);
         }
     }
 }

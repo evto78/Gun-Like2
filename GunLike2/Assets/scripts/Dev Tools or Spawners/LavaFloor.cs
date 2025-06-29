@@ -8,7 +8,7 @@ public class LavaFloor : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponentInParent<HealthManager>().TakeDamage(1f, false);
+            other.gameObject.GetComponentInParent<HealthManager>().TakeDamage(1f, false, null);
         }
     }
 }

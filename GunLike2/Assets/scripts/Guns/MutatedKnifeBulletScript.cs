@@ -18,7 +18,7 @@ public class MutatedKnifeBulletScript : BulletScript
         myPos = transform.position;
         if (Physics.BoxCast(myPos, gameObject.GetComponentInChildren<BoxCollider>().size, force, out RaycastHit hit, transform.rotation, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
         {
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject, hit); }
         }
     }
 
@@ -28,7 +28,7 @@ public class MutatedKnifeBulletScript : BulletScript
         if (lifetime > 0.1f && !collided)
         {
             pierce = 0;
-            RunOnCollide(gameObject);
+            RunOnCollide(gameObject, new RaycastHit());
         }
     }
 }

@@ -5,16 +5,18 @@ using UnityEngine;
 public class EnemyBullet : MonoBehaviour
 {
     float dmg;
-    public void SetStats(float givenDmg)
+    EnemyHealthManager ehm;
+    public void SetStats(float givenDmg, EnemyHealthManager source)
     {
         dmg = givenDmg;
+        ehm = source;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false);
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, ehm);
         }
         Destroy(gameObject);
     }

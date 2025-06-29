@@ -11,7 +11,7 @@ public class AeroRifleScript : GunScript
         {
             for(int i = 0; i < (magSize - currentBullets); i++)
             {
-                manager.healthMan.TakeDamage(1, false);
+                manager.healthMan.TakeDamage(1, false, null);
                 currentBullets++;
             }
         }

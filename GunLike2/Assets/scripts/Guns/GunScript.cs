@@ -78,6 +78,9 @@ public class GunScript : MonoBehaviour
     public int goodies;
     public int anatomy;
     public int enzymes;
+    public int darkBranch;
+    public int brokenPen;
+    int brokenPenCounter; 
 
     public float echoDmg;
 
@@ -181,6 +184,8 @@ public class GunScript : MonoBehaviour
         goodies = manager.leftGoodies;
         anatomy = manager.leftAnatomy;
         enzymes = manager.leftEnzymes;
+        darkBranch = manager.leftDarkBranch;
+        brokenPen = manager.leftBrokenPen;
 
         ricochet = manager.leftRicochet;
 
@@ -260,6 +265,8 @@ public class GunScript : MonoBehaviour
         goodies = manager.rightGoodies;
         anatomy = manager.rightAnatomy;
         enzymes = manager.rightEnzymes;
+        darkBranch = manager.rightDarkBranch;
+        brokenPen = manager.rightBrokenPen;
 
         ricochet = manager.rightRicochet;
 
@@ -456,6 +463,7 @@ public class GunScript : MonoBehaviour
                 }
                 if(whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
                 if(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                if (brokenPen > 0) { brokenPenCounter++; }
             }
         }
     }
@@ -480,6 +488,7 @@ public class GunScript : MonoBehaviour
             }
             if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
             if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+            if (brokenPen > 0) { brokenPenCounter++; }
             bowCharge = 0f;
         }
     }
@@ -539,6 +548,7 @@ public class GunScript : MonoBehaviour
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge+=0.2f; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
         if (tacticalCompress > 0 && tacticalReload > 0) { dmg = dmg * (1 + (tacticalCompress / (10f / tacticalCompress))); tacticalCompress = 0; }
+        if (brokenPen > 0 && brokenPenCounter >= 10) { dmg *= 2f + (1.5f * brokenPen - 1f); }
     }
     public virtual void Shoot(float bowChar)
     {
@@ -550,7 +560,7 @@ public class GunScript : MonoBehaviour
         attackTimer = 1;
         if(carvedBone > 0 && currentBullets < 1)
         {
-            manager.healthMan.TakeDamage(1, false);
+            manager.healthMan.TakeDamage(1, false, null);
             currentBullets++;
         }
         if (currentBullets > 0)

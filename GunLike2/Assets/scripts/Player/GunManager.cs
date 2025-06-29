@@ -97,6 +97,8 @@ public class GunManager : MonoBehaviour
     public int leftGoodies;
     public int leftAnatomy;
     public int leftEnzymes;
+    public int leftDarkBranch;
+    public int leftBrokenPen;
 
     public bool leftRicochet = false;
 
@@ -169,6 +171,8 @@ public class GunManager : MonoBehaviour
     public int rightGoodies;
     public int rightAnatomy;
     public int rightEnzymes;
+    public int rightDarkBranch;
+    public int rightBrokenPen;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -337,12 +341,14 @@ public class GunManager : MonoBehaviour
         leftAtkSpdMult += MultAdder(60f, givenLeftItems[118]);
         leftAtkSpdMult += MultAdder(60f, givenLeftItems[132]);
         leftAtkSpdMult += MultAdder(10f, givenLeftItems[143]);
+        leftAtkSpdMult += MultAdder(20f, givenLeftItems[153]);
 
         leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
         leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
         leftAtkSpdDiv += MultAdder(-60f, givenLeftItems[91]);
         leftAtkSpdDiv += MultAdder(-40f, givenLeftItems[138]);
         leftAtkSpdDiv += MultAdder(-20f, givenLeftItems[139]);
+        leftAtkSpdDiv += MultAdder(-40f, givenLeftItems[151]);
         //Left Reload Speed
         leftReSpdMult += MultAdder(20f, givenLeftItems[7]);
         leftReSpdMult += MultAdder(10f, givenLeftItems[143]);
@@ -478,6 +484,8 @@ public class GunManager : MonoBehaviour
         leftGoodies = givenLeftItems[139];
         leftAnatomy = givenLeftItems[141];
         leftEnzymes = givenLeftItems[145];
+        leftDarkBranch = givenLeftItems[151];
+        leftBrokenPen = givenLeftItems[156];
         
         leftRicochet = false;
 
@@ -499,12 +507,14 @@ public class GunManager : MonoBehaviour
         rightAtkSpdMult += MultAdder(60f, givenRightItems[118]);
         rightAtkSpdMult += MultAdder(60f, givenRightItems[132]);
         rightAtkSpdMult += MultAdder(10f, givenRightItems[143]);
+        rightAtkSpdMult += MultAdder(20f, givenRightItems[153]);
 
         rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
         rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
         rightAtkSpdDiv += MultAdder(-60f, givenRightItems[91]);
         rightAtkSpdDiv += MultAdder(-40f, givenRightItems[138]);
         rightAtkSpdDiv += MultAdder(-20f, givenRightItems[139]);
+        rightAtkSpdDiv += MultAdder(-40f, givenRightItems[151]);
         //Right Reload Speed
         rightReSpdMult += MultAdder(20f, givenRightItems[7]);
         rightReSpdMult += MultAdder(10f, givenRightItems[143]);
@@ -639,6 +649,8 @@ public class GunManager : MonoBehaviour
         rightGoodies = givenRightItems[139];
         rightAnatomy = givenRightItems[141];
         rightEnzymes = givenRightItems[145];
+        rightDarkBranch = givenRightItems[151];
+        rightBrokenPen = givenRightItems[156];
 
         rightRicochet = false;
 
@@ -663,6 +675,9 @@ public class GunManager : MonoBehaviour
         leftBulSize *= leftBulSizeMult; leftBulSize /= leftBulSizeDiv; rightBulSize *= rightBulSizeMult; rightBulSize /= rightBulSizeDiv;
         leftCritDamage *= leftCritDamageMult; leftCritDamage /= leftCritDamageDiv; rightCritDamage *= rightCritDamageMult; rightCritDamage /= rightCritDamageDiv;
         leftWeakPointDamage *= leftWeakPointDamageMult; leftWeakPointDamage /= leftWeakPointDamageDiv; rightWeakPointDamage *= rightWeakPointDamageMult; rightWeakPointDamage /= rightWeakPointDamageDiv;
+        //Rotation transfer cable
+        if (givenLeftItems[153] > 0) { leftAtkSpd /= 2f; leftCritChance += (((100 * leftAtkSpdMult) - (100 * leftAtkSpdDiv))); } 
+        if (givenRightItems[153] > 0) { rightAtkSpd /= 2f; rightCritChance += (((100 * rightAtkSpdMult) - (100 * rightAtkSpdDiv))); }
         //Thumb Tack
         if (givenLeftItems[59] > 0 && givenLeftItems[149] > 0) { leftDmg *= 3f; }
         if (givenRightItems[59] > 0 && givenRightItems[149] > 0) { rightDmg *= 3f; }

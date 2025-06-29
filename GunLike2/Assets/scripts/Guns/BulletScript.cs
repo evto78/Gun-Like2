@@ -74,6 +74,7 @@ public class BulletScript : MonoBehaviour
     public GameObject sniperTowerAlly;
     public GameObject zipMissle;
     public GameObject web;
+    public GameObject darkBranch;
 
     public virtual void Awake()
     {
@@ -178,7 +179,7 @@ public class BulletScript : MonoBehaviour
         isTrigLead = isLead;
     }
 
-    void RunOnHit(GameObject hit)
+    void RunOnHit(GameObject hit, RaycastHit rayHit)
     {
         EnemyHealthManager ehm;
         if (hit.transform.parent != null)
@@ -238,9 +239,37 @@ public class BulletScript : MonoBehaviour
         {
             if (Random.Range(1,100)<10*gunFiredFrom.enzymes) { ehm.GiveEffect("enzymes", 1); }
         }
+
+        if (gunFiredFrom.darkBranch > 0 && (rayHit.collider != null || rayHit.point != new RaycastHit().point))
+        {
+            if (Random.Range(1, 100) < 5 + 5 * gunFiredFrom.darkBranch)
+            {
+                GameObject spawnedDarkBranch = Instantiate(darkBranch);
+                spawnedDarkBranch.transform.position = rayHit.point;
+                spawnedDarkBranch.transform.LookAt(transform.position - transform.forward);
+                spawnedDarkBranch.transform.SetParent(rayHit.collider.transform);
+                spawnedDarkBranch.GetComponent<DarkBranch>().damage = 5 + damage;
+                spawnedDarkBranch.GetComponent<DarkBranch>().attachedEHM = ehm;
+            }
+        }
+
+        //H.E.A.T Rounds
+        if (whatHandThisComesFrom == "left" && pi.leftItems[102] > 0 || whatHandThisComesFrom == "right" && pi.rightItems[102] > 0){if (rayHit.point != Vector3.zero){
+                for (int i = 0; i < Random.Range(1, 3); i++)
+                {
+                    GameObject spawnedLava = Instantiate(lavaBlob);
+                    spawnedLava.transform.localScale = Vector3.one * Random.Range(0.5f, 1.1f);
+                    spawnedLava.transform.position = rayHit.collider.transform.position;
+                    spawnedLava.transform.LookAt(rayHit.point);
+                    spawnedLava.transform.Rotate(new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f), Random.Range(-30f, 30f)));
+                    spawnedLava.transform.position = rayHit.point;
+                    spawnedLava.transform.position += spawnedLava.transform.forward / 2f;
+                    spawnedLava.GetComponent<Rigidbody>().AddForce((spawnedLava.transform.forward * (bulSpd)) + (Vector3.up * 10f)* Random.Range(1f, 1.5f));
+                }}
+        }
     }
 
-    protected void RunOnCollide(GameObject givenGameObject)
+    protected void RunOnCollide(GameObject givenGameObject, RaycastHit hit)
     {
         if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) < 20f) { damage = damage * (1f + 0.1f * gunkyClaw); } else if(Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) > 20f) { damage = damage * (1f + 0.1f * gunkyClaw); }
         collidedPos = transform.position;
@@ -274,13 +303,13 @@ public class BulletScript : MonoBehaviour
             damage /= gunFiredFrom.haunt + 1;
             for(int i = 0; i < gunFiredFrom.haunt+1; i++)
             {
-                EnemyCollision(givenGameObject);
+                EnemyCollision(givenGameObject, hit);
             }
             damage *= gunFiredFrom.haunt + 1;
         }
         else
         {
-            EnemyCollision(givenGameObject);
+            EnemyCollision(givenGameObject, hit);
         }
         if (!collided && pierce < 1)
         {
@@ -343,52 +372,6 @@ public class BulletScript : MonoBehaviour
         else
         {
             pierce -= 1;
-
-            //H.E.A.T Rounds
-            if(whatHandThisComesFrom == "left" && pi.leftItems[102] > 0 || whatHandThisComesFrom == "right" && pi.rightItems[102] > 0)
-            {
-                Ray ricoRay = new Ray(transform.position, transform.forward);
-                RaycastHit ricoHit;
-
-                myPos = transform.position;
-                Vector3 reflectDir = Vector3.zero;
-                Vector3 hitPos = Vector3.zero;
-                if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
-                {
-                    reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                    hitPos = ricoHit.point;
-                }
-                else
-                {
-                    ricoRay = new Ray(transform.position, -transform.forward);
-
-                    myPos = transform.position;
-                    if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 3f))))
-                    {
-                        //Debug.Log("Rico Hit! BACKWARDS!... Adjusting position for better reflect.");
-                        myPos = transform.position - transform.forward * (rb.velocity * Time.deltaTime).magnitude;
-                        ricoRay = new Ray(myPos, transform.forward);
-                        if (Physics.Raycast(ricoRay, out ricoHit, Vector3.Distance(myPos, (myPos + rb.velocity * Time.fixedDeltaTime * 6f))))
-                        {
-                            reflectDir = Vector3.Reflect(ricoRay.direction, ricoHit.normal);
-                            hitPos = ricoHit.point;
-
-                        }
-                    }
-                }
-                if(hitPos != Vector3.zero)
-                {
-                    for (int i = 0; i < Random.Range(1, 2); i++)
-                    {
-                        GameObject spawnedLava = Instantiate(lavaBlob);
-                        //reflectDir += new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1)) * -5f;
-                        spawnedLava.transform.position = hitPos;
-                        spawnedLava.transform.rotation = Quaternion.LookRotation(reflectDir);
-                        spawnedLava.transform.position += spawnedLava.transform.forward;
-                        spawnedLava.GetComponent<Rigidbody>().AddForce(spawnedLava.transform.forward * bulSpd * 2f);
-                    }
-                }
-            }
 
             if (ricochet)
             {
@@ -461,39 +444,39 @@ public class BulletScript : MonoBehaviour
         damage = damage / (1 + (turbineCharge/4f));
     }
 
-    void EnemyCollision(GameObject givenGameObject)
+    void EnemyCollision(GameObject givenGameObject, RaycastHit hit)
     {
         if (gunFiredFrom.anatomy > 0)
         {
             if (givenGameObject.tag == "Enemy")
             {
-                WeakPointHit(givenGameObject);
+                WeakPointHit(givenGameObject, hit);
             }
             if (givenGameObject.tag == "EnemyWeakPoint")
             {
-                NormalHit(givenGameObject);
+                NormalHit(givenGameObject, hit);
             }
         }
         else
         {
             if(givenGameObject.tag == "Enemy")
             {
-                NormalHit(givenGameObject);
+                NormalHit(givenGameObject, hit);
             }
             if (givenGameObject.tag == "EnemyWeakPoint")
             {
-                WeakPointHit(givenGameObject);
+                WeakPointHit(givenGameObject, hit);
             }
         }
     }
-    void WeakPointHit(GameObject givenGameObject)
+    void WeakPointHit(GameObject givenGameObject, RaycastHit hit)
     {
         if (!isCrit)
         {
             if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
             {
                 givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
-                RunOnHit(givenGameObject);
+                RunOnHit(givenGameObject, hit);
             }
 
             givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -503,7 +486,7 @@ public class BulletScript : MonoBehaviour
             if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
             {
                 givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * gunFiredFrom.critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
-                RunOnHit(givenGameObject);
+                RunOnHit(givenGameObject, hit);
             }
 
             givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -523,7 +506,7 @@ public class BulletScript : MonoBehaviour
             }
         }
     }
-    void NormalHit(GameObject givenGameObject)
+    void NormalHit(GameObject givenGameObject, RaycastHit hit)
     {
         if (!isCrit)
         {
@@ -532,7 +515,7 @@ public class BulletScript : MonoBehaviour
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, whatHandThisComesFrom);
-                    RunOnHit(givenGameObject);
+                    RunOnHit(givenGameObject, hit);
                 }
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -542,7 +525,7 @@ public class BulletScript : MonoBehaviour
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage, false, "weakHit", transform.position, whatHandThisComesFrom);
-                    RunOnHit(givenGameObject);
+                    RunOnHit(givenGameObject, hit);
                 }
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -555,7 +538,7 @@ public class BulletScript : MonoBehaviour
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
-                    RunOnHit(givenGameObject);
+                    RunOnHit(givenGameObject, hit);
                 }
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -565,7 +548,7 @@ public class BulletScript : MonoBehaviour
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
                     givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
-                    RunOnHit(givenGameObject);
+                    RunOnHit(givenGameObject, hit);
                 }
 
                 givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
@@ -589,7 +572,7 @@ public class BulletScript : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collided) { RunOnCollide(collision.gameObject); }
+        if (!collided) { RunOnCollide(collision.gameObject, new RaycastHit()); }
     }
     private void FixedUpdate()
     {
@@ -603,7 +586,8 @@ public class BulletScript : MonoBehaviour
         if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
         {
             transform.position = hit.point - transform.forward / 10f;
-            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) { RunOnCollide(hit.collider.gameObject); }
+            if (hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "EnemyWeakPoint" || hit.collider.gameObject.tag == "Ground" || hit.collider.gameObject.tag == "Untagged" || hit.collider.gameObject.layer == 0) 
+            { RunOnCollide(hit.collider.gameObject, hit); }
         }
     }
 

@@ -87,6 +87,8 @@ public class PlayerItem : MonoBehaviour
     List<int> rightSnapshot;
 
     public int gotchaTickets;
+    public int leftLowFreqRes; List<int> leftLFRAffected = new List<int>();
+    public int rightLowFreqRes; List<int> rightLFRAffected = new List<int>();
 
     public int lastItemPressed;
     public string lastItemPressedHand;
@@ -141,16 +143,18 @@ public class PlayerItem : MonoBehaviour
     }
     private void Update()
     {
+        //Stat Update
         leftSnapshot = new List<int>();
         leftSnapshot.AddRange(leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(rightItems);
-
+        leftLowFreqRes = leftItems[154];rightLowFreqRes = rightItems[154];
+        LowFreqRes();
         playerMvt.StatUpdate(leftItems, rightItems, rarityList);
         healthManager.StatUpdate(leftItems, rightItems, rarityList);
         gunManager.StatUpdate(leftItems, rightItems, rarityList);
-
-
+        LowFreqResCleanup();
+        //After Stat Update
         LookForItem();
 
         UpdateModifierList();
@@ -480,6 +484,59 @@ public class PlayerItem : MonoBehaviour
         }
 
     }
+    public void LowFreqRes()
+    {
+        if(leftLowFreqRes + rightLowFreqRes < 1) { return; }
+        leftLFRAffected.Clear();
+        rightLFRAffected.Clear();
+        foreach(ItemObject itemObj in itemData)
+        {
+            ItemObject.rarityType rarity = itemObj.rarity;
+            if (leftItems[itemObj.id] > 0)
+            {
+                
+                if (leftLowFreqRes > 0)
+                {
+                    if (leftLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                    if (leftLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                    if (leftLowFreqRes > 2 && (rarity == ItemObject.rarityType.Rare || rarity == ItemObject.rarityType.Unique)) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                    if (leftLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                    if (leftLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                }
+            }
+            if (rightItems[itemObj.id] > 0) 
+            {
+                if (rightLowFreqRes > 0)
+                {
+                    if (rightLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                    if (rightLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                    if (rightLowFreqRes > 2 && (rarity == ItemObject.rarityType.Rare || rarity == ItemObject.rarityType.Unique)) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                    if (rightLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                    if (rightLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                }
+            }
+        }
+    }
+    public void LowFreqResCleanup()
+    {
+        if (leftLFRAffected.Count + rightLFRAffected.Count < 1) { return; }
+        if (leftLFRAffected.Count > 0)
+        {
+            foreach(int affectedItem in leftLFRAffected)
+            {
+                leftItems[affectedItem] -= leftLowFreqRes;
+            }
+        }
+        if (rightLFRAffected.Count > 0)
+        {
+            foreach (int affectedItem in rightLFRAffected)
+            {
+                rightItems[affectedItem] -= rightLowFreqRes;
+            }
+        }
+        leftLFRAffected.Clear();
+        rightLFRAffected.Clear();
+    }
     public void SpawnItem(int id, bool overrideID, int rarity, bool overrideRarity)
     {
         int spawnedRarity = 0;
@@ -536,15 +593,16 @@ public class PlayerItem : MonoBehaviour
         if(id == 88 && hand == "right") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown); }//printer
         if(id == 103 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
         if(id == 103 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//sniper
+        if(id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
+        if(id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
+        if (id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
+        if(id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
+        if (id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
+        if(id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
         // health manager
-        if(id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
+        if (id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
         if(id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
+        if(id == 155) { info = new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown/2f) +(60f/healthManager.divineInter)); }//divine intervention
 
         //Debug.Log("ID: " + id + " | " + info);
         return info;

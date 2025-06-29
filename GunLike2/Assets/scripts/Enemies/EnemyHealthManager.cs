@@ -19,6 +19,7 @@ public class EnemyHealthManager : MonoBehaviour
     public List<MonoBehaviour> brains;
     public GameObject frozenEffect;
     public GameObject markedEffect;
+    public GameObject feathersEffect;
     public GameObject item;
     public GameObject itemPossibility;
 
@@ -213,7 +214,7 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1,100)<chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage,false);
+                playerHM.TakeDamage(-latestDamage,false,this);
                 latestDamage = 0;
             }
         }
@@ -224,7 +225,7 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1, 100) < chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage, false);
+                playerHM.TakeDamage(-latestDamage, false,this);
                 latestDamage = 0;
             }
         }
@@ -512,7 +513,10 @@ public class EnemyHealthManager : MonoBehaviour
                 if(Random.Range(1,100) < 100 - (featherton * 25)) { playerTargeted = true; }
             }
             if(lowestHP != float.PositiveInfinity && !playerTargeted) { possibleTargets[lowestHPIndex].TakeDamage(latestDamage, true, "normalhit", possibleTargets[lowestHPIndex].transform.position, "self"); Debug.DrawLine(transform.position, possibleTargets[lowestHPIndex].transform.position, Color.red, 1f); }
-            else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false); }
+            else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false, this); }
+            feathersEffect.SetActive(true);
+            feathersEffect.transform.SetParent(null);
+            Destroy(feathersEffect, 2f);
         }
     }
 

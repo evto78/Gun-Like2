@@ -50,6 +50,9 @@ public class HealthManager : MonoBehaviour
 	public float chickenCoopTimer;
 	int canineTooth;
 	float canineToothTimer;
+	public int divineInter;
+	public float divineTimer;
+	EnemyHealthManager lastHitMe;
 	EnemyHealthManager markedEnemy;
 	public bool attackedThisRoom;
 	public GameObject egg;
@@ -154,6 +157,7 @@ public class HealthManager : MonoBehaviour
 		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
 		chickenCoop = 0 + givenLeftItems[114] + givenRightItems[114];
 		canineTooth = 0 + givenLeftItems[130] + givenRightItems[130];
+		divineInter = 0 + givenLeftItems[155] + givenRightItems[155];
 		//Applying Mult
 		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
 		armor *= armorMult; armor /= armorDiv;
@@ -228,19 +232,33 @@ public class HealthManager : MonoBehaviour
 
 		if(curHp <= 0 && activeEffects[21].x < 1) 
 		{ 
-			if(playerItem.leftItems[116] > 0)
+			if(playerItem.leftItems[155] > 0)//Divine Intervention
             {
 				GiveEffect("invaun", 1f);
 				curHp = maxHp;
-				playerItem.leftItems[116]--;
+				divineTimer = 60f + (60f/divineInter);
+				if(lastHitMe != null) { lastHitMe.TakeDamage(maxHp, false, "normalHit", lastHitMe.transform.position, "player"); }
             }
-			else if (playerItem.rightItems[116] > 0)
+			else if (playerItem.rightItems[155] > 0)
             {
+				GiveEffect("invaun", 1f);
+				curHp = maxHp;
+				divineTimer = 60f + (60f/divineInter);
+				if (lastHitMe != null) { lastHitMe.TakeDamage(maxHp, false, "normalHit", lastHitMe.transform.position, "player"); }
+			}
+			else if (playerItem.leftItems[116] > 0)//Another Shot
+			{
+				GiveEffect("invaun", 1f);
+				curHp = maxHp;
+				playerItem.leftItems[116]--;
+			}
+			else if (playerItem.rightItems[116] > 0)
+			{
 				GiveEffect("invaun", 1f);
 				curHp = maxHp;
 				playerItem.rightItems[116]--;
 			}
-            else
+			else
             {
 				dead = true;
 			}
@@ -355,13 +373,13 @@ public class HealthManager : MonoBehaviour
 
 				if(Random.Range(1,100) > (53 - experimentalImp * 3))
                 {
-					TakeDamage(-1f * healthRegen, false);
+					TakeDamage(-1f * healthRegen, false, null);
                 }
                 else
                 {
 					if(curHp > 0.5f * healthRegen)
                     {
-						TakeDamage(0.5f * healthRegen, false);
+						TakeDamage(0.5f * healthRegen, false, null);
 					}
                 }
             }
@@ -414,7 +432,7 @@ public class HealthManager : MonoBehaviour
 
 		if(canineTooth > 0)
         {
-			canineToothTimer -= Time.deltaTime;
+			canineToothTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
 			if (markedEnemy == null && canineToothTimer <= 0f)
             {
 				markedEnemy = gdm.activeEhms[Random.Range(0, gdm.activeEhms.Count)];
@@ -448,9 +466,14 @@ public class HealthManager : MonoBehaviour
             if (!attackedThisRoom && activeEffects[22].x < 2) { GiveEffect("invis", 1); }
 			if (attackedThisRoom) { activeEffects[22] = new Vector4(0, activeEffects[22].y, activeEffects[22].z, activeEffects[22].w); }
         }
+
+		if(divineInter > 0)
+        {
+			if(divineTimer > 0) { divineTimer -= Time.deltaTime + (Time.deltaTime * clockwork); }
+        }
 	}
 
-	public void TakeDamage(float damageTaken, bool wasFromExpGrowth)
+	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source)
 	{
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
@@ -467,6 +490,7 @@ public class HealthManager : MonoBehaviour
 		{
             if (Random.Range(1, 100) < evadeChance) { return; }
 			//Damage
+			if (source != null) { lastHitMe = source; }
 			if (damageTaken <= tempArmor)
 			{
 				//armor has absorbed all damage but min dmg is 1
@@ -516,7 +540,7 @@ public class HealthManager : MonoBehaviour
 
 		if (curHp != maxHp && wasAtMax && radioDome > 0)
 		{
-			TakeDamage(maxHp * (15f / 100f), false);
+			TakeDamage(maxHp * (15f / 100f), false, null);
 			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
 			spawnedRadioDome.transform.position = transform.position;
 			spawnedRadioDome.GetComponent<RadioactiveDomes>().damage = maxHp * (15f / 100f);
@@ -575,13 +599,11 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
 		if (effectGiven == "invis") { activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
 		
-
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
 		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, 1f, 1f, 1f); }
 	}
-
 	void ManageEffects()
 	{
 		Vector4 q = new Vector4(0, 0, 0, 0);
@@ -609,7 +631,7 @@ public class HealthManager : MonoBehaviour
 					if (q.x > 0f) { q.z = q.y; }
 
 					//run effects that happen when timer ends
-					if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*5f, false); }
+					if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*5f, false, null); }
 				}
 			}
 
@@ -617,7 +639,6 @@ public class HealthManager : MonoBehaviour
 		}
 
 	}
-
 	void DisplayEffects()
 	{
 		string strToAdd = "";
@@ -649,7 +670,6 @@ public class HealthManager : MonoBehaviour
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
 		}
-
 	}
 
 }
