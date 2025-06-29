@@ -74,15 +74,11 @@ public class BulletScript : MonoBehaviour
     public GameObject zipMissle;
     public GameObject web;
 
-    public bool anchored;
-    Transform anchorTar;
-    Vector3 relativePos;
-
     void Awake()
     {
         hm = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthManager>();
-        pi = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItem>();
-        gm = GameObject.FindGameObjectWithTag("Player").GetComponent<GunManager>();
+        pi = hm.gameObject.GetComponent<PlayerItem>();
+        gm = hm.gameObject.GetComponent<GunManager>();
 
         rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 30f);
@@ -98,9 +94,8 @@ public class BulletScript : MonoBehaviour
     private void Update()
     {
         if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
-        if (rb.velocity != Vector3.zero && !anchored) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
-        if (collided && !gunFiredFrom.nerfedBul) { rb.velocity = Vector3.zero; if (!anchored) { transform.position = collidedPos; } }
-        if (anchored) { rb.velocity = Vector3.zero; transform.localPosition = relativePos; }
+        if (rb.velocity != Vector3.zero) { transform.rotation = Quaternion.LookRotation(rb.velocity); }
+        if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
 
         Debug.DrawRay(transform.position, rb.velocity * Time.deltaTime, Color.cyan);
 
@@ -280,48 +275,19 @@ public class BulletScript : MonoBehaviour
         if (!collided && pierce < 1)
         {
             rb.velocity = Vector3.zero;
+            rb.freezeRotation = true;
             hitParticle.Play();
-            if(!gunFiredFrom.nerfedBul)
+            if (!gunFiredFrom.nerfedBul)
             {
-                rb.freezeRotation = true;
                 Destroy(mesh);
-                anchored = true;
-                anchorTar = givenGameObject.transform;
-                transform.SetParent(anchorTar);
-                relativePos = transform.localPosition;
-                gameObject.GetComponent<Collider>().enabled = false;
-            }
-            else
-            {
-                if(givenGameObject.tag == "Untagged" || givenGameObject.tag == "Ground")
-                {
-                    rb.freezeRotation = true;
-                    anchored = true;
-                    anchorTar = givenGameObject.transform;
-                    transform.SetParent(anchorTar);
-                    relativePos = transform.localPosition;
-                    gameObject.GetComponent<Collider>().enabled = false;
-                }
-                else
-                {
-                    rb.AddForce(-transform.forward / 4f, ForceMode.Impulse);
-                    rb.AddForce(Vector3.up / 2f, ForceMode.Impulse);
-                }
-            }
-            if(anchored == true && (anchorTar.gameObject.tag != "Enemy" || anchorTar.gameObject.tag != "EnemyWeakPoint"))
-            {
-                anchored = false;
-                rb.freezeRotation = true;
-                anchored = true;
-                anchorTar = givenGameObject.transform;
-                transform.SetParent(anchorTar);
-                relativePos = transform.localPosition;
-                gameObject.GetComponent<Collider>().enabled = false;
+                fireSponEffect.transform.parent.transform.SetParent(givenGameObject.transform);
+                Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f,3f));
             }
             collided = true;
-            
+            gameObject.GetComponent<Collider>().enabled = false;
 
-            if(introTrig > 0)
+
+            if (introTrig > 0)
             {
                 if (isTrigLead)
                 {
@@ -615,7 +581,7 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collided && !anchored && !gunFiredFrom.nerfedBul) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
+        if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
         DetectCollision(rb.velocity * 1.5f);
     }
 

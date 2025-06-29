@@ -284,10 +284,6 @@ public class EnemyHealthManager : MonoBehaviour
     private void OnDestroy()
     {
         if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); }
-        foreach(BulletScript bullet in transform.GetComponentsInChildren<BulletScript>())
-        {
-            bullet.transform.parent = null; bullet.anchored = false;
-        }
     }
 
     //GiveEffect("radiation", 1f)
