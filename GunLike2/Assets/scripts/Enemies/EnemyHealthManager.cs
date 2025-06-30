@@ -20,6 +20,7 @@ public class EnemyHealthManager : MonoBehaviour
     public GameObject frozenEffect;
     public GameObject markedEffect;
     public GameObject feathersEffect;
+    public ParticleSystem ChemicalEffect;
     public GameObject item;
     public GameObject itemPossibility;
 
@@ -79,7 +80,7 @@ public class EnemyHealthManager : MonoBehaviour
         //Effect Setup
         activeEffects = new List<Vector4>();
         icons = new List<GameObject>();
-        int effectsToAdd = 14;
+        int effectsToAdd = 16;
         for(int i = 0; i < effectsToAdd; i++)
         {
             activeEffects.Add(Vector4.zero);
@@ -305,17 +306,19 @@ public class EnemyHealthManager : MonoBehaviour
         }
 
         //Item effects
-        if (effectID == 3 || effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
-        if (effectID == 4 || effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
-        if (effectID == 5 || effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }
-        if (effectID == 6 || effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }
-        if (effectID == 7 || effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }
-        if (effectID == 8 || effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }
-        if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }
-        if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }
-        if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }
+        if (effectID == 3 || effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Jam
+        if (effectID == 4 || effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }//Silver4Cash
+        if (effectID == 5 || effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//HelpingHandInHand
+        if (effectID == 6 || effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }//CoolAsIce
+        if (effectID == 7 || effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }//Gunky's blessing
+        if (effectID == 8 || effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }//Improvised Storage
+        if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }//Gas Gernade attachment
+        if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }//Broken Lightbulb
+        if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }//Canine Tooth
         if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
-        if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }
+        if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }//Enzymes
+        if (effectID == 14 || effectGiven == "chemical A") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
+        if (effectID == 15 || effectGiven == "chemical B") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
     }
     public void RandomDebuff()
     {

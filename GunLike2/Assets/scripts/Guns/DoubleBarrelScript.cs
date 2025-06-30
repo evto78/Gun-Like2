@@ -14,9 +14,16 @@ public class DoubleBarrelScript : GunScript
         }
         else
         {
-            if (!reloading && !shooting)
+            if (!reloading && !shooting && rushJobTimer <= 0)
             {
-                if(Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
+                if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+                {
+                    misfireEffect.GetComponent<ParticleSystem>().Play();
+                    rushJobTimer = (1f / reSpd) / 2f;
+                    return;
+                }
+
+                if (Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
                 else
                 {
                     for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
@@ -45,8 +52,14 @@ public class DoubleBarrelScript : GunScript
 
     public override void AttemptShootUp()
     {
-        if (bowAct > 0)
+        if (bowAct > 0 && !reloading && !shooting)
         {
+            if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+            {
+                misfireEffect.GetComponent<ParticleSystem>().Play();
+                rushJobTimer = (1f / reSpd) / 2f;
+                return;
+            }
             if (Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
             else
             {

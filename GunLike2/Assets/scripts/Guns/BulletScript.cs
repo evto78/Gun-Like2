@@ -26,6 +26,8 @@ public class BulletScript : MonoBehaviour
     public int pierce = 0;
     public bool ricochet = false;
 
+    public bool isFlea;
+
     public int heavySpirits;
     public int nuclearBullets;
     public int introTrig;
@@ -152,7 +154,7 @@ public class BulletScript : MonoBehaviour
         ricochet = givenRico;
         bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
         myIsHeavy = isHeavy;
-        if (isHeavy != 0f || isLargeSpon || isOil)
+        if (isHeavy != 0f || isLargeSpon || isOil || isFlea)
         {
             rb.useGravity = true;
             rb.mass = isHeavy + 1;
@@ -161,8 +163,10 @@ public class BulletScript : MonoBehaviour
         {
             rb.useGravity = false;
         }
-
-        transform.localScale = new Vector3(transform.localScale.x * givenBulSize, transform.localScale.y * givenBulSize, transform.localScale.z * givenBulSize);
+        float bulSize = givenBulSize;
+        if (isFlea) { pierce += 10; ricochet = true; bulSize /= 2f; damage = 1; bulSpd = Mathf.Clamp(bulSpd, 5, 25); }
+        
+        transform.localScale = new Vector3(transform.localScale.x * bulSize, transform.localScale.y * bulSize, transform.localScale.z * bulSize);
 
         Vector3 forceDir = transform.forward * bulSpd;
 
@@ -266,6 +270,26 @@ public class BulletScript : MonoBehaviour
                     spawnedLava.transform.position += spawnedLava.transform.forward / 2f;
                     spawnedLava.GetComponent<Rigidbody>().AddForce((spawnedLava.transform.forward * (bulSpd)) + (Vector3.up * 10f)* Random.Range(1f, 1.5f));
                 }}
+        }
+        //Chemical Agent
+        if (gunFiredFrom.chemicalAgents > 0)
+        {
+            int maxA = gunFiredFrom.chemicalAgents; int maxB = gunFiredFrom.chemicalAgents;
+            if (ehm.activeEffects[14].x < maxA && (ehm.activeEffects[14].x <= ehm.activeEffects[15].x || ehm.activeEffects[14].x == 0))
+            {
+                ehm.GiveEffect("chemical A", 1f);
+            }
+            else if (ehm.activeEffects[15].x < maxB)
+            {
+                ehm.GiveEffect("chemical B", 1f);
+            }
+            else
+            {
+                ehm.TakeDamage(damage * 1.5f * ehm.activeEffects[15].x, false, "normalHit", ehm.transform.position, whatHandThisComesFrom);
+                ehm.activeEffects[14] = new Vector4(0, ehm.activeEffects[14].y, ehm.activeEffects[14].z, ehm.activeEffects[14].w);
+                ehm.activeEffects[15] = new Vector4(0, ehm.activeEffects[15].y, ehm.activeEffects[15].z, ehm.activeEffects[15].w);
+                ehm.ChemicalEffect.Play();
+            }
         }
     }
 

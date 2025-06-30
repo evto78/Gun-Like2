@@ -123,6 +123,7 @@ public class HealthManager : MonoBehaviour
 		armorMult += MultAdder(60f, givenLeftItems[115] + givenRightItems[115]);
 		armorMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
 		armorMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
+		armorMult += MultAdder(40f, givenLeftItems[159] + givenRightItems[159]);
 
 		armorDiv += MultAdder(-20f, givenLeftItems[12] + givenRightItems[12]);
 		armorDiv += MultAdder(-20f, givenLeftItems[66] + givenRightItems[66]);
@@ -138,6 +139,7 @@ public class HealthManager : MonoBehaviour
 		maxHpMult += MultAdder(20f, givenLeftItems[124] + givenRightItems[124]);
 		maxHpMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
 		maxHpMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
+		maxHpMult += MultAdder(40f, givenLeftItems[159] + givenRightItems[159]);
 
 		maxHpDiv += MultAdder(-40f, givenLeftItems[13] + givenRightItems[13]);
 		maxHpDiv += MultAdder(-40f, givenLeftItems[18] + givenRightItems[18]);
@@ -598,11 +600,13 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "warcry") { activeEffects[20] = new Vector4(stacksToAdd, 1f+warcry, 1f+warcry, 1f); } // warcrybuff
 		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
 		if (effectGiven == "invis") { activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
+		if (effectGiven == "smokingGun") { activeEffects[23] = new Vector4(stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Reload speed buff
 		
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
 		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, 1f, 1f, 1f); }
+		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, 5f, 5f, 1f); }
 	}
 	void ManageEffects()
 	{
@@ -648,25 +652,33 @@ public class HealthManager : MonoBehaviour
 		{
 			if (activeEffects[i].x > 0)
 			{
-				if (i == 0) { strToAdd = "bleed"; }
-				if (i == 1) { strToAdd = "burn"; }
-				if (i == 2) { strToAdd = "radiation"; }
-				if (i == 3) { strToAdd = "organic bannana"; }
-				if (i == 4) { strToAdd = "organic apple"; }
-				if (i == 5) { strToAdd = "organic berry"; }
-				if (i == 6) { strToAdd = "organic choco"; }
-				if (i == 7) { strToAdd = "organic lemon"; }
-				if (i == 8) { strToAdd = "organic lime"; }
-				if (i == 9) { strToAdd = "organic grape"; }
-				if (i == 10) { strToAdd = "organic mint"; }
-				if (i == 11) { strToAdd = "organic spicy"; }
-				if (i == 12) { strToAdd = "organic red meat"; }
-				if (i == 13) { strToAdd = "organic white meat"; }
-				if (i == 14) { strToAdd = "organic pink meat"; }
-				if (i == 15) { strToAdd = "organic gray meat"; }
-				if (i == 16) { strToAdd = "bunny hop"; }
-				if (i == 17) { strToAdd = "pants falling"; }
-				if (i == 18) { strToAdd = "active reactor"; }
+                switch (i)
+                {
+					case 0: strToAdd = "bleed";break;
+					case 1: strToAdd = "burn";break;
+					case 2: strToAdd = "radiation";break;
+					case 3: strToAdd = "organic bannana";break;
+					case 4: strToAdd = "organic apple";break;
+					case 5: strToAdd = "organic berry";break;
+					case 6: strToAdd = "organic choco"; break;
+					case 7: strToAdd = "organic lemon"; break;
+					case 8: strToAdd = "organic lime"; break;
+					case 9: strToAdd = "organic grape"; break;
+					case 10: strToAdd = "organic mint"; break;
+					case 11: strToAdd = "organic spicy"; break;
+					case 12: strToAdd = "organic red meat"; break;
+					case 13: strToAdd = "organic white meat"; break;
+					case 14: strToAdd = "organic pink meat"; break;
+					case 15: strToAdd = "organic gray meat"; break;
+					case 16: strToAdd = "bunny hop"; break;
+					case 17: strToAdd = "pants falling"; break;
+					case 18: strToAdd = "active reactor"; break;
+					case 19: strToAdd = "fast fire"; break;
+					case 20: strToAdd = "warcry"; break;
+					case 21: strToAdd = "invaunerability"; break;
+					case 22: strToAdd = "invisible"; break;
+					case 23: strToAdd = "smoking gun"; break;
+				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
 		}

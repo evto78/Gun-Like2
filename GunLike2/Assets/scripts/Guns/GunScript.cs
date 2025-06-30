@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ public class GunScript : MonoBehaviour
     public GunManager manager;
     Transform player;
     public GameObject possessionEffect;
+    public GameObject misfireEffect;
     public string gunName;
 
     //Base stats for this gun
@@ -80,7 +80,18 @@ public class GunScript : MonoBehaviour
     public int enzymes;
     public int darkBranch;
     public int brokenPen;
-    int brokenPenCounter; 
+    int brokenPenCounter;
+    public int rushJob;
+    public float rushJobTimer;
+    public int brokenInk;
+    public int inkCounter;
+    public int chemicalAgents;
+    public int fleas;
+    public int smokingGun;
+    int smokingGunCounter;
+    public int forkedBarrel;
+    public int runicMag;
+    int runicMagsStored;
 
     public float echoDmg;
 
@@ -100,6 +111,7 @@ public class GunScript : MonoBehaviour
     public GameObject pistolBullet;
     public GameObject nerfedPistolBullet;
     public GameObject oilBullet;
+    public GameObject fleaBullet;
     public Transform firePoint;
     public Transform normalFirePoint;
     public Transform doorKnobFirePoint;
@@ -186,6 +198,13 @@ public class GunScript : MonoBehaviour
         enzymes = manager.leftEnzymes;
         darkBranch = manager.leftDarkBranch;
         brokenPen = manager.leftBrokenPen;
+        rushJob = manager.leftRushJob;
+        brokenInk = manager.leftBrokenInk;
+        chemicalAgents = manager.leftChemicalAgents;
+        fleas = manager.left200Fleas;
+        smokingGun = manager.leftSmokingGun;
+        forkedBarrel = manager.leftForkedBarrel;
+        runicMag = manager.leftRunicMag;
 
         ricochet = manager.leftRicochet;
 
@@ -267,6 +286,13 @@ public class GunScript : MonoBehaviour
         enzymes = manager.rightEnzymes;
         darkBranch = manager.rightDarkBranch;
         brokenPen = manager.rightBrokenPen;
+        rushJob = manager.rightRushJob;
+        brokenInk = manager.rightBrokenInk;
+        chemicalAgents = manager.rightChemicalAgents;
+        fleas = manager.right200Fleas;
+        smokingGun = manager.rightSmokingGun;
+        forkedBarrel = manager.rightForkedBarrel;
+        runicMag = manager.rightRunicMag;
 
         ricochet = manager.rightRicochet;
 
@@ -384,7 +410,8 @@ public class GunScript : MonoBehaviour
             if (reloadTimer <= 0)
             {
                 reloading = false;
-                currentBullets = Mathf.RoundToInt(magSize);
+                if(runicMag > 0 && runicMagsStored > 0) { currentBullets = Mathf.Clamp(Mathf.RoundToInt(magSize) + runicMagsStored, 1, Mathf.RoundToInt(magSize)*(runicMag+1)); runicMagsStored = 0; }
+                else{currentBullets = Mathf.RoundToInt(magSize);}
             }
         }
         if (shooting)
@@ -434,6 +461,8 @@ public class GunScript : MonoBehaviour
             if (whatHandThisIsIn == "left") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.leftClockwork); }
             if (whatHandThisIsIn == "right") { gasGrenadeAttachTimer -= Time.deltaTime * (manager.rightClockwork); }
         }
+
+        rushJobTimer -= Time.deltaTime;
     }
 
     public virtual void AttemptShoot()
@@ -445,8 +474,15 @@ public class GunScript : MonoBehaviour
         }
         else
         {
-            if (!reloading && !shooting)
+            if (!reloading && !shooting && rushJobTimer <= 0)
             {
+                if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+                {
+                    misfireEffect.GetComponent<ParticleSystem>().Play();
+                    rushJobTimer = (1f / reSpd)/2f;
+                    return;
+                }
+
                 Shoot(1f);
                 if(pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
                 {
@@ -470,8 +506,16 @@ public class GunScript : MonoBehaviour
 
     public virtual void AttemptShootUp()
     {
-        if (bowAct > 0)
+        smokingGunCounter = 0; if (smokingGun > 0) { manager.healthMan.activeEffects[23] = new Vector4(0, manager.healthMan.activeEffects[23].y, manager.healthMan.activeEffects[23].z, manager.healthMan.activeEffects[23].w); }
+        if (bowAct > 0 && !reloading && !shooting)
         {
+            if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+            {
+                misfireEffect.GetComponent<ParticleSystem>().Play();
+                rushJobTimer = (1f / reSpd) / 2f;
+                return;
+            }
+
             Shoot(bowCharge);
             if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
             {
@@ -495,7 +539,7 @@ public class GunScript : MonoBehaviour
 
     public void AttemptReload()
     {
-        if (!reloading && (currentBullets != magSize || tacticalReload > 0))
+        if (!reloading && (currentBullets != magSize || tacticalReload > 0 || runicMag > 0 ))
         {
             Reload();
         }
@@ -510,6 +554,7 @@ public class GunScript : MonoBehaviour
         shooting = false;
         attackTimer = 0;
 
+        if(runicMag > 0) { runicMagsStored += currentBullets; }
         if(tacticalReload > 0) { tacticalCompress = currentBullets; currentBullets = 1; }
 
         if(manager.leftBeltFed + manager.rightBeltFed > 0)
@@ -549,26 +594,39 @@ public class GunScript : MonoBehaviour
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
         if (tacticalCompress > 0 && tacticalReload > 0) { dmg = dmg * (1 + (tacticalCompress / (10f / tacticalCompress))); tacticalCompress = 0; }
         if (brokenPen > 0 && brokenPenCounter >= 10) { dmg *= 2f + (1.5f * brokenPen - 1f); }
+
+        if (fleas>0&&Random.Range(1,100)<16){
+            for(int i = 0; i < fleas; i++)
+            {
+                GameObject spawnedFlea = Instantiate(fleaBullet, firePoint.position, firePoint.rotation); acc = acc / 1;
+                if (target != null) { spawnedFlea.transform.LookAt(target); timeSinceShot = 5f; }
+                acc *= 1.5f; spawnedFlea.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc))); acc /= 1.5f;
+                spawnedFlea.GetComponent<BulletScript>().mainCamera = cam;
+                SetBulStats(spawnedFlea, dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
+            }
+        }
     }
     public virtual void Shoot(float bowChar)
     {
+        if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect("smokingGun", 1f); } AttemptReload(); return; }
         if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
         animator.SetTrigger("Shooting");
         animator.speed = atkSpd * 1.5f;
         isFastFiring = false;
         shooting = true;
         attackTimer = 1;
-        if(carvedBone > 0 && currentBullets < 1)
+        if(carvedBone > 0 && currentBullets < 1 && !(brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)))
         {
             manager.healthMan.TakeDamage(1, false, null);
             currentBullets++;
         }
-        if (currentBullets > 0)
+        if (currentBullets > 0 || (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)))
         {
             timeSinceShot = 0f;
             EarlyShoot();
-            currentBullets--;
-            if(echoDmg > 0) { dmg += echoDmg; echoDmg = 0; }
+            if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)){inkCounter++;currentBullets--;}else if (brokenInk > 0){inkCounter = 0;}else{
+                currentBullets--;}
+            if (echoDmg > 0) { dmg += echoDmg; echoDmg = 0; }
             GameObject spawnedBullet;
             if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
             else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
@@ -577,7 +635,10 @@ public class GunScript : MonoBehaviour
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
             spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
-            GameObject spawnedBulletB = Instantiate(pistolBullet, firePoint.position, firePoint.rotation);
+            GameObject spawnedBulletB;
+            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBulletB = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
+            else if (nerfedBul) { spawnedBulletB = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
+            else { spawnedBulletB = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
             if (introTrig > 0)
             {
                 spawnedBullet.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBulletB, true);
@@ -595,6 +656,23 @@ public class GunScript : MonoBehaviour
                 spawnedBulletB.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
                 spawnedBulletB.GetComponent<BulletScript>().mainCamera = cam;
                 SetBulStats(spawnedBulletB, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
+            }
+            
+            if (forkedBarrel > 0)
+            {
+                int bulletsSpawned = 1; if (Random.Range(1, 100) < (forkedBarrel - 1f) * 20f) { bulletsSpawned++; }
+                for(int i = 0; i < bulletsSpawned; i++)
+                {
+                    GameObject spawnedForkedBullet;
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedForkedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
+                    else if (nerfedBul) { spawnedForkedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
+                    else { spawnedForkedBullet = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
+
+                    acc += 4;
+                    spawnedForkedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
+                    spawnedForkedBullet.GetComponent<BulletScript>().mainCamera = cam;
+                    SetBulStats(spawnedForkedBullet, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
+                }
             }
 
             if (isFastFiring)
