@@ -363,7 +363,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (isTrigLead)
                 {
-                    if (pairedBullet.GetComponent<BulletScript>().collided)
+                    if (pairedBullet != null && pairedBullet.GetComponent<BulletScript>().collided)
                     {
                         //from there to here
                         GameObject spawnedBullet = Instantiate(bulletPrefab, pairedBullet.transform.position, pairedBullet.transform.rotation);
@@ -377,7 +377,7 @@ public class BulletScript : MonoBehaviour
                 }
                 else
                 {
-                    if (pairedBullet.GetComponent<BulletScript>().collided)
+                    if (pairedBullet != null && pairedBullet.GetComponent<BulletScript>().collided)
                     {
                         //from here to there
                         rb.freezeRotation = false;

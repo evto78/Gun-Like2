@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 170
+  m_EditorClassIdentifier: 
+  id: 170
+  itemName: Overwritten Centrifuge
+  rarity: 7
+  itemSprite: {fileID: 21300000, guid: 88e667f15abe879488ed91744cd87519, type: 3}
+  cooldownItem: 1
+  baseCooldown: 5
+  subType: 0
+  effect: If you ever have more than 1 stack of an item, every 5 seconds remove one
+    of those stacks to gain another item of the same rarity. Does not reroll unique
+    items. Only effects the items on this gun.
+  buff: '-'
+  debuff: '-'
+  effectSum: If you ever have 2 of the same item, one of those items gets rerolled
+    into another random item from the same rarity.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: Variety is Key.
+  ideaCredit: 
+  flavorCredit: 

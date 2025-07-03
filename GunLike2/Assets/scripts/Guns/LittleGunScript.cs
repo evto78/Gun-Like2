@@ -18,9 +18,9 @@ public class LittleGunScript : GunScript
         littleCharge = 0;
     }
 
-    public override void EarlyShoot()
+    public override void EarlyShoot(bool requireAmmo)
     {
-        base.EarlyShoot();
+        base.EarlyShoot(requireAmmo);
         littleCharge += 0.2f;
     }
 }

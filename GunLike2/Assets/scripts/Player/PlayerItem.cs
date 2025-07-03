@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerItem : MonoBehaviour
 {
     [Header("Item Categories and data")]
@@ -94,15 +93,29 @@ public class PlayerItem : MonoBehaviour
     public string lastItemPressedHand;
 
     public GameObject itemPos;
+
+    bool changedLastFrame;
     private void Awake()
     {
         itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
+        SortItemData();
 
         uiManager = gameObject.GetComponent<UIManager>();
 
         LoadRarites();
         LoadCategories();
+    }
+    void SortItemData()
+    {
+        List<int> comparisonList = new List<int>();
+        List<ItemObject> sortedItemData = new List<ItemObject>();
+        for(int i = 0; i < itemData.Count; i++) { comparisonList.Add(i); sortedItemData.Add(null); }
+        for(int i = 0; i < itemData.Count; i++) 
+        {
+            sortedItemData[comparisonList.IndexOf(itemData[i].id)] = itemData[i];
+        }
+        itemData = sortedItemData;
     }
     void LoadRarites()
     {
@@ -163,19 +176,22 @@ public class PlayerItem : MonoBehaviour
     }
     private void LateUpdate()
     {
+        bool change = false;
         for(int i = 0; i < leftItems.Count; i++)
         {
             leftSnapshot[i] = leftItems[i] - leftSnapshot[i];
-            if (leftSnapshot[i] < 0) { OnItemDestroy(i, leftSnapshot[i], "left"); }
-            if (leftSnapshot[i] > 0) { OnItemGain(i, leftSnapshot[i], "left"); }
+            if (leftSnapshot[i] < 0) { OnItemDestroy(i, leftSnapshot[i], "left"); change = true; }
+            if (leftSnapshot[i] > 0) { OnItemGain(i, leftSnapshot[i], "left"); change = true; }
         }
         for (int i = 0; i < rightItems.Count; i++)
         {
             rightSnapshot[i] = rightItems[i] - rightSnapshot[i];
-            if(rightSnapshot[i] < 0) { OnItemDestroy(i, rightSnapshot[i], "right");  }
-            if(rightSnapshot[i] > 0) { OnItemGain(i, rightSnapshot[i], "right");  }
+            if(rightSnapshot[i] < 0) { OnItemDestroy(i, rightSnapshot[i], "right"); change = true; }
+            if(rightSnapshot[i] > 0) { OnItemGain(i, rightSnapshot[i], "right"); change = true; }
         }
+        if (change) { changedLastFrame = true; }
 
+        if (change || (!change && changedLastFrame)) { uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();  if (!change) { changedLastFrame = false; } }
     }
     public void OnItemDestroy(int id, int amount, string hand)
     {
@@ -220,7 +236,12 @@ public class PlayerItem : MonoBehaviour
             if(hand == "right" && rightItems[74] < 1) { return; }
             NuclearFission(id, hand);
         }
-
+        if(lastItemPressed == 171 && lastItemPressedHand == hand)
+        {
+            if(hand == "left" && gunManager.leftOverCompress < 1) { return; }
+            if(hand == "right" && gunManager.rightOverCompress < 1) { return; }
+            OverridenCompressor(id, hand);
+        }
         lastItemPressed = id;
         lastItemPressedHand = hand;
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
@@ -231,29 +252,77 @@ public class PlayerItem : MonoBehaviour
         if(hand == "left")
         {
             if (rarityList[0].Contains(id)) { leftItems[id]--; }//common
-            if (rarityList[1].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//uncommon
-            if (rarityList[2].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 1, hand); }//rare
-            if (rarityList[3].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 2, hand); AddRandItemsFromRarity(1, 7, hand); }//legendary
-            if (rarityList[4].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//mutated
-            if (rarityList[5].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//haunted
-            if (rarityList[6].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(1, 0, hand); AddRandItemsFromRarity(1, 4, hand); }//irradiated
-            if (rarityList[7].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(3, 6, hand); AddRandItemsFromRarity(1, 5, hand); }//nuclear
-            if (rarityList[8].Contains(id)) { leftItems[id]--; }//unique
+            if (rarityList[1].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//uncommon
+            if (rarityList[2].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 1, hand, true); }//rare
+            if (rarityList[3].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 2, hand, true); AddRandItemsFromRarity(1, 7, hand, true); }//legendary
+            if (rarityList[4].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//mutated
+            if (rarityList[5].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//haunted
+            if (rarityList[6].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(1, 0, hand, true); AddRandItemsFromRarity(1, 4, hand, true); }//irradiated
+            if (rarityList[7].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(3, 6, hand, true); AddRandItemsFromRarity(1, 5, hand, true); }//nuclear
         }
         else
         {
             if (rarityList[0].Contains(id)) { rightItems[id]--; }//common
-            if (rarityList[1].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//uncommon
-            if (rarityList[2].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 1, hand); }//rare
-            if (rarityList[3].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 2, hand); AddRandItemsFromRarity(1, 7, hand); }//legendary
-            if (rarityList[4].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//mutated
-            if (rarityList[5].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand); }//haunted
-            if (rarityList[6].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(1, 0, hand); AddRandItemsFromRarity(1, 4, hand); }//irradiated
-            if (rarityList[7].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(3, 6, hand); AddRandItemsFromRarity(1, 5, hand); }//nuclear
-            if (rarityList[8].Contains(id)) { rightItems[id]--; }//unique
+            if (rarityList[1].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//uncommon
+            if (rarityList[2].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 1, hand, true); }//rare
+            if (rarityList[3].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 2, hand, true); AddRandItemsFromRarity(1, 7, hand, true); }//legendary
+            if (rarityList[4].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//mutated
+            if (rarityList[5].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//haunted
+            if (rarityList[6].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(1, 0, hand, true); AddRandItemsFromRarity(1, 4, hand, true); }//irradiated
+            if (rarityList[7].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(3, 6, hand, true); AddRandItemsFromRarity(1, 5, hand, true); }//nuclear
         }
     }
-    void AddRandItemsFromRarity(int amount, int rarity, string hand)
+    void OverridenCompressor(int id, string hand)
+    {
+        int raritySelected = FindRarityByID(id);
+        
+        if(hand == "left")
+        {
+            int sumOfItemsFromRarity = 0;
+            foreach (int i in rarityList[raritySelected])
+            {
+                sumOfItemsFromRarity += leftItems[i];
+            }
+            if (sumOfItemsFromRarity < 3) { return; }
+
+            int itemsRequired;
+            if(gunManager.leftOverCompress>1 && Random.Range(1, 100) < 20 * (gunManager.leftOverCompress - 1))
+            {itemsRequired = 1;} else{itemsRequired = 2;}
+            int attempts = 0;
+            while (itemsRequired > 0 && attempts < 100)
+            {
+                int randId = rarityList[raritySelected][Random.Range(0, rarityList[raritySelected].Count)];
+                if (leftItems[randId] > 0 && randId != id) { leftItems[randId]--; itemsRequired--; }
+                attempts++;
+            }
+            if(itemsRequired > 0) { return; }
+            leftItems[id]++;
+        }
+        else
+        {
+            int sumOfItemsFromRarity = 0;
+            foreach (int i in rarityList[raritySelected])
+            {
+                sumOfItemsFromRarity += rightItems[i];
+            }
+            if (sumOfItemsFromRarity < 3) { return; }
+
+            int itemsRequired;
+            if (gunManager.rightOverCompress > 1 && Random.Range(1, 100) < 20 * (gunManager.rightOverCompress - 1))
+            { itemsRequired = 1; }
+            else { itemsRequired = 2; }
+            int attempts = 0;
+            while (itemsRequired > 0 && attempts < 100)
+            {
+                int randId = rarityList[raritySelected][Random.Range(0, rarityList[raritySelected].Count)];
+                if (rightItems[randId] > 0 && randId != id) { rightItems[randId]--; itemsRequired--; }
+                attempts++;
+            }
+            if(itemsRequired > 0) { return; }
+            rightItems[id]++;
+        }
+    }
+    public void AddRandItemsFromRarity(int amount, int rarity, string hand, bool createPopUp)
     {
         if(hand == "left")
         {
@@ -261,7 +330,7 @@ public class PlayerItem : MonoBehaviour
             {
                 int rand = Random.Range(0, rarityList[rarity].Count);
                 leftItems[rarityList[rarity][rand]]++;
-                OnItemGain(rarityList[rarity][rand], 1, hand);
+                if (createPopUp) { OnItemGain(rarityList[rarity][rand], 1, hand); }
             }
         }
         else
@@ -270,7 +339,7 @@ public class PlayerItem : MonoBehaviour
             {
                 int rand = Random.Range(0, rarityList[rarity].Count);
                 rightItems[rarityList[rarity][rand]]++;
-                OnItemGain(rarityList[rarity][rand], 1, hand);
+                if (createPopUp) { OnItemGain(rarityList[rarity][rand], 1, hand); }
             }
         }
     }
@@ -570,8 +639,16 @@ public class PlayerItem : MonoBehaviour
     }
     public ItemObject FindObjByID(int id)
     {
-        //itemData.IndexOf(itemData[0].na)
-        return Resources.Load<ItemObject>("Items/" + id.ToString());
+        //return Resources.Load<ItemObject>("Items/" + id.ToString()); // <- Old way (expensive)
+        return itemData[id]; // <- awesome new way
+    }
+    public int FindRarityByID(int id)
+    {
+        for(int i = 0; i < rarityList.Count; i++)
+        {
+            if (rarityList[i].Contains(id)) { return i; }
+        }
+        return 0;
     }
     public Vector2 GetCooldownInfo(int id, string hand)
     {
@@ -580,29 +657,30 @@ public class PlayerItem : MonoBehaviour
 
         //gun manager
         if(id == 14 && hand == "left") { info = new Vector2(gunManager.leftMutatedCellTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 10f + 1f)); }//mutatedCell
-        if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 10f + 1f)); }//mutatedCell
-        if(id == 24 && hand == "left") { info = new Vector2(gunManager.leftHungryParasiteTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 2f + 1f)); }//hungryhungryparasite
-        if(id == 24 && hand == "right") { info = new Vector2(gunManager.rightHungryParasiteTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 2f + 1f)); }//hungryhungryparasite
-        if(id == 33 && hand == "left") { info = new Vector2(gunManager.leftFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * leftItems[id])); }//fastinserter
-        if(id == 33 && hand == "right") { info = new Vector2(gunManager.rightFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * rightItems[id])); }//fastinserter
-        if(id == 42 && hand == "left") { info = new Vector2(gunManager.leftSponTimer, FindObjByID(id).baseCooldown); }//spondeal
-        if(id == 42 && hand == "right") { info = new Vector2(gunManager.rightSponTimer, FindObjByID(id).baseCooldown); }//spondeal
-        if(id == 58) { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown); }//lifetime egg
-        if(id == 71) { info = new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown); }//gunky axe
-        if(id == 88 && hand == "left") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown); }//printer
-        if(id == 88 && hand == "right") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown); }//printer
-        if(id == 103 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 103 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
-        if(id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
-        if(id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
-        if (id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
-        if(id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
-        if (id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
-        if(id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
+        else if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 10f + 1f)); }//mutatedCell
+        else if (id == 24 && hand == "left") { info = new Vector2(gunManager.leftHungryParasiteTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 2f + 1f)); }//hungryhungryparasite
+        else if (id == 24 && hand == "right") { info = new Vector2(gunManager.rightHungryParasiteTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 2f + 1f)); }//hungryhungryparasite
+        else if (id == 33 && hand == "left") { info = new Vector2(gunManager.leftFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * leftItems[id])); }//fastinserter
+        else if (id == 33 && hand == "right") { info = new Vector2(gunManager.rightFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * rightItems[id])); }//fastinserter
+        else if (id == 42 && hand == "left") { info = new Vector2(gunManager.leftSponTimer, FindObjByID(id).baseCooldown); }//spondeal
+        else if (id == 42 && hand == "right") { info = new Vector2(gunManager.rightSponTimer, FindObjByID(id).baseCooldown); }//spondeal
+        else if (id == 58) { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown); }//lifetime egg
+        else if (id == 71) { info = new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown); }//gunky axe
+        else if (id == 88 && hand == "left") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown); }//printer
+        else if (id == 88 && hand == "right") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown); }//printer
+        else if (id == 103 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
+        else if (id == 103 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
+        else if (id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
+        else if (id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
+        else if (id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
+        else if (id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
+        else if (id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
+        else if (id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
+        else if (id == 170) { info = new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown); }//overCentri
         // health manager
-        if (id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
-        if(id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
-        if(id == 155) { info = new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown/2f) +(60f/healthManager.divineInter)); }//divine intervention
+        else if (id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
+        else if (id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
+        else if (id == 155) { info = new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown/2f) +(60f/healthManager.divineInter)); }//divine intervention
 
         //Debug.Log("ID: " + id + " | " + info);
         return info;

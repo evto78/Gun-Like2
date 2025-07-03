@@ -92,6 +92,9 @@ public class GunScript : MonoBehaviour
     public int forkedBarrel;
     public int runicMag;
     int runicMagsStored;
+    public int slots;
+    public int triggerHappy;
+    public int bulletFactory;
 
     public float echoDmg;
 
@@ -205,6 +208,9 @@ public class GunScript : MonoBehaviour
         smokingGun = manager.leftSmokingGun;
         forkedBarrel = manager.leftForkedBarrel;
         runicMag = manager.leftRunicMag;
+        slots = manager.leftSlots;
+        triggerHappy = manager.leftTriggerHappy;
+        bulletFactory = manager.leftBulletFactory;
 
         ricochet = manager.leftRicochet;
 
@@ -293,6 +299,9 @@ public class GunScript : MonoBehaviour
         smokingGun = manager.rightSmokingGun;
         forkedBarrel = manager.rightForkedBarrel;
         runicMag = manager.rightRunicMag;
+        slots = manager.rightSlots;
+        triggerHappy = manager.rightTriggerHappy;
+        bulletFactory = manager.rightBulletFactory;
 
         ricochet = manager.rightRicochet;
 
@@ -588,7 +597,7 @@ public class GunScript : MonoBehaviour
         if (whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
         if (whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
     }
-    public virtual void EarlyShoot()
+    public virtual void EarlyShoot(bool requireAmmo)
     {
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge+=0.2f; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
@@ -605,6 +614,8 @@ public class GunScript : MonoBehaviour
                 SetBulStats(spawnedFlea, dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
             }
         }
+
+        if (slots > 0) { dmg = RiggedSlotMachine(dmg); }
     }
     public virtual void Shoot(float bowChar)
     {
@@ -615,17 +626,28 @@ public class GunScript : MonoBehaviour
         isFastFiring = false;
         shooting = true;
         attackTimer = 1;
-        if(carvedBone > 0 && currentBullets < 1 && !(brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)))
+        bool requireAmmo = true;
+        if (bulletFactory > 0) { requireAmmo = false; if(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1) { requireAmmo = true; } }
+        if(brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
+        Debug.Log(" 1 in " + (bulletFactory + (magSize - currentBullets)));
+
+        if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
         {
             manager.healthMan.TakeDamage(1, false, null);
             currentBullets++;
+            if (triggerHappy > 0) { currentBullets++; manager.healthMan.TakeDamage(1, false, null); }
         }
-        if (currentBullets > 0 || (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)))
+        if (currentBullets > 0 || !requireAmmo)
         {
             timeSinceShot = 0f;
-            EarlyShoot();
-            if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)){inkCounter++;currentBullets--;}else if (brokenInk > 0){inkCounter = 0;}else{
-                currentBullets--;}
+            if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)) { inkCounter++; } else if (brokenInk > 0) { inkCounter = 0; requireAmmo = false; }
+            EarlyShoot(requireAmmo);
+            if (requireAmmo)
+            {
+                currentBullets--;
+                if (triggerHappy > 0) { currentBullets--; }
+                if (currentBullets < 0) { currentBullets = 0; }
+            }
             if (echoDmg > 0) { dmg += echoDmg; echoDmg = 0; }
             GameObject spawnedBullet;
             if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
@@ -712,6 +734,48 @@ public class GunScript : MonoBehaviour
         {
             manager.Kick(whatHandThisIsIn);
         }
+    }
+
+    float RiggedSlotMachine(float incomingDamage)
+    {
+        int dmgGiven = Mathf.CeilToInt(incomingDamage);
+        List<int> dmgChars = new List<int>();
+        int temp;
+        Debug.Log(dmgGiven);
+        foreach (char digit in dmgGiven.ToString()) // Build list
+        {
+            int.TryParse(digit.ToString(), out temp);
+            dmgChars.Add(temp);
+        }
+
+        var count = dmgChars.Count; // Shuffle order
+        var last = count - 1;
+        for (var i = 0; i < last; i++)
+        {
+            var r = Random.Range(i, count);
+            var tmp = dmgChars[i];
+            dmgChars[i] = dmgChars[r];
+            dmgChars[r] = tmp;
+        }
+
+        int lowID = 0; int highID = 0; // Set lowest and highest
+        for(int i = 0; i < dmgChars.Count; i++)
+        {
+            if(dmgChars[i] > dmgChars[highID]) { highID = i; }
+            if(dmgChars[i] < dmgChars[lowID]) { lowID = i; }
+        }
+        dmgChars[lowID] = 1;
+        dmgChars[highID] = 0 + (slots-1);
+        if (dmgChars[highID] > 9) { dmgChars[highID] = 9; }
+
+        string constructing = ""; // Reconstruct int
+        foreach(int digit in dmgChars)
+        {
+            constructing += digit.ToString();
+        }
+        int.TryParse(constructing, out dmgGiven);
+        Debug.Log(dmgGiven);
+        return dmgGiven;
     }
 
     void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)

@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class AeroRifleScript : GunScript
 {
-    public override void EarlyShoot()
+    public override void EarlyShoot(bool requireAmmo)
     {
-        base.EarlyShoot();
-        if (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9))
-        {
-            int bulConsumed;
-            bulConsumed = Mathf.CeilToInt(magSize);
-            currentBullets = 0;
-            dmg = 0.5f * bulConsumed * dmg;
-        }
-        else
+        base.EarlyShoot(requireAmmo);
+        if (requireAmmo)
         {
             if (carvedBone > 0 && currentBullets < magSize)
             {
@@ -27,6 +20,12 @@ public class AeroRifleScript : GunScript
             int bulConsumed;
             bulConsumed = currentBullets;
             currentBullets = 1;
+            dmg = 0.5f * bulConsumed * dmg;
+        }
+        else
+        {
+            int bulConsumed;
+            bulConsumed = Mathf.CeilToInt(magSize);
             dmg = 0.5f * bulConsumed * dmg;
         }
     }

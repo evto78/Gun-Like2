@@ -57,6 +57,9 @@ public class HealthManager : MonoBehaviour
 	public bool attackedThisRoom;
 	public GameObject egg;
 	public GameObject fly;
+	int depleatedRock;
+	bool leftSpongeStone; bool rightSpongeStone;
+	public int massMutation;
 
 	public int appleBuff;
 
@@ -100,51 +103,67 @@ public class HealthManager : MonoBehaviour
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
 		maxHp = baseMaxHP + appleBuff;
+		//Before Mult
+		leftSpongeStone = givenLeftItems[167]>0; rightSpongeStone = givenRightItems[167]>0;
 		//Health Regen
-		healthRegenMult += MultAdder(20f, givenLeftItems[2] + givenRightItems[2]);
-		healthRegenMult += MultAdder(20f, givenLeftItems[14] + givenRightItems[14]);
-		healthRegenMult += MultAdder(20f, givenLeftItems[84] + givenRightItems[84]);
-		healthRegenMult += MultAdder(40f, givenLeftItems[92] + givenRightItems[92]);
-		healthRegenMult += MultAdder(10f, givenLeftItems[94] + givenRightItems[94]);
-		healthRegenMult += MultAdder(40f, givenLeftItems[129] + givenRightItems[129]);
-		healthRegenMult += MultAdder(40f, givenLeftItems[131] + givenRightItems[131]);
-		healthRegenMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
+		healthRegenMult += MultAdder(20f, givenLeftItems[2] + givenRightItems[2], false, false);
+		healthRegenMult += MultAdder(20f, givenLeftItems[14] + givenRightItems[14], false, false);
+		healthRegenMult += MultAdder(20f, givenLeftItems[84] + givenRightItems[84], false, false);
+		healthRegenMult += MultAdder(40f, givenLeftItems[92] + givenRightItems[92], false, false);
+		healthRegenMult += MultAdder(10f, givenLeftItems[94] + givenRightItems[94], false, false);
+		healthRegenMult += MultAdder(40f, givenLeftItems[129] + givenRightItems[129], false, false);
+		healthRegenMult += MultAdder(40f, givenLeftItems[131] + givenRightItems[131], false, false);
+		healthRegenMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143], false, false);
 
-		healthRegenDiv += MultAdder(-20f, givenLeftItems[24] + givenRightItems[24]);
-		healthRegenDiv += MultAdder(-40f, givenLeftItems[30] + givenRightItems[30]);
-		healthRegenDiv += MultAdder(-40f, givenLeftItems[80] + givenRightItems[80]);
-		healthRegenDiv += MultAdder(-20f, givenLeftItems[96] + givenRightItems[96]);
+		healthRegenDiv += MultAdder(-20f, givenLeftItems[24] + givenRightItems[24], false, false);
+		healthRegenDiv += MultAdder(-40f, givenLeftItems[30] + givenRightItems[30], false, false);
+		healthRegenDiv += MultAdder(-40f, givenLeftItems[80] + givenRightItems[80], false, false);
+		healthRegenDiv += MultAdder(-20f, givenLeftItems[96] + givenRightItems[96], false, false);
 		//Armor
-		armorMult += MultAdder(10f, givenLeftItems[3] + givenRightItems[3]);
-		armorMult += MultAdder(10f, givenLeftItems[56] + givenRightItems[56]);
-		armorMult += MultAdder(20f, givenLeftItems[61] + givenRightItems[61]);
-		armorMult += MultAdder(20f, givenLeftItems[63] + givenRightItems[63]);
-		armorMult += MultAdder(20f, givenLeftItems[65] + givenRightItems[65]);
-		armorMult += MultAdder(60f, givenLeftItems[115] + givenRightItems[115]);
-		armorMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
-		armorMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
-		armorMult += MultAdder(40f, givenLeftItems[159] + givenRightItems[159]);
+		armorMult += MultAdder(10f, givenRightItems[3], true, false); // <- all of the stats being seperated is sponge stones fault. Dont blame me.
+		armorMult += MultAdder(10f, givenLeftItems[3], true, true);
+		armorMult += MultAdder(10f, givenRightItems[56], true, false);
+		armorMult += MultAdder(10f, givenLeftItems[56], true, true);
+		armorMult += MultAdder(20f, givenRightItems[61], true, false);
+		armorMult += MultAdder(20f, givenLeftItems[61], true, true);
+		armorMult += MultAdder(20f, givenRightItems[63], true, false);
+		armorMult += MultAdder(20f, givenLeftItems[63], true, true);
+		armorMult += MultAdder(20f, givenRightItems[65], true, false);
+		armorMult += MultAdder(20f, givenLeftItems[65], true, true);
+		armorMult += MultAdder(60f, givenRightItems[115], true, false); 
+		armorMult += MultAdder(60f, givenLeftItems[115], true, true); 
+		armorMult += MultAdder(20f, givenRightItems[140], true, false);
+		armorMult += MultAdder(20f, givenLeftItems[140], true, true);
+		armorMult += MultAdder(10f, givenRightItems[143], true, false);
+		armorMult += MultAdder(10f, givenLeftItems[143], true, true);
+		armorMult += MultAdder(40f, givenRightItems[159], true, false);
+		armorMult += MultAdder(40f, givenLeftItems[159], true, true);
 
-		armorDiv += MultAdder(-20f, givenLeftItems[12] + givenRightItems[12]);
-		armorDiv += MultAdder(-20f, givenLeftItems[66] + givenRightItems[66]);
+		armorDiv += MultAdder(-20f, givenRightItems[12], true, false);
+		armorDiv += MultAdder(-20f, givenLeftItems[12], true, true);
+		armorDiv += MultAdder(-20f, givenRightItems[66], true, false);
+		armorDiv += MultAdder(-20f, givenLeftItems[66], true, true);
+		armorDiv += MultAdder(-40f, givenRightItems[166], true, false);
+		armorDiv += MultAdder(-40f, givenLeftItems[166], true, true);
 		//Max Hp
-		maxHpMult += MultAdder(20f, givenLeftItems[12] + givenRightItems[12]);
-		maxHpMult += MultAdder(40f, givenLeftItems[23] + givenRightItems[23]);
-		maxHpMult += MultAdder(50f, givenLeftItems[30] + givenRightItems[30]);
-		maxHpMult += MultAdder(20f, givenLeftItems[39] + givenRightItems[39]);
-		maxHpMult += MultAdder(20f, givenLeftItems[60] + givenRightItems[60]);
-		maxHpMult += MultAdder(20f, givenLeftItems[61] + givenRightItems[61]);
-		maxHpMult += MultAdder(20f, givenLeftItems[85] + givenRightItems[85]);
-		maxHpMult += MultAdder(10f, givenLeftItems[99] + givenRightItems[99]);
-		maxHpMult += MultAdder(20f, givenLeftItems[124] + givenRightItems[124]);
-		maxHpMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140]);
-		maxHpMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
-		maxHpMult += MultAdder(40f, givenLeftItems[159] + givenRightItems[159]);
+		maxHpMult += MultAdder(20f, givenLeftItems[12] + givenRightItems[12], false, false);
+		maxHpMult += MultAdder(40f, givenLeftItems[23] + givenRightItems[23], false, false);
+		maxHpMult += MultAdder(50f, givenLeftItems[30] + givenRightItems[30], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[39] + givenRightItems[39], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[60] + givenRightItems[60], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[61] + givenRightItems[61], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[85] + givenRightItems[85], false, false);
+		maxHpMult += MultAdder(10f, givenLeftItems[99] + givenRightItems[99], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[124] + givenRightItems[124], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[140] + givenRightItems[140], false, false);
+		maxHpMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143], false, false);
+		maxHpMult += MultAdder(40f, givenLeftItems[159] + givenRightItems[159], false, false);
+		maxHpMult += MultAdder(20f, givenLeftItems[166] + givenRightItems[166], false, false);
 
-		maxHpDiv += MultAdder(-40f, givenLeftItems[13] + givenRightItems[13]);
-		maxHpDiv += MultAdder(-40f, givenLeftItems[18] + givenRightItems[18]);
-		maxHpDiv += MultAdder(-40f, givenLeftItems[79] + givenRightItems[79]);
-		maxHpDiv += MultAdder(-60f, givenLeftItems[92] + givenRightItems[92]);
+		maxHpDiv += MultAdder(-40f, givenLeftItems[13] + givenRightItems[13], false, false);
+		maxHpDiv += MultAdder(-40f, givenLeftItems[18] + givenRightItems[18], false, false);
+		maxHpDiv += MultAdder(-40f, givenLeftItems[79] + givenRightItems[79], false, false);
+		maxHpDiv += MultAdder(-60f, givenLeftItems[92] + givenRightItems[92], false, false);
 		//Other
 		orgGum = 0f + givenLeftItems[17] + givenRightItems[17];
 		expGrowth = 0f + givenLeftItems[18] + givenRightItems[18];
@@ -159,7 +178,9 @@ public class HealthManager : MonoBehaviour
 		warcry = 0 + givenLeftItems[110] + givenRightItems[110];
 		chickenCoop = 0 + givenLeftItems[114] + givenRightItems[114];
 		canineTooth = 0 + givenLeftItems[130] + givenRightItems[130];
+		massMutation = 0 + givenLeftItems[152] + givenRightItems[152];
 		divineInter = 0 + givenLeftItems[155] + givenRightItems[155];
+		depleatedRock = 0 + givenLeftItems[166] + givenRightItems[166];
 		//Applying Mult
 		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
 		armor *= armorMult; armor /= armorDiv;
@@ -194,9 +215,17 @@ public class HealthManager : MonoBehaviour
 		if (activeEffects[14].x > 0f) { healthRegen = healthRegen / (orgGum / 10f + 1f); }
 		if (activeEffects[6].x > 0f) { armor = armor * (orgGum / 10f + 1f); }
 		if (activeEffects[8].x > 0f) { healthRegen = healthRegen * (orgGum / 10f + 1f); }
+
+		if (activeEffects[24].x > 0f) { armor += activeEffects[24].x; }
+		if (activeEffects[25].x > 0f) { armor -= activeEffects[25].x; }
 	}
-	float MultAdder(float mult, int amount)
+	float MultAdder(float mult, int amount, bool isArmor, bool isLeft)
     {
+		if(isArmor && (leftSpongeStone || rightSpongeStone))
+        {
+            if (isLeft && leftSpongeStone) { amount *= 2; }
+            if (!isLeft && rightSpongeStone) { amount *= 2; }
+        }
 		if(mult > 0) { return mult * (1f / 100f) * amount; }
 		if(mult < 0) { return -mult * (1f / 100f) * amount; }
 		return 0;
@@ -487,6 +516,8 @@ public class HealthManager : MonoBehaviour
 		{
 			//Heal
 			curHp -= damageTaken;
+
+            if (depleatedRock > 0) { GiveEffect("drockDebuff", Mathf.RoundToInt((-damageTaken) / (2f / depleatedRock))); }
 		}
 		else
 		{
@@ -497,11 +528,13 @@ public class HealthManager : MonoBehaviour
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
+				if (depleatedRock > 0) { GiveEffect("drockBuff", 1); }
 			}
 			else
 			{
 				//return new hp with dmg reduced by armor
 				curHp -= (damageTaken - tempArmor);
+				if (depleatedRock > 0) { GiveEffect("drockBuff", Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
 			}
 			regenTimer = 2f;
 
@@ -537,6 +570,11 @@ public class HealthManager : MonoBehaviour
 					spawnedFly.GetComponent<ZipMissle>().damage = (maxHp / 100f);
 					spawnedFly.GetComponent<ZipMissle>().thrust *= Random.Range(2f, 4f);
                 }
+            }
+
+			if(source != null && (leftSpongeStone || rightSpongeStone))
+            {
+				source.QueStandardDamage(armor / 4f);
             }
 		}
 
@@ -601,6 +639,8 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "invaun") { activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); }//Invaunerability
 		if (effectGiven == "invis") { activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); }//Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
 		if (effectGiven == "smokingGun") { activeEffects[23] = new Vector4(stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Reload speed buff
+		if (effectGiven == "drockBuff") { activeEffects[24] = new Vector4(activeEffects[24].x+stacksToAdd, 0.5f, 0.5f, 1f); }//Depleated Rock BUFF
+		if (effectGiven == "drockDebuff") { activeEffects[25] = new Vector4(activeEffects[25].x + stacksToAdd, 0.5f, 0.5f, -1f); }//Deplaated Rock DEBUFF
 		
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
@@ -678,6 +718,8 @@ public class HealthManager : MonoBehaviour
 					case 21: strToAdd = "invaunerability"; break;
 					case 22: strToAdd = "invisible"; break;
 					case 23: strToAdd = "smoking gun"; break;
+					case 24: strToAdd = "depleated rock buff"; break;
+					case 25: strToAdd = "depleated rock debuff"; break;
 				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}

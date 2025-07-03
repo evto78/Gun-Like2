@@ -107,6 +107,11 @@ public class GunManager : MonoBehaviour
     public int leftSmokingGun;
     public int leftForkedBarrel;
     public int leftRunicMag;
+    public int leftSlots;
+    public int leftOverCenti;
+    public int leftOverCompress;
+    public int leftTriggerHappy;
+    public int leftBulletFactory;
 
     public bool leftRicochet = false;
 
@@ -187,6 +192,11 @@ public class GunManager : MonoBehaviour
     public int rightSmokingGun;
     public int rightForkedBarrel;
     public int rightRunicMag;
+    public int rightSlots;
+    public int rightOverCenti;
+    public int rightOverCompress;
+    public int rightTriggerHappy;
+    public int rightBulletFactory;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -197,6 +207,7 @@ public class GunManager : MonoBehaviour
     public GameObject darkwave;
     float darkwaveTimer;
     public float axeCooldown;
+    public float centriCheckTimer;
 
     public GameObject leftLeg;
     public GameObject rightLeg;
@@ -333,23 +344,21 @@ public class GunManager : MonoBehaviour
         // da eagle special treatment
         if(daEagleIgnoredLeft > 0)
         {
-            leftAtkSpd = Calc(5f, daEagleIgnoredLeft, leftAtkSpd);
-            leftReSpd = Calc(5f, daEagleIgnoredLeft, leftReSpd);
-            leftDmg = Calc(5f, daEagleIgnoredLeft, leftDmg);
-            leftMagSize = Calc(5f, daEagleIgnoredLeft, leftMagSize);
-            leftAcc = Calc(5f, daEagleIgnoredLeft, leftAcc);
-            leftBulSpd = Calc(5f, daEagleIgnoredLeft, leftBulSpd);
-            leftBulSize = Calc(5f, daEagleIgnoredLeft, leftBulSize);
+            leftAtkSpdMult += MultAdder(5f, daEagleIgnoredLeft);
+            leftReSpdMult += MultAdder(5f, daEagleIgnoredLeft);
+            leftDmgMult += MultAdder(5f, daEagleIgnoredLeft);
+            leftMagSizeMult += MultAdder(5f, daEagleIgnoredLeft);
+            leftAccMult += MultAdder(5f, daEagleIgnoredLeft);
+            leftBulSpdMult += MultAdder(5f, daEagleIgnoredLeft);
         }
         if (daEagleIgnoredRight > 0)
         {
-            rightAtkSpd = Calc(5f, daEagleIgnoredRight, rightAtkSpd);
-            rightReSpd = Calc(5f, daEagleIgnoredRight, rightReSpd);
-            rightDmg = Calc(5f, daEagleIgnoredRight, rightDmg);
-            rightMagSize = Calc(5f, daEagleIgnoredRight, rightMagSize);
-            rightAcc = Calc(5f, daEagleIgnoredRight, rightAcc);
-            rightBulSpd = Calc(5f, daEagleIgnoredRight, rightBulSpd);
-            rightBulSize = Calc(5f, daEagleIgnoredRight, rightBulSize);
+            rightAtkSpdMult += MultAdder(5f, daEagleIgnoredRight);
+            rightReSpdMult += MultAdder(5f, daEagleIgnoredRight);
+            rightDmgMult += MultAdder(5f, daEagleIgnoredRight);
+            rightMagSizeMult += MultAdder(5f, daEagleIgnoredRight);
+            rightAccMult += MultAdder(5f, daEagleIgnoredRight);
+            rightBulSpdMult += MultAdder(5f, daEagleIgnoredRight);
         }
         //Left Attack Speed
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[62]);
@@ -360,6 +369,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[153]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[157]);
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[161]);
+        leftAtkSpdMult += MultAdder(40f, givenLeftItems[169]);
 
         leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
         leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
@@ -375,6 +385,7 @@ public class GunManager : MonoBehaviour
         leftReSpdDiv += MultAdder(-10f, givenLeftItems[59]);
         leftReSpdDiv += MultAdder(-60f, givenLeftItems[90]);
         leftReSpdDiv += MultAdder(-20f, givenLeftItems[113]);
+        leftReSpdDiv += MultAdder(-100f, givenLeftItems[172]);
         //Left Damage
         leftDmgMult += MultAdder(40f, givenLeftItems[21]);
         leftDmgMult += MultAdder(40f, givenLeftItems[13]);
@@ -411,6 +422,7 @@ public class GunManager : MonoBehaviour
         leftMagSizeMult += MultAdder(60f, givenLeftItems[118]);
         leftMagSizeMult += MultAdder(10f, givenLeftItems[143]);
         leftMagSizeMult += MultAdder(20f, givenLeftItems[158]);
+        leftMagSizeMult += MultAdder(20f, givenLeftItems[169]);
 
         leftMagSizeDiv += MultAdder(-50f, givenLeftItems[21]);
         leftMagSizeDiv += MultAdder(-40f, givenLeftItems[25]);
@@ -518,6 +530,11 @@ public class GunManager : MonoBehaviour
         leftSmokingGun = givenLeftItems[162];
         leftForkedBarrel = givenLeftItems[163];
         leftRunicMag = givenLeftItems[164];
+        leftSlots = givenLeftItems[168];
+        leftTriggerHappy = givenLeftItems[169];
+        leftOverCenti = givenLeftItems[170];
+        leftOverCompress = givenLeftItems[171];
+        leftBulletFactory = givenLeftItems[172];
         
         leftRicochet = false;
 
@@ -542,6 +559,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpdMult += MultAdder(20f, givenRightItems[153]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[157]);
         rightAtkSpdMult += MultAdder(20f, givenRightItems[161]);
+        rightAtkSpdMult += MultAdder(40f, givenRightItems[169]);
 
         rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
         rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
@@ -557,6 +575,7 @@ public class GunManager : MonoBehaviour
         rightReSpdDiv += MultAdder(-20f, givenRightItems[59]);
         rightReSpdDiv += MultAdder(-60f, givenRightItems[90]);
         rightReSpdDiv += MultAdder(-20f, givenRightItems[113]);
+        rightReSpdDiv += MultAdder(-100f, givenRightItems[172]);
         //Right Damage
         rightDmgMult += MultAdder(40f, givenRightItems[21]);
         rightDmgMult += MultAdder(40f, givenRightItems[13]);
@@ -591,6 +610,7 @@ public class GunManager : MonoBehaviour
         rightMagSizeMult += MultAdder(60f, givenRightItems[118]);
         rightMagSizeMult += MultAdder(10f, givenRightItems[143]);
         rightMagSizeMult += MultAdder(20f, givenRightItems[158]);
+        rightMagSizeMult += MultAdder(20f, givenRightItems[169]);
 
         rightMagSizeDiv += MultAdder(-50f, givenRightItems[21]);
         rightMagSizeDiv += MultAdder(-40f, givenRightItems[25]);
@@ -697,6 +717,11 @@ public class GunManager : MonoBehaviour
         rightSmokingGun = givenRightItems[162];
         rightForkedBarrel = givenRightItems[163];
         rightRunicMag = givenRightItems[164];
+        rightSlots = givenRightItems[168];
+        rightTriggerHappy = givenRightItems[169];
+        rightOverCenti = givenRightItems[170];
+        rightOverCompress = givenRightItems[171];
+        rightBulletFactory = givenRightItems[172];
 
         rightRicochet = false;
 
@@ -721,6 +746,9 @@ public class GunManager : MonoBehaviour
         leftBulSize *= leftBulSizeMult; leftBulSize /= leftBulSizeDiv; rightBulSize *= rightBulSizeMult; rightBulSize /= rightBulSizeDiv;
         leftCritDamage *= leftCritDamageMult; leftCritDamage /= leftCritDamageDiv; rightCritDamage *= rightCritDamageMult; rightCritDamage /= rightCritDamageDiv;
         leftWeakPointDamage *= leftWeakPointDamageMult; leftWeakPointDamage /= leftWeakPointDamageDiv; rightWeakPointDamage *= rightWeakPointDamageMult; rightWeakPointDamage /= rightWeakPointDamageDiv;
+        //Trigger Happy
+        if(leftTriggerHappy > 0) { leftAtkSpd *= 2; }
+        if(rightTriggerHappy > 0) { rightAtkSpd *= 2; }
         //Forked Barrel
         if (givenLeftItems[163] > 0) { leftDmg /= 2f; leftAcc /= 2f; }
         if (givenRightItems[163] > 0) { rightDmg /= 2f; rightAcc /= 2f; }
@@ -1083,6 +1111,16 @@ public class GunManager : MonoBehaviour
 
         leftKickCooldown -= Time.deltaTime; if(leftKickCooldown <= 0) { leftLeg.SetActive(false); }
         rightKickCooldown -= Time.deltaTime; if (rightKickCooldown <= 0) { rightLeg.SetActive(false); }
+
+        if(leftOverCenti > 0 || rightOverCenti > 0)
+        {
+            centriCheckTimer -= Time.deltaTime;
+            if(centriCheckTimer <= 0)
+            {
+                OverwrittenCentrifugeCheck();
+                centriCheckTimer = 5f;
+            }
+        }
     }
 
     void mutatedCellReroll(List<int> itemList)
@@ -1238,6 +1276,30 @@ public class GunManager : MonoBehaviour
                             erb2.AddForce(force, ForceMode.Impulse);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    void OverwrittenCentrifugeCheck()
+    {
+        if (leftOverCenti > 0)
+        {
+            for(int i = 0; i < playerItem.leftItems.Count; i++)
+            {
+                if(playerItem.leftItems[i]>1 && !rarityList[8].Contains(i))
+                {
+                    playerItem.leftItems[i] -= 1; playerItem.AddRandItemsFromRarity(1, playerItem.FindRarityByID(i), "left", false);
+                }
+            }
+        }
+        if (rightOverCenti > 0)
+        {
+            for (int i = 0; i < playerItem.rightItems.Count; i++)
+            {
+                if (playerItem.rightItems[i] > 1 && !rarityList[8].Contains(i))
+                {
+                    playerItem.rightItems[i] -= 1; playerItem.AddRandItemsFromRarity(1, playerItem.FindRarityByID(i), "right", false);
                 }
             }
         }

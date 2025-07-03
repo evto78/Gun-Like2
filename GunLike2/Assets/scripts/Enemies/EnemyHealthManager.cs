@@ -65,8 +65,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     List<float> dmgQued = new List<float>();
     float burnTimer;
-
-    void Start()
+    private void Awake()
     {
         //Gather references
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
@@ -74,24 +73,33 @@ public class EnemyHealthManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerItem = player.GetComponent<PlayerItem>();
         playerHM = player.GetComponent<HealthManager>();
-        //Base Stat setup
-        maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
-        armor = baseArmor * difficultyScale * gdm.difficulty;
         //Effect Setup
         activeEffects = new List<Vector4>();
         icons = new List<GameObject>();
-        int effectsToAdd = 16;
-        for(int i = 0; i < effectsToAdd; i++)
+        int effectsToAdd = 17;
+        for (int i = 0; i < effectsToAdd; i++)
         {
             activeEffects.Add(Vector4.zero);
         }
-        for(int i = 0; i < effectsToAdd; i++)
+        for (int i = 0; i < effectsToAdd; i++)
         {
             GiveEffect(i.ToString(), 0f);
             GameObject spawnedIcon = Instantiate(effectIcon);
             spawnedIcon.transform.SetParent(effectHolder, false);
             icons.Add(spawnedIcon);
         }
+        //Check if mutated
+        if (playerHM.massMutation > 0 && Random.Range(1, 100) < 2.5f + ((playerHM.massMutation - 1) * 5f))
+        {
+            GiveEffect("mutated", 1);
+            baseMaxHp *= 2f;
+            baseArmor *= 2f;
+            baseDamage *= 2f;
+            transform.localScale *= 1.5f;
+        }
+        //Base Stat setup
+        maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
+        armor = baseArmor * difficultyScale * gdm.difficulty;
         //Make sure is at fullHP
         curHp = maxHp;
         //NOW GO GET EM SOILDER!!!
@@ -319,6 +327,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }//Enzymes
         if (effectID == 14 || effectGiven == "chemical A") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
         if (effectID == 15 || effectGiven == "chemical B") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
+        if (effectID == 16 || effectGiven == "mutated") { activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Mass Mutation
     }
     public void RandomDebuff()
     {
@@ -468,7 +477,6 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1, 100) <= dropChance)
             {
                 int rand = Random.Range(1, 101);
-                List<List<int>> raritys = playerItem.rarityList;
 
                 if (rand < 71) { SpawnItem(0); }
                 if (rand < 91 && rand > 70) { SpawnItem(1); }
@@ -520,6 +528,20 @@ public class EnemyHealthManager : MonoBehaviour
             feathersEffect.SetActive(true);
             feathersEffect.transform.SetParent(null);
             Destroy(feathersEffect, 2f);
+        }
+        //mass mutation
+        if (activeEffects[16].x > 0)
+        {
+            int rand = Random.Range(1, 101);
+
+            if (rand < 71) { SpawnItem(0); }
+            if (rand < 91 && rand > 70) { SpawnItem(1); }
+            if (rand == 91 || rand == 92) { SpawnItem(2); }
+            if (rand == 93 || rand == 94) { SpawnItem(4); }
+            if (rand == 95 || rand == 96) { SpawnItem(5); }
+            if (rand == 97 || rand == 98) { SpawnItem(6); }
+            if (rand == 99) { SpawnItem(3); }
+            if (rand == 100) { SpawnItem(7); }
         }
     }
 

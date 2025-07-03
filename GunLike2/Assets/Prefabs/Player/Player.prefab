@@ -1466,6 +1466,7 @@ MonoBehaviour:
   slamming: 0
   sliding: 0
   timeSinceGrounded: 0
+  wornOutWhip: 0
   playerItem: {fileID: 1652207953152809334}
   shockwave: {fileID: 2550807905415200008, guid: ce8bdb4a01367db4baf4233a81e2a2b5, type: 3}
 --- !u!114 &645800364383380793
@@ -1553,6 +1554,7 @@ MonoBehaviour:
   leftGunkyAxe: 0
   leftClockwork: 0
   leftSniperTower: 0
+  leftPrinterTimer: 0
   leftPerfectedScope: 0
   leftPumpShotgunAttach: 0
   leftGrenadeAttach: 0
@@ -1572,6 +1574,9 @@ MonoBehaviour:
   leftBrokenInk: 0
   leftChemicalAgents: 0
   left200Fleas: 0
+  leftSmokingGun: 0
+  leftForkedBarrel: 0
+  leftRunicMag: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -1619,7 +1624,6 @@ MonoBehaviour:
   rightGunkyAxe: 0
   rightClockwork: 0
   surpriseEggTimer: 0
-  leftPrinterTimer: 0
   rightPrinterTimer: 0
   rightSniperTower: 0
   rightPerfectedScope: 0
@@ -1641,6 +1645,9 @@ MonoBehaviour:
   rightBrokenInk: 0
   rightChemicalAgents: 0
   right200Fleas: 0
+  rightSmokingGun: 0
+  rightForkedBarrel: 0
+  rightRunicMag: 0
   rightRicochet: 0
   gunkyAxe: {fileID: 1846831637977737591, guid: 59bfadda3e8590e42bc773450106de82, type: 3}
   microwave: {fileID: 4375448883670722993, guid: 75c8b4280fb62cd4caf59f0ef6d01826, type: 3}
@@ -1748,6 +1755,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeEffects:
+  - {x: 0, y: 0, z: 0, w: 0}
+  - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
