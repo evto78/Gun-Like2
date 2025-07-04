@@ -21,6 +21,7 @@ public class BulletScript : MonoBehaviour
     public bool isCrit;
     public bool isAutoWeak;
     public float weakDamage;
+    public float critDamage;
     public float bulSpd;
 
     public int pierce = 0;
@@ -55,6 +56,7 @@ public class BulletScript : MonoBehaviour
     public int gunkyClaw;
     public int storage;
     protected float turbineCharge;
+    public int critUnfunny;
 
     public Collider myCollider;
 
@@ -77,6 +79,7 @@ public class BulletScript : MonoBehaviour
     public GameObject zipMissle;
     public GameObject web;
     public GameObject darkBranch;
+    public GameObject stickyNote;
 
     public virtual void Awake()
     {
@@ -136,6 +139,7 @@ public class BulletScript : MonoBehaviour
         pierce = givenPierce;
         isAutoWeak = isAutoWeakHit;
         weakDamage = givenWeakDmg;
+        critDamage = gunFiredFrom.critDamage;
         bulSpd = givenBulSpd;
         if (isLargeSpon) { bulSpd = bulSpd / 2f; }
         if (isLargeSpon) { transform.localScale = transform.localScale * 3f; }
@@ -150,6 +154,7 @@ public class BulletScript : MonoBehaviour
         gunkyClaw = givenGunkClaw;
         if(whatHandThisComesFrom == "left") { storage = pi.leftItems[95]; }
         if(whatHandThisComesFrom == "right") { storage = pi.rightItems[95]; }
+        critUnfunny = gunFiredFrom.critUnfunny; if (critUnfunny > 0) { criticallyUnfunny(); }
 
         ricochet = givenRico;
         bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
@@ -176,6 +181,21 @@ public class BulletScript : MonoBehaviour
             rb.AddForce(forceDir, ForceMode.VelocityChange);
         }
         DetectCollision(forceDir);
+    }
+    void criticallyUnfunny()
+    {
+        float critChance = gunFiredFrom.critChance;
+        if(critChance <= 100f) { return; }
+        isCrit = true;
+        critDamage *= Mathf.Pow(2f, Mathf.Floor(critChance / 100f));
+        critChance = ((critChance / 100f) - Mathf.Floor(critChance / 100f)) * 100f;
+        if (Random.Range(1, 100) < critChance)
+        {
+            critDamage *= 2f;
+        }
+        if (Random.Range(1, 11) != 1) { return; }
+        GameObject stckyNote = Instantiate(stickyNote);
+        stckyNote.transform.position = gunFiredFrom.firePoint.position + (gunFiredFrom.firePoint.forward/2f);
     }
     public void IntroTrigSetUp(GameObject givenPairedBullet, bool isLead)
     {
@@ -509,7 +529,7 @@ public class BulletScript : MonoBehaviour
         {
             if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
             {
-                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * gunFiredFrom.critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * weakDamage * critDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                 RunOnHit(givenGameObject, hit);
             }
 
@@ -561,7 +581,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * critDamage, false, "critHit", transform.position, whatHandThisComesFrom);
                     RunOnHit(givenGameObject, hit);
                 }
 
@@ -571,7 +591,7 @@ public class BulletScript : MonoBehaviour
             {
                 if (givenGameObject.GetComponentInParent<EnemyHealthManager>() != null)
                 {
-                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * gunFiredFrom.critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
+                    givenGameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * critDamage * weakDamage, false, "critWeakHit", transform.position, whatHandThisComesFrom);
                     RunOnHit(givenGameObject, hit);
                 }
 

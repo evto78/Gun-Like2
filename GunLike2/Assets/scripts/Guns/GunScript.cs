@@ -95,6 +95,7 @@ public class GunScript : MonoBehaviour
     public int slots;
     public int triggerHappy;
     public int bulletFactory;
+    public int critUnfunny;
 
     public float echoDmg;
 
@@ -152,7 +153,7 @@ public class GunScript : MonoBehaviour
     {
         whatHandThisIsIn = "left";
 
-        magSize = Mathf.Round(baseMagSize * manager.leftMagSize);
+        magSize = Mathf.CeilToInt(baseMagSize * manager.leftMagSize);
         atkSpd = baseAtkSpd * manager.leftAtkSpd;
         reSpd = baseReSpd * manager.leftReSpd;
         bulSpd = baseBulSpd * manager.leftBulSpd;
@@ -211,6 +212,7 @@ public class GunScript : MonoBehaviour
         slots = manager.leftSlots;
         triggerHappy = manager.leftTriggerHappy;
         bulletFactory = manager.leftBulletFactory;
+        critUnfunny = manager.leftCritUnfunny;
 
         ricochet = manager.leftRicochet;
 
@@ -234,6 +236,10 @@ public class GunScript : MonoBehaviour
         {
             bulSize = 10f;
         }
+        if (magSize < 1)
+        {
+            magSize = 1;
+        }
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
@@ -243,7 +249,7 @@ public class GunScript : MonoBehaviour
     {
         whatHandThisIsIn = "right";
 
-        magSize = Mathf.Round(baseMagSize * manager.rightMagSize);
+        magSize = Mathf.CeilToInt(baseMagSize * manager.rightMagSize);
         atkSpd = baseAtkSpd * manager.rightAtkSpd;
         reSpd = baseReSpd * manager.rightReSpd;
         bulSpd = baseBulSpd * manager.rightBulSpd;
@@ -302,6 +308,7 @@ public class GunScript : MonoBehaviour
         slots = manager.rightSlots;
         triggerHappy = manager.rightTriggerHappy;
         bulletFactory = manager.rightBulletFactory;
+        critUnfunny = manager.rightCritUnfunny;
 
         ricochet = manager.rightRicochet;
 
@@ -324,6 +331,10 @@ public class GunScript : MonoBehaviour
         if (bulSize > 10f)
         {
             bulSize = 10f;
+        }
+        if (magSize < 1)
+        {
+            magSize = 1;
         }
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
@@ -574,6 +585,9 @@ public class GunScript : MonoBehaviour
         if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect("warcry", 1f); }
         if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect("warcry", 1f); }
 
+        if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
+        if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
+
         LateReload();
     }
     public virtual void LateReload()
@@ -734,7 +748,6 @@ public class GunScript : MonoBehaviour
             manager.Kick(whatHandThisIsIn);
         }
     }
-
     float RiggedSlotMachine(float incomingDamage)
     {
         int dmgGiven = Mathf.CeilToInt(incomingDamage);

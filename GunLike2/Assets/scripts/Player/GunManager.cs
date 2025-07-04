@@ -74,6 +74,7 @@ public class GunManager : MonoBehaviour
     public int leftMultistage;
     int leftSurpriseEggLifetime;
     public int leftNerf;
+    public int leftSpinach;
     public int leftStickTo;
     public int leftStickToCounters;
     public int leftGunkyBless;
@@ -112,6 +113,7 @@ public class GunManager : MonoBehaviour
     public int leftOverCompress;
     public int leftTriggerHappy;
     public int leftBulletFactory;
+    public int leftCritUnfunny;
 
     public bool leftRicochet = false;
 
@@ -158,6 +160,7 @@ public class GunManager : MonoBehaviour
     public int rightMultistage;
     int rightSurpriseEggLifetime;
     public int rightNerf;
+    public int rightSpinach;
     public int rightStickTo;
     public int rightStickToCounters;
     public int rightGunkyBless;
@@ -197,6 +200,7 @@ public class GunManager : MonoBehaviour
     public int rightOverCompress;
     public int rightTriggerHappy;
     public int rightBulletFactory;
+    public int rightCritUnfunny;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -213,6 +217,11 @@ public class GunManager : MonoBehaviour
     public GameObject rightLeg;
     float leftKickCooldown;
     float rightKickCooldown;
+
+    List<MeshRenderer> leftMRs = new List<MeshRenderer>();
+    List<MeshRenderer> rightMRs = new List<MeshRenderer>();
+    List<Color> leftColors = new List<Color>();
+    List<Color> rightColors = new List<Color>();
 
     public int totalLiveBullets;
     public int maximumLiveBullets;
@@ -241,8 +250,20 @@ public class GunManager : MonoBehaviour
 
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;
-    }
 
+        GrabMeshRenders();
+    }
+    void GrabMeshRenders()
+    {
+        leftMRs.Clear();
+        rightMRs.Clear();
+        leftColors.Clear();
+        rightColors.Clear();
+        leftMRs.AddRange(leftHand.GetComponentsInChildren<MeshRenderer>());
+        rightMRs.AddRange(rightHand.GetComponentsInChildren<MeshRenderer>());
+        foreach(MeshRenderer mr in leftMRs) { leftColors.Add(mr.material.color); }
+        foreach(MeshRenderer mr in rightMRs) { rightColors.Add(mr.material.color); }
+    }
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
         leftList.Clear();
@@ -386,6 +407,7 @@ public class GunManager : MonoBehaviour
         leftReSpdDiv += MultAdder(-60f, givenLeftItems[90]);
         leftReSpdDiv += MultAdder(-20f, givenLeftItems[113]);
         leftReSpdDiv += MultAdder(-100f, givenLeftItems[172]);
+        leftReSpdDiv += MultAdder(-100f, givenLeftItems[180]);
         //Left Damage
         leftDmgMult += MultAdder(40f, givenLeftItems[21]);
         leftDmgMult += MultAdder(40f, givenLeftItems[13]);
@@ -404,6 +426,7 @@ public class GunManager : MonoBehaviour
         leftDmgMult += MultAdder(20f, givenLeftItems[133]);
         leftDmgMult += MultAdder(10f, givenLeftItems[143]);
         leftDmgMult += MultAdder(40f, givenLeftItems[157]);
+        leftDmgMult += MultAdder(500f, givenLeftItems[180]);
         
         leftDmgDiv += MultAdder(-20f, givenLeftItems[12]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[31]);
@@ -474,6 +497,7 @@ public class GunManager : MonoBehaviour
         leftCritChance += 20f * givenLeftItems[77];
         leftCritChance += 10f * givenLeftItems[78];
         leftCritChance += 20f * givenLeftItems[148];
+        leftCritChance += 50f * givenLeftItems[179];
         //Left Crit Damage
         leftCritDamageMult += MultAdder(20f, givenLeftItems[77]);
         leftCritDamageMult += MultAdder(100f, givenLeftItems[147]);
@@ -502,6 +526,7 @@ public class GunManager : MonoBehaviour
         leftMultistage = givenLeftItems[57];
         leftSurpriseEggLifetime = givenLeftItems[58];
         leftNerf = givenLeftItems[59];
+        leftSpinach = givenLeftItems[60];
         leftStickTo = givenLeftItems[67];
         leftGunkyBless = givenLeftItems[69];
         leftGunkyClaw = givenLeftItems[70];
@@ -537,6 +562,7 @@ public class GunManager : MonoBehaviour
         leftOverCenti = givenLeftItems[170];
         leftOverCompress = givenLeftItems[171];
         leftBulletFactory = givenLeftItems[172];
+        leftCritUnfunny = givenLeftItems[179];
         
         leftRicochet = false;
 
@@ -578,6 +604,7 @@ public class GunManager : MonoBehaviour
         rightReSpdDiv += MultAdder(-60f, givenRightItems[90]);
         rightReSpdDiv += MultAdder(-20f, givenRightItems[113]);
         rightReSpdDiv += MultAdder(-100f, givenRightItems[172]);
+        rightReSpdDiv += MultAdder(-100f, givenRightItems[180]);
         //Right Damage
         rightDmgMult += MultAdder(40f, givenRightItems[21]);
         rightDmgMult += MultAdder(40f, givenRightItems[13]);
@@ -595,6 +622,7 @@ public class GunManager : MonoBehaviour
         rightDmgMult += MultAdder(20f, givenRightItems[133]);
         rightDmgMult += MultAdder(10f, givenRightItems[143]);
         rightDmgMult += MultAdder(40f, givenRightItems[157]);
+        rightDmgMult += MultAdder(500f, givenRightItems[180]);
 
         rightDmgDiv += MultAdder(-20f, givenRightItems[12]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[31]);
@@ -663,6 +691,7 @@ public class GunManager : MonoBehaviour
         rightCritChance += 20f * givenRightItems[77];
         rightCritChance += 10f * givenRightItems[78];
         rightCritChance += 20f * givenRightItems[148];
+        rightCritChance += 50f * givenRightItems[179];
         //Right Crit Damage
         rightCritDamageMult += MultAdder(20f, givenRightItems[77]);
         rightCritDamageMult += MultAdder(100f, givenRightItems[147]);
@@ -691,6 +720,7 @@ public class GunManager : MonoBehaviour
         rightMultistage = givenRightItems[57];
         rightSurpriseEggLifetime = givenRightItems[58];
         rightNerf = givenRightItems[59];
+        rightSpinach = givenRightItems[60];
         rightStickTo = givenRightItems[67];
         rightGunkyBless = givenRightItems[69];
         rightGunkyClaw = givenRightItems[70];
@@ -726,6 +756,7 @@ public class GunManager : MonoBehaviour
         rightOverCenti = givenRightItems[170];
         rightOverCompress = givenRightItems[171];
         rightBulletFactory = givenRightItems[172];
+        rightCritUnfunny = givenRightItems[179];
 
         rightRicochet = false;
 
@@ -815,6 +846,10 @@ public class GunManager : MonoBehaviour
             if (playerItem.rightIFPStatToDeBuff == 24) { rightBulSize = rightBulSize * (0.9f / givenRightItems[22]); }
             if (playerItem.rightIFPStatToDeBuff == 25) { rightBulPir = Mathf.FloorToInt(rightBulPir * (0.9f / givenRightItems[22])); }
         }
+
+        //One in the chamber
+        if (givenLeftItems[180] > 0) { leftMagSize = 0f; }
+        if (givenRightItems[180] > 0) { rightMagSize = 0f; }
 
         rightHand.transform.GetChild(0).SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
         leftHand.transform.GetChild(0).SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
@@ -1123,6 +1158,29 @@ public class GunManager : MonoBehaviour
             {
                 OverwrittenCentrifugeCheck();
                 centriCheckTimer = 5f;
+            }
+        }
+
+        if (leftSpinach + rightSpinach > 0)
+        {
+            if(leftMRs.Count == 0 || rightMRs.Count == 0) { GrabMeshRenders(); }
+            try
+            {
+                if (leftSpinach > 0)
+                {
+                    for (int i = 0; i < leftMRs.Count; i++)
+                    { leftMRs[i].material.color = new Color(leftColors[i].r - (leftSpinach / 50f), leftColors[i].g + (leftSpinach / 50f), leftColors[i].b - (leftSpinach / 50f), leftColors[i].a); }
+                }
+                if (rightSpinach > 0)
+                {
+                    for (int i = 0; i < rightMRs.Count; i++)
+                    { rightMRs[i].material.color = new Color(rightColors[i].r - (rightSpinach / 50f), rightColors[i].g + (rightSpinach / 50f), rightColors[i].b - (rightSpinach / 50f), rightColors[i].a); }
+                }
+            }
+            catch (System.Exception)
+            {
+                GrabMeshRenders();
+                throw;
             }
         }
     }

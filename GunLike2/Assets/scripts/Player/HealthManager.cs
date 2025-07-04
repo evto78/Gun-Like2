@@ -60,6 +60,7 @@ public class HealthManager : MonoBehaviour
 	int depleatedRock;
 	bool leftSpongeStone; bool rightSpongeStone;
 	public int massMutation;
+	public int ionParticle;
 
 	public int appleBuff;
 
@@ -181,6 +182,7 @@ public class HealthManager : MonoBehaviour
 		massMutation = 0 + givenLeftItems[152] + givenRightItems[152];
 		divineInter = 0 + givenLeftItems[155] + givenRightItems[155];
 		depleatedRock = 0 + givenLeftItems[166] + givenRightItems[166];
+		ionParticle = 0 + givenLeftItems[181] + givenRightItems[181];
 		//Applying Mult
 		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
 		armor *= armorMult; armor /= armorDiv;
@@ -508,6 +510,12 @@ public class HealthManager : MonoBehaviour
 	{
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
+		if(ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * ionParticle)
+        {
+			float rand = Random.Range(10f, 1000f);
+			damageTaken *= rand;
+			Debug.Log("Miracle of: " + rand);
+        }
         if (playerItem.leftItems[140] + playerItem.rightItems[140] > 0)
         {
 			tempArmor *= (curHp / maxHp);

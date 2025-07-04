@@ -31,6 +31,7 @@ public class ItemPossibility : MonoBehaviour
     int oid2;
     Vector3 lockedPos;
     bool locked;
+    bool limestoneScale;
 
     float timer;
     PlayerItem pi;
@@ -41,6 +42,9 @@ public class ItemPossibility : MonoBehaviour
     {
         player = GameObject.Find("Player");
         pi = player.GetComponent<PlayerItem>();
+
+        limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
+
         option1 = null;
         option2 = null;
 
@@ -53,13 +57,13 @@ public class ItemPossibility : MonoBehaviour
                 overrideid = true; idover = pi.horrorItems[Random.Range(0, pi.horrorItems.Count)];
                 for(int i = 0; i < pi.rarityList.Count; i++)
                 {
-                    if (pi.rarityList[i].Contains(idover)) { SetRarity(i); } 
+                    if (pi.rarityList[i].Contains(idover)) { SetRarity(i, false); } 
                 }
             }
         }
         if (pi.leftItems[142] + pi.rightItems[142] > 0)
         {
-            overrideid = true; idover = 143; SetRarity(8);
+            overrideid = true; idover = 143; SetRarity(8, false);
         }
         if (pi.rightItems[68] + pi.leftItems[68] > 0) { isShrodinger = true; } else { isShrodinger = false; }
         if (overrideid) { isShrodinger = false; }
@@ -74,20 +78,27 @@ public class ItemPossibility : MonoBehaviour
                 int rand = Random.Range(1, 101);
                 int rarityID = 0;
 
-                if (rand < 71) { rarityID = 0; }
-                if (rand < 91 && rand > 70) { rarityID = 1; }
-                if (rand == 91 || rand == 92) { rarityID = 2; }
-                if (rand == 93 || rand == 94) { rarityID = 4; }
-                if (rand == 95 || rand == 96) { rarityID = 5; }
-                if (rand == 97 || rand == 98) { rarityID = 6; }
-                if (rand == 99) { rarityID = 3; }
-                if (rand == 100) { rarityID = 7; }
-
+                if (limestoneScale)
+                {
+                    rand = Random.Range(0, 8);
+                    rarityID = rand;
+                }
+                else
+                {
+                    if (rand < 71) { rarityID = 0; }
+                    if (rand < 91 && rand > 70) { rarityID = 1; }
+                    if (rand == 91 || rand == 92) { rarityID = 2; }
+                    if (rand == 93 || rand == 94) { rarityID = 4; }
+                    if (rand == 95 || rand == 96) { rarityID = 5; }
+                    if (rand == 97 || rand == 98) { rarityID = 6; }
+                    if (rand == 99) { rarityID = 3; }
+                    if (rand == 100) { rarityID = 7; }
+                }
                 GameObject spawnedItem;
                 spawnedItem = Instantiate(itemPossibility);
                 spawnedItem.transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                 spawnedItem.GetComponent<Rigidbody>().AddForce((spawnedItem.transform.position - player.transform.position) * -20f + Vector3.up * 250f);
-                spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID);
+                spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID, false);
             }
         }
         
@@ -118,7 +129,7 @@ public class ItemPossibility : MonoBehaviour
                 spawnedItem.GetComponent<Rigidbody>().AddForce((spawnedItem.transform.position - player.transform.position)*-20f + Vector3.up * 250f);
                 spawnedItem.GetComponent<ItemPossibility>().overrideid = true;
                 spawnedItem.GetComponent<ItemPossibility>().idover = pi.unstableItems[Random.Range(0, pi.unstableItems.Count)];
-                spawnedItem.GetComponent<ItemPossibility>().SetRarity(9);
+                spawnedItem.GetComponent<ItemPossibility>().SetRarity(8,false);
                 spawnedItem.GetComponent<ItemPossibility>().isDoubled = true;
                 Destroy(gameObject);
             }
@@ -130,20 +141,28 @@ public class ItemPossibility : MonoBehaviour
                     int rand = Random.Range(1, 101);
                     int rarityID = 0;
 
-                    if (rand < 71) { rarityID = 0; }
-                    if (rand < 91 && rand > 70) { rarityID = 1; }
-                    if (rand == 91 || rand == 92) { rarityID = 2; }
-                    if (rand == 93 || rand == 94) { rarityID = 4; }
-                    if (rand == 95 || rand == 96) { rarityID = 5; }
-                    if (rand == 97 || rand == 98) { rarityID = 6; }
-                    if (rand == 99) { rarityID = 3; }
-                    if (rand == 100) { rarityID = 7; }
+                    if (limestoneScale)
+                    {
+                        rand = Random.Range(0, 8);
+                        rarityID = rand;
+                    }
+                    else
+                    {
+                        if (rand < 71) { rarityID = 0; }
+                        if (rand < 91 && rand > 70) { rarityID = 1; }
+                        if (rand == 91 || rand == 92) { rarityID = 2; }
+                        if (rand == 93 || rand == 94) { rarityID = 4; }
+                        if (rand == 95 || rand == 96) { rarityID = 5; }
+                        if (rand == 97 || rand == 98) { rarityID = 6; }
+                        if (rand == 99) { rarityID = 3; }
+                        if (rand == 100) { rarityID = 7; }
+                    }
 
                     GameObject spawnedItem;
                     spawnedItem = Instantiate(itemPossibility);
                     spawnedItem.transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                     spawnedItem.GetComponent<Rigidbody>().AddForce((spawnedItem.transform.position - player.transform.position) * -20f + Vector3.up * 250f);
-                    spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID);
+                    spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarityID,false);
                     spawnedItem.GetComponent<ItemPossibility>().isDoubled = true;
 
                 }
@@ -151,7 +170,7 @@ public class ItemPossibility : MonoBehaviour
         }
     }
 
-    public void SetRarity(int givenRarity)
+    public void SetRarity(int givenRarity, bool doesNotMatter)
     {
         player = GameObject.Find("Player");
         pi = player.GetComponent<PlayerItem>();
@@ -188,15 +207,18 @@ public class ItemPossibility : MonoBehaviour
         nuclearPS.SetActive(false); 
         uniquePS.SetActive(false); 
 
-        if (rarity == 0) { commonPS.SetActive(true);}
-        if(rarity == 1) { uncommonPS.SetActive(true);}
-        if(rarity == 2) { rarePS.SetActive(true);}
-        if(rarity == 3) { legendaryPS.SetActive(true);}
-        if(rarity == 4) { mutatedPS.SetActive(true);}
-        if(rarity == 5) { hauntedPS.SetActive(true);}
-        if(rarity == 6) { irradiadedPS.SetActive(true);}
-        if(rarity == 7) { nuclearPS.SetActive(true);}
-        if(rarity == 8) { uniquePS.SetActive(true);}
+        switch (rarity)
+        {
+            case 0: commonPS.SetActive(true); break;
+            case 1: uncommonPS.SetActive(true); break;
+            case 2: rarePS.SetActive(true); break;
+            case 3: legendaryPS.SetActive(true); break;
+            case 4: mutatedPS.SetActive(true); break;
+            case 5: hauntedPS.SetActive(true); break;
+            case 6: irradiadedPS.SetActive(true); break;
+            case 7: nuclearPS.SetActive(true); break;
+            case 8: uniquePS.SetActive(true); break;
+        }
     }
 
     private void Update()

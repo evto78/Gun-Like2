@@ -12,6 +12,7 @@ public class ItemContainer : MonoBehaviour
     public GameObject itemPossibility;
     public Transform spawnPos;
     GameObject player;
+    PlayerItem pi;
     bool interacted;
     public bool animatie;
     public int numOfItems;
@@ -32,6 +33,7 @@ public class ItemContainer : MonoBehaviour
             anim = GetComponent<Animator>();
         }
         player = GameObject.Find("Player");
+        pi = player.GetComponent<PlayerItem>();
 
         cost = player.GetComponent<HealthManager>().baseCost;
         if (free) { cost = 0; }
@@ -39,15 +41,25 @@ public class ItemContainer : MonoBehaviour
         costTxt.text = cost.ToString() + "$";
 
         int rand = Random.Range(1, 101);
-
-        if (rand < 71) { rarity = 0; }
-        if (rand < 91 && rand > 70) { rarity = 1; }
-        if (rand == 91 || rand == 92) { rarity = 2; }
-        if (rand == 93 || rand == 94) { rarity = 4; }
-        if (rand == 95 || rand == 96) { rarity = 5; }
-        if (rand == 97 || rand == 98) { rarity = 6; }
-        if (rand == 99) { rarity = 3; }
-        if (rand == 100) { rarity = 7; }
+        int rarityID = 0;
+        bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
+        if (limestoneScale)
+        {
+            rand = Random.Range(0, 8);
+            rarityID = rand;
+        }
+        else
+        {
+            if (rand < 71) { rarityID = 0; }
+            if (rand < 91 && rand > 70) { rarityID = 1; }
+            if (rand == 91 || rand == 92) { rarityID = 2; }
+            if (rand == 93 || rand == 94) { rarityID = 4; }
+            if (rand == 95 || rand == 96) { rarityID = 5; }
+            if (rand == 97 || rand == 98) { rarityID = 6; }
+            if (rand == 99) { rarityID = 3; }
+            if (rand == 100) { rarityID = 7; }
+        }
+        rarity = rarityID;
 
         if (player.GetComponent<PlayerItem>().leftItems[142] + player.GetComponent<PlayerItem>().rightItems[142] > 0) { rarity = 8; }
 
@@ -64,7 +76,7 @@ public class ItemContainer : MonoBehaviour
         spawnedItem.transform.position = spawnPos.position;
         spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
         
     }
@@ -88,6 +100,8 @@ public class ItemContainer : MonoBehaviour
         hatch.transform.SetParent(null);
         meshes.Remove(hatch.GetComponent<MeshRenderer>());
         Destroy(hatch, 10f);
+
+        if(pi.healthManager.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * pi.healthManager.ionParticle) { int rand = Random.Range(5, 20); numOfItems += rand; Debug.Log("Miracle of: "+rand); }
 
         itemsSpawned = 0;
         for(int i = 0; i < numOfItems; i++)

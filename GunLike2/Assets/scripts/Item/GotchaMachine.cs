@@ -46,15 +46,25 @@ public class GotchaMachine : MonoBehaviour
     void RandomDraw()
     {
         int rand = Random.Range(1, 101);
-
-        if (rand < 71) { SpawnItem(0); }
-        if (rand < 91 && rand > 70) { SpawnItem(1); }
-        if (rand == 91 || rand == 92) { SpawnItem(2); }
-        if (rand == 93 || rand == 94) { SpawnItem(4); }
-        if (rand == 95 || rand == 96) { SpawnItem(5); }
-        if (rand == 97 || rand == 98) { SpawnItem(6); }
-        if (rand == 99) { SpawnItem(3); }
-        if (rand == 100) { SpawnItem(7); }
+        int rarityID = 0;
+        bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
+        if (limestoneScale)
+        {
+            rand = Random.Range(0, 8);
+            rarityID = rand;
+        }
+        else
+        {
+            if (rand < 71) { rarityID = 0; }
+            if (rand < 91 && rand > 70) { rarityID = 1; }
+            if (rand == 91 || rand == 92) { rarityID = 2; }
+            if (rand == 93 || rand == 94) { rarityID = 4; }
+            if (rand == 95 || rand == 96) { rarityID = 5; }
+            if (rand == 97 || rand == 98) { rarityID = 6; }
+            if (rand == 99) { rarityID = 3; }
+            if (rand == 100) { rarityID = 7; }
+        }
+        SpawnItem(rarityID);
     }
     private void SpawnItem(int iD)
     {
@@ -66,7 +76,7 @@ public class GotchaMachine : MonoBehaviour
         spawnedItem.GetComponent<Rigidbody>().AddForce(transform.forward * Random.Range(100f, 150f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(transform.right * Random.Range(-25f, 25f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
 }

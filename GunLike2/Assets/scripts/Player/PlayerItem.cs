@@ -643,28 +643,36 @@ public class PlayerItem : MonoBehaviour
         if(!overrideID && !overrideRarity)
         {
             int rand = Random.Range(1, 101);
-            if (rand < 71) { spawnedRarity = 0; }
-            if (rand < 91 && rand > 70) { spawnedRarity = 1; }
-            if (rand == 91 || rand == 92) { spawnedRarity = 2; }
-            if (rand == 93 || rand == 94) { spawnedRarity = 4; }
-            if (rand == 95 || rand == 96) { spawnedRarity = 5; }
-            if (rand == 97 || rand == 98) { spawnedRarity = 6; }
-            if (rand == 99) { spawnedRarity = 3; }
-            if (rand == 100) { spawnedRarity = 7; }
+            int rarityID = 0;
+            bool limestoneScale = leftItems[178] + rightItems[178] > 0;
+            if (limestoneScale)
+            {
+                rand = Random.Range(0, 8);
+                rarityID = rand;
+            }
+            else
+            {
+                if (rand < 71) { rarityID = 0; }
+                if (rand < 91 && rand > 70) { rarityID = 1; }
+                if (rand == 91 || rand == 92) { rarityID = 2; }
+                if (rand == 93 || rand == 94) { rarityID = 4; }
+                if (rand == 95 || rand == 96) { rarityID = 5; }
+                if (rand == 97 || rand == 98) { rarityID = 6; }
+                if (rand == 99) { rarityID = 3; }
+                if (rand == 100) { rarityID = 7; }
+            }
+            spawnedRarity = rarityID;
         }
         else if (overrideRarity) { spawnedRarity = rarity; }
 
         GameObject spawnedItem = Instantiate(itemPos);
         spawnedItem.transform.position = transform.position + transform.forward * 1.2f;
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(spawnedRarity);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(spawnedRarity, false);
         if (overrideID) 
         { 
             spawnedItem.GetComponent<ItemPossibility>().overrideid = true; 
             spawnedItem.GetComponent<ItemPossibility>().idover = id;
-            for(int i = 0; i < rarityList.Count; i++)
-            {
-                if (rarityList[i].Contains(id)) { spawnedItem.GetComponent<ItemPossibility>().SetRarity(i); }
-            }
+            spawnedItem.GetComponent<ItemPossibility>().SetRarity(FindRarityByID(id), false);
         }
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }

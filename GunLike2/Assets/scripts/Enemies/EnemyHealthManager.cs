@@ -123,6 +123,12 @@ public class EnemyHealthManager : MonoBehaviour
     public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
     {
         float tempArmor = armor;
+        if (playerHM.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * playerHM.ionParticle)
+        {
+            float rand = Random.Range(10f, 1000f);
+            dmgTaken *= rand;
+            Debug.Log("Miracle of: " + rand);
+        }
         if (activeEffects[0].x > 0) { tempArmor *= 0.25f; }
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
         if (activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
@@ -477,15 +483,25 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1, 100) <= dropChance)
             {
                 int rand = Random.Range(1, 101);
-
-                if (rand < 71) { SpawnItem(0); }
-                if (rand < 91 && rand > 70) { SpawnItem(1); }
-                if (rand == 91 || rand == 92) { SpawnItem(2); }
-                if (rand == 93 || rand == 94) { SpawnItem(4); }
-                if (rand == 95 || rand == 96) { SpawnItem(5); }
-                if (rand == 97 || rand == 98) { SpawnItem(6); }
-                if (rand == 99) { SpawnItem(3); }
-                if (rand == 100) { SpawnItem(7); }
+                int rarityID = 0;
+                bool limestoneScale = playerItem.leftItems[178] + playerItem.rightItems[178] > 0;
+                if (limestoneScale)
+                {
+                    rand = Random.Range(0, 8);
+                    rarityID = rand;
+                }
+                else
+                {
+                    if (rand < 71) { rarityID = 0; }
+                    if (rand < 91 && rand > 70) { rarityID = 1; }
+                    if (rand == 91 || rand == 92) { rarityID = 2; }
+                    if (rand == 93 || rand == 94) { rarityID = 4; }
+                    if (rand == 95 || rand == 96) { rarityID = 5; }
+                    if (rand == 97 || rand == 98) { rarityID = 6; }
+                    if (rand == 99) { rarityID = 3; }
+                    if (rand == 100) { rarityID = 7; }
+                }
+                SpawnItem(rarityID);
             }
         }
         //gotcha machine
@@ -533,15 +549,25 @@ public class EnemyHealthManager : MonoBehaviour
         if (activeEffects[16].x > 0)
         {
             int rand = Random.Range(1, 101);
-
-            if (rand < 71) { SpawnItem(0); }
-            if (rand < 91 && rand > 70) { SpawnItem(1); }
-            if (rand == 91 || rand == 92) { SpawnItem(2); }
-            if (rand == 93 || rand == 94) { SpawnItem(4); }
-            if (rand == 95 || rand == 96) { SpawnItem(5); }
-            if (rand == 97 || rand == 98) { SpawnItem(6); }
-            if (rand == 99) { SpawnItem(3); }
-            if (rand == 100) { SpawnItem(7); }
+            int rarityID = 0;
+            bool limestoneScale = playerItem.leftItems[178] + playerItem.rightItems[178] > 0;
+            if (limestoneScale)
+            {
+                rand = Random.Range(0, 8);
+                rarityID = rand;
+            }
+            else
+            {
+                if (rand < 71) { rarityID = 0; }
+                if (rand < 91 && rand > 70) { rarityID = 1; }
+                if (rand == 91 || rand == 92) { rarityID = 2; }
+                if (rand == 93 || rand == 94) { rarityID = 4; }
+                if (rand == 95 || rand == 96) { rarityID = 5; }
+                if (rand == 97 || rand == 98) { rarityID = 6; }
+                if (rand == 99) { rarityID = 3; }
+                if (rand == 100) { rarityID = 7; }
+            }
+            SpawnItem(rarityID);
         }
     }
 
@@ -553,7 +579,7 @@ public class EnemyHealthManager : MonoBehaviour
         spawnedItem = Instantiate(itemPossibility);
         spawnedItem.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 500f);
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
     }
 }

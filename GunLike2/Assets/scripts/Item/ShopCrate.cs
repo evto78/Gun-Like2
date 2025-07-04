@@ -30,19 +30,28 @@ public class ShopCrate : MonoBehaviour
         player = GameObject.Find("Player");
         pi = player.GetComponent<PlayerItem>();
 
-        //pickID
-        int rand = Random.Range(1, 101);
-        int temp = 0;
         List<List<int>> raritys = pi.rarityList;
 
-        if (rand < 71) { temp = 0; }
-        if (rand < 91 && rand > 70) { temp = 1; }
-        if (rand == 91 || rand == 92) { temp = 2; }
-        if (rand == 93 || rand == 94) { temp = 4; }
-        if (rand == 95 || rand == 96) { temp = 5; }
-        if (rand == 97 || rand == 98) { temp = 6; }
-        if (rand == 99) { temp = 3; }
-        if (rand == 100) { temp = 7; }
+        int rand = Random.Range(1, 101);
+        int rarityID = 0;
+        bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
+        if (limestoneScale)
+        {
+            rand = Random.Range(0, 8);
+            rarityID = rand;
+        }
+        else
+        {
+            if (rand < 71) { rarityID = 0; }
+            if (rand < 91 && rand > 70) { rarityID = 1; }
+            if (rand == 91 || rand == 92) { rarityID = 2; }
+            if (rand == 93 || rand == 94) { rarityID = 4; }
+            if (rand == 95 || rand == 96) { rarityID = 5; }
+            if (rand == 97 || rand == 98) { rarityID = 6; }
+            if (rand == 99) { rarityID = 3; }
+            if (rand == 100) { rarityID = 7; }
+        }
+        int temp = rarityID;
 
         if (pi.leftItems[142] + pi.rightItems[142] > 0) { temp = 8; overrideId = true; idOver = 143; }
 
@@ -70,7 +79,7 @@ public class ShopCrate : MonoBehaviour
         spawnedItem.transform.position = spawnPos.position;
         spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarity);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(rarity, false);
         spawnedItem.GetComponent<ItemPossibility>().overrideid = true;
         spawnedItem.GetComponent<ItemPossibility>().idover = iD;
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;

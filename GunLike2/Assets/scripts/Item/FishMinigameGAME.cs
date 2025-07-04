@@ -121,7 +121,7 @@ public class FishMinigameGAME : MonoBehaviour
         spawnedItem.transform.position = spawnPos.position;
         spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
         spawnedItem.GetComponent<ItemPossibility>().overrideid = true;
         spawnedItem.GetComponent<ItemPossibility>().idover = player.GetComponent<PlayerItem>().fishItems[Random.Range(0, player.GetComponent<PlayerItem>().fishItems.Count)];
 

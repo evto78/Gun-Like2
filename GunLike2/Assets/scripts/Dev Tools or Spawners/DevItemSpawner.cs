@@ -98,6 +98,6 @@ public class DevItemSpawner : MonoBehaviour
     {
 		GameObject spawnedItem;
 		spawnedItem = Instantiate(itemPotential, transform.position + transform.forward * 3f + Vector3.up * 3f, transform.rotation);
-		spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD);
+		spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
 	}
 }
