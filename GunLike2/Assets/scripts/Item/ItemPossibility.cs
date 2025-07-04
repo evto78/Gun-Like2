@@ -153,9 +153,30 @@ public class ItemPossibility : MonoBehaviour
 
     public void SetRarity(int givenRarity)
     {
+        player = GameObject.Find("Player");
+        pi = player.GetComponent<PlayerItem>();
         timer = 0.5f;
 
         rarity = givenRarity;
+
+        if(rarity < 2 && pi.MasterCardCheck())
+        {
+            pi.masterCardChance = 0f;
+            int rand = Random.Range(1, 11);
+            switch (rand)
+            {
+                case 1: rarity = 2; break;
+                case 2: rarity = 2; break;
+                case 3: rarity = 4; break;
+                case 4: rarity = 4; break;
+                case 5: rarity = 5; break;
+                case 6: rarity = 5; break;
+                case 7: rarity = 6; break;
+                case 8: rarity = 6; break;
+                case 9: rarity = 3; break;
+                case 10: rarity = 7; break;
+            }
+        } 
 
         commonPS.SetActive(false);
         uncommonPS.SetActive(false);

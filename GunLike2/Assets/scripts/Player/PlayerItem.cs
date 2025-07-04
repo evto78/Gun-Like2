@@ -88,6 +88,8 @@ public class PlayerItem : MonoBehaviour
     public int gotchaTickets;
     public int leftLowFreqRes; List<int> leftLFRAffected = new List<int>();
     public int rightLowFreqRes; List<int> rightLFRAffected = new List<int>();
+    public int masterCard;
+    public float masterCardChance;
 
     public int lastItemPressed;
     public string lastItemPressedHand;
@@ -161,6 +163,7 @@ public class PlayerItem : MonoBehaviour
         leftSnapshot.AddRange(leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(rightItems);
+        masterCard = leftItems[174] + rightItems[174];
         leftLowFreqRes = leftItems[154];rightLowFreqRes = rightItems[154];
         LowFreqRes();
         playerMvt.StatUpdate(leftItems, rightItems, rarityList);
@@ -613,7 +616,7 @@ public class PlayerItem : MonoBehaviour
         {
             int rand = Random.Range(1, 101);
             if (rand < 71) { spawnedRarity = 0; }
-            if (rand < 91 && rand > 70) { spawnedRarity = 0; }
+            if (rand < 91 && rand > 70) { spawnedRarity = 1; }
             if (rand == 91 || rand == 92) { spawnedRarity = 2; }
             if (rand == 93 || rand == 94) { spawnedRarity = 4; }
             if (rand == 95 || rand == 96) { spawnedRarity = 5; }
@@ -636,6 +639,12 @@ public class PlayerItem : MonoBehaviour
             }
         }
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
+    }
+    public bool MasterCardCheck()
+    {
+        if(masterCard < 1) { return false; }
+        if (Random.Range(1, 100) < masterCardChance) { return true; }
+        else { masterCardChance += 4f + masterCard; return false; }
     }
     public ItemObject FindObjByID(int id)
     {

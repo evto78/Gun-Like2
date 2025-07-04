@@ -444,12 +444,14 @@ public class GunManager : MonoBehaviour
         leftAccDiv += MultAdder(-60f, givenLeftItems[118]);
         leftAccDiv += MultAdder(-40f, givenLeftItems[121]);
         leftAccDiv += MultAdder(-20f, givenLeftItems[163]);
+        leftAccDiv += MultAdder(-20f, givenLeftItems[173]);
         //Left Bullet Speed
         leftBulSpdMult += MultAdder(20f, givenLeftItems[9]);
         leftBulSpdMult += MultAdder(20f, givenLeftItems[57]);
         leftBulSpdMult += MultAdder(20f, givenLeftItems[76]);
         leftBulSpdMult += MultAdder(20f, givenLeftItems[119]);
         leftBulSpdMult += MultAdder(10f, givenLeftItems[143]);
+        leftBulSpdMult += MultAdder(20f, givenLeftItems[173]);
 
         leftBulSpdDiv += MultAdder(-20f, givenLeftItems[11]);
         leftBulSpdDiv += MultAdder(-20f, givenLeftItems[12]);
@@ -631,12 +633,14 @@ public class GunManager : MonoBehaviour
         rightAccDiv += MultAdder(-10f, givenRightItems[59]);
         rightAccDiv += MultAdder(-60f, givenRightItems[118]);
         rightAccDiv += MultAdder(-40f, givenRightItems[121]);
+        rightAccDiv += MultAdder(-20f, givenRightItems[173]);
         //Right Bullet Speed
         rightBulSpdMult += MultAdder(20f, givenRightItems[9]);
         rightBulSpdMult += MultAdder(20f, givenRightItems[57]);
         rightBulSpdMult += MultAdder(20f, givenRightItems[76]);
         rightBulSpdMult += MultAdder(20f, givenRightItems[119]);
         rightBulSpdMult += MultAdder(10f, givenRightItems[143]);
+        rightBulSpdMult += MultAdder(20f, givenRightItems[173]);
 
         rightBulSpdDiv += MultAdder(-20f, givenRightItems[11]);
         rightBulSpdDiv += MultAdder(-20f, givenRightItems[12]);

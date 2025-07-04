@@ -629,7 +629,6 @@ public class GunScript : MonoBehaviour
         bool requireAmmo = true;
         if (bulletFactory > 0) { requireAmmo = false; if(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1) { requireAmmo = true; } }
         if(brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
-        Debug.Log(" 1 in " + (bulletFactory + (magSize - currentBullets)));
 
         if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
         {
