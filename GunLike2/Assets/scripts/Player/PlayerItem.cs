@@ -230,6 +230,11 @@ public class PlayerItem : MonoBehaviour
             if (Random.Range(1, 100) < 5 && rightItems[99] > 0 && hand == "right") { rightItems[99]--; }
             if (Random.Range(1, 100) < 5 && rightItems[100] > 0 && hand == "right") { rightItems[100]--; }
         }
+        if(id == 175)
+        {
+            if(hand == "left"){for(int i = 0; i < 50 * amount; i++) { gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); }}
+            if(hand == "right"){for(int i = 0; i < 50 * amount; i++) { gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); }}
+        }
     }
     public void ItemPressedInInv(int id, string hand)
     {
@@ -390,12 +395,13 @@ public class PlayerItem : MonoBehaviour
         if(leftItems[55] > 0) { leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[56] += 1; leftItems[55] -= 1; }
         if(rightItems[55] > 0) { rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[56] += 1; rightItems[55] -= 1; }
     }
-
     void LookForItem()
     {
         Vector3 camPos = playerCamera.position;
         Ray ray = new Ray(camPos, playerCamera.forward);
         RaycastHit hit;
+
+        int leftMonkeysPaw = leftItems[176]; int rightMonkeysPaw = rightItems[176];
 
         if (Physics.Raycast(ray, out hit, 7f))
         {
@@ -410,15 +416,19 @@ public class PlayerItem : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E) || (Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.LeftShift)))
                 {
-                    rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                    int id = hit.collider.gameObject.GetComponentInParent<Item>().WhatItem();
+                    rightItems[id] += 1;
+                    if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
-                    if (leftItems[86] > 0) { leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; leftItems[86]--; }
+                    if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
                 }
                 if (Input.GetKeyDown(KeyCode.Q) || (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift)))
                 {
-                    leftItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1;
+                    int id = hit.collider.gameObject.GetComponentInParent<Item>().WhatItem();
+                    leftItems[id] += 1;
+                    if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
-                    if (rightItems[86] > 0) { rightItems[hit.collider.gameObject.GetComponentInParent<Item>().WhatItem()] += 1; rightItems[86]--; }
+                    if (rightItems[86] > 0) { rightItems[id] += 1; rightItems[86]--; }
                 }
             }
             else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))
@@ -453,7 +463,25 @@ public class PlayerItem : MonoBehaviour
             itemDisplay.SetActive(false);
         }
     }
-
+    void MonkeysPaw(int id, string hand, int amt)
+    {
+        int rarity = FindRarityByID(id);
+        int liquidItems = 0;
+        if(hand == "left")
+        {
+            leftItems[id]+=amt;
+            for(int i = 0; i < rarityList[rarity].Count; i++)
+            { if(leftItems[rarityList[rarity][i]] > 0) { liquidItems += leftItems[rarityList[rarity][i]]; leftItems[rarityList[rarity][i]] = 0; }
+            } leftItems[id] += liquidItems; liquidItems = 0;
+        }
+        else
+        {
+            rightItems[id]+=amt;
+            for (int i = 0; i < rarityList[rarity].Count; i++)
+            { if (rightItems[rarityList[rarity][i]] > 0) { liquidItems += rightItems[rarityList[rarity][i]]; rightItems[rarityList[rarity][i]] = 0; }
+            } rightItems[id] += liquidItems; liquidItems = 0;
+        }
+    }
     void UpdateModifierList()
     {
         modifierList.Clear();

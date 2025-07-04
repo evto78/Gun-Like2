@@ -305,7 +305,7 @@ public class HealthManager : MonoBehaviour
 			GiveEffect("active reactor", 1);
         }
 
-		money += moneyDropped;
+		money += moneyDropped; money += 10 * (playerItem.leftItems[177] + playerItem.rightItems[177]);
 
 		if(enemyThatDied.activeEffects[8].x > 0)
         {

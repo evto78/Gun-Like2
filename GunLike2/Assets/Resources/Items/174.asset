@@ -12,19 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
   m_Name: 174
   m_EditorClassIdentifier: 
-  id: 0
-  itemName: 
-  rarity: 0
-  itemSprite: {fileID: 0}
+  id: 174
+  itemName: The Master Card
+  rarity: 1
+  itemSprite: {fileID: 21300000, guid: dd164cea547fe27428b32c3bb8c149b2, type: 3}
   cooldownItem: 0
   baseCooldown: 0
   subType: 0
-  effect: 
-  buff: 
-  debuff: 
-  effectSum: 
-  buffSum: 
-  debuffSum: 
-  flavor: 
-  ideaCredit: 
+  effect: Every item that is below rare rarity, gives a stacking 5% chance to make
+    the next item rare or above. stacks add 1% extra chance.
+  buff: '-'
+  debuff: '-'
+  effectSum: When a item is spawned and it isn't above uncommon rarity, the next
+    items have a higher chance to be a higher rarity. This higher chance is reset
+    on spawning a item above uncommon rarity.
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: Unlimited Money...
+  ideaCredit: bulwark(with a high credit score)
   flavorCredit: 
