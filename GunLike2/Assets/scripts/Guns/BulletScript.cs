@@ -193,7 +193,6 @@ public class BulletScript : MonoBehaviour
         {
             critDamage *= 2f;
         }
-        if (Random.Range(1, 11) != 1) { return; }
         GameObject stckyNote = Instantiate(stickyNote);
         stckyNote.transform.position = gunFiredFrom.firePoint.position + (gunFiredFrom.firePoint.forward/2f);
     }
