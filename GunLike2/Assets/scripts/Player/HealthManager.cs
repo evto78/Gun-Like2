@@ -63,6 +63,7 @@ public class HealthManager : MonoBehaviour
 	public int ionParticle;
 
 	public int appleBuff;
+	public float fortifyBuff;
 
 	public float timeSinceEnemyDied;
 
@@ -103,7 +104,7 @@ public class HealthManager : MonoBehaviour
 
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
-		maxHp = baseMaxHP + appleBuff;
+		maxHp = baseMaxHP + appleBuff + Mathf.CeilToInt(fortifyBuff);
 		//Before Mult
 		leftSpongeStone = givenLeftItems[167]>0; rightSpongeStone = givenRightItems[167]>0;
 		//Health Regen
@@ -649,6 +650,7 @@ public class HealthManager : MonoBehaviour
 		if (effectGiven == "smokingGun") { activeEffects[23] = new Vector4(stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Reload speed buff
 		if (effectGiven == "drockBuff") { activeEffects[24] = new Vector4(activeEffects[24].x+stacksToAdd, 0.5f, 0.5f, 1f); }//Depleated Rock BUFF
 		if (effectGiven == "drockDebuff") { activeEffects[25] = new Vector4(activeEffects[25].x + stacksToAdd, 0.5f, 0.5f, -1f); }//Deplaated Rock DEBUFF
+		if (effectGiven == "chaosEngine") { activeEffects[26] = new Vector4(activeEffects[26].x + stacksToAdd, 3f, 3f, 1f); }//Chaos Engine
 		
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }

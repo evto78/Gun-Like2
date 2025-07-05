@@ -447,6 +447,7 @@ public class PlayerItem : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
+                    healthManager.GiveEffect("chaosEngine", 1f);
                 }
                 if(hit.collider.gameObject.TryGetComponent<ItemContainer>(out ItemContainer ic))
                 {

@@ -8,6 +8,7 @@ public class GunScript : MonoBehaviour
     Transform player;
     public GameObject possessionEffect;
     public GameObject misfireEffect;
+    public GameObject confettiEffect;
     public string gunName;
 
     //Base stats for this gun
@@ -96,6 +97,8 @@ public class GunScript : MonoBehaviour
     public int triggerHappy;
     public int bulletFactory;
     public int critUnfunny;
+    public int fority;
+    public int confetti;
 
     public float echoDmg;
 
@@ -213,6 +216,8 @@ public class GunScript : MonoBehaviour
         triggerHappy = manager.leftTriggerHappy;
         bulletFactory = manager.leftBulletFactory;
         critUnfunny = manager.leftCritUnfunny;
+        fority = manager.leftFortify;
+        confetti = manager.leftConfetti;
 
         ricochet = manager.leftRicochet;
 
@@ -309,6 +314,8 @@ public class GunScript : MonoBehaviour
         triggerHappy = manager.rightTriggerHappy;
         bulletFactory = manager.rightBulletFactory;
         critUnfunny = manager.rightCritUnfunny;
+        fority = manager.rightFortify;
+        confetti = manager.rightConfetti;
 
         ricochet = manager.rightRicochet;
 
@@ -443,7 +450,6 @@ public class GunScript : MonoBehaviour
                 shooting = false;
             }
         }
-
 
         if (currentBullets > 0)
         {
@@ -635,6 +641,7 @@ public class GunScript : MonoBehaviour
     {
         if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect("smokingGun", 1f); } AttemptReload(); return; }
         if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
+        if (confetti > 0) { confettiEffect.GetComponent<ParticleSystem>().Play(); }
         animator.SetTrigger("Shooting");
         animator.speed = atkSpd * 1.5f;
         isFastFiring = false;

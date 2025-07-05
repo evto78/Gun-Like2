@@ -62,6 +62,7 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "o") { SpawnPotential(8); }
 				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
 				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
+				else if (numberTyped == "all") { SpawnALL(); }
 				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = System.Int32.Parse(numberTyped.Trim()); }
 				else
                 {
@@ -87,7 +88,13 @@ public class DevItemSpawner : MonoBehaviour
 			consoleText.text = "";
         }
 	}
-
+	void SpawnALL()
+    {
+		foreach(ItemObject itemObj in itemData)
+        {
+			SpawnItem(itemObj.id);
+        }
+    }
 	private void SpawnItem(int iD)
 	{
 		GameObject spawnedItem;

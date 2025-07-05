@@ -10,7 +10,6 @@ public class Item : MonoBehaviour
     public List<Material> backgroundList = new List<Material>();
 
     public int itemID;
-    public TextMeshPro itemText;
     Rigidbody rb;
     public SpriteRenderer sr;
 
@@ -21,8 +20,6 @@ public class Item : MonoBehaviour
 
     private void Start()
     {
-        itemText.text = "";
-
         rb = GetComponent<Rigidbody>();
 
         //rb.useGravity = true;

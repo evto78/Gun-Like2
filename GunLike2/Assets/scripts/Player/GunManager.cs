@@ -114,6 +114,8 @@ public class GunManager : MonoBehaviour
     public int leftTriggerHappy;
     public int leftBulletFactory;
     public int leftCritUnfunny;
+    public int leftFortify;
+    public int leftConfetti;
 
     public bool leftRicochet = false;
 
@@ -201,6 +203,8 @@ public class GunManager : MonoBehaviour
     public int rightTriggerHappy;
     public int rightBulletFactory;
     public int rightCritUnfunny;
+    public int rightFortify;
+    public int rightConfetti;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -391,6 +395,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[157]);
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[161]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[169]);
+        leftAtkSpdMult += MultAdder(40f, givenLeftItems[184]);
 
         leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
         leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
@@ -402,6 +407,7 @@ public class GunManager : MonoBehaviour
         leftReSpdMult += MultAdder(20f, givenLeftItems[7]);
         leftReSpdMult += MultAdder(10f, givenLeftItems[143]);
         leftReSpdMult += MultAdder(20f, givenLeftItems[161]);
+        leftReSpdMult += MultAdder(40f, givenLeftItems[184]);
 
         leftReSpdDiv += MultAdder(-10f, givenLeftItems[59]);
         leftReSpdDiv += MultAdder(-60f, givenLeftItems[90]);
@@ -427,6 +433,7 @@ public class GunManager : MonoBehaviour
         leftDmgMult += MultAdder(10f, givenLeftItems[143]);
         leftDmgMult += MultAdder(40f, givenLeftItems[157]);
         leftDmgMult += MultAdder(500f, givenLeftItems[180]);
+        leftDmgMult += MultAdder(40f, givenLeftItems[184]);
         
         leftDmgDiv += MultAdder(-20f, givenLeftItems[12]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[31]);
@@ -446,6 +453,7 @@ public class GunManager : MonoBehaviour
         leftMagSizeMult += MultAdder(10f, givenLeftItems[143]);
         leftMagSizeMult += MultAdder(20f, givenLeftItems[158]);
         leftMagSizeMult += MultAdder(20f, givenLeftItems[169]);
+        leftMagSizeMult += MultAdder(40f, givenLeftItems[184]);
 
         leftMagSizeDiv += MultAdder(-50f, givenLeftItems[21]);
         leftMagSizeDiv += MultAdder(-40f, givenLeftItems[25]);
@@ -460,6 +468,7 @@ public class GunManager : MonoBehaviour
         leftAccMult += MultAdder(40f, givenLeftItems[27]);
         leftAccMult += MultAdder(40f, givenLeftItems[128]);
         leftAccMult += MultAdder(10f, givenLeftItems[143]);
+        leftAccMult += MultAdder(40f, givenLeftItems[184]);
 
         leftAccDiv += MultAdder(-20f, givenLeftItems[32]);
         leftAccDiv += MultAdder(-20f, givenLeftItems[46]);
@@ -475,6 +484,7 @@ public class GunManager : MonoBehaviour
         leftBulSpdMult += MultAdder(20f, givenLeftItems[119]);
         leftBulSpdMult += MultAdder(10f, givenLeftItems[143]);
         leftBulSpdMult += MultAdder(20f, givenLeftItems[173]);
+        leftBulSpdMult += MultAdder(40f, givenLeftItems[184]);
 
         leftBulSpdDiv += MultAdder(-20f, givenLeftItems[11]);
         leftBulSpdDiv += MultAdder(-20f, givenLeftItems[12]);
@@ -484,23 +494,28 @@ public class GunManager : MonoBehaviour
         //Left Bullet Size
         leftBulSizeMult += MultAdder(20f, givenLeftItems[11]);
         leftBulSizeMult += MultAdder(20f, givenLeftItems[64]);
+        leftBulSizeMult += MultAdder(40f, givenLeftItems[184]);
         //Left Bullet Pierce
-        leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82];
+        leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82] + givenLeftItems[184];
         //Left Weak Point Chance
         leftWeakPointChance += 10f * givenLeftItems[141];
         leftWeakPointChance += 10f * givenLeftItems[150];
+        leftWeakPointChance += 20f * givenLeftItems[184];
         //Left Weak Point Damage
         leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[76]);
         leftWeakPointDamageMult += MultAdder(10f, givenLeftItems[141]);
         leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[149]);
+        leftWeakPointDamageMult += MultAdder(40f, givenLeftItems[184]);
         //Left Crit Chance
         leftCritChance += 20f * givenLeftItems[77];
         leftCritChance += 10f * givenLeftItems[78];
         leftCritChance += 20f * givenLeftItems[148];
         leftCritChance += 50f * givenLeftItems[179];
+        leftCritChance += 20f * givenLeftItems[184];
         //Left Crit Damage
         leftCritDamageMult += MultAdder(20f, givenLeftItems[77]);
         leftCritDamageMult += MultAdder(100f, givenLeftItems[147]);
+        leftCritDamageMult += MultAdder(40f, givenLeftItems[184]);
         //Left Other
         leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
@@ -563,6 +578,8 @@ public class GunManager : MonoBehaviour
         leftOverCompress = givenLeftItems[171];
         leftBulletFactory = givenLeftItems[172];
         leftCritUnfunny = givenLeftItems[179];
+        leftFortify = givenLeftItems[182];
+        leftConfetti = givenLeftItems[187];
         
         leftRicochet = false;
 
@@ -588,6 +605,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpdMult += MultAdder(40f, givenRightItems[157]);
         rightAtkSpdMult += MultAdder(20f, givenRightItems[161]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[169]);
+        rightAtkSpdMult += MultAdder(40f, givenRightItems[184]);
 
         rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
         rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
@@ -599,6 +617,7 @@ public class GunManager : MonoBehaviour
         rightReSpdMult += MultAdder(20f, givenRightItems[7]);
         rightReSpdMult += MultAdder(10f, givenRightItems[143]);
         rightReSpdMult += MultAdder(20f, givenRightItems[161]);
+        rightReSpdMult += MultAdder(40f, givenRightItems[184]);
 
         rightReSpdDiv += MultAdder(-20f, givenRightItems[59]);
         rightReSpdDiv += MultAdder(-60f, givenRightItems[90]);
@@ -623,6 +642,7 @@ public class GunManager : MonoBehaviour
         rightDmgMult += MultAdder(10f, givenRightItems[143]);
         rightDmgMult += MultAdder(40f, givenRightItems[157]);
         rightDmgMult += MultAdder(500f, givenRightItems[180]);
+        rightDmgMult += MultAdder(40f, givenRightItems[184]);
 
         rightDmgDiv += MultAdder(-20f, givenRightItems[12]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[31]);
@@ -641,6 +661,7 @@ public class GunManager : MonoBehaviour
         rightMagSizeMult += MultAdder(10f, givenRightItems[143]);
         rightMagSizeMult += MultAdder(20f, givenRightItems[158]);
         rightMagSizeMult += MultAdder(20f, givenRightItems[169]);
+        rightMagSizeMult += MultAdder(40f, givenRightItems[184]);
 
         rightMagSizeDiv += MultAdder(-50f, givenRightItems[21]);
         rightMagSizeDiv += MultAdder(-40f, givenRightItems[25]);
@@ -655,6 +676,7 @@ public class GunManager : MonoBehaviour
         rightAccMult += MultAdder(40f, givenRightItems[27]);
         rightAccMult += MultAdder(40f, givenRightItems[128]);
         rightAccMult += MultAdder(10f, givenRightItems[143]);
+        rightAccMult += MultAdder(40f, givenRightItems[184]);
 
         rightAccDiv += MultAdder(-20f, givenRightItems[32]);
         rightAccDiv += MultAdder(-20f, givenRightItems[46]);
@@ -669,6 +691,7 @@ public class GunManager : MonoBehaviour
         rightBulSpdMult += MultAdder(20f, givenRightItems[119]);
         rightBulSpdMult += MultAdder(10f, givenRightItems[143]);
         rightBulSpdMult += MultAdder(20f, givenRightItems[173]);
+        rightBulSpdMult += MultAdder(40f, givenRightItems[184]);
 
         rightBulSpdDiv += MultAdder(-20f, givenRightItems[11]);
         rightBulSpdDiv += MultAdder(-20f, givenRightItems[12]);
@@ -678,23 +701,28 @@ public class GunManager : MonoBehaviour
         //Right Bullet Size
         rightBulSizeMult += MultAdder(20f, givenRightItems[11]);
         rightBulSizeMult += MultAdder(20f, givenRightItems[64]);
+        rightBulSizeMult += MultAdder(40f, givenRightItems[184]);
         //Right Pierce
-        rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82];
+        rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82] + givenRightItems[184];
         //Right Weak Point Chance
         rightWeakPointChance += 10f * givenRightItems[141];
         rightWeakPointChance += 10f * givenRightItems[150];
+        rightWeakPointChance += 20f * givenRightItems[184];
         //Right Weak Point Damage
         rightWeakPointDamageMult += MultAdder(20f, givenRightItems[76]);
         rightWeakPointDamageMult += MultAdder(10f, givenRightItems[141]);
         rightWeakPointDamageMult += MultAdder(20f, givenRightItems[149]);
+        rightWeakPointDamageMult += MultAdder(40f, givenRightItems[184]);
         //Right Crit Chance
         rightCritChance += 20f * givenRightItems[77];
         rightCritChance += 10f * givenRightItems[78];
         rightCritChance += 20f * givenRightItems[148];
         rightCritChance += 50f * givenRightItems[179];
+        rightCritChance += 20f * givenRightItems[184];
         //Right Crit Damage
         rightCritDamageMult += MultAdder(20f, givenRightItems[77]);
         rightCritDamageMult += MultAdder(100f, givenRightItems[147]);
+        rightCritDamageMult += MultAdder(40f, givenRightItems[184]);
         //Right Other
         rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
@@ -757,6 +785,8 @@ public class GunManager : MonoBehaviour
         rightOverCompress = givenRightItems[171];
         rightBulletFactory = givenRightItems[172];
         rightCritUnfunny = givenRightItems[179];
+        rightFortify = givenRightItems[182];
+        rightConfetti = givenRightItems[187];
 
         rightRicochet = false;
 

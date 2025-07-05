@@ -21,7 +21,7 @@ public class ItemContainer : MonoBehaviour
     public bool free;
     public int rarity;
     public GameObject internalItemPos;
-    List<MeshRenderer> meshes = new List<MeshRenderer>();
+    List<SmartMeshRen> sMRS = new List<SmartMeshRen>();
     public bool eyeballLooking;
     public float timeSinceEye;
 
@@ -63,8 +63,13 @@ public class ItemContainer : MonoBehaviour
 
         if (player.GetComponent<PlayerItem>().leftItems[142] + player.GetComponent<PlayerItem>().rightItems[142] > 0) { rarity = 8; }
 
-        meshes.Clear();
-        meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
+        sMRS.Clear();
+        foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
+        {
+            SmartMeshRen smr = new SmartMeshRen();
+            smr.mr = mr; smr.mat = mr.material; smr.matColor = mr.material.color;
+            sMRS.Add(smr);
+        }
     }
 
     private void SpawnItem(int iD)
@@ -98,7 +103,6 @@ public class ItemContainer : MonoBehaviour
         hatch.GetComponent<Rigidbody>().AddForce((spawnPos.transform.forward * 1000f) + (Vector3.one * Random.Range(-100f,100f)));
         hatch.GetComponent<Rigidbody>().AddTorque(Vector3.one * Random.Range(-100f,100f));
         hatch.transform.SetParent(null);
-        meshes.Remove(hatch.GetComponent<MeshRenderer>());
         Destroy(hatch, 10f);
 
         if(pi.healthManager.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * pi.healthManager.ionParticle) { int rand = Random.Range(5, 20); numOfItems += rand; Debug.Log("Miracle of: "+rand); }
@@ -130,13 +134,14 @@ public class ItemContainer : MonoBehaviour
         timeSinceEye += Time.deltaTime;
         if(timeSinceEye > 0.25f)
         {
-            meshes.Clear();
-            meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
             eyeballLooking = false;
             if (internalItemPos != null) { internalItemPos.transform.GetChild(rarity).gameObject.SetActive(false); }
-            foreach (MeshRenderer mr in meshes)
+            foreach (SmartMeshRen smr in sMRS)
             {
-                mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 1f);
+                if (smr.mr != null)
+                {
+                    smr.mr.material.color = new Color(smr.matColor.r, smr.matColor.g, smr.matColor.b, 1f);
+                }
             }
         }
         
@@ -145,12 +150,13 @@ public class ItemContainer : MonoBehaviour
     {
         if (eyeballLooking)
         {
-            meshes.Clear();
-            meshes.AddRange(GetComponentsInChildren<MeshRenderer>());
             if (internalItemPos != null) { internalItemPos.transform.GetChild(rarity).gameObject.SetActive(true); }
-            foreach (MeshRenderer mr in meshes)
+            foreach (SmartMeshRen smr in sMRS)
             {
-                mr.material.color = new Color(mr.material.color.r, mr.material.color.g, mr.material.color.b, 0.2f);
+                if(smr.mr != null)
+                {
+                    smr.mr.material.color = new Color(smr.matColor.r, smr.matColor.g, smr.matColor.b, 0.2f);
+                }
             }
         }
     }

@@ -310,6 +310,11 @@ public class BulletScript : MonoBehaviour
                 ehm.ChemicalEffect.Play();
             }
         }
+        //Fortify
+        if(gunFiredFrom.fority > 0)
+        {
+            gunFiredFrom.manager.healthMan.fortifyBuff += (1f / (gunFiredFrom.atkSpd*2f))*gunFiredFrom.fority;
+        }
     }
 
     protected void RunOnCollide(GameObject givenGameObject, RaycastHit hit)
