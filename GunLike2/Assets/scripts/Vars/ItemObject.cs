@@ -13,6 +13,7 @@ public class ItemObject : ScriptableObject
     public Sprite itemSprite;
     public bool cooldownItem;
     public float baseCooldown;
+    public bool globalItem; //Does the item effect only affect the gun it is attached to.
     public enum itemType { basic, sponser, classic, fish, unstablePart, boss, horror }
     public itemType subType;
     

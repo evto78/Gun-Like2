@@ -67,6 +67,8 @@ public class NEWPlayerMovement : MonoBehaviour
     public PlayerItem playerItem;
     public GameObject shockwave;
 
+    bool hscSpawned;
+
     List<Vector4> effectList;
 
     // Start is called before the first frame update
@@ -236,6 +238,15 @@ public class NEWPlayerMovement : MonoBehaviour
         if (onGround) { slamming = false; }
         if (Cursor.lockState == CursorLockMode.Locked) { CameraMove(); }
         GetInputs();
+
+        if (!onGround && !hscSpawned)
+        {
+            if (DistanceToGround() > 200)
+            {
+                playerItem.SpawnItem(188, true, 8, true);
+                hscSpawned = true;
+            }
+        }
 
         Effects();
     }
@@ -509,5 +520,19 @@ public class NEWPlayerMovement : MonoBehaviour
             flatVel = flatVel / (friction * (1 + Time.deltaTime));
             rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z);
         }
+    }
+
+    float DistanceToGround()
+    {
+        float dist = 0f;
+
+        Ray ray = new Ray(transform.position, -Vector3.up);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 300f, LayerMask.GetMask("Default")))
+        {
+            dist = Vector3.Distance(transform.position, hit.point);
+        }
+
+        return dist;
     }
 }

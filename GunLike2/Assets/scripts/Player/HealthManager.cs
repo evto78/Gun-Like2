@@ -730,6 +730,7 @@ public class HealthManager : MonoBehaviour
 					case 23: strToAdd = "smoking gun"; break;
 					case 24: strToAdd = "depleated rock buff"; break;
 					case 25: strToAdd = "depleated rock debuff"; break;
+					case 26: strToAdd = "chaos engine"; break;
 				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
