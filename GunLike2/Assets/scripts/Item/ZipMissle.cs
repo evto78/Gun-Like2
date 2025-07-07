@@ -62,11 +62,11 @@ public class ZipMissle : MonoBehaviour
         {
             if (collision.transform.parent != null)
             {
-                collision.transform.parent.GetComponent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, "player");
+                collision.transform.parent.GetComponent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, transform.position, "player");
             }
             else
             {
-                collision.transform.GetComponent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, "player");
+                collision.transform.GetComponent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, transform.position, "player");
             }
             Destroy(gameObject);
         }

@@ -34,11 +34,11 @@ public class NuclearExplosion : MonoBehaviour
         {
             if (collision.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
             {
-                ehm.TakeDamage(damage, false, "normalHit", collision.gameObject.transform.position, "self");
+                ehm.TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
             }
             else if (collision.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
             {
-                ehm2.TakeDamage(damage, false, "normalHit", collision.gameObject.transform.position, "self");
+                ehm2.TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
             }
         }
         if (collision.gameObject.tag == "Player")

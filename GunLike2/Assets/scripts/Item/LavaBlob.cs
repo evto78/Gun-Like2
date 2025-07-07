@@ -20,12 +20,12 @@ public class LavaBlob : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", transform.position, "self");
+            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, transform.position, "self");
             Destroy(gameObject);
         }
         if (collision.gameObject.tag == "EnemyWeakPoint")
         {
-            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * 2f, false, "weakHit", transform.position, "self");
+            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage * 2f, false, HitType.ht.weak, transform.position, "self");
             Destroy(gameObject);
         }
         if (collision.gameObject.tag == "Ground")

@@ -585,11 +585,11 @@ public class GunScript : MonoBehaviour
 
         if(manager.leftBeltFed + manager.rightBeltFed > 0)
         {
-            manager.healthMan.GiveEffect("pants falling", 50);
+            manager.healthMan.GiveEffect(PlayerEffectType.effectName.pantsFalling, 50);
         }
 
-        if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect("warcry", 1f); }
-        if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect("warcry", 1f); }
+        if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
+        if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
 
         if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
         if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
@@ -639,7 +639,7 @@ public class GunScript : MonoBehaviour
     }
     public virtual void Shoot(float bowChar)
     {
-        if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect("smokingGun", 1f); } AttemptReload(); return; }
+        if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect(PlayerEffectType.effectName.smokingGun, 1f); } AttemptReload(); return; }
         if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
         if (confetti > 0) { confettiEffect.GetComponent<ParticleSystem>().Play(); }
         animator.SetTrigger("Shooting");

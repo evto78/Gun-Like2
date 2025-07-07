@@ -24,6 +24,11 @@ public class ItemDisplayScript : MonoBehaviour
     public Image bgDesc;
     public Image bgTitle;
     public Image itemSprite;
+    public Image itemGlobal;
+
+    public Sprite isGlobal;
+    public Sprite notGlobal;
+
 
     private void Start()
     {
@@ -56,35 +61,38 @@ public class ItemDisplayScript : MonoBehaviour
 
                 for(int i = 0; i < 29; i++)
                 {
-                    if (i == 0) { statToChange = "Speed"; }
-                    if (i == 1) { statToChange = "Sprint Speed"; }
-                    if (i == 2) { statToChange = "Jump Height"; }
-                    if (i == 3) { statToChange = "Number Of Jumps"; }
-                    if (i == 4) { statToChange = "Crit Chance"; }
-                    if (i == 5) { statToChange = "Crit Damage"; }
-                    if (i == 6) { statToChange = "Weak Spot Damage"; }
-                    if (i == 7) { statToChange = "Damage"; }
-                    if (i == 8) { statToChange = "Attack Speed"; }
-                    if (i == 9) { statToChange = "Reload Speed"; }
-                    if (i == 10) { statToChange = "Magazine Size"; }
-                    if (i == 11) { statToChange = "Accuracy"; }
-                    if (i == 12) { statToChange = "Bullet Speed"; }
-                    if (i == 13) { statToChange = "Bullet Size"; }
-                    if (i == 14) { statToChange = "Pierce"; }
-                    if (i == 15) { statToChange = "Crit Chance"; }
-                    if (i == 16) { statToChange = "Crit Damage"; }
-                    if (i == 17) { statToChange = "Weak Spot Damage"; }
-                    if (i == 18) { statToChange = "Damage"; }
-                    if (i == 19) { statToChange = "Attack Speed"; }
-                    if (i == 20) { statToChange = "Reload Speed"; }
-                    if (i == 21) { statToChange = "Magazine Size"; }
-                    if (i == 22) { statToChange = "Accuracy"; }
-                    if (i == 23) { statToChange = "Bullet Speed"; }
-                    if (i == 24) { statToChange = "Bullet Size"; }
-                    if (i == 25) { statToChange = "Pierce"; }
-                    if (i == 26) { statToChange = "Max HP"; }
-                    if (i == 27) { statToChange = "Passive HP Regen"; }
-                    if (i == 28) { statToChange = "Armor"; }
+                    switch (i)
+                    {
+                        case 0: statToChange = "Speed"; break;
+                        case 1: statToChange = "Sprint Speed"; break;
+                        case 2: statToChange = "Jump Height"; break;
+                        case 3: statToChange = "Number Of Jumps"; break;
+                        case 4: statToChange = "Crit Chance"; break;
+                        case 5: statToChange = "Crit Damage"; break;
+                        case 6: statToChange = "Weak Spot Damage"; break;
+                        case 7: statToChange = "Damage"; break;
+                        case 8: statToChange = "Attack Speed"; break;
+                        case 9: statToChange = "Reload Speed"; break;
+                        case 10: statToChange = "Magazine Size"; break;
+                        case 11: statToChange = "Accuracy"; break;
+                        case 12: statToChange = "Bullet Speed"; break;
+                        case 13: statToChange = "Bullet Size"; break;
+                        case 14: statToChange = "Pierce"; break;
+                        case 15: statToChange = "Crit Chance"; break;
+                        case 16: statToChange = "Crit Damage"; break;
+                        case 17: statToChange = "Weak Spot Damage"; break;
+                        case 18: statToChange = "Damage"; break;
+                        case 19: statToChange = "Attack Speed"; break;
+                        case 20: statToChange = "Reload Speed"; break;
+                        case 21: statToChange = "Magazine Size"; break;
+                        case 22: statToChange = "Accuracy"; break;
+                        case 23: statToChange = "Bullet Speed"; break;
+                        case 24: statToChange = "Bullet Size"; break;
+                        case 25: statToChange = "Pierce"; break;
+                        case 26: statToChange = "Max HP"; break;
+                        case 27: statToChange = "Passive HP Regen"; break;
+                        case 28: statToChange = "Armor"; break;
+                    }
 
                     if (playerItemScript.leftIFPStatToBuff == i) { lftBff = statToChange; }
                     if (playerItemScript.leftIFPStatToDeBuff == i) { lftDeBff = statToChange; }
@@ -113,6 +121,7 @@ public class ItemDisplayScript : MonoBehaviour
         flavorTxt.text = selectedItem.flavor;
 
         itemSprite.sprite = selectedItem.itemSprite;
+        if (selectedItem.globalItem) { itemGlobal.sprite = isGlobal; } else { itemGlobal.sprite = notGlobal; }
 
         SetRarity(selectedItem.id);
 

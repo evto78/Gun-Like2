@@ -51,7 +51,7 @@ public class Shockwave : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, "normalHit", collision.gameObject.transform.position, "self");
+            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
             if (blinding) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("blind", playerItem.leftItems[125]+playerItem.rightItems[125]); }
             if (coolSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
             if (fireSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }

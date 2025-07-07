@@ -447,7 +447,7 @@ public class PlayerItem : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
-                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect("chaosEngine", 1f); }
+                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(PlayerEffectType.effectName.chaosEngine, 1f); }
                 }
                 if(hit.collider.gameObject.TryGetComponent<ItemContainer>(out ItemContainer ic))
                 {
@@ -675,7 +675,9 @@ public class PlayerItem : MonoBehaviour
             spawnedItem.GetComponent<ItemPossibility>().idover = id;
             spawnedItem.GetComponent<ItemPossibility>().SetRarity(FindRarityByID(id), false);
         }
-        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
+        spawnedItem.GetComponent<Rigidbody>().AddForce((Vector3.up * 10f)+(transform.forward), ForceMode.Impulse);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(transform.right * Random.Range(-1f,1f), ForceMode.Impulse);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(transform.forward * Random.Range(-1f,1f), ForceMode.Impulse);
     }
     public bool MasterCardCheck()
     {

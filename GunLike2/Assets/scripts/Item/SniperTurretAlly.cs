@@ -40,7 +40,7 @@ public class SniperTurretAlly : MonoBehaviour
     }
     void Shoot()
     {
-        target.TakeDamage(damage, true, "normalHit", target.transform.position, "other");
+        target.TakeDamage(damage, true, HitType.ht.normal, target.transform.position, "other");
     }
     void DrawLaser()
     {

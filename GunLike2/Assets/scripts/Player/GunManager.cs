@@ -1307,7 +1307,7 @@ public class GunManager : MonoBehaviour
                     {
                         if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
                         {
-                            ehm.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                            ehm.TakeDamage(leftDmg * 30f, false, HitType.ht.normal, hit.point, hand);
                         }
                         if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
                         {
@@ -1318,7 +1318,7 @@ public class GunManager : MonoBehaviour
                     {
                         if (hit.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
                         {
-                            ehm2.TakeDamage(leftDmg * 30f, false, "normalHit", hit.point, hand);
+                            ehm2.TakeDamage(leftDmg * 30f, false, HitType.ht.normal, hit.point, hand);
                         }
                         if (hit.transform.TryGetComponent<Rigidbody>(out Rigidbody erb2))
                         {
@@ -1350,7 +1350,7 @@ public class GunManager : MonoBehaviour
                     {
                         if (hit.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
                         {
-                            ehm.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                            ehm.TakeDamage(rightDmg * 30f, false, HitType.ht.normal, hit.point, hand);
                         }
                         if (hit.transform.parent.TryGetComponent<Rigidbody>(out Rigidbody erb))
                         {
@@ -1361,7 +1361,7 @@ public class GunManager : MonoBehaviour
                     {
                         if (hit.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm2))
                         {
-                            ehm2.TakeDamage(rightDmg * 30f, false, "normalHit", hit.point, hand);
+                            ehm2.TakeDamage(rightDmg * 30f, false, HitType.ht.normal, hit.point, hand);
                         }
                         if (hit.transform.TryGetComponent<Rigidbody>(out Rigidbody erb2))
                         {

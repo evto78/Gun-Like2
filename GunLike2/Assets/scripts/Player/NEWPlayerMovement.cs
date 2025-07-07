@@ -95,7 +95,7 @@ public class NEWPlayerMovement : MonoBehaviour
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
         //base stats
-        float moveSpeedMult = 1f; float moveSpeedDiv = 1f;
+        float rightmoveSpeedMult = 1f; float rightmoveSpeedDiv = 1f; float leftmoveSpeedMult = 1f; float leftmoveSpeedDiv = 1f;
         float sprintMoveSpeedMult = 1f; float sprintMoveSpeedDiv = 1f;
         float jumpForceMult = 1f; float jumpForceDiv = 1f;
         float gravityMult = 1f; float gravityDiv = 1f;
@@ -120,14 +120,21 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
         if (effectList[26].x > 0f) { moveSpeed = moveSpeed * 2f; }
         //Move Speed
-        moveSpeedMult += MultAdder(20f, givenLeftItems[59] + givenRightItems[59]);
-        moveSpeedMult += MultAdder(20f, givenLeftItems[73] + givenRightItems[73]);
-        moveSpeedMult += MultAdder(10f, givenLeftItems[143] + givenRightItems[143]);
-        moveSpeedMult += MultAdder(40f, givenLeftItems[165] + givenRightItems[165]);
-        moveSpeedMult += MultAdder(40f, givenLeftItems[185] + givenRightItems[185]);
+        leftmoveSpeedMult += MultAdder(20f, givenLeftItems[59]);
+        rightmoveSpeedMult += MultAdder(20f, givenRightItems[59]);
+        leftmoveSpeedMult += MultAdder(20f, givenLeftItems[73]);
+        rightmoveSpeedMult += MultAdder(20f, givenRightItems[73]);
+        leftmoveSpeedMult += MultAdder(10f, givenLeftItems[143]);
+        rightmoveSpeedMult += MultAdder(10f, givenRightItems[143]);
+        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[165]);
+        rightmoveSpeedMult += MultAdder(40f, givenRightItems[165]);
+        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[185]);
+        rightmoveSpeedMult += MultAdder(40f, givenRightItems[185]);
 
-        moveSpeedDiv += MultAdder(-20f, givenLeftItems[20] + givenRightItems[20]);
-        moveSpeedDiv += MultAdder(-20f, givenLeftItems[61] + givenRightItems[61]);
+        leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[20]);
+        rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[20]);
+        leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[61]);
+        rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[61]);
         //Sprint Speed
         sprintMoveSpeedMult += MultAdder(20f, givenLeftItems[0] + givenRightItems[0]);
         sprintMoveSpeedMult += MultAdder(40f, givenLeftItems[59] + givenRightItems[59]);
@@ -146,8 +153,12 @@ public class NEWPlayerMovement : MonoBehaviour
         numberOfJumps += givenLeftItems[135] + givenRightItems[135];
         //Gravity
         gravityDiv += MultAdder(-10f, givenLeftItems[15] + givenRightItems[15]);
+        //Partial Intagability
+        healthMan.evadeChance = 0f;
+        if (givenLeftItems[73] > 0) { healthMan.evadeChance += (leftmoveSpeedMult*100f) / 2f; leftmoveSpeedMult /= 2f; }
+        if (givenRightItems[73] > 0) { healthMan.evadeChance += (rightmoveSpeedMult*100f) / 2f; rightmoveSpeedMult /= 2f; }
         //Apply mult
-        moveSpeed *= moveSpeedMult; moveSpeed /= moveSpeedDiv;
+        moveSpeed *= leftmoveSpeedMult+rightmoveSpeedMult; moveSpeed /= leftmoveSpeedDiv+rightmoveSpeedDiv;
         sprintMoveSpeed *= sprintMoveSpeedMult; sprintMoveSpeed /= sprintMoveSpeedDiv;
         jumpForce *= jumpForceMult; jumpForce /= jumpForceDiv;
         gravityModifier *= gravityMult; gravityModifier /= gravityDiv;
@@ -274,7 +285,7 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             if (hit.transform.gameObject.tag == "Ground")
             {
-                if (hasBunny && !onGround) { healthMan.GiveEffect("bunny hop buff", 1f); }
+                if (hasBunny && !onGround) { healthMan.GiveEffect(PlayerEffectType.effectName.bunnyHop, 1f); }
                 jumpsLeft = numberOfJumps;
                 timeSinceGrounded = 0f;
                 if(playerItem.leftItems[93] + playerItem.rightItems[93] > 0 && rb.velocity.y < -25)

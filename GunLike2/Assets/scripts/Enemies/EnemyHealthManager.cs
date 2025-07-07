@@ -115,19 +115,18 @@ public class EnemyHealthManager : MonoBehaviour
         
         if(dmgQued.Count > 0)
         {
-            TakeDamage(dmgQued[0], true, "normalHit", transform.position, "self");
+            TakeDamage(dmgQued[0], true, HitType.ht.normal, transform.position, "self");
             dmgQued.RemoveAt(0);
         }
     }
 
-    public void TakeDamage(float dmgTaken, bool ignoreArmor, string textColor, Vector3 hitLocation, string source)
+    public void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
         float tempArmor = armor;
         if (playerHM.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * playerHM.ionParticle)
         {
             float rand = Random.Range(10f, 1000f);
             dmgTaken *= rand;
-            Debug.Log("Miracle of: " + rand);
         }
         if (activeEffects[0].x > 0) { tempArmor *= 0.25f; }
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
@@ -137,11 +136,11 @@ public class EnemyHealthManager : MonoBehaviour
         if(playerItem.leftItems[146]>0 && source == "left") { dmgTaken *= (1.05f+0.05f * playerItem.leftItems[146])*numOfActiveEffects; }
         if(playerItem.rightItems[146]>0 && source == "right") { dmgTaken *= (1.05f+0.05f * playerItem.rightItems[146])*numOfActiveEffects; }
 
-        if (!textColor.Contains("crit"))
+        if (hit != HitType.ht.crit && hit != HitType.ht.critweak && hit != HitType.ht.special)
         {
             if (activeEffects[11].x > 0 && Random.Range(0,2) == 0) { 
-                if(textColor == "normalHit") { textColor = "critHit"; }
-                if(textColor == "weakHit") { textColor = "critWeakHit"; }
+                if(hit == HitType.ht.normal) { hit = HitType.ht.crit; }
+                if(hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
                 if (source == "left") { dmgTaken *= playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
                 if (source == "right") { dmgTaken *= playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
                 if(playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
@@ -246,7 +245,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
         if(latestDamage != 0)
         {
-            PopUpText(latestDamage.ToString(), textColor, hitLocation, source);
+            PopUpText(latestDamage.ToString(), hit, hitLocation, source);
             gameObject.SendMessage("TookDmg", SendMessageOptions.DontRequireReceiver);
         }
 
@@ -259,7 +258,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakePercentDamage(float pDmgTaken)
     {
-        TakeDamage(curHp * pDmgTaken, true, "normalHit", transform.position, "self");
+        TakeDamage(curHp * pDmgTaken, true, HitType.ht.normal, transform.position, "self");
 
         if (curHp <= 0) { Die(); }
     }
@@ -334,6 +333,8 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectID == 14 || effectGiven == "chemical A") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
         if (effectID == 15 || effectGiven == "chemical B") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
         if (effectID == 16 || effectGiven == "mutated") { activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Mass Mutation
+
+        if(activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, 6f, 6f, -1f); }
     }
     public void RandomDebuff()
     {
@@ -457,14 +458,14 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    void PopUpText(string dmgText, string textColor, Vector3 hitLocation, string source)
+    void PopUpText(string dmgText, HitType.ht hit, Vector3 hitLocation, string source)
     {
         GameObject spawnedText = Instantiate(damageText, player.GetComponentInChildren<Canvas>().gameObject.transform);
 
         //spawnedText.transform.SetParent(player.GetComponentInChildren<Canvas>().gameObject.transform);
 
         spawnedText.gameObject.transform.position = hitLocation;
-        spawnedText.GetComponent<DamageText>().SetText(dmgText, textColor, hitLocation, source);
+        spawnedText.GetComponent<DamageText>().SetText(dmgText, hit, hitLocation, source);
 
         //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }
@@ -539,7 +540,7 @@ public class EnemyHealthManager : MonoBehaviour
             {
                 if(Random.Range(1,100) < 100 - (featherton * 25)) { playerTargeted = true; }
             }
-            if(lowestHP != float.PositiveInfinity && !playerTargeted) { possibleTargets[lowestHPIndex].TakeDamage(latestDamage, true, "normalhit", possibleTargets[lowestHPIndex].transform.position, "self"); Debug.DrawLine(transform.position, possibleTargets[lowestHPIndex].transform.position, Color.red, 1f); }
+            if(lowestHP != float.PositiveInfinity && !playerTargeted) { possibleTargets[lowestHPIndex].TakeDamage(latestDamage, true, HitType.ht.normal, possibleTargets[lowestHPIndex].transform.position, "self"); Debug.DrawLine(transform.position, possibleTargets[lowestHPIndex].transform.position, Color.red, 1f); }
             else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false, this); }
             feathersEffect.SetActive(true);
             feathersEffect.transform.SetParent(null);

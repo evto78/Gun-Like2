@@ -10,6 +10,7 @@ public class DamageText : MonoBehaviour
     public Color critHit;
     public Color weakHit;
     public Color critWeakHit;
+    public Color specialHit;
     public Color badHit;
 
     public Vector3 myRelatieWorldPos;
@@ -28,7 +29,7 @@ public class DamageText : MonoBehaviour
         timer = 2f;
     }
 
-    public void SetText(string sentText, string givenColor, Vector3 worldPos, string source)
+    public void SetText(string sentText, HitType.ht hit, Vector3 worldPos, string source)
     {
         myCamera = Camera.main;
 
@@ -37,25 +38,14 @@ public class DamageText : MonoBehaviour
         tempRounding = Mathf.CeilToInt(tempRounding);
         textDisplay.text = ""+tempRounding;
         myRelatieWorldPos = worldPos;
-        if (givenColor == "normalHit")
+        switch (hit)
         {
-            textDisplay.color = normalHit;
-        }
-        if (givenColor == "critHit")
-        {
-            textDisplay.color = critHit;
-        }
-        if (givenColor == "weakHit")
-        {
-            textDisplay.color = weakHit;
-        }
-        if (givenColor == "critWeakHit")
-        {
-            textDisplay.color = critWeakHit;
-        }
-        if (givenColor == "badHit")
-        {
-            textDisplay.color = badHit;
+            case HitType.ht.normal: textDisplay.color = normalHit; break;
+            case HitType.ht.crit: textDisplay.color = critHit; break;
+            case HitType.ht.weak: textDisplay.color = weakHit; break;
+            case HitType.ht.critweak: textDisplay.color = critWeakHit; break;
+            case HitType.ht.special: textDisplay.color = specialHit; break;
+            case HitType.ht.bad: textDisplay.color = badHit; break;
         }
 
         driftStr = Random.Range(10f, 15f);

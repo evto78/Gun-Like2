@@ -546,7 +546,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
-            if (hasBunny) { healthMan.GiveEffect("bunny hop buff", 1f); }
+            if (hasBunny) { healthMan.GiveEffect(PlayerEffectType.effectName.bunnyHop, 1f); }
             timeSinceGrounded = 0;
             SetMovementState((wasSprinting) ? MoveState.sprint : MoveState.walk);
             fxSetTilt?.Invoke(0);
