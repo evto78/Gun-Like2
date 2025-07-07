@@ -9,6 +9,14 @@ public class SunflowerSun : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, 50f);
+        if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitDwn, 100f))
+        {
+            transform.position = hitDwn.point;
+        }
+        else if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitUp, 100f))
+        {
+            transform.position = hitUp.point;
+        }
         rb = GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
         player = GameObject.Find("Player").transform;
@@ -16,12 +24,14 @@ public class SunflowerSun : MonoBehaviour
     private void FixedUpdate()
     {
         rb.AddForce(Vector3.up * 200f * Time.fixedDeltaTime);
-        rb.AddForce((player.position - transform.position) * 5f);
+        rb.AddForce((player.position - transform.position).normalized * 100f * Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
+            HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+            if (hm.activeEffects[27].x < 30 + (30 * hm.sunflower)) { hm.GiveEffect(PlayerEffectType.effectName.sunny, 30f + (30f * hm.sunflower)); }
             Destroy(gameObject);
         }
     }

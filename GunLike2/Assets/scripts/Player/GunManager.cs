@@ -116,6 +116,7 @@ public class GunManager : MonoBehaviour
     public int leftCritUnfunny;
     public int leftFortify;
     public int leftConfetti;
+    public int leftEndless;
 
     public bool leftRicochet = false;
 
@@ -205,6 +206,7 @@ public class GunManager : MonoBehaviour
     public int rightCritUnfunny;
     public int rightFortify;
     public int rightConfetti;
+    public int rightEndless;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -326,6 +328,7 @@ public class GunManager : MonoBehaviour
         if (effectList[13].x > 0f) { masterAtkSpd = Calc(-10f, givenLeftItems[17] + givenRightItems[17], masterAtkSpd); }
         if (effectList[18].x > 0f) { masterAtkSpd = masterAtkSpd * 1.5f; }
         if (effectList[19].x > 0f) { masterAtkSpd = masterAtkSpd * 2f; }
+        if (effectList[27].x > 0f) { masterDmg *= 2f; }
         //Smoking Gun
         if (effectList[23].x > 0) { masterReSpd *= (1f + (0.2f * givenLeftItems[162] + givenRightItems[162])) * effectList[23].x; }
 
@@ -385,6 +388,8 @@ public class GunManager : MonoBehaviour
             rightAccMult += MultAdder(5f, daEagleIgnoredRight);
             rightBulSpdMult += MultAdder(5f, daEagleIgnoredRight);
         }
+        //Endless Mag
+        leftEndless = givenLeftItems[192]; rightEndless = givenRightItems[192];
         //Left Attack Speed
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[62]);
         leftAtkSpdMult += MultAdder(10f, givenLeftItems[97]);
@@ -454,6 +459,7 @@ public class GunManager : MonoBehaviour
         leftMagSizeMult += MultAdder(20f, givenLeftItems[158]);
         leftMagSizeMult += MultAdder(20f, givenLeftItems[169]);
         leftMagSizeMult += MultAdder(40f, givenLeftItems[184]);
+        leftMagSizeMult += MultAdder(100f, givenLeftItems[192]);
 
         leftMagSizeDiv += MultAdder(-50f, givenLeftItems[21]);
         leftMagSizeDiv += MultAdder(-40f, givenLeftItems[25]);
@@ -662,6 +668,7 @@ public class GunManager : MonoBehaviour
         rightMagSizeMult += MultAdder(20f, givenRightItems[158]);
         rightMagSizeMult += MultAdder(20f, givenRightItems[169]);
         rightMagSizeMult += MultAdder(40f, givenRightItems[184]);
+        rightMagSizeMult += MultAdder(100f, givenRightItems[192]);
 
         rightMagSizeDiv += MultAdder(-50f, givenRightItems[21]);
         rightMagSizeDiv += MultAdder(-40f, givenRightItems[25]);
@@ -801,6 +808,8 @@ public class GunManager : MonoBehaviour
         if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
         if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
         if (givenRightItems[135] > 0f) { float upBuff = 1 + ((transform.position.y / 50f) * 2f); if (upBuff > 2f) { upBuff = 2f; } ; rightDmg *= upBuff; }
+        //endless mag
+        if(leftEndless > 0) { leftMagSizeMult *= 2f; } if(rightEndless > 0) { rightMagSizeMult *= 2; }
         //Apply Mult
         leftAtkSpd *= leftAtkSpdMult; leftAtkSpd /= leftAtkSpdDiv; rightAtkSpd *= rightAtkSpdMult; rightAtkSpd /= rightAtkSpdDiv;
         leftReSpd *= leftReSpdMult; leftReSpd /= leftReSpdDiv; rightReSpd *= rightReSpdMult; rightReSpd /= rightReSpdDiv;

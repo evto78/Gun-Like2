@@ -99,13 +99,13 @@ public class PlayerItem : MonoBehaviour
     bool changedLastFrame;
     private void Awake()
     {
+        leftItems = new List<int>(); rightItems = new List<int>();
         itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
         SortItemData();
 
         uiManager = gameObject.GetComponent<UIManager>();
 
-        LoadRarites();
         LoadCategories();
     }
     void SortItemData()
@@ -119,7 +119,7 @@ public class PlayerItem : MonoBehaviour
         }
         itemData = sortedItemData;
     }
-    void LoadRarites()
+    void LoadCategories()
     {
         commonItems = new List<int>();
         uncommonItems = new List<int>();
@@ -130,31 +130,40 @@ public class PlayerItem : MonoBehaviour
         irradiatedItems = new List<int>();
         nuclearItems = new List<int>();
         rarityList = new List<List<int>>();
+
+        gunLike1Items = new List<int>();
+        sponserItems = new List<int>();
+        fishItems = new List<int>();
+        unstableItems = new List<int>();
+        horrorItems = new List<int>();
+        cooldownItems = new List<int>();
+
         foreach(ItemObject item in itemData)
         {
-            if(item.rarity.ToString() == "Common") { commonItems.Add(item.id); }
-            if(item.rarity.ToString() == "Uncommon") { uncommonItems.Add(item.id); }
-            if(item.rarity.ToString() == "Rare") { rareItems.Add(item.id); }
-            if(item.rarity.ToString() == "Legendary") { legendaryItems.Add(item.id); }
-            if(item.rarity.ToString() == "Mutated") { mutatedItems.Add(item.id); }
-            if(item.rarity.ToString() == "Haunted") { hauntedItems.Add(item.id); }
-            if(item.rarity.ToString() == "Irradiated") { irradiatedItems.Add(item.id); }
-            if(item.rarity.ToString() == "Nuclear") { nuclearItems.Add(item.id); }
-            if(item.rarity.ToString() == "Unique") { uniqueItems.Add(item.id); }
+            leftItems.Add(0);rightItems.Add(0);
+            switch (item.rarity)
+            {
+                case ItemObject.rarityType.Common: commonItems.Add(item.id); break;
+                case ItemObject.rarityType.Uncommon: uncommonItems.Add(item.id); break;
+                case ItemObject.rarityType.Rare: rareItems.Add(item.id); break;
+                case ItemObject.rarityType.Legendary: legendaryItems.Add(item.id); break;
+                case ItemObject.rarityType.Mutated: mutatedItems.Add(item.id); break;
+                case ItemObject.rarityType.Haunted: hauntedItems.Add(item.id); break;
+                case ItemObject.rarityType.Irradiated: irradiatedItems.Add(item.id); break;
+                case ItemObject.rarityType.Nuclear: nuclearItems.Add(item.id); break;
+                case ItemObject.rarityType.Unique: uniqueItems.Add(item.id); break;
+            }
+            switch (item.subType)
+            {
+                case ItemObject.itemType.classic: gunLike1Items.Add(item.id); break;
+                case ItemObject.itemType.sponser: sponserItems.Add(item.id); break;
+                case ItemObject.itemType.fish: fishItems.Add(item.id); break;
+                case ItemObject.itemType.unstablePart: unstableItems.Add(item.id); break;
+                case ItemObject.itemType.horror: horrorItems.Add(item.id); break;
+            }
+            if (item.cooldownItem) { cooldownItems.Add(item.id); }
         }
         rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
-    }
-    void LoadCategories()
-    {
-        foreach(ItemObject item in itemData)
-        {
-            if(item.subType.ToString() == "classic") { gunLike1Items.Add(item.id); }
-            if(item.subType.ToString() == "sponser") { sponserItems.Add(item.id); }
-            if(item.subType.ToString() == "fish") { fishItems.Add(item.id); }
-            if(item.subType.ToString() == "unstablePart") { unstableItems.Add(item.id); }
-            if (item.cooldownItem) { cooldownItems.Add(item.id); }
-            if(item.subType.ToString() == "horror") { horrorItems.Add(item.id); }
-        }
     }
     private void Update()
     {
@@ -214,26 +223,33 @@ public class PlayerItem : MonoBehaviour
     public void OnItemGain(int id, int amount, string hand)
     {
         popupUI.CreateNotif(id, amount);
-        if(id == 69 || id == 70 || id == 71 || id == 72)
+        switch (id)
         {
-            uiManager.VisionOfGunky();
+            case 69: uiManager.VisionOfGunky(); break;
+            case 70: uiManager.VisionOfGunky(); break;
+            case 71: uiManager.VisionOfGunky(); break;
+            case 72: uiManager.VisionOfGunky(); break;
+            case 175:
+                if (hand == "left") { for (int i = 0; i < 50 * amount; i++) { gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); } }
+                if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); } }
+                break;
+            case 186: healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); break;
+            case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[173]) + (50f * rightItems[173])); break;
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
-        for (int i = 0; i < amount; i++)
+        if((leftItems[97]+ leftItems[98]+ leftItems[99] + leftItems[100])+(rightItems[97] + rightItems[98] + rightItems[99] + rightItems[100]) > 0)
         {
-            if (Random.Range(1, 100) < 5 && leftItems[97] > 0 && hand == "left") { leftItems[97]--; }
-            if (Random.Range(1, 100) < 5 && leftItems[98] > 0 && hand == "left") { leftItems[98]--; }
-            if (Random.Range(1, 100) < 5 && leftItems[99] > 0 && hand == "left") { leftItems[99]--; }
-            if (Random.Range(1, 100) < 5 && leftItems[100] > 0 && hand == "left") { leftItems[100]--; }
-            if (Random.Range(1, 100) < 5 && rightItems[97] > 0 && hand == "right") { rightItems[97]--; }
-            if (Random.Range(1, 100) < 5 && rightItems[98] > 0 && hand == "right") { rightItems[98]--; }
-            if (Random.Range(1, 100) < 5 && rightItems[99] > 0 && hand == "right") { rightItems[99]--; }
-            if (Random.Range(1, 100) < 5 && rightItems[100] > 0 && hand == "right") { rightItems[100]--; }
-        }
-        if(id == 175)
-        {
-            if(hand == "left"){for(int i = 0; i < 50 * amount; i++) { gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); }}
-            if(hand == "right"){for(int i = 0; i < 50 * amount; i++) { gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); }}
+            for (int i = 0; i < amount; i++)
+            {
+                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[97]--; }
+                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[98]--; }
+                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[99]--; }
+                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[100]--; }
+                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[97]--; }
+                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[98]--; }
+                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[99]--; }
+                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[100]--; }
+            }
         }
     }
     public void ItemPressedInInv(int id, string hand)
@@ -421,6 +437,7 @@ public class PlayerItem : MonoBehaviour
                     if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
+                    if(id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
                 }
                 if (Input.GetKeyDown(KeyCode.Q) || (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift)))
                 {
@@ -429,6 +446,7 @@ public class PlayerItem : MonoBehaviour
                     if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (rightItems[86] > 0) { rightItems[id] += 1; rightItems[86]--; }
+                    if(id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
                 }
             }
             else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))
@@ -729,6 +747,7 @@ public class PlayerItem : MonoBehaviour
         else if (id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
         else if (id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
         else if (id == 155) { info = new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown/2f) +(60f/healthManager.divineInter)); }//divine intervention
+        else if (id == 186) { info = new Vector2(healthManager.sunflowerTimer, FindObjByID(id).baseCooldown); }//sunflower
 
         //Debug.Log("ID: " + id + " | " + info);
         return info;

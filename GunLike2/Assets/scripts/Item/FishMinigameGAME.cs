@@ -73,9 +73,8 @@ public class FishMinigameGAME : MonoBehaviour
             for (int i = 0; i < numOfItems; i++)
             {
                 itemsSpawned++;
-                int rand = Random.Range(1, 101);
 
-                SpawnItem(8);
+                SpawnItem();
             }
         }
     }
@@ -112,19 +111,12 @@ public class FishMinigameGAME : MonoBehaviour
         score += rarity*5;
         scoreTxt.text = score.ToString();
     }
-    private void SpawnItem(int iD)
+    private void SpawnItem()
     {
-        List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
+        PlayerItem pi = player.GetComponent<PlayerItem>();
 
-        GameObject spawnedItem;
-        spawnedItem = Instantiate(itemPossibility);
-        spawnedItem.transform.position = spawnPos.position;
-        spawnedItem.GetComponent<Rigidbody>().AddForce(spawnPos.transform.forward * Random.Range(100f, 150f));
-        spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
-        spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
-        spawnedItem.GetComponent<ItemPossibility>().overrideid = true;
-        spawnedItem.GetComponent<ItemPossibility>().idover = player.GetComponent<PlayerItem>().fishItems[Random.Range(0, player.GetComponent<PlayerItem>().fishItems.Count)];
-
-        spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
+        int rand = Random.Range(1, 11);
+        if (rand == 1) { pi.SpawnItem(190, true, 8, true); }//SUPERFISH! (not listed as a fish on purpose)
+        else { pi.SpawnItem(pi.fishItems[Random.Range(0, pi.fishItems.Count)], true, 8, true); }
     }
 }

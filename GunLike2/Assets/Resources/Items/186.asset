@@ -14,18 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 186
   itemName: Sunflower
-  rarity: 8
+  rarity: 7
   itemSprite: {fileID: 21300000, guid: e1f6c4114d654d444a18e38fa326af0b, type: 3}
-  cooldownItem: 0
-  baseCooldown: 0
+  cooldownItem: 1
+  baseCooldown: 50
   globalItem: 0
   subType: 0
-  effect: 
-  buff: 
-  debuff: 
-  effectSum: Not Built
-  buffSum: 
-  debuffSum: 
-  flavor: 
+  effect: Suns will periodicly spawn around you, picking one up brings you to 60
+    stacks of "Sunny" if you were below that. While having stacks of "Sunny" take
+    half damage and deal double damage. But when you have no stacks of "Sunny", rapidly
+    decay your Max Hp. On pickup, gain 120 stacks of "Sunny". Stacks make each sun
+    give more stacks of "Sunny". stacks of "Sunny" decay at a rate of 1 per second.
+  buff: '-'
+  debuff: '-'
+  effectSum: Suns will periodicly spawn around you, picking one up brings you to
+    60 stacks of "Sunny" if you were below that. While having stacks of "Sunny" take
+    half damage and deal double damage. But when you have no stacks of "Sunny", rapidly
+    decay your Max Hp. On pickup, gain 120 stacks of "Sunny".
+  buffSum: '-'
+  debuffSum: '-'
+  flavor: "I don\u2019t know how Dave got them to fall from the sky, so this is what
+    you get."
   ideaCredit: 
-  flavorCredit: 
+  flavorCredit: Buluuark (farmer)

@@ -61,9 +61,14 @@ public class HealthManager : MonoBehaviour
 	bool leftSpongeStone; bool rightSpongeStone;
 	public int massMutation;
 	public int ionParticle;
+	public int sunflower;
+	public float sunflowerTimer;
+	public GameObject sunflowerSun;
+	public int pufferfish;
 
 	public int appleBuff;
 	public float fortifyBuff;
+	public float sunflowerDebuff;
 
 	public float timeSinceEnemyDied;
 
@@ -108,6 +113,7 @@ public class HealthManager : MonoBehaviour
 		healthRegen = baseHealthRegen;
 		armor = baseArmor;
 		maxHp = baseMaxHP + appleBuff + Mathf.CeilToInt(fortifyBuff);
+		maxHp -= Mathf.CeilToInt(sunflowerDebuff);
 		//Before Mult
 		leftSpongeStone = givenLeftItems[167]>0; rightSpongeStone = givenRightItems[167]>0;
 		//Health Regen
@@ -188,6 +194,7 @@ public class HealthManager : MonoBehaviour
 		depleatedRock = 0 + givenLeftItems[166] + givenRightItems[166];
 		ionParticle = 0 + givenLeftItems[181] + givenRightItems[181];
 		wishes = 0 + givenLeftItems[183] + givenRightItems[183];
+		sunflower = 0 + givenLeftItems[186] + givenRightItems[186];
 		//Applying Mult
 		healthRegen *= healthRegenMult; healthRegen /= healthRegenDiv;
 		armor *= armorMult; armor /= armorDiv;
@@ -534,6 +541,34 @@ public class HealthManager : MonoBehaviour
                 }
             }
         }
+
+		if(sunflower > 0)
+        {
+			sunflowerTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
+			if(sunflowerTimer < 0)
+            {
+				GameObject spawnedSun = Instantiate(sunflowerSun);
+				spawnedSun.transform.position = transform.position + new Vector3(Random.Range(-25f, 25f), 0f, Random.Range(-25f, 25f));
+				sunflowerTimer = 50f;
+            }
+			if(activeEffects[27].x < 1) { sunflowerDebuff += Time.deltaTime * 2f; }
+        }
+
+		if(playerItem.leftItems[190] > 0) {
+			switch (Random.Range(0, 2)) 
+			{case 0: playerItem.SpawnItem(0, false, 3, true); break;
+			case 1: playerItem.SpawnItem(0, false, 7, true); break;}
+			playerItem.SpawnItem(0, false, 0, false);
+			playerItem.SpawnItem(0, false, 0, false);
+			playerItem.leftItems[190]--; }
+		if(playerItem.rightItems[190] > 0) {
+			switch (Random.Range(0, 2))
+			{case 0: playerItem.SpawnItem(0, false, 3, true); break;
+			case 1: playerItem.SpawnItem(0, false, 7, true); break;}
+			playerItem.SpawnItem(0, false, 0, false);
+			playerItem.SpawnItem(0, false, 0, false);
+			playerItem.rightItems[190]--;
+		}
 	}
 	void WishSmite()
     {
@@ -560,11 +595,12 @@ public class HealthManager : MonoBehaviour
 			//Heal
 			curHp -= damageTaken;
 
-            if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockDebuff, Mathf.RoundToInt((-damageTaken) / (2f / depleatedRock))); }
+			if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockDebuff, Mathf.RoundToInt((-damageTaken) / (2f / depleatedRock))); }
 		}
 		else
 		{
-            if (Random.Range(1, 100) < evadeChance) { return; }
+			if (Random.Range(1, 100) < evadeChance) { return; }
+			if(activeEffects[27].x>0){ damageTaken /= 2f; }
 			//Damage
 			if (source != null) { lastHitMe = source; }
 			if (damageTaken <= tempArmor)
@@ -618,6 +654,11 @@ public class HealthManager : MonoBehaviour
 			if(source != null && (leftSpongeStone || rightSpongeStone))
             {
 				source.QueStandardDamage(armor / 4f);
+            }
+
+			if(pufferfish > 0)
+            {
+				source.QueStandardDamage(armor * (1 + pufferfish));
             }
 		}
 
@@ -764,6 +805,7 @@ public class HealthManager : MonoBehaviour
 					case 24: strToAdd = "depleated rock buff"; break;
 					case 25: strToAdd = "depleated rock debuff"; break;
 					case 26: strToAdd = "chaos engine"; break;
+					case 27: strToAdd = "sunny"; break;
 				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
