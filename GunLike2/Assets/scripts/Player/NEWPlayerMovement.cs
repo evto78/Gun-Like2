@@ -252,7 +252,7 @@ public class NEWPlayerMovement : MonoBehaviour
 
         if (!onGround && !hscSpawned)
         {
-            if (DistanceToGround() > 200)
+            if (transform.position.y > 200)
             {
                 playerItem.SpawnItem(188, true, 8, true);
                 hscSpawned = true;
