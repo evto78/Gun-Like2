@@ -234,7 +234,7 @@ public class PlayerItem : MonoBehaviour
                 if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); } }
                 break;
             case 186: healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); break;
-            case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[173]) + (50f * rightItems[173])); break;
+            case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[177]) + (50f * rightItems[177])); break;
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         if((leftItems[97]+ leftItems[98]+ leftItems[99] + leftItems[100])+(rightItems[97] + rightItems[98] + rightItems[99] + rightItems[100]) > 0)
@@ -710,47 +710,56 @@ public class PlayerItem : MonoBehaviour
     }
     public int FindRarityByID(int id)
     {
-        for(int i = 0; i < rarityList.Count; i++)
-        {
-            if (rarityList[i].Contains(id)) { return i; }
-        }
-        return 0;
+        return itemData[id].rarity.GetHashCode();
     }
     public Vector2 GetCooldownInfo(int id, string hand)
     {
         //x is cur y is max
-        Vector2 info = Vector2.zero;
-
-        //gun manager
-        if(id == 14 && hand == "left") { info = new Vector2(gunManager.leftMutatedCellTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 10f + 1f)); }//mutatedCell
-        else if(id == 14 && hand == "right") { info = new Vector2(gunManager.rightMutatedCellTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 10f + 1f)); }//mutatedCell
-        else if (id == 24 && hand == "left") { info = new Vector2(gunManager.leftHungryParasiteTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 2f + 1f)); }//hungryhungryparasite
-        else if (id == 24 && hand == "right") { info = new Vector2(gunManager.rightHungryParasiteTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 2f + 1f)); }//hungryhungryparasite
-        else if (id == 33 && hand == "left") { info = new Vector2(gunManager.leftFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * leftItems[id])); }//fastinserter
-        else if (id == 33 && hand == "right") { info = new Vector2(gunManager.rightFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * rightItems[id])); }//fastinserter
-        else if (id == 42 && hand == "left") { info = new Vector2(gunManager.leftSponTimer, FindObjByID(id).baseCooldown); }//spondeal
-        else if (id == 42 && hand == "right") { info = new Vector2(gunManager.rightSponTimer, FindObjByID(id).baseCooldown); }//spondeal
-        else if (id == 58) { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown); }//lifetime egg
-        else if (id == 71) { info = new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown); }//gunky axe
-        else if (id == 88 && hand == "left") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown); }//printer
-        else if (id == 88 && hand == "right") { info = new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown); }//printer
-        else if (id == 103 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
-        else if (id == 103 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown); }//sniper
-        else if (id == 106 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
-        else if (id == 106 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown); }//pumpshotgun
-        else if (id == 107 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
-        else if (id == 107 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown); }//grenade
-        else if (id == 108 && hand == "left") { info = new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
-        else if (id == 108 && hand == "right") { info = new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown); }//gasGrenade
-        else if (id == 170) { info = new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown); }//overCentri
-        // health manager
-        else if (id == 17) { info = new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown); }//organic gumball
-        else if (id == 114) { info = new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown); }//chickencoop
-        else if (id == 155) { info = new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown/2f) +(60f/healthManager.divineInter)); }//divine intervention
-        else if (id == 186) { info = new Vector2(healthManager.sunflowerTimer, FindObjByID(id).baseCooldown); }//sunflower
-
-        //Debug.Log("ID: " + id + " | " + info);
-        return info;
+        if(hand == "left")
+        {
+            switch (id)
+            {
+                case 14: return new Vector2(gunManager.leftMutatedCellTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 10f + 1f));
+                case 24: return new Vector2(gunManager.leftHungryParasiteTimer, FindObjByID(id).baseCooldown / (leftItems[id] / 2f + 1f));
+                case 33: return new Vector2(gunManager.leftFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * leftItems[id]));
+                case 42: return new Vector2(gunManager.leftSponTimer, FindObjByID(id).baseCooldown);
+                case 58: return new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown);
+                case 71: return new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown);
+                case 88: return new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown);
+                case 103: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown);
+                case 106: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
+                case 107: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 108: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 170: return new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown);
+                case 17: return new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown);
+                case 114: return new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown);
+                case 155: return new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown / 2f) + (60f / healthManager.divineInter));
+                case 186: return new Vector2(healthManager.sunflowerTimer, FindObjByID(id).baseCooldown);
+            }
+        }
+        else
+        {
+            switch (id)
+            {
+                case 14: return new Vector2(gunManager.rightMutatedCellTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 10f + 1f));
+                case 24: return new Vector2(gunManager.rightHungryParasiteTimer, FindObjByID(id).baseCooldown / (rightItems[id] / 2f + 1f));
+                case 33: return new Vector2(gunManager.rightFastInserterTimer, FindObjByID(id).baseCooldown / (0.2f * rightItems[id]));
+                case 42: return new Vector2(gunManager.rightSponTimer, FindObjByID(id).baseCooldown);
+                case 58: return new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown);
+                case 71: return new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown);
+                case 88: return new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown);
+                case 103: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown);
+                case 106: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
+                case 107: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 108: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 170: return new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown);
+                case 17: return new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown);
+                case 114: return new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown);
+                case 155: return new Vector2(healthManager.divineTimer, (FindObjByID(id).baseCooldown / 2f) + (60f / healthManager.divineInter));
+                case 186: return new Vector2(healthManager.sunflowerTimer, FindObjByID(id).baseCooldown);
+            }
+        }
+        return Vector2.zero;
     }
 }
 

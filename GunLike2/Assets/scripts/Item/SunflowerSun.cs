@@ -9,11 +9,11 @@ public class SunflowerSun : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, 50f);
-        if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitDwn, 100f))
+        if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitDwn, 300f))
         {
             transform.position = hitDwn.point;
         }
-        else if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitUp, 100f))
+        else if(Physics.Raycast(new Ray(transform.position, -Vector3.up), out RaycastHit hitUp, 300f))
         {
             transform.position = hitUp.point;
         }

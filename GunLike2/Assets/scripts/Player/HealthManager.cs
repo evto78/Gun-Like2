@@ -548,7 +548,7 @@ public class HealthManager : MonoBehaviour
 			if(sunflowerTimer < 0)
             {
 				GameObject spawnedSun = Instantiate(sunflowerSun);
-				spawnedSun.transform.position = transform.position + new Vector3(Random.Range(-25f, 25f), 0f, Random.Range(-25f, 25f));
+				spawnedSun.transform.position = transform.position + new Vector3(Random.Range(-25f, 25f), 100f, Random.Range(-25f, 25f));
 				sunflowerTimer = 50f;
             }
 			if(activeEffects[27].x < 1) { sunflowerDebuff += Time.deltaTime * 2f; }
