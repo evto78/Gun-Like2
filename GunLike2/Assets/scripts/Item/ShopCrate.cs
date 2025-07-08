@@ -37,19 +37,11 @@ public class ShopCrate : MonoBehaviour
         bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
         if (limestoneScale)
         {
-            rand = Random.Range(0, 8);
-            rarityID = rand;
+            rarityID = ItemRarity.GetUnWeightedRandRarity();
         }
         else
         {
-            if (rand < 71) { rarityID = 0; }
-            if (rand < 91 && rand > 70) { rarityID = 1; }
-            if (rand == 91 || rand == 92) { rarityID = 2; }
-            if (rand == 93 || rand == 94) { rarityID = 4; }
-            if (rand == 95 || rand == 96) { rarityID = 5; }
-            if (rand == 97 || rand == 98) { rarityID = 6; }
-            if (rand == 99) { rarityID = 3; }
-            if (rand == 100) { rarityID = 7; }
+            rarityID = ItemRarity.GetWeightedRandRarity();
         }
         int temp = rarityID;
 

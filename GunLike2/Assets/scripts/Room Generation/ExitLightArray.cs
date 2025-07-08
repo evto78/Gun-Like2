@@ -25,9 +25,15 @@ public class ExitLightArray : MonoBehaviour
 
         for(float i = 1; i < lights.Count+1; i++)
         {
-            lights[Mathf.RoundToInt(i-1)].intensity = Mathf.Clamp(curve.Evaluate(((Mathf.Clamp(timer, (i-1f)/numOfLights, (i)/numOfLights))*6f)/i) * maxIntensity, minIntensity, maxIntensity);
+            float min = (i - 1f) / numOfLights;
+            float max = (i + 1f) / numOfLights;
+            float relativeTimer = Mathf.Clamp(timer, min, max);
+            relativeTimer = ((((relativeTimer/numOfLights)/max)*numOfLights*((min)-(relativeTimer))) * -1f)*10f;
+            float curvePos = curve.Evaluate(relativeTimer);
+
+            lights[Mathf.RoundToInt(i-1)].intensity = Mathf.Clamp(curvePos * maxIntensity, minIntensity, maxIntensity);
         }
 
-        if(timer >= 1) { timer = 0f; }
+        if(timer >= 1f+(1f/numOfLights)) { timer = 0f; }
     }
 }

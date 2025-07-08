@@ -15,6 +15,7 @@ public class VelocityTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(txt == null) { return; }
         txt.text = Mathf.Round(rb.velocity.magnitude).ToString();
     }
 }

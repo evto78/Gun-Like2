@@ -40,26 +40,15 @@ public class ItemContainer : MonoBehaviour
 
         costTxt.text = cost.ToString() + "$";
 
-        int rand = Random.Range(1, 101);
-        int rarityID = 0;
         bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
         if (limestoneScale)
         {
-            rand = Random.Range(0, 8);
-            rarityID = rand;
+            rarity = ItemRarity.GetUnWeightedRandRarity();
         }
         else
         {
-            if (rand < 71) { rarityID = 0; }
-            if (rand < 91 && rand > 70) { rarityID = 1; }
-            if (rand == 91 || rand == 92) { rarityID = 2; }
-            if (rand == 93 || rand == 94) { rarityID = 4; }
-            if (rand == 95 || rand == 96) { rarityID = 5; }
-            if (rand == 97 || rand == 98) { rarityID = 6; }
-            if (rand == 99) { rarityID = 3; }
-            if (rand == 100) { rarityID = 7; }
+            rarity = ItemRarity.GetWeightedRandRarity();
         }
-        rarity = rarityID;
 
         if (player.GetComponent<PlayerItem>().leftItems[142] + player.GetComponent<PlayerItem>().rightItems[142] > 0) { rarity = 8; }
 
@@ -108,20 +97,22 @@ public class ItemContainer : MonoBehaviour
         if(pi.healthManager.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * pi.healthManager.ionParticle) { int rand = Random.Range(5, 20); numOfItems += rand; Debug.Log("Miracle of: "+rand); }
 
         itemsSpawned = 0;
-        for(int i = 0; i < numOfItems; i++)
+        bool limestoneScale = pi.leftItems[178] + pi.rightItems[178] > 0;
+        if (limestoneScale)
         {
-            itemsSpawned++;
-            int rand = Random.Range(1, 101);
-            List<List<int>> raritys = player.GetComponent<PlayerItem>().rarityList;
-            if (i == 0) { SpawnItem(rarity); rand = 999; }
-            if (rand < 71) { SpawnItem(0); }
-            if (rand < 91 && rand > 70) { SpawnItem(1); }
-            if (rand == 91 || rand == 92) { SpawnItem(2); }
-            if (rand == 93 || rand == 94) { SpawnItem(4); }
-            if (rand == 95 || rand == 96) { SpawnItem(5); }
-            if (rand == 97 || rand == 98) { SpawnItem(6); }
-            if (rand == 99) { SpawnItem(3); }
-            if (rand == 100) { SpawnItem(7); }
+            for (int i = 0; i < numOfItems; i++)
+            {
+                itemsSpawned++;
+                SpawnItem(ItemRarity.GetUnWeightedRandRarity());
+            }
+        }
+        else
+        {
+            for (int i = 0; i < numOfItems; i++)
+            {
+                itemsSpawned++;
+                SpawnItem(ItemRarity.GetWeightedRandRarity());
+            }
         }
 
         Destroy(costTxt.transform.gameObject);

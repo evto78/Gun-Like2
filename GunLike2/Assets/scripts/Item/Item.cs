@@ -17,12 +17,12 @@ public class Item : MonoBehaviour
 
     public GameObject player;
     PlayerItem playerItem;
+    public TrailRenderer trail;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        //rb.useGravity = true;
         rb.isKinematic = false;
 
         player = GameObject.FindWithTag("Player");
@@ -32,28 +32,18 @@ public class Item : MonoBehaviour
 
     public void SetItemID(int givenID)
     {
-        //happens b4 start
-        //Debug.Log("spawning item: " + givenID);
         itemObj = Resources.Load<ItemObject>("Items/"+givenID.ToString());
         itemID = givenID;
         sr.sprite = itemObj.itemSprite;
         if (player == null){player = GameObject.FindWithTag("Player");}
         playerItem = player.GetComponent<PlayerItem>();
-
-        for (int i = 0; i < playerItem.rarityList.Count; i++)
-        {
-            if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; }
-        }
+        mr.material = backgroundList[playerItem.FindRarityByID(itemID)];
+        trail.material = mr.material;
     }
 
     public int WhatItem()
     {
         return itemID;
-    }
-
-    public void StayStill()
-    {
-        //rb.velocity = Vector3.zero;
     }
 
     private void Update()

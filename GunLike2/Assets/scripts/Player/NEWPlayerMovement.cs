@@ -532,18 +532,4 @@ public class NEWPlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z);
         }
     }
-
-    float DistanceToGround()
-    {
-        float dist = 0f;
-
-        Ray ray = new Ray(transform.position, -Vector3.up);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 300f, LayerMask.GetMask("Default")))
-        {
-            dist = Vector3.Distance(transform.position, hit.point);
-        }
-
-        return dist;
-    }
 }
