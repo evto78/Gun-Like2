@@ -59,7 +59,7 @@ public class GunScript : MonoBehaviour
     public int multistage;
     public bool nerfedBul;
     public bool stickTo;
-    public bool gunkyBlessed;
+    public int gunkyBlessed;
     public int gunkyClaw;
     public int sniperTower;
     public float sniperTowerCooldown;
@@ -188,7 +188,7 @@ public class GunScript : MonoBehaviour
         multistage = manager.leftMultistage;
         nerfedBul = manager.leftNerf > 0;
         stickTo = manager.leftStickTo > 0;
-        gunkyBlessed = Random.Range(0, 100) < manager.leftGunkyBless * 20f;
+        gunkyBlessed = manager.leftGunkyBless;
         gunkyClaw = manager.leftGunkyClaw;
         sniperTower = manager.leftSniperTower;
         perfectedScope = manager.leftPerfectedScope;
@@ -286,7 +286,7 @@ public class GunScript : MonoBehaviour
         multistage = manager.rightMultistage;
         nerfedBul = manager.rightNerf > 0;
         stickTo = manager.rightStickTo > 0;
-        gunkyBlessed = Random.Range(0, 100) < manager.rightGunkyBless * 20f;
+        gunkyBlessed = manager.rightGunkyBless;
         gunkyClaw = manager.rightGunkyClaw;
         sniperTower = manager.rightSniperTower;
         perfectedScope = manager.rightPerfectedScope;

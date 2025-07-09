@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     public ItemObject itemObj;
 
     public List<Material> backgroundList = new List<Material>();
-
+    public List<Color> shineColors;
     public int itemID;
     Rigidbody rb;
     public SpriteRenderer sr;
@@ -18,6 +18,7 @@ public class Item : MonoBehaviour
     public GameObject player;
     PlayerItem playerItem;
     public TrailRenderer trail;
+    public ParticleSystem ps;
 
     private void Start()
     {
@@ -37,8 +38,11 @@ public class Item : MonoBehaviour
         sr.sprite = itemObj.itemSprite;
         if (player == null){player = GameObject.FindWithTag("Player");}
         playerItem = player.GetComponent<PlayerItem>();
-        mr.material = backgroundList[playerItem.FindRarityByID(itemID)];
+        int rarity = playerItem.FindRarityByID(itemID);
+        mr.material = backgroundList[rarity];
         trail.material = mr.material;
+        ParticleSystem.MainModule psm = ps.main;
+        psm.startColor = new ParticleSystem.MinMaxGradient(new Color(1,1,1,0), shineColors[rarity]);
     }
 
     public int WhatItem()
@@ -58,6 +62,7 @@ public class Item : MonoBehaviour
                 if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; }
             }
         }
+        if (rb.isKinematic) { rb.AddForce(-Vector3.up * 50f, ForceMode.Impulse); }
     }
     public void Taken()
     {

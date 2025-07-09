@@ -118,7 +118,7 @@ public class BulletScript : MonoBehaviour
     public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd,
         float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
-        float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, bool isGunk, int givenGunkClaw)
+        float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, int isGunk, int givenGunkClaw)
     {
         if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
@@ -127,7 +127,7 @@ public class BulletScript : MonoBehaviour
         if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; coolSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; fastSponEffect.SetActive(true); }
         if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); }
-        isGunky = isGunk;
+        isGunky = Random.Range(1,100)<isGunk*20f;
 
         whatHandThisComesFrom = whatHand;
         gunFiredFrom = firedFrom;
@@ -559,6 +559,6 @@ public class BulletScript : MonoBehaviour
     void SetBulletStats(GameObject bullet)
     {
         bullet.GetComponent<BulletScript>().setStats(null, damage, isCrit, pierce + 1, isAutoWeak, weakDamage, bulSpd, 1, ricochet, whatHandThisComesFrom, myIsHeavy, heavySpirits, nuclearBullets, 0, jam
-            , 0, 0, 0, 0, 0, 0, 0, 0, multistage, isGunky, gunkyClaw);
+            , 0, 0, 0, 0, 0, 0, 0, 0, multistage, 0, gunkyClaw);
     }
 }
