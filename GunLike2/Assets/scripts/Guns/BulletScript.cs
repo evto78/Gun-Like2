@@ -110,7 +110,7 @@ public class BulletScript : MonoBehaviour
     private void Update()
     {
         if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
-        transform.rotation = Quaternion.LookRotation(rb.velocity);
+        if (rb.velocity.magnitude != 0){ transform.rotation = Quaternion.LookRotation(rb.velocity); }
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
 
         if((whatHandThisComesFrom == "left" && pi.leftItems[119] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[119] > 0)) { if (rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); } turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f; }

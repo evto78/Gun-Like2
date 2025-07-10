@@ -372,6 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1516022573984075751}
+  - component: {fileID: 6190871140046616630}
   m_Layer: 0
   m_Name: Fishing Dock
   m_TagString: Ground
@@ -388,7 +389,7 @@ Transform:
   m_GameObject: {fileID: 706108583656459320}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.02, y: 0.039, z: -32.11}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -399,6 +400,20 @@ Transform:
   - {fileID: 8654471931565394650}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6190871140046616630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706108583656459320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aca3562861cc2649ba2ccbae9ab4710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footprint: 8
+  flatten: 1
 --- !u!1 &755854855802964295
 GameObject:
   m_ObjectHideFlags: 0

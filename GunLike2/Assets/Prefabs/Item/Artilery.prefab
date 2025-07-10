@@ -5082,6 +5082,7 @@ GameObject:
   - component: {fileID: 8743238747351890315}
   - component: {fileID: 8693043988669905749}
   - component: {fileID: 7151889944799130313}
+  - component: {fileID: 6655705591894509297}
   m_Layer: 0
   m_Name: Artilery
   m_TagString: Interactable
@@ -5097,7 +5098,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639746699381135530}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.13052624, y: 0, z: 0, w: 0.9914449}
   m_LocalPosition: {x: -13.59, y: 2.96, z: 4.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5118,7 +5119,7 @@ Transform:
   - {fileID: 4936319122897966946}
   - {fileID: 3059071672392043213}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -15, y: 0, z: 0}
 --- !u!114 &6529432607367574957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5221,6 +5222,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   affectedObject: {fileID: 2627959920215108297}
   renDistance: 10
+--- !u!114 &6655705591894509297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639746699381135530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aca3562861cc2649ba2ccbae9ab4710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footprint: 2
+  flatten: 0
 --- !u!1 &812207313682691359
 GameObject:
   m_ObjectHideFlags: 0

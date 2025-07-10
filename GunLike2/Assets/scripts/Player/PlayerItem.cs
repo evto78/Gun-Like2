@@ -230,8 +230,8 @@ public class PlayerItem : MonoBehaviour
             case 71: uiManager.VisionOfGunky(); break;
             case 72: uiManager.VisionOfGunky(); break;
             case 175:
-                if (hand == "left") { for (int i = 0; i < 50 * amount; i++) { gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); } }
-                if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().addBullet(); } }
+                if (hand == "left") { for (int i = 0; i < 50 * amount; i++) { gunManager.leftGunScript.addBullet(); } }
+                if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightGunScript.addBullet(); } }
                 break;
             case 186: healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); break;
             case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[177]) + (50f * rightItems[177])); break;
@@ -716,10 +716,10 @@ public class PlayerItem : MonoBehaviour
                 case 58: return new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown);
                 case 71: return new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown);
                 case 88: return new Vector2(FindObjByID(id).baseCooldown - gunManager.leftPrinterTimer, FindObjByID(id).baseCooldown);
-                case 103: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown);
-                case 106: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
-                case 107: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown);
-                case 108: return new Vector2(gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 103: return new Vector2(gunManager.leftGunScript.sniperTowerCooldown, FindObjByID(id).baseCooldown);
+                case 106: return new Vector2(gunManager.leftGunScript.pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
+                case 107: return new Vector2(gunManager.leftGunScript.grenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 108: return new Vector2(gunManager.leftGunScript.gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
                 case 170: return new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown);
                 case 17: return new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown);
                 case 114: return new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown);
@@ -738,10 +738,10 @@ public class PlayerItem : MonoBehaviour
                 case 58: return new Vector2(FindObjByID(id).baseCooldown - gunManager.surpriseEggTimer, FindObjByID(id).baseCooldown);
                 case 71: return new Vector2(gunManager.axeCooldown, FindObjByID(id).baseCooldown);
                 case 88: return new Vector2(FindObjByID(id).baseCooldown - gunManager.rightPrinterTimer, FindObjByID(id).baseCooldown);
-                case 103: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().sniperTowerCooldown, FindObjByID(id).baseCooldown);
-                case 106: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
-                case 107: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().grenadeAttachTimer, FindObjByID(id).baseCooldown);
-                case 108: return new Vector2(gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 103: return new Vector2(gunManager.rightGunScript.sniperTowerCooldown, FindObjByID(id).baseCooldown);
+                case 106: return new Vector2(gunManager.rightGunScript.pumpShotgunAttachTimer, FindObjByID(id).baseCooldown);
+                case 107: return new Vector2(gunManager.rightGunScript.grenadeAttachTimer, FindObjByID(id).baseCooldown);
+                case 108: return new Vector2(gunManager.rightGunScript.gasGrenadeAttachTimer, FindObjByID(id).baseCooldown);
                 case 170: return new Vector2(gunManager.centriCheckTimer, FindObjByID(id).baseCooldown);
                 case 17: return new Vector2(healthManager.orgGumTimer, FindObjByID(id).baseCooldown);
                 case 114: return new Vector2(healthManager.chickenCoopTimer, FindObjByID(id).baseCooldown);

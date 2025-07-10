@@ -89,7 +89,7 @@ public class GunScript : MonoBehaviour
     public int chemicalAgents;
     public int fleas;
     public int smokingGun;
-    int smokingGunCounter;
+    protected int smokingGunCounter;
     public int forkedBarrel;
     public int runicMag;
     int runicMagsStored;
@@ -110,7 +110,7 @@ public class GunScript : MonoBehaviour
     public int currentBullets;
     public bool reloading = false;
     protected bool shooting = false;
-    protected float bowCharge;
+    public float bowCharge;
 
     protected bool ricochet = false;
 
@@ -495,8 +495,8 @@ public class GunScript : MonoBehaviour
     {
         if ((bowAct > 0))
         {
-            bowCharge += 1 * atkSpd * Time.deltaTime;
-            if (bowCharge > bowAct + 1f) { bowCharge = bowAct + 1f; }
+            bowCharge += ((bowAct/2f) * Time.deltaTime) + (1.5f * atkSpd * Time.deltaTime);
+            if (bowCharge > bowAct + 1f) { bowCharge = bowAct + 1f; AttemptShootUp(true); }
         }
         else
         {
@@ -530,9 +530,9 @@ public class GunScript : MonoBehaviour
         }
     }
 
-    public virtual void AttemptShootUp()
+    public virtual void AttemptShootUp(bool forcedInput)
     {
-        smokingGunCounter = 0; if (smokingGun > 0) { manager.healthMan.activeEffects[23] = new Vector4(0, manager.healthMan.activeEffects[23].y, manager.healthMan.activeEffects[23].z, manager.healthMan.activeEffects[23].w); }
+        if (!forcedInput) { smokingGunCounter = 0; if (smokingGun > 0) { manager.healthMan.activeEffects[23] = new Vector4(0, manager.healthMan.activeEffects[23].y, manager.healthMan.activeEffects[23].z, manager.healthMan.activeEffects[23].w); } }
         if (bowAct > 0 && !reloading && !shooting)
         {
             if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))

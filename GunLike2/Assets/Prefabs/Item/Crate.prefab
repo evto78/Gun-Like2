@@ -29759,6 +29759,7 @@ GameObject:
   - component: {fileID: 9176088547116248730}
   - component: {fileID: 6929333664027117052}
   - component: {fileID: 1768861595083356560}
+  - component: {fileID: 5958319433955249098}
   m_Layer: 0
   m_Name: Crate
   m_TagString: Interactable
@@ -29774,7 +29775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4014124084827065428}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -29877,12 +29878,12 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &1768861595083356560
 MonoBehaviour:
@@ -29898,6 +29899,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   affectedObject: {fileID: 3002757840727446620}
   renDistance: 10
+--- !u!114 &5958319433955249098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4014124084827065428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aca3562861cc2649ba2ccbae9ab4710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footprint: 2
+  flatten: 0
 --- !u!1 &4036916510684097653
 GameObject:
   m_ObjectHideFlags: 0

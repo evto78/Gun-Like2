@@ -16,8 +16,8 @@ public class DroppedNerfBul : MonoBehaviour
         else if(lifeTime>0.5f){ rb.velocity /= 1.5f * (1f + Time.deltaTime); }
         if (Vector3.Distance(player.position, transform.position) < 2.5f)
         {
-            if (whatHandThisComesFrom == "left") { firedFrom.manager.leftHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
-            if (whatHandThisComesFrom == "right") { firedFrom.manager.rightHand.transform.GetChild(0).gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
+            if (whatHandThisComesFrom == "left") { firedFrom.manager.leftGunScript.gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
+            if (whatHandThisComesFrom == "right") { firedFrom.manager.rightGunScript.gameObject.SendMessage("addBullet", SendMessageOptions.DontRequireReceiver); }
             Destroy(gameObject);
         }
     }

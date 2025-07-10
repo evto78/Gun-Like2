@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     public GameObject inventoryUI;
     public GameObject pauseUI;
     public GameObject deathUI;
+    public GameObject bowchargeUI;
 
     public GameObject gunkyPng;
     float initalGunkyPngPos;
@@ -121,9 +122,11 @@ public class UIManager : MonoBehaviour
         moneyText.text = healthManager.money + "$";
         if(healthManager.playerItem.gotchaTickets > 0) { gotchaText.text = healthManager.playerItem.gotchaTickets.ToString(); gotchaText.gameObject.SetActive(true); } else { gotchaText.gameObject.SetActive(false); }
 
-        lGunAmmoText.text = gunManager.leftHand.GetComponentInChildren<GunScript>().currentBullets + " / " + gunManager.leftHand.GetComponentInChildren<GunScript>().magSize;
-        rGunAmmoText.text = gunManager.rightHand.GetComponentInChildren<GunScript>().currentBullets + " / " + gunManager.rightHand.GetComponentInChildren<GunScript>().magSize;
+        lGunAmmoText.text = gunManager.leftGunScript.currentBullets + " / " + gunManager.leftGunScript.magSize;
+        rGunAmmoText.text = gunManager.rightGunScript.currentBullets + " / " + gunManager.rightGunScript.magSize;
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
+
+        bowchargeUI.SetActive(gunManager.leftBowAct + gunManager.rightBowAct > 0);
     }
     void UpdateInventoryUI()
     {

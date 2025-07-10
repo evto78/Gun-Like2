@@ -327,11 +327,11 @@ public class HealthManager : MonoBehaviour
             {
 				if(playerItem.leftItems[95] > 0)
                 {
-					gunManager.leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().SpawnBulletAtPos(enemyThatDied.transform.position);
+					gunManager.leftGunScript.SpawnBulletAtPos(enemyThatDied.transform.position);
                 }
 				if (playerItem.rightItems[95] > 0)
 				{
-					gunManager.rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().SpawnBulletAtPos(enemyThatDied.transform.position);
+					gunManager.rightGunScript.SpawnBulletAtPos(enemyThatDied.transform.position);
 				}
 			}
         }

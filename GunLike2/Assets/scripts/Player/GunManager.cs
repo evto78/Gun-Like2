@@ -15,7 +15,9 @@ public class GunManager : MonoBehaviour
     List<Vector4> effectList;
 
     public GameObject leftHand;
+    public GunScript leftGunScript;
     public GameObject rightHand;
+    public GunScript rightGunScript;
 
     // For bonuses that affect both weapons.
     public float masterAtkSpd = 1f;
@@ -253,6 +255,8 @@ public class GunManager : MonoBehaviour
         if(rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
         Instantiate(guns[leftHandVal], leftHand.transform);
         Instantiate(guns[rightHandVal], rightHand.transform);
+        leftGunScript = leftHand.GetComponentInChildren<GunScript>();
+        rightGunScript = rightHand.GetComponentInChildren<GunScript>();
 
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;
@@ -281,7 +285,7 @@ public class GunManager : MonoBehaviour
         int daEagleIgnoredLeft = 0;
         int daEagleIgnoredRight = 0;
         //da eagle ignores common
-        if(leftHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        if(leftGunScript.gunName == "Da Eagle")
         {
             for(int i = 0; i < givenLeftItems.Count; i++)
             {
@@ -292,7 +296,7 @@ public class GunManager : MonoBehaviour
                 }
             }
         }
-        if (rightHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        if (rightGunScript.gunName == "Da Eagle")
         {
             for (int i = 0; i < givenRightItems.Count; i++)
             {
@@ -890,16 +894,16 @@ public class GunManager : MonoBehaviour
         if (givenLeftItems[180] > 0) { leftMagSize = 0f; }
         if (givenRightItems[180] > 0) { rightMagSize = 0f; }
 
-        rightHand.transform.GetChild(0).SendMessage("StatUpdateRight", SendMessageOptions.DontRequireReceiver);
-        leftHand.transform.GetChild(0).SendMessage("StatUpdateLeft", SendMessageOptions.DontRequireReceiver);
+        rightGunScript.StatUpdateRight();
+        leftGunScript.StatUpdateLeft();
 
         //undo any changes made
-        if(leftHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        if(leftGunScript.gunName == "Da Eagle")
         {
             givenLeftItems.Clear();
             givenLeftItems.AddRange(leftList);
         }
-        if(rightHand.transform.GetChild(0).GetComponent<GunScript>().gunName == "Da Eagle")
+        if(rightGunScript.gunName == "Da Eagle")
         {
             givenRightItems.Clear();
             givenRightItems.AddRange(rightList);
@@ -942,15 +946,17 @@ public class GunManager : MonoBehaviour
 
     private void Update()
     {
+        if(leftGunScript == null) { leftGunScript = leftHand.GetComponentInChildren<GunScript>(); }
+        if(rightGunScript == null) { rightGunScript = rightHand.GetComponentInChildren<GunScript>(); }
+
         axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * (1 + leftClockwork + rightClockwork);
         if (healthMan.dead) { return; }
 
-        if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); }
-        if (Cursor.lockState == CursorLockMode.Locked) { RightGunUpdate(); }
+        if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); RightGunUpdate(); }
         if (Input.GetKeyDown(KeyCode.R) && Cursor.lockState == CursorLockMode.Locked)
         {
-            leftHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
-            rightHand.transform.GetChild(0).SendMessage("AttemptReload", SendMessageOptions.DontRequireReceiver);
+            leftGunScript.AttemptReload();
+            rightGunScript.AttemptReload();
 
             if (axeCooldown <= 0 && leftGunkyAxe + rightGunkyAxe > 0)
             {
@@ -966,11 +972,11 @@ public class GunManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            leftHand.transform.GetChild(0).SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
+            leftGunScript.AttemptShoot();
         }
         if (Input.GetMouseButtonUp(0))
         {
-            leftHand.transform.GetChild(0).SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
+            leftGunScript.AttemptShootUp(false);
         }
     }
 
@@ -978,11 +984,11 @@ public class GunManager : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            rightHand.transform.GetChild(0).SendMessage("AttemptShoot", SendMessageOptions.DontRequireReceiver);
+            rightGunScript.AttemptShoot();
         }
         if (Input.GetMouseButtonUp(1))
         {
-            rightHand.transform.GetChild(0).SendMessage("AttemptShootUp", SendMessageOptions.DontRequireReceiver);
+            rightGunScript.AttemptShootUp(false);
         }
     }
 
@@ -1031,18 +1037,18 @@ public class GunManager : MonoBehaviour
         if (leftFastInserter > 0)
         {
             leftFastInserterTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
-            if (leftFastInserterTimer <= 0 && leftHand.GetComponentInChildren<GunScript>().currentBullets < leftHand.GetComponentInChildren<GunScript>().magSize)
+            if (leftFastInserterTimer <= 0 && leftGunScript.currentBullets < rightGunScript.magSize)
             {
-                leftHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                leftGunScript.addBullet();
                 leftFastInserterTimer = playerItem.FindObjByID(33).baseCooldown / (0.2f * leftFastInserter);
             }
         }
         if (rightFastInserter > 0)
         {
             rightFastInserterTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
-            if (rightFastInserterTimer <= 0 && rightHand.GetComponentInChildren<GunScript>().currentBullets < rightHand.GetComponentInChildren<GunScript>().magSize)
+            if (rightFastInserterTimer <= 0 && rightGunScript.currentBullets < rightGunScript.magSize)
             {
-                rightHand.transform.GetChild(0).SendMessage("addBullet", SendMessageOptions.DontRequireReceiver);
+                rightGunScript.addBullet();
                 rightFastInserterTimer = playerItem.FindObjByID(33).baseCooldown / (0.2f * rightFastInserter);
             }
         }
@@ -1127,7 +1133,7 @@ public class GunManager : MonoBehaviour
         if (leftStickToCounters > leftStickTo * 5) { leftStickToCounters = leftStickTo * 5; }
         if(rightStickToCounters > rightStickTo * 5) { rightStickToCounters = rightStickTo * 5; }
 
-        if(leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && leftMicrowave > 0)
+        if(leftGunScript.reloading && leftMicrowave > 0)
         {
             leftMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * leftClockwork);
             if(leftMicrowaveTimer <= 0)
@@ -1140,7 +1146,7 @@ public class GunManager : MonoBehaviour
                 leftMicrowaveTimer = leftReSpd / 4f;
             }
         }
-        if (rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading && rightMicrowave > 0)
+        if (rightGunScript.reloading && rightMicrowave > 0)
         {
             rightMicrowaveTimer -= Time.deltaTime + (Time.deltaTime * rightClockwork);
             if (rightMicrowaveTimer <= 0)
@@ -1156,7 +1162,7 @@ public class GunManager : MonoBehaviour
 
         if (playerItem.leftItems[125] > 0)
         {
-            if (leftHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading)
+            if (leftGunScript.reloading)
             {
                 if (darkwaveTimer <= 0)
                 {
@@ -1172,7 +1178,7 @@ public class GunManager : MonoBehaviour
         }
         if (playerItem.rightItems[125] > 0)
         {
-            if (rightHand.transform.GetChild(0).gameObject.GetComponent<GunScript>().reloading)
+            if (rightGunScript.reloading)
             {
                 if (darkwaveTimer <= 0)
                 {
@@ -1285,7 +1291,7 @@ public class GunManager : MonoBehaviour
         GameObject spawnedAxe = Instantiate(gunkyAxe);
         spawnedAxe.transform.position = transform.position + (dir + Vector3.up) * 2f;
         spawnedAxe.transform.rotation = transform.rotation;
-        spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg + rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg) / 2f) * 5f;
+        spawnedAxe.GetComponent<GunkyAxe>().damage = ((leftGunScript.dmg + rightGunScript.dmg) / 2f) * 5f;
         spawnedAxe.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (dir * 20f), ForceMode.Impulse);
     }
     public void Kick(string hand)

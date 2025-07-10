@@ -471,8 +471,8 @@ public class NEWPlayerMovement : MonoBehaviour
                 spawnedShockwave.transform.position = transform.position;
                 spawnedShockwave.GetComponent<Shockwave>().damage = 0f;
                 spawnedShockwave.GetComponent<Shockwave>().lifetime = 0.25f;
-                if (playerItem.leftItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.leftHand.transform.GetChild(0).GetComponent<GunScript>().dmg * playerItem.leftItems[144]; }
-                if (playerItem.rightItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.rightHand.transform.GetChild(0).GetComponent<GunScript>().dmg * playerItem.rightItems[144]; }
+                if (playerItem.leftItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.leftGunScript.dmg * playerItem.leftItems[144]; }
+                if (playerItem.rightItems[144] > 0) { spawnedShockwave.GetComponent<Shockwave>().damage += gunMan.rightGunScript.dmg * playerItem.rightItems[144]; }
             }
         }
     }

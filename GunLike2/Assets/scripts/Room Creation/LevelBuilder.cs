@@ -5,15 +5,8 @@ using UnityEngine;
 public class LevelBuilder : MonoBehaviour
 {
     public Terrain terrain;
-    public List<PlaceableObjectChances> chances;
-    public int minPlacedObjects;
-    public int maxPlacedObjects;
-    public int minPlacedFeatures;
-    public int maxPlacedFeatures;
-    int placedObj;
-    int placedFeats;
-    public List<GameObject> placeableObjects;
-    public List<GameObject> placeableFeatures;
+    public List<PlaceableObjectChances> chancesObjects;
+    public List<PlaceableObjectChances> chancesFeatures;
     public GameObject debugCube;
     public GameObject supportPillar;
 
@@ -25,9 +18,6 @@ public class LevelBuilder : MonoBehaviour
     }
     void Build(Terrain lvlTerrain)
     {
-        placedObj = 0; placedFeats = 0;
-        int objectsToPlace = Random.Range(minPlacedObjects, maxPlacedObjects + 1);
-        int featuresToPlace = Random.Range(minPlacedFeatures, maxPlacedFeatures + 1);
         int resolution = 4;
         Vector3 tSize = lvlTerrain.terrainData.size;
         Vector3 tPos = lvlTerrain.transform.position;
@@ -76,21 +66,27 @@ public class LevelBuilder : MonoBehaviour
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
                     //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
                     tDataFull[x,z].onRoad = GetMainTexture(tDataFull[x, z].worldPos, lvlTerrain) == 0;
-                    if (tDataFull[x, z].onRoad) { onRoadArrayIndex.Add(new Vector2(x, z)); } //spawned.GetComponent<MeshRenderer>().material.color = Color.blue;
+                    if (tDataFull[x, z].onRoad) { onRoadArrayIndex.Add(tDataFull[x,z].arrayPos); } //spawned.GetComponent<MeshRenderer>().material.color = Color.blue;
                 }
             }
         }
-        while (placedObj < objectsToPlace)
+        foreach(PlaceableObjectChances obj in chancesObjects)
         {
-            //PlaceShops
-            PlaceObject(placeableObjects[0], placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
-            placedObj++;
+            AttemptPlaceObject(chancesObjects[chancesObjects.IndexOf(obj)], placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
         }
-        while(placedFeats < featuresToPlace)
+        foreach (PlaceableObjectChances obj in chancesFeatures)
         {
-            PlaceFeature();
-            placedFeats++;
+            AttemptPlaceFeature(chancesFeatures[chancesFeatures.IndexOf(obj)], placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
         }
+    }
+    void AttemptPlaceObject(PlaceableObjectChances objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)
+    {
+        int amount = 0; if (Random.Range(1, 100) < objToPlace.chancePerOne) { amount = (int)objToPlace.amount.x; }
+        for(int i = 0; i < objToPlace.amount.y - objToPlace.amount.x; i++)
+        {
+            if (Random.Range(1, 100) < objToPlace.chancePerMore) { amount++; }
+        }
+        for(int i = 0; i < amount; i++) { PlaceObject(objToPlace.obj, placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution); }
     }
     void PlaceObject(GameObject objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Needs a flat ground
     {
@@ -99,32 +95,54 @@ public class LevelBuilder : MonoBehaviour
         TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
         PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
         placedObject.transform.position = pointToBePlacedOn.worldPos;
-        if (!objData.flatten) {return; }
-        PlaceSupport(placedObject, objData.footprint, tDataFull, pointToBePlacedOn, resolution);
+        placedObject.transform.localEulerAngles = new Vector3(placedObject.transform.localEulerAngles.x, Random.Range(0, 360), placedObject.transform.localEulerAngles.z);
+        PlaceSupport(placedObject, objData.footprint, tDataFull, pointToBePlacedOn, resolution, objData, placeableArrayIndex);
         //SetHeight(pointToBePlacedOn, pointToBePlacedOn.height, objData.footprint, resolution);
     }
-    void PlaceFeature()//Does not need a flat ground
+    void AttemptPlaceFeature(PlaceableObjectChances objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)
     {
-
+        int amount = 0; if (Random.Range(1, 100) < objToPlace.chancePerOne) { amount = (int)objToPlace.amount.x; }
+        for (int i = 0; i < objToPlace.amount.y - objToPlace.amount.x; i++)
+        {
+            if (Random.Range(1, 100) < objToPlace.chancePerMore) { amount++; }
+        }
+        for (int i = 0; i < amount; i++) { PlaceFeature(objToPlace.obj, placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution); }
     }
-    void PlaceSupport(GameObject placedObj, float footprint, TerPlaceData[,] tDataFull, TerPlaceData tpd, int resolution)
+    void PlaceFeature(GameObject objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Does not need a flat ground
+    {
+        GameObject placedObject = Instantiate(objToPlace);
+        int rand = Random.Range(0, placeableArrayIndex.Count);
+        TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
+        PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
+        placedObject.transform.position = pointToBePlacedOn.worldPos; placedObject.transform.position = new Vector3(placedObject.transform.position.x, 0, placedObject.transform.position.z);
+        placedObject.transform.localEulerAngles = new Vector3(placedObject.transform.localEulerAngles.x, Random.Range(0, 360), placedObject.transform.localEulerAngles.z);
+        PlaceSupport(placedObject, objData.footprint, tDataFull, pointToBePlacedOn, resolution, objData, placeableArrayIndex);
+    }
+    void PlaceSupport(GameObject placedObj, float footprint, TerPlaceData[,] tDataFull, TerPlaceData tpd, int resolution, PlaceableObject objData, List<Vector2> placeableArrayIndex)
     {
         float maxLocalHeight = 0;
         for(int x = 0; x < tDataFull.GetLength(0); x++)
-        {
-            for (int z = 0; z < tDataFull.GetLength(1); z++)
-            {
-                if(Vector2.Distance(new Vector2(tDataFull[x,z].worldPos.x, tDataFull[x, z].worldPos.z),new Vector2(tpd.worldPos.x, tpd.worldPos.z)) < footprint + Mathf.CeilToInt(footprint/resolution) && tDataFull[x, z].height > maxLocalHeight) 
+        {for (int z = 0; z < tDataFull.GetLength(1); z++){
+                if(Vector2.Distance(new Vector2(tDataFull[x,z].worldPos.x, tDataFull[x, z].worldPos.z),new Vector2(tpd.worldPos.x, tpd.worldPos.z)) < footprint + Mathf.CeilToInt(footprint/resolution)) 
                 {
-                    maxLocalHeight = tDataFull[x, z].height;
+                    if(tDataFull[x, z].height > maxLocalHeight)
+                    {
+                        maxLocalHeight = tDataFull[x, z].height;
+                    }
+                    tDataFull[x, z].placeable = false;
+                    placeableArrayIndex.Remove(tDataFull[x, z].arrayPos);
                 }
             }
         }
+        if (!objData.flatten) { return; }
+
         placedObj.transform.position = new Vector3(placedObj.transform.position.x, maxLocalHeight, placedObj.transform.position.z);
         GameObject pillar = Instantiate(supportPillar);
         pillar.transform.position = placedObj.transform.position;
         pillar.transform.localScale = new Vector3(footprint, maxLocalHeight, footprint);
     }
+
+
     void SetHeight(TerPlaceData tpd, float newHeight, float footprint, int resolution)
     {
         TerrainData tData = tpd.myTerrain.terrainData;

@@ -8,6 +8,8 @@ public class FishingMinigame : MonoBehaviour
     bool playerNear;
     bool playerFishing;
     GameObject player;
+    UIManager uiman;
+    GunManager gm;
     public Animator tabletHolder;
     public GameObject tablet;
     float tabletAnimTimer;
@@ -19,24 +21,26 @@ public class FishingMinigame : MonoBehaviour
     {
         fished = false;
         player = GameObject.Find("Player");
+        uiman = player.GetComponent<UIManager>();
+        gm = player.GetComponent<GunManager>();
         playerFishing = false;
         tabletScreen.SetActive(false);
     }
     private void Update()
     {
         tabletAnimTimer -= Time.deltaTime;
-        if (playerNear && player.GetComponent<PlayerItem>().leftItems[83] + player.GetComponent<PlayerItem>().rightItems[83] > 0)
+        if (playerNear && gm.playerItem.leftItems[83] + gm.playerItem.rightItems[83] > 0)
         {
             if (!playerFishing && Input.GetKeyDown(KeyCode.E) && fished == false)
             {
                 playerFishing = true;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                player.GetComponent<UIManager>().fishing = true;
+                uiman.fishing = true;
                 player.transform.position = transform.position;
                 Camera.main.transform.LookAt(tablet.transform);
-                player.GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SetActive(false);
-                player.GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SetActive(false);
+                gm.leftGunScript.gameObject.SetActive(false);
+                gm.rightGunScript.gameObject.SetActive(false);
                 tabletAnimTimer = 1.2f;
                 Cursor.SetCursor(fishingCursor, new Vector2(32f, 32f), CursorMode.ForceSoftware);
                 timesUp = false;
@@ -46,15 +50,15 @@ public class FishingMinigame : MonoBehaviour
         }
         //Debug.Log("1: "+timesUp);
         //if (tabletAnimTimer <= 0) { timesUp = false; }
-        if (player.GetComponent<UIManager>().fishing && (Input.GetKeyDown(KeyCode.Escape) || timesUp))
+        if (uiman.fishing && (Input.GetKeyDown(KeyCode.Escape) || timesUp))
         {
             playerFishing = false;
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            player.GetComponent<UIManager>().fishing = false;
-            player.GetComponent<UIManager>().playUI.SetActive(true);
-            player.GetComponent<GunManager>().leftHand.transform.GetChild(0).gameObject.SetActive(true);
-            player.GetComponent<GunManager>().rightHand.transform.GetChild(0).gameObject.SetActive(true);
+            uiman.fishing = false;
+            uiman.playUI.SetActive(true);
+            gm.leftGunScript.gameObject.SetActive(true);
+            gm.rightGunScript.gameObject.SetActive(true);
             Camera.main.fieldOfView = PlayerPrefs.GetFloat("FOV");
             tabletScreen.SetActive(false);
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);

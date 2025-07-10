@@ -141,8 +141,8 @@ public class EnemyHealthManager : MonoBehaviour
             if (activeEffects[11].x > 0 && Random.Range(0,2) == 0) { 
                 if(hit == HitType.ht.normal) { hit = HitType.ht.crit; }
                 if(hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
-                if (source == "left") { dmgTaken *= playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
-                if (source == "right") { dmgTaken *= playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().critDamage; }
+                if (source == "left") { dmgTaken *= playerItem.gunManager.leftGunScript.critDamage; }
+                if (source == "right") { dmgTaken *= playerItem.gunManager.rightGunScript.critDamage; }
                 if(playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
             }
         }
@@ -158,8 +158,8 @@ public class EnemyHealthManager : MonoBehaviour
                 if(Random.Range(1,100) < (playerItem.leftItems[127] * 2.5f) + 5f)
                 {
                     curHp = -100f;
-                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
-                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
+                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
                     Die();
                 }
             }
@@ -171,8 +171,8 @@ public class EnemyHealthManager : MonoBehaviour
                 if (Random.Range(1, 100) < (playerItem.rightItems[127] * 2.5f) + 5f)
                 {
                     curHp = -100f;
-                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
-                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+                    if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
+                    if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
                     Die();
                 }
             }
@@ -250,8 +250,8 @@ public class EnemyHealthManager : MonoBehaviour
         }
 
         if (curHp <= 0 && !died) { died = true; 
-            if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
-            if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightHand.transform.GetChild(0).GetComponent<GunScript>().echoDmg = dmgTaken / 1.5f; }
+            if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
+            if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
             Die();
         }
     }
@@ -286,7 +286,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
         if(activeEffects[7].x > 0 && playerItem.leftItems[72] + playerItem.rightItems[72] > 0)
         {
-            player.GetComponent<GunManager>().SpawnAxe((transform.position - player.transform.position).normalized);
+            playerItem.gunManager.SpawnAxe((transform.position - player.transform.position).normalized);
         }
     }
 
