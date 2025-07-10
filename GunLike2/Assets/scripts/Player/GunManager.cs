@@ -248,15 +248,28 @@ public class GunManager : MonoBehaviour
         {
             rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
         }
-        if(leftHandVal == 9) { leftHandVal = rightHandVal; }
-        if(rightHandVal == 9) { rightHandVal = leftHandVal; }
-
+        bool leftGoo = false; bool rightGoo = false;
+        if(leftHandVal == 9) { leftHandVal = rightHandVal; leftGoo = true; }
+        if(rightHandVal == 9) { rightHandVal = leftHandVal; rightGoo = true; }
         if(leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
         if(rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
         Instantiate(guns[leftHandVal], leftHand.transform);
         Instantiate(guns[rightHandVal], rightHand.transform);
-        leftGunScript = leftHand.GetComponentInChildren<GunScript>();
-        rightGunScript = rightHand.GetComponentInChildren<GunScript>();
+        leftGunScript = leftHand.GetComponentInChildren<GunScript>(); 
+        if(leftGoo) 
+        { 
+            leftGunScript.isGoo = true; 
+            GooColorShift gcs = leftGunScript.gameObject.AddComponent<GooColorShift>();  gcs.speed = 20f; gcs.randomness = 1.3f; leftGunScript.gooEffect = gcs;
+            Debug.Log("Added to left!");
+        }
+        rightGunScript = rightHand.GetComponentInChildren<GunScript>(); 
+        if(rightGoo) 
+        { 
+            rightGunScript.isGoo = true;
+            GooColorShift gcs = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcs.speed = 20f; gcs.randomness = 1.3f; rightGunScript.gooEffect = gcs;
+            Debug.Log("Added to right!");
+        }
+        // ^^^ doesn't work for some reason, idk why but i guess it is fine for now. ^^^
 
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;

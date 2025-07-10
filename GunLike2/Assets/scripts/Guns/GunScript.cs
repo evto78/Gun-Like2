@@ -10,6 +10,8 @@ public class GunScript : MonoBehaviour
     public GameObject misfireEffect;
     public GameObject confettiEffect;
     public string gunName;
+    public bool isGoo;
+    public GooColorShift gooEffect;
 
     //Base stats for this gun
     public float baseMagSize = 15;
@@ -115,6 +117,7 @@ public class GunScript : MonoBehaviour
     protected bool ricochet = false;
 
 
+
     public GameObject pistolBullet;
     public GameObject nerfedPistolBullet;
     public GameObject oilBullet;
@@ -146,6 +149,8 @@ public class GunScript : MonoBehaviour
         player = GameObject.Find("Player").transform;
         cam = Camera.main;
 
+        if(gooEffect != null) { gooEffect.enabled = isGoo; }
+        
         LateStart();
     }
     public virtual void LateStart()
