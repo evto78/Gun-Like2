@@ -8,6 +8,7 @@ public class InteractableButton : MonoBehaviour
     public List<GameObject> linkedObjects;
     Animator animator;
     float interactTimer;
+    public bool oneTimePress; bool pressed;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -20,7 +21,7 @@ public class InteractableButton : MonoBehaviour
 
     public void Interact()
     {
-        if(interactTimer < 0f)
+        if(interactTimer < 0f && !pressed)
         {
             interactTimer = 1f;
             animator.SetTrigger("Press");
@@ -31,6 +32,7 @@ public class InteractableButton : MonoBehaviour
                     thing.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
                 }
             }
+            if (oneTimePress) { pressed = true; }
         }
     }
 }
