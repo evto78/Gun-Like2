@@ -10,14 +10,13 @@ public class Shop : MonoBehaviour
     GameObject player;
     PlayerItem pi;
     int membership;
+    bool open;
     void Start()
     {
         player = GameObject.Find("Player");
         pi = player.GetComponent<PlayerItem>();
         dome.GetComponent<Animator>().SetBool("Open", true);
     }
-
-    // Update is called once per frame
     void Update()
     {
         membership = pi.leftItems[112] + pi.rightItems[112];
@@ -36,12 +35,14 @@ public class Shop : MonoBehaviour
         if(Vector3.Distance(transform.position, player.transform.position) < 15f)
         {
             dome.GetComponent<Animator>().SetBool("Open", true);
-
+            if (!open) { transform.LookAt(player.transform); }
+            transform.localEulerAngles = Vector3.up * transform.localEulerAngles.y;
+            open = true;
         }
         else
         {
             dome.GetComponent<Animator>().SetBool("Open", false);
-
+            open = false;
         }
     }
 }

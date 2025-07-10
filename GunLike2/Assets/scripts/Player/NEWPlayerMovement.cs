@@ -283,7 +283,7 @@ public class NEWPlayerMovement : MonoBehaviour
     {
         if (Physics.BoxCast(new Vector3(transform.position.x, transform.position.y - 0f, transform.position.z), transform.localScale * 0.5f, -Vector3.up, out RaycastHit hit, transform.rotation, 1f))
         {
-            if (hit.transform.gameObject.tag == "Ground")
+            if (hit.transform.gameObject.tag == "Ground" || hit.transform.gameObject.tag == "Untagged")
             {
                 if (hasBunny && !onGround) { healthMan.GiveEffect(PlayerEffectType.effectName.bunnyHop, 1f); }
                 jumpsLeft = numberOfJumps;

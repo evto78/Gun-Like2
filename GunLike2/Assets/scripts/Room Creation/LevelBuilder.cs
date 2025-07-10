@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelBuilder : MonoBehaviour
 {
     public Terrain terrain;
+    public List<PlaceableObjectChances> chances;
     public int minPlacedObjects;
     public int maxPlacedObjects;
     public int minPlacedFeatures;
@@ -81,7 +82,8 @@ public class LevelBuilder : MonoBehaviour
         }
         while (placedObj < objectsToPlace)
         {
-            PlaceObject(placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
+            //PlaceShops
+            PlaceObject(placeableObjects[0], placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
             placedObj++;
         }
         while(placedFeats < featuresToPlace)
@@ -90,9 +92,9 @@ public class LevelBuilder : MonoBehaviour
             placedFeats++;
         }
     }
-    void PlaceObject(List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Needs a flat ground
+    void PlaceObject(GameObject objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Needs a flat ground
     {
-        GameObject placedObject = Instantiate(placeableObjects[0]);
+        GameObject placedObject = Instantiate(objToPlace);
         int rand = Random.Range(0, placeableArrayIndex.Count);
         TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
         PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
