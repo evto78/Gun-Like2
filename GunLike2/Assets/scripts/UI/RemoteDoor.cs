@@ -15,7 +15,13 @@ public class RemoteDoor : MonoBehaviour
     public void Activate()
     {
         if (open) { open = false; } else { open = true; }
-
+        animator.speed = 1f;
+        animator.SetBool("Open", open);
+    }
+    public void SetOpen(bool openSent)
+    {
+        open = openSent;
+        animator.speed = 100f;
         animator.SetBool("Open", open);
     }
 }

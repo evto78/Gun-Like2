@@ -50,6 +50,6 @@ public class MainMenuManager : MonoBehaviour
     }
     public void LoadLevel()
     {
-        SceneManager.LoadScene("Sandbox");
+        SceneManager.LoadScene("Level Generation");
     }
 }

@@ -8,7 +8,7 @@ public class InteractableButton : MonoBehaviour
     public List<GameObject> linkedObjects;
     Animator animator;
     float interactTimer;
-    public bool oneTimePress; bool pressed;
+    public bool oneTimePress; public bool pressed;
     private void Start()
     {
         animator = GetComponent<Animator>();

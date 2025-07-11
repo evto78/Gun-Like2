@@ -234,6 +234,9 @@ public class GunManager : MonoBehaviour
     public int totalLiveBullets;
     public int maximumLiveBullets;
 
+    GooColorShift gcsL; GooColorShift gcsR;
+    bool leftGoo; bool rightGoo;
+
     private void Start()
     {
         totalLiveBullets = 0;
@@ -248,7 +251,7 @@ public class GunManager : MonoBehaviour
         {
             rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
         }
-        bool leftGoo = false; bool rightGoo = false;
+        leftGoo = false; rightGoo = false;
         if(leftHandVal == 9) { leftHandVal = rightHandVal; leftGoo = true; }
         if(rightHandVal == 9) { rightHandVal = leftHandVal; rightGoo = true; }
         if(leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
@@ -259,15 +262,13 @@ public class GunManager : MonoBehaviour
         if(leftGoo) 
         { 
             leftGunScript.isGoo = true; 
-            GooColorShift gcs = leftGunScript.gameObject.AddComponent<GooColorShift>();  gcs.speed = 20f; gcs.randomness = 1.3f; leftGunScript.gooEffect = gcs;
-            Debug.Log("Added to left!");
+            gcsL = leftGunScript.gameObject.AddComponent<GooColorShift>();  gcsL.speed = 20f; gcsL.randomness = 1.3f; leftGunScript.gooEffect = gcsL;
         }
         rightGunScript = rightHand.GetComponentInChildren<GunScript>(); 
         if(rightGoo) 
         { 
             rightGunScript.isGoo = true;
-            GooColorShift gcs = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcs.speed = 20f; gcs.randomness = 1.3f; rightGunScript.gooEffect = gcs;
-            Debug.Log("Added to right!");
+            gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
         }
         // ^^^ doesn't work for some reason, idk why but i guess it is fine for now. ^^^
 
@@ -961,6 +962,8 @@ public class GunManager : MonoBehaviour
     {
         if(leftGunScript == null) { leftGunScript = leftHand.GetComponentInChildren<GunScript>(); }
         if(rightGunScript == null) { rightGunScript = rightHand.GetComponentInChildren<GunScript>(); }
+        if(leftGoo && gcsL == null) { leftGunScript.isGoo = true; gcsL = leftGunScript.gameObject.AddComponent<GooColorShift>(); gcsL.speed = 20f; gcsL.randomness = 1.3f; leftGunScript.gooEffect = gcsL;}
+        if(rightGoo && gcsR == null) { rightGunScript.isGoo = true; gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;}
 
         axeCooldown -= Time.deltaTime * (1+(leftGunkyAxe + rightGunkyAxe)/10f) * (1 + leftClockwork + rightClockwork);
         if (healthMan.dead) { return; }

@@ -32,7 +32,7 @@ public class NuclearExplosion : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyWeakPoint")
         {
-            if (collision.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
+            if (collision.transform.parent != null && collision.transform.parent.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
             {
                 ehm.TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
             }

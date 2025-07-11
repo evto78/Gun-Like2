@@ -11,6 +11,7 @@ public class UZIWalkerBrain : MonoBehaviour
     Animator turretAnim;
     EnemyHealthManager hm;
     NavMeshAgent agent;
+    NavAI nav;
 
     public GameObject bullet;
     public float shotCooldown;
@@ -26,6 +27,8 @@ public class UZIWalkerBrain : MonoBehaviour
     bool jammed;
     public ParticleSystem jamEffect;
 
+    public enum state { idle, chasing} public state curState;
+
     void Start()
     {
         player = GameObject.Find("Player");
@@ -33,53 +36,71 @@ public class UZIWalkerBrain : MonoBehaviour
         dmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
         turretAnim = turrethead.GetComponentInChildren<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        nav = GetComponent<NavAI>();
+        curState = state.idle; nav.SetState(NavAI.state.idle);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(hm.playerHM.activeEffects[22].x > 0)
+        {//Player is invisible. (via circus mask)
+            curState = state.idle;
+            nav.SetState(NavAI.state.wander);
+        }
+        else
+        {
+            curState = state.chasing;
+            nav.SetState(NavAI.state.chase);
+        }
+
         jammed = hm.activeEffects[3].x > 0;
 
-        if(hm.playerHM.activeEffects[22].x > 0) { return; }
-        turrethead.transform.LookAt(player.transform.position);
-
-        if (Physics.Raycast(turrethead.transform.position, turrethead.transform.forward, out RaycastHit hit, 100f))
+        switch (curState)
         {
-            //Debug.Log(hit.transform.gameObject.tag);
-            if (hit.transform.gameObject.tag == "Player" || true)
-            {
-                if (fireTimer <= 0 && cooldownTimer <= 0)
+            case state.idle: break;
+            case state.chasing:
+                turrethead.transform.LookAt(player.transform.position);
+
+                if (Physics.Raycast(turrethead.transform.position, turrethead.transform.forward, out RaycastHit hit, 100f))
                 {
-                    Shoot();
-                    turretAnim.SetBool("Recharge", false);
-                    turretAnim.SetTrigger("Fire");
-                    turretAnim.speed = 1f / fireRate;
-                    bulShot++;
-                    fireTimer = fireRate;
-                    if (bulShot >= bulPerBurst)
+                    //Debug.Log(hit.transform.gameObject.tag);
+                    if (hit.transform.gameObject.tag == "Player" || true)
                     {
-                        if (jammed)
+                        if (fireTimer <= 0 && cooldownTimer <= 0)
                         {
-                            hm.activeEffects[3] = new Vector4(hm.activeEffects[3].x - 1, hm.activeEffects[3].y, hm.activeEffects[3].z, hm.activeEffects[3].w);
+                            Shoot();
+                            turretAnim.SetBool("Recharge", false);
+                            turretAnim.SetTrigger("Fire");
+                            turretAnim.speed = 1f / fireRate;
+                            bulShot++;
+                            fireTimer = fireRate;
+                            if (bulShot >= bulPerBurst)
+                            {
+                                if (jammed)
+                                {
+                                    hm.activeEffects[3] = new Vector4(hm.activeEffects[3].x - 1, hm.activeEffects[3].y, hm.activeEffects[3].z, hm.activeEffects[3].w);
+                                }
+                                cooldownTimer = shotCooldown;
+                                turretAnim.speed = 1f / cooldownTimer;
+                                turretAnim.SetBool("Recharge", true);
+                                bulShot = 0;
+                            }
                         }
-                        cooldownTimer = shotCooldown;
-                        turretAnim.speed = 1f / cooldownTimer;
-                        turretAnim.SetBool("Recharge", true);
-                        bulShot = 0;
+                    }
+                    else if (cooldownTimer <= 0f)
+                    {
+                        turretAnim.SetBool("Recharge", false);
                     }
                 }
-            }
-            else if(cooldownTimer <= 0f)
-            {
-                turretAnim.SetBool("Recharge", false);
-            }
+                else if (cooldownTimer <= 0f)
+                {
+                    turretAnim.SetBool("Recharge", false);
+                }
+                fireTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
+                cooldownTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
+                break;
         }
-        else if (cooldownTimer <= 0f)
-        {
-            turretAnim.SetBool("Recharge", false);
-        }
-        fireTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
-        cooldownTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
 
         if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f*(hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { agent.speed = 7f; }

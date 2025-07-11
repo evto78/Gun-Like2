@@ -5,19 +5,66 @@ using UnityEngine;
 public class LevelBuilder : MonoBehaviour
 {
     public Terrain terrain;
-    public List<PlaceableObjectChances> chancesObjects;
-    public List<PlaceableObjectChances> chancesFeatures;
+    PlayerItem pi; GameDataManager gdm;
+    public List<PlaceableObjectChances> chancesObjectsBASE;
+    public List<PlaceableObjectChances> chancesFeaturesBASE;
+    List<PlaceableObjectChances> chancesObjects;
+    List<PlaceableObjectChances> chancesFeatures;
     public GameObject debugCube;
     public GameObject supportPillar;
 
-    void Start()
+    List<GameObject> placed = new List<GameObject>();
+    private void Start()
+    {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        pi = gdm.phm.playerItem;
+
+        OddsUpdate();
+    }
+    private void Update()
+    {
+        //Change odds relative to items!
+        OddsUpdate();
+    }
+    void OddsUpdate()
+    {
+        chancesObjects = new List<PlaceableObjectChances>(); 
+        foreach(PlaceableObjectChances poc in chancesObjectsBASE)
+        {
+            PlaceableObjectChances temp = new PlaceableObjectChances();
+            temp.amount = poc.amount; temp.chancePerOne = poc.chancePerOne; temp.chancePerMore = poc.chancePerMore; temp.obj = poc.obj;
+            chancesObjects.Add(temp);
+        }
+        chancesFeatures = new List<PlaceableObjectChances>();
+        foreach(PlaceableObjectChances poc in chancesFeaturesBASE)
+        {
+            PlaceableObjectChances temp = new PlaceableObjectChances();
+            temp.amount = poc.amount; temp.chancePerOne = poc.chancePerOne; temp.chancePerMore = poc.chancePerMore; temp.obj = poc.obj;
+            chancesFeatures.Add(temp);
+        }
+        //Dirt Stained Coffin (ID 123) (OBJ 4)
+        chancesObjects[4].chancePerOne = pi.leftItems[123] + pi.rightItems[123] * 100f;
+        chancesObjects[4].chancePerMore = pi.leftItems[123] + pi.rightItems[123] * 25f;
+        //Chaos Engine (ID 185) (ALL)
+        if (pi.leftItems[185] + pi.rightItems[185] > 0){foreach (PlaceableObjectChances poc in chancesObjects){
+                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * (1.5f * (pi.leftItems[185] + pi.rightItems[185]))), Mathf.CeilToInt(poc.amount.y * (1.5f * (pi.leftItems[185] + pi.rightItems[185]))));
+        }}
+        //High Sky Cloud (ID 188) (ALL)
+        if (pi.leftItems[188] + pi.rightItems[188] > 0){foreach (PlaceableObjectChances poc in chancesObjects){
+                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.1f), Mathf.CeilToInt(poc.amount.y * 1.1f));
+        }}
+    }
+    public void Activate()
     {
         terrain = Terrain.activeTerrains[0];
 
         Build(terrain);
+
+        gdm.BeginSpawning();
     }
     void Build(Terrain lvlTerrain)
     {
+        if (placed.Count > 0) { foreach(GameObject obj in placed) { Destroy(obj); } placed = new List<GameObject>(); }
         int resolution = 4;
         Vector3 tSize = lvlTerrain.terrainData.size;
         Vector3 tPos = lvlTerrain.transform.position;
@@ -90,7 +137,7 @@ public class LevelBuilder : MonoBehaviour
     }
     void PlaceObject(GameObject objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Needs a flat ground
     {
-        GameObject placedObject = Instantiate(objToPlace);
+        GameObject placedObject = Instantiate(objToPlace); placed.Add(placedObject);
         int rand = Random.Range(0, placeableArrayIndex.Count);
         TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
         PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
@@ -110,7 +157,7 @@ public class LevelBuilder : MonoBehaviour
     }
     void PlaceFeature(GameObject objToPlace, List<Vector2> placeableArrayIndex, Terrain lvlTerrain, TerPlaceData[,] tDataFull, Vector3 tPos, int resolution)//Does not need a flat ground
     {
-        GameObject placedObject = Instantiate(objToPlace);
+        GameObject placedObject = Instantiate(objToPlace); placed.Add(placedObject);
         int rand = Random.Range(0, placeableArrayIndex.Count);
         TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
         PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
@@ -137,7 +184,7 @@ public class LevelBuilder : MonoBehaviour
         if (!objData.flatten) { return; }
 
         placedObj.transform.position = new Vector3(placedObj.transform.position.x, maxLocalHeight, placedObj.transform.position.z);
-        GameObject pillar = Instantiate(supportPillar);
+        GameObject pillar = Instantiate(supportPillar); placed.Add(pillar);
         pillar.transform.position = placedObj.transform.position;
         pillar.transform.localScale = new Vector3(footprint, maxLocalHeight, footprint);
     }

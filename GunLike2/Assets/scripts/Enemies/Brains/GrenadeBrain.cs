@@ -7,12 +7,14 @@ public class GrenadeBrain : MonoBehaviour
 {
     Transform target;
     public float speed = 5;
-    public bool Ticking = false;
+    public bool ticking = false;
     public Rigidbody rb;
     float tickTimer = 3;
     public GameObject explo;
     float bounceTimer;
     public EnemyHealthManager hm;
+    float wanderTimer; Vector3 wanderDir;
+    public enum state { idle, wander, chase} public state curState;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,22 +23,47 @@ public class GrenadeBrain : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         explo.SetActive(false);
         target = GameObject.Find("Player").transform;
+        curState = state.idle;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x < 0) { followPlayer(); }
-        if (!Ticking)
+        if(hm.playerHM.activeEffects[22].x > 0)
         {
-            if (hm.playerHM.activeEffects[22].x < 0) { Bounce(); }
+            curState = state.wander;
         }
         else
         {
-            Blow();
+            curState = state.chase;
         }
+
+        switch (curState)
+        {
+            case state.idle: break;
+            case state.chase:
+                followPlayer();
+                Bounce();
+                break;
+            case state.wander:
+                Wander();
+                break;
+        }
+
+        if (ticking) { Blow(); }
+
         if (hm.activeEffects[12].x > 0) { speed = 5f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { speed = 5f; }
+    }
+    void Wander()
+    {
+        wanderTimer -= Time.deltaTime;
+        if(wanderTimer < 0)
+        {
+            wanderTimer = Random.Range(2f, 7f);
+            wanderDir = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        }
+        rb.AddForce(wanderDir * speed * 20f * Time.deltaTime);
     }
     void followPlayer()
     {
@@ -69,9 +96,9 @@ public class GrenadeBrain : MonoBehaviour
             rb.AddForce(transform.forward * speed * 3f, ForceMode.Impulse);
             bounceTimer = 3;
         }
-         if (Vector3.Distance(target.position, transform.position) < 5)
+        if (Vector3.Distance(target.position, transform.position) < 5f)
         {
-            Ticking = true;
+            ticking = true;
         }
 
     }

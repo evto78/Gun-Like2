@@ -19,18 +19,19 @@ public class KnifeBrain : MonoBehaviour
     public Vector3 moveCurve;
     Rigidbody rb;
 
+    public GameObject leadKnife;
     public bool isLead;
     public int spawnAmount;
     public int spawnVariance;
     public int strikeRange;
     public float dmg;
-    bool preparing;
     float strikeTimer;
-    bool striking;
     float cooldownTimer;
     public GameObject knifePrefab;
 
     EnemyHealthManager hm;
+
+    public enum state { idle, wander, chase, prepare, strike} public state curState;
 
     bool pauseNagivation;
     bool speedingUp;
@@ -40,7 +41,6 @@ public class KnifeBrain : MonoBehaviour
         baseSpeed = speed;
         rb = gameObject.GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
-        preparing = false;
         hm = GetComponent<EnemyHealthManager>();
         hm.gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         dmg = hm.baseDamage * hm.gdm.difficulty * hm.difficultyScale;
@@ -52,7 +52,6 @@ public class KnifeBrain : MonoBehaviour
 
         if (isLead)
         {
-
             target = player;
 
             SpawnFollowers(Random.Range(spawnAmount-spawnVariance, spawnAmount+spawnVariance));
@@ -62,8 +61,9 @@ public class KnifeBrain : MonoBehaviour
         else
         {
             mr.material = followMat;
-
         }
+
+        curState = state.idle;
     }
     // Update is called once per frame
     void Update()
@@ -73,52 +73,64 @@ public class KnifeBrain : MonoBehaviour
             target = player;
         }
 
-        if (Vector3.Distance(transform.position, player.transform.position) < strikeRange && !preparing && !striking && cooldownTimer <= 0f)
+        if(hm.playerHM.activeEffects[22].x > 0)
+        {//Player is invisible. (via circus mask)
+            curState = state.wander;
+        } else if(curState == state.wander)
         {
-            if (!(hm.playerHM.activeEffects[22].x < 0)) 
-            {
-                preparing = true;
-                pauseNagivation = true;
-                rb.velocity = rb.velocity / 10f;
-                transform.LookAt(player.transform.position);
-
-                rb.freezeRotation = true;
-
-                shimmerEffect.Play();
-
-                strikeTimer = 0.5f;
-            }
+            curState = state.chase;
         }
 
-        if (preparing)
+        switch (curState)
         {
-            if (!(hm.playerHM.activeEffects[22].x < 0))
-            {
-                transform.LookAt(player.transform.position);
+            case state.idle: break;
+            case state.wander:
+                pauseNagivation = false;
+                if(target == player || isLead)
+                {
+                    target = GameObject.Find("FlyingOrbitPoint"); if(target == null) { target = gameObject; }
+                }
+                break;
+            case state.chase:
+                if (isLead) { target = player; } else { target = leadKnife; } if(target == null) { target = player; }
+                if(Vector3.Distance(transform.position, player.transform.position) < strikeRange && cooldownTimer <= 0f)
+                {
+                    curState = state.prepare;
+                    pauseNagivation = true;
+                    rb.velocity = rb.velocity / 10f;
+                    transform.LookAt(player.transform.position);
+                    rb.freezeRotation = true;
+                    shimmerEffect.Play();
+                    strikeTimer = 0.5f;
+                }
+                break;
+            case state.prepare:
+                if (!(hm.playerHM.activeEffects[22].x < 0))
+                {
+                    transform.LookAt(player.transform.position);
 
+                    strikeTimer -= Time.deltaTime;
+                    rb.velocity = rb.velocity / 1.1f;
+
+                    if (strikeTimer <= 0f) { curState = state.strike; strikeTimer = 2f; }
+                }
+                break;
+            case state.strike:
                 strikeTimer -= Time.deltaTime;
-                rb.velocity = rb.velocity / 1.1f;
+                //if moving away from player, stop striking sooner
+                if (Vector3.Distance(transform.position + rb.velocity, target.transform.position) > Vector3.Distance(transform.position, target.transform.position))
+                {
+                    strikeTimer -= Time.deltaTime * 3f;
+                }
+                if (hm.activeEffects[12].x > 0) { rb.AddForce(transform.forward * ((50f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])))) * Time.deltaTime), ForceMode.Impulse); }
+                else { rb.AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse); }
 
-                if (strikeTimer <= 0f) { striking = true; preparing = false; strikeTimer = 2f; }
-            }
-        }
 
-        if (striking)
-        {
-            strikeTimer -= Time.deltaTime;
-            //if moving away from player, stop striking sooner
-            if (Vector3.Distance(transform.position + rb.velocity, target.transform.position) > Vector3.Distance(transform.position, target.transform.position))
-            {
-                strikeTimer -= Time.deltaTime * 3f;
-            }
-            if (hm.activeEffects[12].x > 0) { rb.AddForce(transform.forward * ((50f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])))) * Time.deltaTime), ForceMode.Impulse); }
-            else { rb.AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse); }
-            
-
-            if(strikeTimer <= 0f)
-            {
-                StopStrike();
-            }
+                if (strikeTimer <= 0f)
+                {
+                    StopStrike();
+                }
+                break;
         }
 
         cooldownTimer -= Time.deltaTime;
@@ -139,7 +151,7 @@ public class KnifeBrain : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" && curState == state.strike)
         {
             collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, hm);
 
@@ -158,7 +170,7 @@ public class KnifeBrain : MonoBehaviour
         target = player;
 
         cooldownTimer = 3f;
-        striking = false;
+        curState = state.chase;
         pauseNagivation = false;
         gameObject.GetComponent<Rigidbody>().freezeRotation = false;
     }
@@ -171,6 +183,7 @@ public class KnifeBrain : MonoBehaviour
             spawned.transform.position = new Vector3(transform.position.x + Random.Range(-2f, 2f), transform.position.y + Random.Range(-2f, 2f), transform.position.z + Random.Range(-2f, 2f));
             spawned.GetComponent<KnifeBrain>().isLead = false;
             spawned.GetComponent<KnifeBrain>().target = gameObject;
+            spawned.GetComponent<KnifeBrain>().leadKnife = gameObject;
         }
     }
 
@@ -189,7 +202,7 @@ public class KnifeBrain : MonoBehaviour
         rb.AddForce(moveDir * speed * Time.fixedDeltaTime);
 
         //turn in the direction of movement
-        if (rb.velocity.sqrMagnitude > 0.01)
+        if (rb.velocity.magnitude > 0)
         {
             transform.rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
         }

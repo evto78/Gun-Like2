@@ -305,6 +305,11 @@ public class BulletScript : MonoBehaviour
         {
             gunFiredFrom.manager.healthMan.fortifyBuff += (1f / (gunFiredFrom.atkSpd*2f))*gunFiredFrom.fority;
         }
+        if(gunFiredFrom.manager.healthMan.activeEffects[22].x > 0)
+        {
+            gunFiredFrom.manager.healthMan.GiveEffect(PlayerEffectType.effectName.invisibility, 0f);
+            gunFiredFrom.manager.healthMan.attackedThisRoom = true;
+        }
     }
 
     protected void RunOnCollide(GameObject givenGameObject, RaycastHit hit)
