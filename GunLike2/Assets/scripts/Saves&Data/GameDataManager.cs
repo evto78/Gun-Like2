@@ -6,6 +6,8 @@ public class GameDataManager : MonoBehaviour
 {
     public List<EnemyHealthManager> activeEhms = new List<EnemyHealthManager>();
     public List<EnemySpawner> activeSpawners = new List<EnemySpawner>();
+    public Vector2 basePoints; public float flatPointsPerDifficulty;
+    public float pointsLeft;
     public float difficulty;
     public float difficultySelected;
     public float timeSpent;
@@ -39,7 +41,9 @@ public class GameDataManager : MonoBehaviour
     }
     public void BeginSpawning()
     {
-        foreach(EnemySpawner spawner in activeSpawners)
+        pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
+        pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
+        foreach (EnemySpawner spawner in activeSpawners)
         {
             spawner.StartSpawning();
         }

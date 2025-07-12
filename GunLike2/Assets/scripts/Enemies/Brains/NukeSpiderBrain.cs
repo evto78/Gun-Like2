@@ -52,15 +52,16 @@ public class NukeSpiderBrain : MonoBehaviour
                 if (Vector3.Distance(player.transform.position, transform.position) < jumpDistance)
                 {
                     curState = state.jumping;
+                    nav.SetState(NavAI.state.idle);
                     nav.enabled = false;
                     agent.enabled = false;
                     Jump();
                 }
                 break;
-            case state.jumping: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false);
+            case state.jumping: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false);
                 if(rb.velocity.y < 0) { curState = state.diving; Dive(); }
                 break;
-            case state.diving: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false);
+            case state.diving: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(true);
                 transform.eulerAngles = divingAngle;
                 break;
         }

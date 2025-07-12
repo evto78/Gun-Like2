@@ -20,7 +20,13 @@ public class StickyNote : MonoBehaviour
         ignoreCollisionTimer = 20f;
         rb = GetComponent<Rigidbody>();
         myCollider = GetComponentInChildren<Collider>();
-        joke = jokes[Random.Range(0, jokes.Count)];
+        int rand = Random.Range(0, jokes.Count);
+        joke = jokes[rand];
+        if(rand == 42)
+        {
+            name = System.Environment.UserName;
+            joke = "What is the dumbest name that starts with the letter "+name[0]+"?         "+name+"!";
+        }
         txt.text = joke;
         Destroy(gameObject, 20f);
         rb.AddForce((Vector3.up*2f + new Vector3(Random.Range(-1f,1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f))/2f)*2f);

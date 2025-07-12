@@ -10,7 +10,6 @@ public class EnemySpawner : MonoBehaviour
     public List<Spawnable> spawnableEnemies;
     float spawnRate; float timer;
     bool spawning;
-    public Vector2 pointAmount; float pointsLeft;
     float minCost; int attempts;
     public bool canSpawnWalker;
     private void Start()
@@ -27,6 +26,7 @@ public class EnemySpawner : MonoBehaviour
             foreach(Spawnable s in spawnableEnemies)
             {
                 if(s.type == Spawnable.Type.walker) { temp.Add(s); }
+                if(s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
             }
             foreach(Spawnable s in temp)
             {
@@ -41,8 +41,7 @@ public class EnemySpawner : MonoBehaviour
     public void StartSpawning()
     {
         spawning = true;
-        pointsLeft = Random.Range(pointAmount.x , pointAmount.y * gdm.difficulty);
-        pointsLeft = pointsLeft * (1 + (0.5f * (pi.leftItems[185] + pi.rightItems[185])));
+        
         minCost = 999999f;
         foreach(Spawnable thing in spawnableEnemies)
         {
@@ -52,7 +51,7 @@ public class EnemySpawner : MonoBehaviour
     private void Update()
     {
         timer -= spawnRate * Time.deltaTime;
-        if (!spawning || timer > 0) { return; } if(pointsLeft < minCost) { spawning = false; return; }
+        if (!spawning || timer > 0) { return; } if(gdm.pointsLeft < minCost) { spawning = false; return; }
         attempts = 0;
         Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]);
         timer = 4f;
@@ -60,9 +59,11 @@ public class EnemySpawner : MonoBehaviour
     void Spawn(Spawnable thing)
     {
         if(attempts > 25) { return; }
-        if(thing.pointCost > pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
-        pointsLeft -= thing.pointCost;
+        if(thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
+        gdm.pointsLeft -= thing.pointCost;
 
-        Instantiate(thing.thingToSpawn, spawnPoint.position, spawnPoint.rotation);
+        for(int i = 0; i < Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y); i++){
+            Instantiate(thing.thingToSpawn, spawnPoint.position, spawnPoint.rotation);
+        }
     }
 }
