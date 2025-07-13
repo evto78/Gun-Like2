@@ -38,13 +38,29 @@ public class GameDataManager : MonoBehaviour
         roomNumber += 1;
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
+        timeSpent += 120f;
     }
     public void BeginSpawning()
     {
+        List<int> index = new List<int>(); int offset = Random.Range(0,activeSpawners.Count);
+        for(int i = 0; i < activeSpawners.Count; i++)
+        {
+            int temp1 = i + offset; if(temp1 > index.Count - 1) { temp1 = temp1-index.Count-1; }
+            index.Add(temp1);
+        }
+        List<EnemySpawner> newOrder = new List<EnemySpawner>();
+        for(int i = 0; i < activeSpawners.Count; i++)
+        {
+            newOrder.Add(activeSpawners[index[i]]);
+        }
+        activeSpawners = newOrder;
         pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
         pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
+        float delayTime = 1;
         foreach (EnemySpawner spawner in activeSpawners)
         {
+            delayTime += Random.Range(3f, 5f);
+            spawner.myDelay = delayTime;
             spawner.StartSpawning();
         }
     }
