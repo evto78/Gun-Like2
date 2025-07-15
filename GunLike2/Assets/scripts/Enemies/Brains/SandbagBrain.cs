@@ -32,7 +32,7 @@ public class SandbagBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ehm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && ehm.curHp == ehm.maxHp))
+        if (ehm.playerHM.activeEffects[22].x > 0)
         {//Player is invisible. (via circus mask)
             curState = state.idle;
         }
@@ -48,6 +48,10 @@ public class SandbagBrain : MonoBehaviour
                 rb.AddForce((player.transform.position - transform.position).normalized * speed * 20f * Time.deltaTime);
                 if(Vector3.Distance(player.transform.position, transform.position+rb.velocity)>Vector3.Distance(player.transform.position, transform.position)){
                     rb.AddForce((player.transform.position - transform.position).normalized * speed * 20f * Time.deltaTime);
+                }
+                if(player.transform.position.y>transform.position.y && rb.velocity.magnitude <= 15f)
+                {
+                    rb.AddForce(Vector3.up * speed * 10f * Time.deltaTime);
                 }
                 break;
         }

@@ -10,6 +10,7 @@ public class PlayerTeleporter : MonoBehaviour
     List<RemoteDoor> startDoors = new List<RemoteDoor>();
     List<InteractableButton> endButtons = new List<InteractableButton>();
     List<RemoteDoor> endDoors = new List<RemoteDoor>();
+    public InteractableButton mybutton;
     private void Start()
     {
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
@@ -25,6 +26,7 @@ public class PlayerTeleporter : MonoBehaviour
         foreach(InteractableButton button in endButtons) { button.oneTimePress = true; button.pressed = false; }
         foreach(RemoteDoor door in startDoors) { door.SetOpen(false); }
         foreach(RemoteDoor door in endDoors) { door.SetOpen(false); }
+        mybutton.oneTimePress = false; mybutton.pressed = false;
         player.transform.position = player.transform.position + (start.transform.position - end.transform.position);
         gdm.AdvanceToNextRoom();
     }
