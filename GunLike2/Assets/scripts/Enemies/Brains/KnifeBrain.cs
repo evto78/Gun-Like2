@@ -63,7 +63,7 @@ public class KnifeBrain : MonoBehaviour
             mr.material = followMat;
         }
 
-        curState = state.idle;
+        curState = state.wander;
     }
     // Update is called once per frame
     void Update()
@@ -73,7 +73,7 @@ public class KnifeBrain : MonoBehaviour
             target = player;
         }
 
-        if(hm.playerHM.activeEffects[22].x > 0)
+        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp))
         {//Player is invisible. (via circus mask)
             curState = state.wander;
         } else if(curState == state.wander)

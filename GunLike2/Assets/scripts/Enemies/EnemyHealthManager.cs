@@ -16,6 +16,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     [Header("OTHER:")]
 
+    public Spawnable data;
     public List<MonoBehaviour> brains;
     public GameObject frozenEffect;
     public GameObject markedEffect;
@@ -67,12 +68,23 @@ public class EnemyHealthManager : MonoBehaviour
     float burnTimer;
     private void Awake()
     {
-        //Gather references
-        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
-        gdm.activeEhms.Add(this);
-        player = GameObject.FindWithTag("Player");
-        playerItem = player.GetComponent<PlayerItem>();
-        playerHM = player.GetComponent<HealthManager>();
+        if(gdm == null)
+        {
+            //Gather references
+            gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+            gdm.activeEhms.Add(this);
+            playerHM = gdm.phm;
+            playerItem = gdm.phm.playerItem;
+            player = gdm.phm.gameObject;
+        }
+        else
+        {
+            gdm.activeEhms.Add(this);
+            playerHM = gdm.phm;
+            playerItem = gdm.phm.playerItem;
+            player = gdm.phm.gameObject;
+        }
+        
         //Effect Setup
         activeEffects = new List<Vector4>();
         icons = new List<GameObject>();
@@ -292,8 +304,11 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void Die()
     {
+        //on death effects
         OnDeath();
 
+        //on actual destruction
+        if (data != null){gdm.pointsLeft += data.pointCost / 1.5f;} // refund some points
         Destroy(gameObject);
     }
     private void OnDestroy()

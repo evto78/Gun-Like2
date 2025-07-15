@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 32583661}
   - component: {fileID: 32583660}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: SkyboxCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1495,6 +1495,10 @@ PrefabInstance:
       value: OpenEND
       objectReference: {fileID: 0}
     - target: {fileID: 2518224392123102452, guid: 5bc11e77b68fa1643b4e420d14167335, type: 3}
+      propertyPath: oneTimePress
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2518224392123102452, guid: 5bc11e77b68fa1643b4e420d14167335, type: 3}
       propertyPath: linkedObjects.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -2050,6 +2054,10 @@ MonoBehaviour:
     chancePerOne: 100
     chancePerMore: 0
     obj: {fileID: 7727061329372379749, guid: c25ec284cd9c3d843b4eef63d7dd5a66, type: 3}
+  - amount: {x: 1, y: 1}
+    chancePerOne: 50
+    chancePerMore: 0
+    obj: {fileID: 3070259082556763620, guid: bb2c507c5530d494b8008ee759c5119c, type: 3}
   chancesFeaturesBASE:
   - amount: {x: 1, y: 4}
     chancePerOne: 50
@@ -2661,6 +2669,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2133517604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1275150332 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3056162612049833695, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+  m_PrefabInstance: {fileID: 515218678}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f4108f7e7ef464986192ed1a6898ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1347980444 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1074921731352622473, guid: a9f9bb8603442ad4d85f7906c4c56813, type: 3}
@@ -3985,8 +4004,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1121413894882205167, guid: 52cb8a26d436c5c4aa5d745d82cb1f70, type: 3}
+      propertyPath: phm
+      value: 
+      objectReference: {fileID: 1275150332}
+    - target: {fileID: 1121413894882205167, guid: 52cb8a26d436c5c4aa5d745d82cb1f70, type: 3}
       propertyPath: basePoints.x
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1121413894882205167, guid: 52cb8a26d436c5c4aa5d745d82cb1f70, type: 3}
       propertyPath: basePoints.y

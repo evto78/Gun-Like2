@@ -29,7 +29,7 @@ public class GrenadeBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x > 0)
+        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(target.position, transform.position) > 100 && hm.curHp == hm.maxHp))
         {
             curState = state.wander;
         }
@@ -92,8 +92,8 @@ public class GrenadeBrain : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation,  85 * Time.deltaTime);
         if (bounceTimer <= 0)
         {
-            rb.AddForce(Vector3.up * speed * 3f, ForceMode.Impulse);
-            rb.AddForce(transform.forward * speed * 3f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * speed * 8f, ForceMode.Impulse);
+            rb.AddForce(transform.forward * speed * 6f, ForceMode.Impulse);
             bounceTimer = 3;
         }
         if (Vector3.Distance(target.position, transform.position) < 5f)

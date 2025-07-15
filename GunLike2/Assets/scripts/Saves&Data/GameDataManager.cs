@@ -23,6 +23,7 @@ public class GameDataManager : MonoBehaviour
         roomNumber = 0;
         timeSpent = 0;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
+        gameTimerActive = false;
     }
     private void Update()
     {
@@ -35,13 +36,19 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
+        gameTimerActive = false;
         roomNumber += 1;
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
         timeSpent += 120f;
+        foreach(EnemyHealthManager ehm in activeEhms)
+        {
+            Destroy(ehm.gameObject);
+        }
     }
     public void BeginSpawning()
     {
+        gameTimerActive = true;
         List<int> index = new List<int>(); int offset = Random.Range(0,activeSpawners.Count);
         for(int i = 0; i < activeSpawners.Count; i++)
         {
@@ -59,9 +66,9 @@ public class GameDataManager : MonoBehaviour
         float delayTime = 1;
         foreach (EnemySpawner spawner in activeSpawners)
         {
-            delayTime += Random.Range(3f, 5f);
             spawner.myDelay = delayTime;
             spawner.StartSpawning();
+            delayTime += Random.Range(3f, 5f);
         }
     }
 }

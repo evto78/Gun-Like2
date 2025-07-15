@@ -72,7 +72,6 @@ public class LevelBuilder : MonoBehaviour
         int maxHeight = 150;
         int paddingFromUnplaceable = Mathf.RoundToInt(80f / resolution);
         List<Vector2> placeableArrayIndex = new List<Vector2>();
-        List<Vector2> onRoadArrayIndex = new List<Vector2>();
         for (int x = 0; x < tDataFull.GetLength(0); x++)//build height map
         {
             for(int z = 0; z < tDataFull.GetLength(1); z++)
@@ -112,8 +111,6 @@ public class LevelBuilder : MonoBehaviour
                 { 
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
                     //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
-                    tDataFull[x,z].onRoad = GetMainTexture(tDataFull[x, z].worldPos, lvlTerrain) == 0;
-                    if (tDataFull[x, z].onRoad) { onRoadArrayIndex.Add(tDataFull[x,z].arrayPos); } //spawned.GetComponent<MeshRenderer>().material.color = Color.blue;
                 }
             }
         }

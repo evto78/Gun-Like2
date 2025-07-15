@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Hierarchy
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 104
+  controlID: 121
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -68,8 +68,8 @@ MonoBehaviour:
     y: 0
     width: 389
     height: 947
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 292
     height: 700
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 47
+  controlID: 65
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 48
+  controlID: 66
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -314,7 +314,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -117348
+  m_LastSelectedObjectID: -1448188
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -352,6 +352,7 @@ MonoBehaviour:
   m_ViewTransforms:
     m_KeySerializationHelper:
     - {fileID: -496645070663005469, guid: bea3c6b25f561aa4a8be6decff5a6d60, type: 2}
+    - {fileID: -7708584073118437694, guid: 13d62f562207ec1469ae95c6df15f06c, type: 2}
     m_ValueSerializationHelper:
     - e00: 1
       e01: 0
@@ -369,10 +370,26 @@ MonoBehaviour:
       e31: 0
       e32: 0
       e33: 1
+    - e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: bea3c6b25f561aa4a8be6decff5a6d60, type: 2}
+  m_AnimatorController: {fileID: 9100000, guid: 13d62f562207ec1469ae95c6df15f06c, type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: -496645070663005469, guid: bea3c6b25f561aa4a8be6decff5a6d60, type: 2}
+  - m_Target: {fileID: -7708584073118437694, guid: 13d62f562207ec1469ae95c6df15f06c, type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
   stateMachineGraphGUI: {fileID: 0}
@@ -382,7 +399,7 @@ MonoBehaviour:
   m_MiniTool: 0
   m_LockTracker:
     m_IsLocked: 0
-  m_CurrentEditor: 0
+  m_CurrentEditor: 1
   m_LayerEditor:
     m_SelectedLayerIndex: 0
 --- !u!114 &14
@@ -430,7 +447,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/scripts/Enemies
+    - Assets/scripts/Item
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -438,16 +455,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/scripts/Enemies
+  - Assets/scripts/Item
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Evan\Documents\GitHub\Gun-Like2\GunLike2
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 418}
-    m_SelectedIDs: 1aa80000
-    m_LastClickedID: 43034
-    m_ExpandedIDs: 00000000027400000474000006740000087400004e7400001aa8000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 594}
+    m_SelectedIDs: bc940000
+    m_LastClickedID: 38076
+    m_ExpandedIDs: 000000002a9400002c9400002e9400003094000066940000729400007c940000b094000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -475,7 +492,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000002740000047400000674000008740000
+    m_ExpandedIDs: 000000002a9400002c9400002e94000030940000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -503,7 +520,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c6230000
+    m_ExpandedInstanceIDs: c6230000726f0200
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -615,9 +632,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: c4060000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 28a9ffff2afbffff
+      m_ExpandedIDs: aad0e9ffe6d4e9ff04e7e9ff84fff6ff4601f7ff4a01f7ffae3cfcffbc78fdffc078fdff7e7dfdff3cf2fdffd8f2fdfffaecffff2afbffff76670000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -984,9 +1001,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 117.66257, y: 107.35555, z: 23.389555}
+    m_Target: {x: 118.63936, y: 149.87488, z: 46.45213}
     speed: 2
-    m_Value: {x: 117.66257, y: 107.35555, z: 23.389555}
+    m_Value: {x: 118.63936, y: 149.87488, z: 46.45213}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1032,13 +1049,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.24974525, y: 0.20383337, z: -0.05380435, w: -0.9451961}
+    m_Target: {x: -0.3621219, y: 0.25991374, z: -0.10773598, w: -0.88896793}
     speed: 2
-    m_Value: {x: -0.2496379, y: 0.20522925, z: -0.054173186, w: -0.9447895}
+    m_Value: {x: -0.36202085, y: 0.2598412, z: -0.107705906, w: -0.8887198}
   m_Size:
-    m_Target: 6.014074
+    m_Target: 14.504226
     speed: 2
-    m_Value: 6.014074
+    m_Value: 14.504226
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1130,7 +1147,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1

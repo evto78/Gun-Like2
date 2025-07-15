@@ -34,7 +34,7 @@ public class NukeSpiderBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x > 0 && curState != state.jumping && curState != state.diving)
+        if((hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp)) && curState != state.jumping && curState != state.diving)
         {//Player is invisible (via circus mask).
             curState = state.idle;
             nav.SetState(NavAI.state.wander);
@@ -47,8 +47,8 @@ public class NukeSpiderBrain : MonoBehaviour
 
         switch (curState)
         {
-            case state.idle: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); break;
-            case state.chaseing: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false);
+            case state.idle: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true; break;
+            case state.chaseing: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true;
                 if (Vector3.Distance(player.transform.position, transform.position) < jumpDistance)
                 {
                     curState = state.jumping;
@@ -58,10 +58,10 @@ public class NukeSpiderBrain : MonoBehaviour
                     Jump();
                 }
                 break;
-            case state.jumping: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false);
-                if(rb.velocity.y < 0) { curState = state.diving; Dive(); }
+            case state.jumping: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false); rb.useGravity = true; rb.isKinematic = false;
+                if (rb.velocity.y < 0) { curState = state.diving; Dive(); }
                 break;
-            case state.diving: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(true);
+            case state.diving: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(true); rb.useGravity = true; rb.isKinematic = false;
                 transform.eulerAngles = divingAngle;
                 break;
         }
@@ -102,6 +102,7 @@ public class NukeSpiderBrain : MonoBehaviour
     }
     private void OnEnable()
     {
+        if(nav == null) { return; }
         nav.enabled = true;
     }
 }

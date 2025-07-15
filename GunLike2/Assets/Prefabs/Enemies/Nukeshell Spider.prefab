@@ -26220,6 +26220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
+  shake: 0
 --- !u!1 &5216161180915949512
 GameObject:
   m_ObjectHideFlags: 0
@@ -31992,6 +31993,7 @@ MonoBehaviour:
   nukeDmg: 250
   tail: {fileID: 928537480289238499}
   shine: {fileID: 3408081602784756747}
+  curState: 0
 --- !u!114 &4592710457669310760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32009,6 +32011,7 @@ MonoBehaviour:
   baseDamage: 125
   difficultyStatScaling: 1
   difficultyScale: 1
+  data: {fileID: 11400000, guid: 32bbf887f2a7539409fc6e1920d35084, type: 2}
   brains:
   - {fileID: 1406929100862567255}
   frozenEffect: {fileID: 7513864299807799720}
@@ -32093,7 +32096,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desDistance: 0
-  updateFreq: 0
+  updateFreq: 0.5
+  navState: 0
 --- !u!195 &1454143430321180582
 NavMeshAgent:
   m_ObjectHideFlags: 0

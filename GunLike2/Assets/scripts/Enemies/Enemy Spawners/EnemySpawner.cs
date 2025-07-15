@@ -18,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         pi = gdm.phm.playerItem;
         gdm.activeSpawners.Add(this);
-        spawnRate = 1f; timer = 4f;
+        spawnRate = 1f; timer = 0f; spawning = false;
         spawnableEnemies = new List<Spawnable>();
         spawnableEnemies.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
         if (!canSpawnWalker)
@@ -59,13 +59,12 @@ public class EnemySpawner : MonoBehaviour
     }
     void Spawn(Spawnable thing)
     {
-        Debug.Log(timer + " | " + thing.name + " | " + gdm.pointsLeft);
-        if(attempts > 25) { return; }
-        if(thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
+        if(attempts > 25) { spawning = false; return; }
+        if (thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
         gdm.pointsLeft -= thing.pointCost;
 
         for(int i = 0; i < Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y); i++){
-            Instantiate(thing.thingToSpawn, spawnPoint.position, spawnPoint.rotation);
+            GameObject spawned = Instantiate(thing.thingToSpawn, spawnPoint.position, spawnPoint.rotation); spawned.GetComponent<EnemyHealthManager>().gdm = gdm;
         }
     }
 }

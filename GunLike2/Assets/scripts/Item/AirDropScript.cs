@@ -18,7 +18,7 @@ public class AirDropScript : MonoBehaviour
     {
         player = GameObject.Find("Player").transform;
         transform.localEulerAngles = Vector3.up * Random.Range(0, 360);
-        transform.position = player.position + (Vector3.up * 80f) + (transform.forward * -initialDistance);
+        transform.position = player.position + (Vector3.up * 300f) + (transform.forward * -initialDistance);
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
     }
 

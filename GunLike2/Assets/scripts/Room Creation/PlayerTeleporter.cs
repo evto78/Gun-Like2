@@ -16,8 +16,8 @@ public class PlayerTeleporter : MonoBehaviour
         player = gdm.phm.gameObject;
         startButtons.AddRange(start.GetComponentsInChildren<InteractableButton>());
         startDoors.AddRange(start.GetComponentsInChildren<RemoteDoor>());
-        endButtons.AddRange(start.GetComponentsInChildren<InteractableButton>());
-        endDoors.AddRange(start.GetComponentsInChildren<RemoteDoor>());
+        endButtons.AddRange(end.GetComponentsInChildren<InteractableButton>());
+        endDoors.AddRange(end.GetComponentsInChildren<RemoteDoor>());
     }
     public void Activate()
     {

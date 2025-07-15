@@ -108,7 +108,7 @@ Transform:
   m_GameObject: {fileID: 6191841131435203806}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.03}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -245,20 +245,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 8261184421544068053}
   spawnableEnemies:
-  - thingToSpawn: {fileID: 1713566396256921537, guid: ae1455a7d3a2c5144ae0eaaf8b3f25d3, type: 3}
-    pointCost: 1.5
-    type: 0
-  - thingToSpawn: {fileID: 69622700615697579, guid: e7d1b5942427ee349aa995a623d7db04, type: 3}
-    pointCost: 3
-    type: 1
-  - thingToSpawn: {fileID: 8593465375342481658, guid: 9d68db871bd35d24cbe6e0ef995a88f5, type: 3}
-    pointCost: 20
-    type: 2
-  - thingToSpawn: {fileID: 1869403215250110881, guid: 3f383f71216bc4c4ea69478a62602aef, type: 3}
-    pointCost: 14
-    type: 2
-  pointAmount: {x: 10, y: 40}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   canSpawnWalker: 0
+  myDelay: 0
 --- !u!1 &8786184958667205509
 GameObject:
   m_ObjectHideFlags: 0

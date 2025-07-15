@@ -142,12 +142,14 @@ MonoBehaviour:
   followMat: {fileID: 2100000, guid: 9640da59e29a6dc4bb1aee443559c33e, type: 2}
   speed: 150
   moveCurve: {x: 0, y: 0, z: 0}
+  leadKnife: {fileID: 0}
   isLead: 1
   spawnAmount: 5
   spawnVariance: 2
   strikeRange: 18
   dmg: 10
   knifePrefab: {fileID: 69622700615697579, guid: 66321f82639258c4390c21e1274dd5bd, type: 3}
+  curState: 0
 --- !u!114 &7510649052574356979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +167,7 @@ MonoBehaviour:
   baseDamage: 10
   difficultyStatScaling: 1
   difficultyScale: 1
+  data: {fileID: 11400000, guid: 8d9ea0e6cab5ad84ca13179edbed6815, type: 2}
   brains:
   - {fileID: 6197071371399329386}
   frozenEffect: {fileID: 581757714442115930}
@@ -295,6 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
+  shake: 0
 --- !u!1 &581757714442115930
 GameObject:
   m_ObjectHideFlags: 0
