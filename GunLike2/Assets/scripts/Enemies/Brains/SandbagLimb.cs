@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SandbagLimb : MonoBehaviour
 {
-    SandbagBrain sb; LineRenderer lr;
+    SandbagBrain sb; LineRenderer lr; public ParticleSystem ps;
     float shrinkTimer; bool shrinking;
     // Start is called before the first frame update
     void Start()
@@ -23,5 +23,6 @@ public class SandbagLimb : MonoBehaviour
         {
             collision.gameObject.GetComponent<HealthManager>().TakeDamage(sb.dmg, false, sb.ehm);
         }
+        ps.Play();
     }
 }

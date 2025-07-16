@@ -100,6 +100,7 @@ public class EnemyHealthManager : MonoBehaviour
             spawnedIcon.transform.SetParent(effectHolder, false);
             icons.Add(spawnedIcon);
         }
+        ManageEffects();
         //Check if mutated
         if (playerHM.massMutation > 0 && Random.Range(1, 100) < 2.5f + ((playerHM.massMutation - 1) * 5f))
         {
@@ -134,6 +135,17 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
+        foreach(MonoBehaviour brain in brains)
+        {
+            if(hit == HitType.ht.critweak || hit == HitType.ht.weak)
+            {
+                brain.SendMessage("WeakHit", SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                brain.SendMessage("Hit", SendMessageOptions.DontRequireReceiver);
+            }
+        }
         float tempArmor = armor;
         if (playerHM.ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * playerHM.ionParticle)
         {

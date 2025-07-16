@@ -6,6 +6,7 @@ using UnityEngine;
 public class GrenadeBrain : MonoBehaviour
 {
     Transform target;
+    Transform secondaryTarget;
     public float speed = 5;
     public bool ticking = false;
     public Rigidbody rb;
@@ -14,6 +15,13 @@ public class GrenadeBrain : MonoBehaviour
     float bounceTimer;
     public EnemyHealthManager hm;
     float wanderTimer; Vector3 wanderDir;
+    public MeshRenderer mr; Vector3 originalScale;
+    bool foundSiblings = false;
+    public ParticleSystem fuse;
+
+    float subTimer;
+    public Color normalColor; public Color explodingColor;
+
     public enum state { idle, wander, chase} public state curState;
     // Start is called before the first frame update
     void Start()
@@ -24,12 +32,30 @@ public class GrenadeBrain : MonoBehaviour
         explo.SetActive(false);
         target = GameObject.Find("Player").transform;
         curState = state.idle;
+        originalScale = mr.transform.localScale;
+        fuse.gameObject.SetActive(false);
     }
-
+    void FindSiblings()
+    {
+        List<EnemyHealthManager> ehms = new List<EnemyHealthManager>();
+        foreach(EnemyHealthManager ehm in hm.gdm.activeEhms)
+        {
+            if (ehm.brains[0].GetType().ToString() == "GrenadeBrain")
+            {
+                ehms.Add(ehm);
+            }
+        }
+        secondaryTarget = ehms[Random.Range(0, ehms.Count)].transform;
+        ehms.Clear();
+        foundSiblings = true;
+    }
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(target.position, transform.position) > 100 && hm.curHp == hm.maxHp))
+        bool sub = false;
+        subTimer -= Time.deltaTime; if (subTimer <= 0) { sub = true; }
+        if (!foundSiblings || secondaryTarget == null) { FindSiblings(); }
+        if(hm.playerHM.activeEffects[22].x > 0)
         {
             curState = state.wander;
         }
@@ -42,7 +68,7 @@ public class GrenadeBrain : MonoBehaviour
         {
             case state.idle: break;
             case state.chase:
-                followPlayer();
+                Move();
                 Bounce();
                 break;
             case state.wander:
@@ -50,10 +76,12 @@ public class GrenadeBrain : MonoBehaviour
                 break;
         }
 
-        if (ticking) { Blow(); }
+        if (ticking) { Blow(); mr.material.color = Color.Lerp(explodingColor, normalColor, tickTimer); if (sub) { mr.material.color = Color.white; } }
+        else { mr.material.color = normalColor; }
 
         if (hm.activeEffects[12].x > 0) { speed = 5f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { speed = 5f; }
+        if(subTimer<= -0.1f) { subTimer = 0.1f; }
     }
     void Wander()
     {
@@ -65,22 +93,25 @@ public class GrenadeBrain : MonoBehaviour
         }
         rb.AddForce(wanderDir * speed * 20f * Time.deltaTime);
     }
-    void followPlayer()
+    void Move()
     {
-        rb.AddForce((target.position - transform.position).normalized * speed * 40f * Time.deltaTime);
+        float modifier = Mathf.Clamp(Vector3.Distance(transform.position, target.position)/100f, 1f, 5f);
+        rb.AddForce((target.position - transform.position).normalized * modifier * speed * 40f * Time.deltaTime);//move to player
+
+        modifier = Mathf.Clamp(Vector3.Distance(transform.position, secondaryTarget.position), 1f, 20f);
+        rb.AddForce((secondaryTarget.position - transform.position).normalized * modifier * speed * 20f * Time.deltaTime);//move to secondary target
     }
     void Blow()
     {
-        if(tickTimer > 0)
+        fuse.gameObject.SetActive(true);
+        mr.transform.localScale = originalScale * (1 + (1-tickTimer));
+        tickTimer -= Time.deltaTime;
+        if(tickTimer <= 0)
         {
-            tickTimer -= Time.deltaTime;
-            if(tickTimer <= 0)
-            {
-                explo.SetActive(true);
-                explo.transform.SetParent(null);
-                explo.GetComponent<ExplosionHitbox>().damage = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
-                Destroy(gameObject);
-            }
+            explo.SetActive(true);
+            explo.transform.SetParent(null);
+            explo.GetComponent<ExplosionHitbox>().damage = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
+            Destroy(gameObject);
         }
     }
 
@@ -96,9 +127,10 @@ public class GrenadeBrain : MonoBehaviour
             rb.AddForce(transform.forward * speed * 6f, ForceMode.Impulse);
             bounceTimer = 3;
         }
-        if (Vector3.Distance(target.position, transform.position) < 5f)
+        if (Vector3.Distance(target.position, transform.position) < 5f && !ticking)
         {
             ticking = true;
+            subTimer = 0f;
         }
 
     }

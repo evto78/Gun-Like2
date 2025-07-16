@@ -63,17 +63,17 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
 				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
 				else if (numberTyped == "all") { SpawnALL(); }
-				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = System.Int32.Parse(numberTyped.Trim()); }
+				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
 				else
                 {
 					if(modifier > 0)
                     {
 						for(int i = 0; i < modifier; i++)
                         {
-							SpawnItem(System.Int32.Parse(numberTyped.Trim()));
+							SpawnItem(int.Parse(numberTyped.Trim()));
 						}
                     }
-					SpawnItem(System.Int32.Parse(numberTyped.Trim()));
+					SpawnItem(int.Parse(numberTyped.Trim()));
 				}
 
 				typing = false;

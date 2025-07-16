@@ -41,7 +41,7 @@ public class ExplosionHitbox : MonoBehaviour
                 other.gameObject.GetComponent<Rigidbody>().AddForce(((other.transform.position - transform.position).normalized + Vector3.up * 0.1f) * knockback, ForceMode.Impulse);
             }
         }
-        if(other.transform.parent.gameObject.TryGetComponent<GrenadeBrain>(out GrenadeBrain grenade))
+        if(other.transform.parent != null && other.transform.parent.gameObject.TryGetComponent<GrenadeBrain>(out GrenadeBrain grenade))
         {
             grenade.ticking = true;
             other.transform.parent.gameObject.GetComponent<Rigidbody>().AddForce(((other.transform.position - transform.position).normalized + Vector3.up * 0.1f) * knockback, ForceMode.Impulse);

@@ -20,6 +20,7 @@ public class NukeSpiderBrain : MonoBehaviour
     EnemyHealthManager hm;
     public enum state { idle, chaseing, jumping, diving}
     public state curState;
+    bool off;
     void Start()
     {
         curState = state.idle;
@@ -29,45 +30,64 @@ public class NukeSpiderBrain : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         hm = GetComponent<EnemyHealthManager>();
         nukeDmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
+        off = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if((hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp)) && curState != state.jumping && curState != state.diving)
-        {//Player is invisible (via circus mask).
-            curState = state.idle;
-            nav.SetState(NavAI.state.wander);
-        }
-        else if (curState != state.jumping && curState != state.diving)
+        if (!off)
         {
-            curState = state.chaseing;
-            nav.SetState(NavAI.state.chase);
-        }
+            if ((hm.playerHM.activeEffects[22].x > 0) && (curState != state.jumping && curState != state.diving))
+            {//Player is invisible (via circus mask).
+                curState = state.idle;
+                nav.SetState(NavAI.state.wander);
+            }
+            else if (curState != state.jumping && curState != state.diving)
+            {
+                curState = state.chaseing;
+                nav.SetState(NavAI.state.chase);
+            }
 
-        switch (curState)
+            switch (curState)
+            {
+                case state.idle: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true; break;
+                case state.chaseing:
+                    nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true;
+                    if (Vector3.Distance(player.transform.position, transform.position) < jumpDistance)
+                    {
+                        curState = state.jumping;
+                        nav.SetState(NavAI.state.idle);
+                        nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false); rb.useGravity = true; rb.isKinematic = false;
+                        Jump();
+                    }
+                    break;
+                case state.jumping:
+                    nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false); rb.useGravity = true; rb.isKinematic = false;
+                    if (rb.velocity.y < 0) { curState = state.diving; Dive(); }
+                    break;
+                case state.diving:
+                    nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(true); rb.useGravity = true; rb.isKinematic = false;
+                    transform.eulerAngles = divingAngle;
+                    break;
+            }
+
+            if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+            else { agent.speed = 7f; }
+        }
+        else
         {
-            case state.idle: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true; break;
-            case state.chaseing: nav.enabled = true; agent.enabled = true; tail.SetActive(false); shine.SetActive(false); rb.useGravity = false; rb.isKinematic = true;
-                if (Vector3.Distance(player.transform.position, transform.position) < jumpDistance)
-                {
-                    curState = state.jumping;
-                    nav.SetState(NavAI.state.idle);
-                    nav.enabled = false;
-                    agent.enabled = false;
-                    Jump();
-                }
-                break;
-            case state.jumping: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(false); rb.useGravity = true; rb.isKinematic = false;
-                if (rb.velocity.y < 0) { curState = state.diving; Dive(); }
-                break;
-            case state.diving: nav.enabled = false; agent.enabled = false; tail.SetActive(true); shine.SetActive(true); rb.useGravity = true; rb.isKinematic = false;
-                transform.eulerAngles = divingAngle;
-                break;
+            if (rb.velocity.y < 0) { Dive(); shine.SetActive(true); curState = state.diving; }
         }
-
-        if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
-        else { agent.speed = 7f; }
+    }
+    public void WeakHit()
+    {
+        if (curState != state.diving) { return; }
+        
+        off = true;
+        shine.SetActive(false);
+        curState = state.jumping;
+        Jump();
     }
     void Jump()
     {
@@ -83,8 +103,18 @@ public class NukeSpiderBrain : MonoBehaviour
     {
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
         transform.LookAt(player.transform);
-        divingAngle = transform.eulerAngles;
-        rb.AddForce((player.transform.position - transform.position).normalized * 500f, ForceMode.Impulse);
+        if (off) 
+        { 
+            transform.LookAt(transform.position - Vector3.up);
+            divingAngle = transform.eulerAngles;
+            rb.AddForce(-Vector3.up.normalized * 500f, ForceMode.Impulse);
+        }
+        else
+        {
+            divingAngle = transform.eulerAngles;
+            rb.AddForce((player.transform.position - transform.position).normalized * 30f, ForceMode.Impulse);
+        }
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
