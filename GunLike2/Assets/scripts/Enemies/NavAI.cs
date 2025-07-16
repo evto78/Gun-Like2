@@ -13,6 +13,7 @@ public class NavAI : MonoBehaviour
     public float updateFreq;
     public enum state { idle, wander, chase} public state navState;
     float wanderTimer = 0;
+    Vector3 lastSecondPos; float lspTimer;
 
     void Start()
     {
@@ -22,6 +23,11 @@ public class NavAI : MonoBehaviour
     }
 
     // Update is called once per frame
+    private void LateUpdate()
+    {
+        lspTimer -= Time.deltaTime;
+        if (lspTimer <= 0) { lspTimer = 1f; lastSecondPos = transform.position; }
+    }
     void Update()
     {
         switch (navState)
@@ -48,7 +54,7 @@ public class NavAI : MonoBehaviour
                 } break;
             case state.wander: agent.isStopped = false;
                 targetUpdateTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
-                if(Vector3.Distance(transform.position, agent.destination) <= 1f) { wanderTimer += Time.deltaTime * Random.Range(0.8f,1.2f); }
+                if(Vector3.Distance(transform.position, lastSecondPos) <= 0.5f) { wanderTimer += Time.deltaTime * Random.Range(0.7f,1.3f); }
                 if (targetUpdateTimer < 0 && wanderTimer > 5f)
                 {
                     targetUpdateTimer = updateFreq;
@@ -60,17 +66,20 @@ public class NavAI : MonoBehaviour
     }
     public void SetState(state newState)
     {
-        navState = newState;
+        if(newState == navState) { return; }
         switch (newState)
         {
             case state.idle: agent.destination = transform.position; break;
             case state.chase: break;
-            case state.wander: wanderTimer = 0f; GetRandomAvaliablePoint(); break;
+            case state.wander: wanderTimer = 0; GetRandomAvaliablePoint(); break;
         }
+        navState = newState;
     }
     void GetRandomAvaliablePoint()
     {
-        Vector3 randPoint = Random.insideUnitCircle * 25f; randPoint += transform.position;
+        Vector3 randPoint = Random.insideUnitCircle * 100f;
+        randPoint.z = randPoint.y; randPoint.y = 0;
+        randPoint += transform.position;
         NavMeshHit hit;
         if (NavMesh.SamplePosition(randPoint, out hit, 10f, 1))
         {

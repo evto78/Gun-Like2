@@ -21,6 +21,7 @@ public class NukeSpiderBrain : MonoBehaviour
     public enum state { idle, chaseing, jumping, diving}
     public state curState;
     bool off;
+    public GameObject confusionEffect;
     void Start()
     {
         curState = state.idle;
@@ -82,12 +83,13 @@ public class NukeSpiderBrain : MonoBehaviour
     }
     public void WeakHit()
     {
-        if (curState != state.diving) { return; }
+        if (curState != state.diving || off) { return; }
         
         off = true;
         shine.SetActive(false);
         curState = state.jumping;
         Jump();
+        confusionEffect.SetActive(true);
     }
     void Jump()
     {
@@ -107,12 +109,12 @@ public class NukeSpiderBrain : MonoBehaviour
         { 
             transform.LookAt(transform.position - Vector3.up);
             divingAngle = transform.eulerAngles;
-            rb.AddForce(-Vector3.up.normalized * 500f, ForceMode.Impulse);
+            rb.AddForce(-Vector3.up.normalized * 30f, ForceMode.Impulse);
         }
         else
         {
             divingAngle = transform.eulerAngles;
-            rb.AddForce((player.transform.position - transform.position).normalized * 30f, ForceMode.Impulse);
+            rb.AddForce((player.transform.position - transform.position).normalized * 500f, ForceMode.Impulse);
         }
         
     }

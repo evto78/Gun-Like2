@@ -43,7 +43,7 @@ public class UZIWalkerBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp))
+        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 200 && hm.curHp == hm.maxHp))
         {//Player is invisible. (via circus mask)
             curState = state.idle;
             nav.SetState(NavAI.state.wander);
@@ -67,7 +67,7 @@ public class UZIWalkerBrain : MonoBehaviour
                     //Debug.Log(hit.transform.gameObject.tag);
                     if (hit.transform.gameObject.tag == "Player" || true)
                     {
-                        if (fireTimer <= 0 && cooldownTimer <= 0)
+                        if (fireTimer <= 0 && cooldownTimer <= 0 && CanShoot())
                         {
                             Shoot();
                             turretAnim.SetBool("Recharge", false);
@@ -105,7 +105,19 @@ public class UZIWalkerBrain : MonoBehaviour
         if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f*(hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { agent.speed = 7f; }
     }
+    bool CanShoot()
+    {
+        Ray ray = new Ray(firepoint.transform.position, player.transform.position - firepoint.transform.position);
+        if(Physics.Raycast(ray,out RaycastHit hit, 75))
+        {
+            if(hit.transform.gameObject.layer == 7)
+            {
+                return true;
+            }
+        }
 
+        return false;
+    }
     void Shoot()
     {
         if (jammed)
