@@ -14,7 +14,11 @@ public class GrenadeLobberBrain : MonoBehaviour
     public ParticleSystem jamEffect;
     NavAI nav;
     public float shotCooldown;
+    public float burstCooldown;
+    public int burstAmt;
+    int grenadesShotThisBurst;
     float cooldownTimer;
+    float burstTimer;
     public float lobSpeed;
     private void Start()
     {
@@ -23,6 +27,10 @@ public class GrenadeLobberBrain : MonoBehaviour
         phm = hm.gdm.phm;
         player = phm.gameObject;
         nav = GetComponent<NavAI>();
+
+        cooldownTimer = 0;
+        burstTimer = 0;
+        grenadesShotThisBurst = 0;
     }
     private void Update()
     {
@@ -46,7 +54,23 @@ public class GrenadeLobberBrain : MonoBehaviour
             case state.lob: nav.SetState(NavAI.state.chase); 
                 if(cooldownTimer <= 0)
                 {
-                    Lob();
+                    if(grenadesShotThisBurst <= burstAmt)
+                    {
+                        if (burstTimer <= 0)
+                        {
+                            Lob();
+                        }
+                        else
+                        {
+                            burstTimer -= Time.deltaTime;
+                        }
+                    }
+                    else
+                    {
+                        grenadesShotThisBurst = 0;
+                        cooldownTimer = shotCooldown;
+                    }
+                    
                 }
                 else { cooldownTimer -= Time.deltaTime; }
                 break;
@@ -54,10 +78,12 @@ public class GrenadeLobberBrain : MonoBehaviour
     }
     void Lob()
     {
-        cooldownTimer = shotCooldown;
+        burstTimer = burstCooldown;
+        gunGrenade.GetComponent<Animator>().speed = 1 / (burstCooldown/2f);
         gunGrenade.GetComponent<Animator>().SetTrigger("shoot");
         if (jammed) { jamEffect.Play(); return; }
         GameObject spawned = Instantiate(grenade, firePointGrenade.position, firePointGrenade.rotation);
         spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * lobSpeed, ForceMode.Impulse);
+        grenadesShotThisBurst++;
     }
 }

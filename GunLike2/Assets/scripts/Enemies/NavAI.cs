@@ -98,6 +98,9 @@ public class NavAI : MonoBehaviour
     }
     private void OnDisable()
     {
-        agent.isStopped = true;
+        if (agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+        }
     }
 }

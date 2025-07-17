@@ -5939,10 +5939,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grenade: {fileID: 1713566396256921537, guid: ae1455a7d3a2c5144ae0eaaf8b3f25d3, type: 3}
   firePointGrenade: {fileID: 4207661106893370405}
-  gunGrenade: {fileID: 3959299569623856081}
+  gunGrenade: {fileID: 5839595670798148504}
   curState: 0
   jamEffect: {fileID: 4045341464985478874}
   shotCooldown: 5
+  burstCooldown: 0.4
+  burstAmt: 5
   lobSpeed: 150
 --- !u!114 &5678681906075670151
 MonoBehaviour:
@@ -5957,7 +5959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desDistance: 50
-  updateFreq: 0.5
+  updateFreq: 1
   navState: 0
 --- !u!114 &6477820777971925560
 MonoBehaviour:

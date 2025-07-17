@@ -15,12 +15,16 @@ public class DroneBrain : MonoBehaviour
     GameObject player;
     enum holdType { empty, uzi, grenade, nuke} holdType holding;
     public enum state { wander, seeking, attacking} public state curState;
+    bool jammed;
+    GameObject fop;
     [Header("Uzi Walker")]
     public GameObject pickUpUzi; public GameObject uziBullet; public Transform firePointUzi; public GameObject gunUzi; public ParticleSystem jammedUzi;
+    public float uziCooldown; float uCooldownTimer; public float uziBurstCooldown; float uBurstTimer; public int UziBustAmt; int bulShot; public float uziAcc;
     [Header("Grenade Lobber")]
     public GameObject pickUpGrenade; public GameObject grenade; public Transform firePointGrenade; public GameObject gunGrenade; public ParticleSystem jammedGrenade;
+    public float greCooldown; float gCooldownTimer; public float greBurstCooldown; float gBurstTimer; public int greBurstAmt; int greShot;
     [Header("Nukeshell Spider")]
-    public GameObject pickUpNuke; public GameObject nuke;
+    public GameObject pickUpNuke; public GameObject nuke; Vector3 nukeDivePos; public float nukeSpeed; public float nukeHoverSpeed;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,9 +34,11 @@ public class DroneBrain : MonoBehaviour
         phm = hm.gdm.phm;
         grabableTarget = null;
         player = phm.gameObject;
+        fop = GameObject.Find("FlyingOrbitPoint");
     }
     void Update()
     {
+        jammed = hm.activeEffects[3].x > 0;
         if (phm.activeEffects[22].x > 0)
         {
             curState = state.wander;
@@ -50,10 +56,17 @@ public class DroneBrain : MonoBehaviour
             case state.wander: break;
             case state.seeking:
                 //if no target is set, set a target
-                if(holding == holdType.empty && grabableTarget == null) { grabableTarget = FindActiveWalker(); }
+                if(holding == holdType.empty && grabableTarget == null) 
+                { 
+                    grabableTarget = FindActiveWalker();
+                    if (grabableTarget == null)
+                    {
+                        MoveToTarget(fop.transform.position,1);
+                    }
+                }
                 //if a target is set, but not holding it yet, move towards the target
                 else if(holding == holdType.empty && grabableTarget != null){
-                    MoveToTarget(grabableTarget.gameObject, 0);
+                    MoveToTarget(grabableTarget.transform.position, 0);
                     //if above the target, lower and get closer.
                     if (Vector2.Distance(new Vector2(transform.position.x,transform.position.z),new Vector2(grabableTarget.transform.position.x,grabableTarget.transform.position.z)) < 5f) 
                     { hoverHeight = 2; }
@@ -64,7 +77,7 @@ public class DroneBrain : MonoBehaviour
                         {
                             case "Uzi Walker": holding = holdType.uzi; pickUpUzi.SetActive(true); break;
                             case "Grenade Lobber": holding = holdType.grenade; pickUpGrenade.SetActive(true); break;
-                            case "Nukeshell Spider": holding = holdType.nuke; pickUpNuke.SetActive(true); break;
+                            case "Nukeshell Spider": holding = holdType.nuke; pickUpNuke.SetActive(true); nukeDivePos = player.transform.position; break;
                         }
                         hoverHeight = 50f;
                         Destroy(grabableTarget.gameObject);
@@ -77,13 +90,18 @@ public class DroneBrain : MonoBehaviour
                 {
                     case holdType.empty: break;
                     case holdType.uzi:
-                        MoveToTarget(player, 30); 
+                        MoveToTarget(player.transform.position, 30);
+                        AttemptShoot();
                         break;
                     case holdType.grenade:
-                        MoveToTarget(player, 40);
+                        MoveToTarget(player.transform.position, 40);
+                        AttemptShoot();
                         break;
                     case holdType.nuke:
-                        MoveToTarget(player, 0);
+                        MoveToTarget(nukeDivePos, 0);
+                        hoverSpeed = nukeHoverSpeed;
+                        if(nukeDivePos.y > transform.position.y) { hoverHeight += 5; }
+                        else { hoverHeight -= 5; }
                         break;
                 }
                 break;
@@ -100,38 +118,110 @@ public class DroneBrain : MonoBehaviour
             rb.AddForce(Vector3.up * hoverSpeed * Time.deltaTime / 2f);
             foreach (PropellerSpin propeller in propellers) { propeller.speed = 800f; }
         }
+        if (holding == holdType.nuke && curHeight > hoverHeight)
+        {
+            rb.AddForce(Vector3.up * -nukeHoverSpeed * Time.deltaTime * 2f);
+            foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+        }
+        else if(holding == holdType.nuke && curHeight < hoverHeight)
+        {
+            rb.AddForce(Vector3.up * nukeHoverSpeed * Time.deltaTime);
+            foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+        }
         if (hm.activeEffects[6].x > 0) { foreach (PropellerSpin propeller in propellers) { propeller.speed = 0f; } }
     }
     private void OnDisable()
     {
         foreach (PropellerSpin propeller in propellers) { propeller.speed = 0f; }
     }
-    void Shoot()
+    void AttemptShoot()
     {
-        if(holding == holdType.uzi)
+        if(holding == holdType.uzi && CanShootUzi())
         {
-
+            if(uCooldownTimer <= 0)
+            {
+                if(bulShot <= UziBustAmt)
+                {
+                    if(uBurstTimer <= 0)
+                    {
+                        Shoot();
+                        uBurstTimer = uziBurstCooldown;
+                    } else { uBurstTimer -= Time.deltaTime; }
+                } else { uCooldownTimer = uziCooldown; bulShot = 0; }
+            } else { uCooldownTimer -= Time.deltaTime; }
         }
         else if(holding == holdType.grenade)
         {
-
+            if (gCooldownTimer <= 0)
+            {
+                if (greShot <= greBurstAmt)
+                {
+                    if (gBurstTimer <= 0)
+                    {
+                        Shoot();
+                        gBurstTimer = greBurstCooldown;
+                    } else { gBurstTimer -= Time.deltaTime; }
+                } else { gCooldownTimer = greCooldown; greShot = 0; }
+            } else { gCooldownTimer -= Time.deltaTime; }
         }
     }
-    void MoveToTarget(GameObject target, float desDistance)
+    bool CanShootUzi()
     {
-        if(holding == holdType.nuke) { speed *= 2f; }
-        Debug.DrawRay(transform.position, (target.transform.position - transform.position).normalized * 5f, Color.red);
+        Ray ray = new Ray(firePointUzi.transform.position, player.transform.position - firePointUzi.transform.position);
+        if (Physics.Raycast(ray, out RaycastHit hit, 75))
+        {
+            if (hit.transform.gameObject.layer == 7)
+            {
+                return true;
+            }
+        }
 
-        if (Vector3.Distance(target.transform.position, transform.position) > desDistance)
+        return false;
+    }
+    void Shoot()
+    {
+        if (holding == holdType.uzi)
         {
-            rb.AddForce((target.transform.position - transform.position).normalized * speed * Time.deltaTime);
+            gunUzi.GetComponent<Animator>().speed = 1 / (uziBurstCooldown / 2f);
+            gunUzi.GetComponent<Animator>().SetTrigger("shoot");
+            if (jammed) { jammedUzi.Play(); return; }
+            GameObject uziBul = Instantiate(uziBullet, firePointUzi.position, firePointUzi.rotation);
+            uziBul.transform.LookAt(player.transform.position + player.GetComponent<Rigidbody>().velocity / 3f);
+            uziBul.transform.Rotate(new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * uziAcc);
+            uziBul.GetComponent<EnemyBullet>().SetStats(3 * hm.baseDamage * hm.difficultyScale * hm.difficultyStatScaling, hm);
+            uziBul.GetComponent<Rigidbody>().AddForce(uziBul.transform.forward * 1.2f, ForceMode.Impulse);
+            bulShot++;
         }
-        if(Vector3.Distance(target.transform.position, transform.position) > desDistance && (Vector3.Distance(target.transform.position, transform.position+rb.velocity) > Vector3.Distance(target.transform.position, transform.position)))
+        else if (holding == holdType.grenade)
         {
-            rb.AddForce((target.transform.position - transform.position).normalized * speed * Time.deltaTime);
+            gunGrenade.GetComponent<Animator>().speed = 1 / (greBurstCooldown / 2f);
+            gunGrenade.GetComponent<Animator>().SetTrigger("shoot");
+            if (jammed) { jammedGrenade.Play(); return; }
+            GameObject spawned = Instantiate(grenade, firePointGrenade.position, firePointGrenade.rotation);
+            spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * 150f, ForceMode.Impulse);
+            greShot++;
         }
+    }
+    void MoveToTarget(Vector3 target, float desDistance)
+    {
+        if(holding == holdType.nuke) { speed *= nukeSpeed; }
+        Debug.DrawRay(transform.position, (target - transform.position).normalized * 5f, Color.red);
+
+        if (Vector3.Distance(target, transform.position) > desDistance)
+        {
+            rb.AddForce((target - transform.position).normalized * speed * Time.deltaTime);
+            if (Vector3.Distance(target, transform.position + rb.velocity) > Vector3.Distance(target, transform.position))
+            {
+                rb.AddForce((target - transform.position).normalized * speed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            rb.AddForce((target - transform.position).normalized * -speed * Time.deltaTime);
+        }
+        
         if (rb.velocity.magnitude > 3f) { transform.LookAt(transform.position + rb.velocity); }
-        if (holding == holdType.nuke) { speed /= 2f; }
+        if (holding == holdType.nuke) { speed /= nukeSpeed; }
     }
     void DistanceToGround()
     {
@@ -146,7 +236,7 @@ public class DroneBrain : MonoBehaviour
         List<EnemyHealthManager> ehms = new List<EnemyHealthManager>();
         foreach(EnemyHealthManager ehm in hm.gdm.activeEhms)
         {
-            if(ehm.data.type == Spawnable.Type.walker)
+            if(ehm.data != null && ehm.data.type == Spawnable.Type.walker)
             {
                 ehms.Add(ehm);
             }
@@ -162,7 +252,7 @@ public class DroneBrain : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(holding == holdType.nuke && rb.velocity.magnitude > 20)
+        if(holding == holdType.nuke && rb.velocity.magnitude > 15)
         {
             GameObject spawnedNuke = Instantiate(nuke);
             spawnedNuke.transform.position = transform.position;

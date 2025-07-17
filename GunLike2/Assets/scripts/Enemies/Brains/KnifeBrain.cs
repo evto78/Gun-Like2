@@ -36,8 +36,11 @@ public class KnifeBrain : MonoBehaviour
     bool pauseNagivation;
     bool speedingUp;
 
+    GameObject fop;
+
     void Start()
     {
+        fop = GameObject.Find("FlyingOrbitPoint");
         baseSpeed = speed;
         rb = gameObject.GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
@@ -88,7 +91,7 @@ public class KnifeBrain : MonoBehaviour
                 pauseNagivation = false;
                 if(target == player || isLead)
                 {
-                    target = GameObject.Find("FlyingOrbitPoint"); if(target == null) { target = gameObject; }
+                    target = fop; if(target == null) { target = gameObject; }
                 }
                 break;
             case state.chase:

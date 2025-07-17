@@ -135,7 +135,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -5177,6 +5177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5907941746341124139}
+  - component: {fileID: 8692044056639113548}
   m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
@@ -5200,6 +5201,27 @@ Transform:
   - {fileID: 2528218412155060553}
   m_Father: {fileID: 8293636868629485376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8692044056639113548
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286335456743714622}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6, y: 5, z: 1.6}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1 &5232228632705669715
 GameObject:
   m_ObjectHideFlags: 0
@@ -10313,7 +10335,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -10755,7 +10777,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: -0.5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
