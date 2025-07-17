@@ -65,10 +65,10 @@ public class EnemyHealthManager : MonoBehaviour
     // w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
     List<float> dmgQued = new List<float>();
-    float burnTimer;
+    float burnTimer; public bool refundPoints;
     private void Awake()
     {
-        if(gdm == null)
+        if (gdm == null)
         {
             //Gather references
             gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
@@ -84,7 +84,7 @@ public class EnemyHealthManager : MonoBehaviour
             playerItem = gdm.phm.playerItem;
             player = gdm.phm.gameObject;
         }
-        
+
         //Effect Setup
         activeEffects = new List<Vector4>();
         icons = new List<GameObject>();
@@ -125,8 +125,8 @@ public class EnemyHealthManager : MonoBehaviour
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
         if (curHp <= 0 && !died) { Die(); died = true; }
-        
-        if(dmgQued.Count > 0)
+
+        if (dmgQued.Count > 0)
         {
             TakeDamage(dmgQued[0], true, HitType.ht.normal, transform.position, "self");
             dmgQued.RemoveAt(0);
@@ -135,6 +135,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
+        if (hit == HitType.ht.weak || hit == HitType.ht.critweak || hit == HitType.ht.special) { ignoreArmor = true; }
         foreach(MonoBehaviour brain in brains)
         {
             if(hit == HitType.ht.critweak || hit == HitType.ht.weak)
@@ -320,7 +321,7 @@ public class EnemyHealthManager : MonoBehaviour
         OnDeath();
 
         //on actual destruction
-        if (data != null){gdm.pointsLeft += data.pointCost / 1.5f;} // refund some points
+        if (data != null && refundPoints){gdm.pointsLeft += data.pointCost / 1.5f;} // refund some points
         Destroy(gameObject);
     }
     private void OnDestroy()

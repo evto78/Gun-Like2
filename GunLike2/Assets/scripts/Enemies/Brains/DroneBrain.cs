@@ -22,7 +22,8 @@ public class DroneBrain : MonoBehaviour
     public float uziCooldown; float uCooldownTimer; public float uziBurstCooldown; float uBurstTimer; public int UziBustAmt; int bulShot; public float uziAcc;
     [Header("Grenade Lobber")]
     public GameObject pickUpGrenade; public GameObject grenade; public Transform firePointGrenade; public GameObject gunGrenade; public ParticleSystem jammedGrenade;
-    public float greCooldown; float gCooldownTimer; public float greBurstCooldown; float gBurstTimer; public int greBurstAmt; int greShot;
+    public float greCooldown; float gCooldownTimer; public float greBurstCooldown; float gBurstTimer; public int greBurstAmt; int greShot; public int maxAtOnce; int curAmt;
+    List<EnemyHealthManager> activeGernades = new List<EnemyHealthManager>();
     [Header("Nukeshell Spider")]
     public GameObject pickUpNuke; public GameObject nuke; Vector3 nukeDivePos; public float nukeSpeed; public float nukeHoverSpeed;
     void Start()
@@ -51,6 +52,11 @@ public class DroneBrain : MonoBehaviour
         {
             curState = state.attacking;
         }
+        for(int i = 0; i < activeGernades.Count; i++)
+        {
+            EnemyHealthManager ehm = activeGernades[i];
+            if(ehm == null) { activeGernades.RemoveAt(i); }
+        } curAmt = activeGernades.Count;
         switch (curState)
         {
             case state.wander: break;
@@ -192,14 +198,15 @@ public class DroneBrain : MonoBehaviour
             uziBul.GetComponent<Rigidbody>().AddForce(uziBul.transform.forward * 1.2f, ForceMode.Impulse);
             bulShot++;
         }
-        else if (holding == holdType.grenade)
+        else if (holding == holdType.grenade && curAmt < maxAtOnce)
         {
             gunGrenade.GetComponent<Animator>().speed = 1 / (greBurstCooldown / 2f);
             gunGrenade.GetComponent<Animator>().SetTrigger("shoot");
             if (jammed) { jammedGrenade.Play(); return; }
             GameObject spawned = Instantiate(grenade, firePointGrenade.position, firePointGrenade.rotation);
             spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * 150f, ForceMode.Impulse);
-            greShot++;
+            spawned.GetComponent<EnemyHealthManager>().refundPoints = false; ;
+            greShot++; activeGernades.Add(spawned.GetComponent<EnemyHealthManager>());
         }
     }
     void MoveToTarget(Vector3 target, float desDistance)
