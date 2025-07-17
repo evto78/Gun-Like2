@@ -8,7 +8,8 @@ public class EnemyProp : MonoBehaviour
     HealthManager phm;
     public GameObject enemy;
     public bool usingAnim;
-    Animator anim; //trigger is "go"
+    public Animator anim; //trigger is "go"
+    public string finalAnimState;
     ParticleSystem ps;
     public float psTimer;
     public Transform spawnPos;
@@ -24,7 +25,7 @@ public class EnemyProp : MonoBehaviour
     {
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         phm = gdm.phm;
-        if (usingAnim) { anim = GetComponent<Animator>(); } else { ps = GetComponentInChildren<ParticleSystem>(); }
+        if (!usingAnim){ ps = GetComponentInChildren<ParticleSystem>(); }
         canSpawn = Random.Range(1, 100) < chance;
     }
     private void Update()
@@ -32,7 +33,7 @@ public class EnemyProp : MonoBehaviour
         if (!canSpawn) { this.enabled = false; return; }
         if (animing && usingAnim)
         {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("YourAnimationName"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(finalAnimState))
             {
                 Instantiate(enemy, spawnPos.position, spawnPos.rotation);
                 Destroy(gameObject);
