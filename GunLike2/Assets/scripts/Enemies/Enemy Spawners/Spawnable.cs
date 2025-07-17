@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class Spawnable : ScriptableObject
 {
+    public string enemyName;
     public GameObject thingToSpawn;
     public float difficultyRequirement;
     public Vector2 amountToSpawn;

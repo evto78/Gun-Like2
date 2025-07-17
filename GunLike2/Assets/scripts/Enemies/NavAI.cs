@@ -43,15 +43,17 @@ public class NavAI : MonoBehaviour
                     {
                         agent.gameObject.GetComponent<NavMeshAgent>().destination = hit.position;
                     }
-                    if (Vector3.Distance(agent.transform.position, target.transform.position) < desDistance)
-                    {
-                        agent.isStopped = true;
-                    }
-                    else
-                    {
-                        agent.isStopped = false;
-                    }
-                } break;
+                    
+                }
+                if (Vector3.Distance(agent.transform.position, target.transform.position) < desDistance)
+                {
+                    agent.isStopped = true;
+                }
+                else
+                {
+                    agent.isStopped = false;
+                }
+                break;
             case state.wander: agent.isStopped = false;
                 targetUpdateTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
                 if(Vector3.Distance(transform.position, lastSecondPos) <= 0.5f) { wanderTimer += Time.deltaTime * Random.Range(0.7f,1.3f); }
