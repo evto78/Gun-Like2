@@ -106,8 +106,8 @@ public class DroneBrain : MonoBehaviour
                     case holdType.nuke:
                         MoveToTarget(nukeDivePos, 0);
                         hoverSpeed = nukeHoverSpeed;
-                        if(nukeDivePos.y > transform.position.y) { hoverHeight += 5; }
-                        else { hoverHeight -= 5; }
+                        if(nukeDivePos.y > transform.position.y) { hoverHeight += 5 * Time.deltaTime; }
+                        else { hoverHeight -= 5 * Time.deltaTime; }
                         break;
                 }
                 break;
