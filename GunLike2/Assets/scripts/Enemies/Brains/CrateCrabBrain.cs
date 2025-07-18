@@ -15,6 +15,8 @@ public class CrateCrabBrain : MonoBehaviour
     public GameObject projectile;
     bool jammed;
     public ParticleSystem jamEffect;
+    public Transform firepoint;
+    public float fireRate; float timer;
     void Start()
     {
         player = GameObject.Find("Player");
@@ -43,11 +45,25 @@ public class CrateCrabBrain : MonoBehaviour
         {
             case state.wander: break;
             case state.chasing:
+                if(timer <= 0)
+                {
+                    Shoot();
 
+                    timer = 1;
+                }
+                else { timer -= fireRate * Time.deltaTime * Random.Range(0f,2f); }
                 break;
         }
 
         if (hm.activeEffects[12].x > 0) { agent.speed = 3f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { agent.speed = 3f; }
+    }
+    void Shoot()
+    {
+        GameObject spawnedGlob = Instantiate(projectile, firepoint.position, firepoint.rotation);
+        spawnedGlob.GetComponent<CrateCrabGlob>().damage = dmg;
+        spawnedGlob.GetComponent<CrateCrabGlob>().ehm = hm;
+        spawnedGlob.GetComponent<CrateCrabGlob>().lifeTimeTimer = Random.Range(10f,20f);
+        spawnedGlob.GetComponent<Rigidbody>().AddForce(transform.forward * 6, ForceMode.Impulse);
     }
 }

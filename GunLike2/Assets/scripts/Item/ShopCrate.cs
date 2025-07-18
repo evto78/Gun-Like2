@@ -11,6 +11,7 @@ public class ShopCrate : MonoBehaviour
     public Transform spawnPos;
     GameObject player;
     PlayerItem pi;
+    GameDataManager gdm;
     public int id;
     int rarity;
     float timer;
@@ -26,9 +27,10 @@ public class ShopCrate : MonoBehaviour
     void Start()
     {
         timer = 0f;
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         anim = GetComponent<Animator>();
-        player = GameObject.Find("Player");
-        pi = player.GetComponent<PlayerItem>();
+        player = gdm.phm.gameObject;
+        pi = gdm.phm.playerItem;
 
         List<List<int>> raritys = pi.rarityList;
 
@@ -47,9 +49,20 @@ public class ShopCrate : MonoBehaviour
 
         if (pi.leftItems[142] + pi.rightItems[142] > 0) { temp = 8; overrideId = true; idOver = 143; }
 
-        cost = Mathf.RoundToInt(player.GetComponent<HealthManager>().baseCost * (1.2f + temp * 2f));
-        if(temp == 3 || temp == 7) { cost *= 3; }
-        if(temp == 8) { cost /= Mathf.RoundToInt(1.2f + temp); }
+        cost = Mathf.CeilToInt((gdm.phm.baseCost * (int)(gdm.difficulty * (gdm.roomNumber + 1))) * 1f);
+
+        switch (rarityID)
+        {
+            case 0: cost *= 1; break;
+            case 1: cost = Mathf.CeilToInt(cost*1.5f); break;
+            case 2: cost *= 4; break;
+            case 3: cost *= 10; break;
+            case 4: cost *= 4; break;
+            case 5: cost *= 4; break;
+            case 6: cost *= 4; break;
+            case 7: cost *= 10; break;
+            case 8: cost = Mathf.CeilToInt(cost/1.5f); break;
+        }
 
         costTxt.text = cost.ToString() + "$";
 

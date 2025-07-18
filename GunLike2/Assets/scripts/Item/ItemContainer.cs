@@ -13,6 +13,7 @@ public class ItemContainer : MonoBehaviour
     public Transform spawnPos;
     GameObject player;
     PlayerItem pi;
+    GameDataManager gdm;
     bool interacted;
     public bool animatie;
     public int numOfItems;
@@ -28,14 +29,17 @@ public class ItemContainer : MonoBehaviour
     public TextMeshProUGUI costTxt;
     void Start()
     {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        transform.localScale = Vector3.one * Random.Range(0.8f,1.2f);
         if (animatie)
         {
             anim = GetComponent<Animator>();
         }
-        player = GameObject.Find("Player");
-        pi = player.GetComponent<PlayerItem>();
+        player = gdm.phm.gameObject;
+        pi = gdm.phm.playerItem;
 
-        cost = player.GetComponent<HealthManager>().baseCost;
+        cost = Mathf.CeilToInt((gdm.phm.baseCost * (int)(gdm.difficulty * (gdm.roomNumber+1))) * (numOfItems/2f));
+
         if (free) { cost = 0; }
 
         costTxt.text = cost.ToString() + "$";

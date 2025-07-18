@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2832929611519063944}
   - component: {fileID: 1784517282923109012}
   - component: {fileID: 4318385516611184509}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 9161008832324138722}
   - component: {fileID: 1929435606274752988}
   - component: {fileID: 8373994621503364543}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 9075315751201808064}
   - component: {fileID: 8553029514785856535}
   - component: {fileID: 7836638287141094470}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Foot (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 1744770573443928119}
   - component: {fileID: 5924279837866953654}
   - component: {fileID: 8923575832109998101}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5144,7 +5144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2770735937443952567}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HitEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5178,7 +5178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1935326669801983762}
   - component: {fileID: 5456684087651113773}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5323,7 +5323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8462263439554332056}
   - component: {fileID: 6259443751618783793}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5377,7 +5377,7 @@ GameObject:
   - component: {fileID: 1663329537299207350}
   - component: {fileID: 591566026290064971}
   - component: {fileID: 1708729091745960362}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LegSegment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5460,7 +5460,7 @@ GameObject:
   - component: {fileID: 5111536986493163069}
   - component: {fileID: 3095580902531682430}
   - component: {fileID: 4371731414188095705}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Foot (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5543,7 +5543,7 @@ GameObject:
   - component: {fileID: 3915191599452114181}
   - component: {fileID: 1223030502303065034}
   - component: {fileID: 1513888454564055495}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10371,7 +10371,7 @@ GameObject:
   - component: {fileID: 1376796555421023287}
   - component: {fileID: 6980363412364916335}
   - component: {fileID: 8403504538241551418}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15257,7 +15257,7 @@ GameObject:
   - component: {fileID: 892916081944144633}
   - component: {fileID: 351248535632072661}
   - component: {fileID: 918833512077847861}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CrateCrabGlob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15323,12 +15323,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317e1215fbdda4c49a967d00f8a980a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 50
   damage: 6
   ehm: {fileID: 0}
-  gravity: 1
-  turnSpeed: 180
+  gravity: 0
+  turnSpeed: 90
   hitEffect: {fileID: 1166003430563020665}
+  lifeTimeTimer: 0
+  pool: {fileID: 8591839004790432392, guid: 0ffe1bc3a1cc9b549bb3ef34aaddcd1d, type: 3}
+  spawnSpeed: 3
 --- !u!1 &7422241829779281424
 GameObject:
   m_ObjectHideFlags: 0
@@ -15340,7 +15343,7 @@ GameObject:
   - component: {fileID: 4743988097734752642}
   - component: {fileID: 2849394214074334343}
   - component: {fileID: 1410733389374758994}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15423,7 +15426,7 @@ GameObject:
   - component: {fileID: 4969529420486975512}
   - component: {fileID: 7866626737057183390}
   - component: {fileID: 7849332523067894194}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LegSegment (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15506,7 +15509,7 @@ GameObject:
   - component: {fileID: 2458076630535505421}
   - component: {fileID: 4646775934832325692}
   - component: {fileID: 1614180340107917016}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Foot (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15589,7 +15592,7 @@ GameObject:
   - component: {fileID: 2178867795896380817}
   - component: {fileID: 5817721026103605592}
   - component: {fileID: 7122935203749141435}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15670,7 +15673,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2205183827357488034}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

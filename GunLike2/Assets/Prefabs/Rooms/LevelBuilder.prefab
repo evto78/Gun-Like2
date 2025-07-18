@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &446677770880246271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6141887412133420573}
+  - component: {fileID: 8925239676254497327}
+  m_Layer: 0
+  m_Name: LevelBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6141887412133420573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446677770880246271}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8925239676254497327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446677770880246271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d494edb38d16c34fa6d93f92ed360e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 0}
+  chancesObjectsBASE:
+  - amount: {x: 1, y: 3}
+    chancePerOne: 85
+    chancePerMore: 25
+    obj: {fileID: 7401710372753162030, guid: d569be7e04ecb8c48acca3cdba10ee7e, type: 3}
+  - amount: {x: 5, y: 20}
+    chancePerOne: 100
+    chancePerMore: 25
+    obj: {fileID: 4014124084827065428, guid: a92918f4838be664e88674e79a863b9f, type: 3}
+  - amount: {x: 3, y: 10}
+    chancePerOne: 80
+    chancePerMore: 25
+    obj: {fileID: 639746699381135530, guid: 1c944e1484f2dc64cad7bd332c34fbbd, type: 3}
+  - amount: {x: 1, y: 1}
+    chancePerOne: 100
+    chancePerMore: 0
+    obj: {fileID: 706108583656459320, guid: 2633fe821ea034a4dbc7e93201138402, type: 3}
+  - amount: {x: 1, y: 3}
+    chancePerOne: 0
+    chancePerMore: 0
+    obj: {fileID: 7726011327541932337, guid: 42164d84bee37e647a1b58684a8de854, type: 3}
+  - amount: {x: 1, y: 1}
+    chancePerOne: 100
+    chancePerMore: 0
+    obj: {fileID: 7727061329372379749, guid: c25ec284cd9c3d843b4eef63d7dd5a66, type: 3}
+  - amount: {x: 1, y: 5}
+    chancePerOne: 80
+    chancePerMore: 33
+    obj: {fileID: 730673710434273892, guid: 8739ef61853f5054da48d8ae8d12b697, type: 3}
+  - amount: {x: 1, y: 1}
+    chancePerOne: 50
+    chancePerMore: 0
+    obj: {fileID: 3070259082556763620, guid: bb2c507c5530d494b8008ee759c5119c, type: 3}
+  - amount: {x: 1, y: 5}
+    chancePerOne: 40
+    chancePerMore: 33
+    obj: {fileID: 4230510281339919095, guid: 5e88868dc677e3f4bad6bb062e235652, type: 3}
+  - amount: {x: 1, y: 7}
+    chancePerOne: 5
+    chancePerMore: 10
+    obj: {fileID: 7933599734598801602, guid: 705b90781112f8a4fb7f1a1fa57388ec, type: 3}
+  chancesFeaturesBASE:
+  - amount: {x: 1, y: 4}
+    chancePerOne: 50
+    chancePerMore: 25
+    obj: {fileID: 2119295188461594244, guid: eff9d9b892e29f4479aa69ccc4378764, type: 3}
+  debugCube: {fileID: 0}
+  supportPillar: {fileID: 7871264026415938520, guid: 6f04f512e79bbd44bba729e6a13b0175, type: 3}

@@ -68,7 +68,10 @@ public class DroneBrain : MonoBehaviour
                     if (grabableTarget == null)
                     {
                         MoveToTarget(fop.transform.position,1);
+                        if (fop.transform.position.y > transform.position.y) { hoverHeight += 5 * Time.deltaTime; }
+                        else { hoverHeight -= 5 * Time.deltaTime; }
                     }
+                    else { hoverHeight = 50; }
                 }
                 //if a target is set, but not holding it yet, move towards the target
                 else if(holding == holdType.empty && grabableTarget != null){
@@ -113,28 +116,53 @@ public class DroneBrain : MonoBehaviour
                 break;
         }
         DistanceToGround();
-        foreach (PropellerSpin propeller in propellers) { propeller.speed = 1800f; }
         if(curHeight < hoverHeight)
         {
             rb.AddForce(Vector3.up * hoverSpeed * Time.deltaTime);
-            foreach(PropellerSpin propeller in propellers) { propeller.speed = 1800f; }
+            UpdatePropellerSpeed();
         }
         else
         {
             rb.AddForce(Vector3.up * hoverSpeed * Time.deltaTime / 2f);
-            foreach (PropellerSpin propeller in propellers) { propeller.speed = 800f; }
+            UpdatePropellerSpeed();
         }
         if (holding == holdType.nuke && curHeight > hoverHeight)
         {
             rb.AddForce(Vector3.up * -nukeHoverSpeed * Time.deltaTime * 2f);
-            foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+            UpdatePropellerSpeed();
         }
         else if(holding == holdType.nuke && curHeight < hoverHeight)
         {
             rb.AddForce(Vector3.up * nukeHoverSpeed * Time.deltaTime);
-            foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+            UpdatePropellerSpeed();
         }
         if (hm.activeEffects[6].x > 0) { foreach (PropellerSpin propeller in propellers) { propeller.speed = 0f; } }
+    }
+    void UpdatePropellerSpeed()
+    {
+        if(holding != holdType.nuke)
+        {
+            if (curHeight < hoverHeight)
+            {
+                foreach (PropellerSpin propeller in propellers) { propeller.speed = 1800f; }
+            }
+            else
+            {
+                foreach (PropellerSpin propeller in propellers) { propeller.speed = 800f; }
+            }
+        }
+        else
+        {
+            if (curHeight < hoverHeight)
+            {
+                foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+            }
+            else
+            {
+                foreach (PropellerSpin propeller in propellers) { propeller.speed = 2600f; }
+            }
+        }
+
     }
     private void OnDisable()
     {

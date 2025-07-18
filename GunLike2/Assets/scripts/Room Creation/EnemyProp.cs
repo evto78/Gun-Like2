@@ -18,6 +18,7 @@ public class EnemyProp : MonoBehaviour
     public float distance;
     public bool timerBased;
     public float timer;
+    public bool interaction;
     [Header("Chance to appear")]
     public float chance;
     bool canSpawn; bool animing;
@@ -27,6 +28,13 @@ public class EnemyProp : MonoBehaviour
         phm = gdm.phm;
         if (!usingAnim){ ps = GetComponentInChildren<ParticleSystem>(); }
         canSpawn = Random.Range(1, 100) < chance;
+    }
+    public void Interact()
+    {
+        if (interaction)
+        {
+            Spawn();
+        }
     }
     private void Update()
     {
