@@ -57,11 +57,13 @@ public class EnemySpawner : MonoBehaviour
         {
             if (thing.pointCost < minCost) { minCost = thing.pointCost; }
         }
+        Debug.Log(timer + " START " + gdm.activeSpawners.IndexOf(this));
     }
     private void Update()
     {
         timer -= spawnRate * Time.deltaTime;
         if (!spawning || timer > 0 || gdm.pointsLeft < minCost) { return; }
+        Debug.Log("Attempting to spawn: " + timer + " : " + gdm.activeSpawners.IndexOf(this));
         attempts = 0;
         timer = Random.Range(5f, 10f);
         Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]);
