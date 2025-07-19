@@ -497,7 +497,7 @@ public class EnemyHealthManager : MonoBehaviour
 
         //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }
-
+    
     public void OnDeath()
     {
         if (didOnDeath) { return; } else { didOnDeath = true; }

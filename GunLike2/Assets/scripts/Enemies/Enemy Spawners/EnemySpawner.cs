@@ -21,18 +21,15 @@ public class EnemySpawner : MonoBehaviour
         spawnRate = 1f; timer = 0f; spawning = false;
         spawnableEnemies = new List<Spawnable>();
         spawnableEnemies.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
-        if (!canSpawnWalker)
+        List<Spawnable> temp = new List<Spawnable>();
+        foreach(Spawnable s in spawnableEnemies)
         {
-            List<Spawnable> temp = new List<Spawnable>();
-            foreach(Spawnable s in spawnableEnemies)
-            {
-                if(s.type == Spawnable.Type.walker) { temp.Add(s); }
-                if(s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
-            }
-            foreach(Spawnable s in temp)
-            {
-                spawnableEnemies.Remove(s);
-            }
+            if(s.type == Spawnable.Type.walker && !canSpawnWalker) { temp.Add(s); }
+            if(s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
+        }
+        foreach(Spawnable s in temp)
+        {
+            spawnableEnemies.Remove(s);
         }
     }
     private void OnDestroy()
@@ -44,22 +41,34 @@ public class EnemySpawner : MonoBehaviour
         spawning = true;
         timer = myDelay;
         minCost = 999999f;
-        foreach(Spawnable thing in spawnableEnemies)
+        spawnableEnemies = new List<Spawnable>();
+        spawnableEnemies.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
+        List<Spawnable> temp = new List<Spawnable>();
+        foreach (Spawnable s in spawnableEnemies)
         {
-            if(thing.pointCost < minCost) { minCost = thing.pointCost; }
+            if (s.type == Spawnable.Type.walker && !canSpawnWalker) { temp.Add(s); }
+            if (s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
+        }
+        foreach (Spawnable s in temp)
+        {
+            spawnableEnemies.Remove(s);
+        }
+        foreach (Spawnable thing in spawnableEnemies)
+        {
+            if (thing.pointCost < minCost) { minCost = thing.pointCost; }
         }
     }
     private void Update()
     {
         timer -= spawnRate * Time.deltaTime;
-        if (!spawning || timer > 0) { return; } if(gdm.pointsLeft < minCost) { spawning = false; return; }
+        if (!spawning || timer > 0 || gdm.pointsLeft < minCost) { return; }
         attempts = 0;
         timer = Random.Range(5f, 10f);
         Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]);
     }
     void Spawn(Spawnable thing)
     {
-        if(attempts > 25) { spawning = false; return; }
+        if(attempts > 25) { return; }
         if (thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
         gdm.pointsLeft -= thing.pointCost;
 
