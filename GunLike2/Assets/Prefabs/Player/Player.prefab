@@ -844,7 +844,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942735131062762087}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -921,7 +921,7 @@ Skybox:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942735131062762087}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 493abcb262f79a148b8162f2680225e7, type: 2}
+  m_CustomSkybox: {fileID: 2100000, guid: 1c8d7b6d04ebf3a48bcfbe37a0fc1542, type: 2}
 --- !u!1 &971982019841527041
 GameObject:
   m_ObjectHideFlags: 0
@@ -1986,6 +1986,7 @@ GameObject:
   - component: {fileID: 7461507813950395447}
   - component: {fileID: 1478225087064856635}
   - component: {fileID: 8714330687066646829}
+  - component: {fileID: 2952588700287408222}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2509,6 +2510,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   txt: {fileID: 0}
+--- !u!114 &2952588700287408222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2518637335849271105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a178120dddc77454d8bb97758ac01f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2579564125161379648
 GameObject:
   m_ObjectHideFlags: 0
