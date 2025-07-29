@@ -14,9 +14,16 @@ public class GameDataManager : MonoBehaviour
     public bool gameTimerActive;
     public int roomNumber;
     public HealthManager phm;
+    PlayerItem pi;
+    //Checking Change
+    bool changedLastFrame;
+    List<int> leftSnapshot;
+    List<int> rightSnapshot;
+
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
+        pi = phm.playerItem;
     }
     private void Start()
     {
@@ -24,6 +31,11 @@ public class GameDataManager : MonoBehaviour
         timeSpent = 0;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
         gameTimerActive = false;
+
+        leftSnapshot = new List<int>();
+        leftSnapshot.AddRange(pi.leftItems);
+        rightSnapshot = new List<int>();
+        rightSnapshot.AddRange(pi.rightItems);
     }
     private void Update()
     {
@@ -32,6 +44,31 @@ public class GameDataManager : MonoBehaviour
             timeSpent += Time.deltaTime;
         }
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
+        CheckForItemGainAndDestroy();
+    }
+    void CheckForItemGainAndDestroy()
+    {
+        bool change = false;
+        for (int i = 0; i < pi.leftItems.Count; i++)
+        {
+            leftSnapshot[i] = pi.leftItems[i] - leftSnapshot[i];
+            if (leftSnapshot[i] < 0) { pi.OnItemDestroy(i, leftSnapshot[i], "left"); change = true; }
+            if (leftSnapshot[i] > 0) { pi.OnItemGain(i, leftSnapshot[i], "left"); change = true; }
+        }
+        for (int i = 0; i < pi.rightItems.Count; i++)
+        {
+            rightSnapshot[i] = pi.rightItems[i] - rightSnapshot[i];
+            if (rightSnapshot[i] < 0) { pi.OnItemDestroy(i, rightSnapshot[i], "right"); change = true; }
+            if (rightSnapshot[i] > 0) { pi.OnItemGain(i, rightSnapshot[i], "right"); change = true; }
+        }
+        if (change) { changedLastFrame = true; }
+
+        if (change || (!change && changedLastFrame)) { pi.uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory(); if (!change) { changedLastFrame = false; } }
+
+        leftSnapshot = new List<int>();
+        leftSnapshot.AddRange(pi.leftItems);
+        rightSnapshot = new List<int>();
+        rightSnapshot.AddRange(pi.rightItems);
     }
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()

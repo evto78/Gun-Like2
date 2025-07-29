@@ -13,6 +13,8 @@ public class GunScript : MonoBehaviour
     public bool isGoo;
     public GooColorShift gooEffect;
 
+    float atkSpeedOverFPSBulQued = 0f;
+
     //Base stats for this gun
     public float baseMagSize = 15;
     public float baseAtkSpd = 2f;
@@ -432,8 +434,10 @@ public class GunScript : MonoBehaviour
             if (attackTimer <= 0)
             {
                 shooting = false;
+                atkSpeedOverFPSBulQued = 0f - attackTimer;
             }
         }
+        else { atkSpeedOverFPSBulQued = 0f; }
 
         if (currentBullets > 0)
         {
@@ -623,6 +627,7 @@ public class GunScript : MonoBehaviour
     }
     public virtual void Shoot(float bowChar)
     {
+        if (atkSpeedOverFPSBulQued >= 1) { atkSpeedOverFPSBulQued -= 1f; Shoot(bowChar); }
         if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect(PlayerEffectType.effectName.smokingGun, 1f); } AttemptReload(); return; }
         if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
         if (confetti > 0) { confettiEffect.GetComponent<ParticleSystem>().Play(); }

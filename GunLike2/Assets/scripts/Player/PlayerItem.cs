@@ -69,7 +69,7 @@ public class PlayerItem : MonoBehaviour
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
     public GunManager gunManager;
-    UIManager uiManager;
+    public UIManager uiManager;
     public PopupItemUI popupUI;
 
     public Transform playerCamera;
@@ -168,10 +168,6 @@ public class PlayerItem : MonoBehaviour
     private void Update()
     {
         //Stat Update
-        leftSnapshot = new List<int>();
-        leftSnapshot.AddRange(leftItems);
-        rightSnapshot = new List<int>();
-        rightSnapshot.AddRange(rightItems);
         masterCard = leftItems[174] + rightItems[174];
         leftLowFreqRes = leftItems[154];rightLowFreqRes = rightItems[154];
         LowFreqRes();
@@ -188,22 +184,7 @@ public class PlayerItem : MonoBehaviour
     }
     private void LateUpdate()
     {
-        bool change = false;
-        for(int i = 0; i < leftItems.Count; i++)
-        {
-            leftSnapshot[i] = leftItems[i] - leftSnapshot[i];
-            if (leftSnapshot[i] < 0) { OnItemDestroy(i, leftSnapshot[i], "left"); change = true; }
-            if (leftSnapshot[i] > 0) { OnItemGain(i, leftSnapshot[i], "left"); change = true; }
-        }
-        for (int i = 0; i < rightItems.Count; i++)
-        {
-            rightSnapshot[i] = rightItems[i] - rightSnapshot[i];
-            if(rightSnapshot[i] < 0) { OnItemDestroy(i, rightSnapshot[i], "right"); change = true; }
-            if(rightSnapshot[i] > 0) { OnItemGain(i, rightSnapshot[i], "right"); change = true; }
-        }
-        if (change) { changedLastFrame = true; }
 
-        if (change || (!change && changedLastFrame)) { uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();  if (!change) { changedLastFrame = false; } }
     }
     public void OnItemDestroy(int id, int amount, string hand)
     {
@@ -272,7 +253,6 @@ public class PlayerItem : MonoBehaviour
     }
     void NuclearFission(int id, string hand)
     {
-        OnItemDestroy(id, 1, hand);
         if(hand == "left")
         {
             if (rarityList[0].Contains(id)) { leftItems[id]--; }//common
@@ -354,7 +334,6 @@ public class PlayerItem : MonoBehaviour
             {
                 int rand = Random.Range(0, rarityList[rarity].Count);
                 leftItems[rarityList[rarity][rand]]++;
-                if (createPopUp) { OnItemGain(rarityList[rarity][rand], 1, hand); }
             }
         }
         else
@@ -363,7 +342,6 @@ public class PlayerItem : MonoBehaviour
             {
                 int rand = Random.Range(0, rarityList[rarity].Count);
                 rightItems[rarityList[rarity][rand]]++;
-                if (createPopUp) { OnItemGain(rarityList[rarity][rand], 1, hand); }
             }
         }
     }

@@ -679,15 +679,11 @@ public class HealthManager : MonoBehaviour
             {
 				playerItem.leftItems[65] -= 1;
 				playerItem.leftItems[66] += 1;
-				playerItem.OnItemDestroy(65, -1, "left");
-				playerItem.OnItemGain(66, 1, "left");
             }
 			if (playerItem.rightItems[65] > 0)
 			{
 				playerItem.rightItems[65] -= 1;
 				playerItem.rightItems[66] += 1;
-				playerItem.OnItemDestroy(65, -1, "right");
-				playerItem.OnItemGain(66, 1, "right");
 			}
 		}
 	}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoubleBarrelScript : GunScript
 {
-    int bulletsQued; static int maxBulletsPerFrame = 100;
+    int bulletsQued; static int maxBulletsPerFrame = 35; float lockedBowCharge = 1;
     public override void AttemptShoot()
     {
         if ((bowAct > 0))
@@ -29,8 +29,8 @@ public class DoubleBarrelScript : GunScript
                     for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                     {
                         Shoot(1f);
-                        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
-                        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                        ||(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                     }
                 }
                 if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
@@ -40,8 +40,8 @@ public class DoubleBarrelScript : GunScript
                     {
                         currentBullets++;
                         Shoot(1f);
-                        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
-                        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                        ||(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                     }
 
                     pumpShotgunAttachTimer = 30f;
@@ -67,8 +67,8 @@ public class DoubleBarrelScript : GunScript
                 for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                 {
                     Shoot(bowCharge);
-                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
-                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                    || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
                 }
             }
             if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
@@ -78,12 +78,13 @@ public class DoubleBarrelScript : GunScript
                 {
                     currentBullets++;
                     Shoot(bowCharge);
-                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
-                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                    || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
                 }
 
                 pumpShotgunAttachTimer = 30f;
             }
+            lockedBowCharge = bowCharge;
             bowCharge = 0f;
         }
     }
@@ -91,6 +92,7 @@ public class DoubleBarrelScript : GunScript
     {
         if(bulletsQued > 0)
         {
+            attackTimer = 1f;
             if(bowAct > 0)
             {
                 for (int y = 0; y < maxBulletsPerFrame; y++)
@@ -98,8 +100,8 @@ public class DoubleBarrelScript : GunScript
                     if(bulletsQued < 1) { break; }
                     bulletsQued--;
                     Shoot(bowCharge);
-                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
-                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                    || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(lockedBowCharge); }
                 }
             }
             else
@@ -109,8 +111,8 @@ public class DoubleBarrelScript : GunScript
                     if(bulletsQued < 1) { break; }
                     bulletsQued--;
                     Shoot(1f);
-                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
-                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                    || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                 }
             }
 
