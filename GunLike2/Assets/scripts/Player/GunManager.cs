@@ -47,7 +47,7 @@ public class GunManager : MonoBehaviour
     public float leftWeakPointChance = 1f;
     public float leftWeakPointDamage = 1f;
     // left item checks
-    public float leftHeavyBul = 0f;
+    public int leftHeavyBul = 0;
     public int leftMutatedCell = 0;
     public float leftMutatedCellTimer = 0f;
     public float leftBowAct = 0f;
@@ -60,15 +60,15 @@ public class GunManager : MonoBehaviour
     public int leftMasterTrig = 0;
     public int leftJam = 0;
     public int leftBeltFed = 0;
-    public float leftFastInserter = 0;
+    public int leftFastInserter = 0;
     public float leftFastInserterTimer = 0f;
-    public float leftFireSpon;
-    public float leftSharperSpon;
-    public float leftSilverSpon;
-    public float leftHelpingSpon;
-    public float leftCoolSpon;
-    public float leftFastSpon;
-    public float leftLargeSpon;
+    public int leftFireSpon;
+    public int leftSharperSpon;
+    public int leftSilverSpon;
+    public int leftHelpingSpon;
+    public int leftCoolSpon;
+    public int leftFastSpon;
+    public int leftLargeSpon;
     public int leftPossession;
     public int leftSponDeal;
     public float leftSponTimer;
@@ -119,6 +119,7 @@ public class GunManager : MonoBehaviour
     public int leftFortify;
     public int leftConfetti;
     public int leftEndless;
+    public int leftStorage;
 
     public bool leftRicochet = false;
 
@@ -136,7 +137,7 @@ public class GunManager : MonoBehaviour
     public float rightWeakPointChance = 1f;
     public float rightWeakPointDamage = 1f;
     // right item checks
-    public float rightHeavyBul = 0f;
+    public int rightHeavyBul = 0;
     public int rightMutatedCell = 0;
     public float rightMutatedCellTimer = 0f;
     public float rightBowAct = 0f;
@@ -151,13 +152,13 @@ public class GunManager : MonoBehaviour
     public int rightBeltFed = 0;
     public int rightFastInserter = 0;
     public float rightFastInserterTimer = 0f;
-    public float rightFireSpon;
-    public float rightSharperSpon;
-    public float rightSilverSpon;
-    public float rightHelpingSpon;
-    public float rightCoolSpon;
-    public float rightFastSpon;
-    public float rightLargeSpon;
+    public int rightFireSpon;
+    public int rightSharperSpon;
+    public int rightSilverSpon;
+    public int rightHelpingSpon;
+    public int rightCoolSpon;
+    public int rightFastSpon;
+    public int rightLargeSpon;
     public int rightPossession;
     public int rightSponDeal;
     public float rightSponTimer;
@@ -209,6 +210,7 @@ public class GunManager : MonoBehaviour
     public int rightFortify;
     public int rightConfetti;
     public int rightEndless;
+    public int rightStorage;
 
     public bool rightRicochet = false;
     int leftHandVal;
@@ -573,6 +575,7 @@ public class GunManager : MonoBehaviour
         leftClockwork = givenLeftItems[81];
         leftPrinter = givenLeftItems[88];
         leftMicrowave = givenLeftItems[89];
+        leftStorage = givenLeftItems[95];
         leftSniperTower = givenLeftItems[103];
         leftPerfectedScope = givenLeftItems[104];
         leftPumpShotgunAttach = givenLeftItems[106];
@@ -781,6 +784,7 @@ public class GunManager : MonoBehaviour
         rightClockwork = givenRightItems[81];
         rightPrinter = givenRightItems[88];
         rightMicrowave = givenRightItems[89];
+        rightStorage = givenRightItems[95];
         rightSniperTower = givenRightItems[103];
         rightPerfectedScope = givenRightItems[104];
         rightPumpShotgunAttach = givenRightItems[106];

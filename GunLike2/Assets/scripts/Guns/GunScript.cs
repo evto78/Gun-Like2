@@ -42,7 +42,7 @@ public class GunScript : MonoBehaviour
     public float weakPointDamage;
 
     //item checks
-    public float heavyBul;
+    public int heavyBul;
     public float bowAct;
     public int heavySpirits;
     public int nuclearBul;
@@ -50,13 +50,13 @@ public class GunScript : MonoBehaviour
     public int advTrig;
     public int masterTrig;
     public int jam;
-    public float fireSpon;
-    public float sharperSpon;
-    public float silverSpon;
-    public float helpingSpon;
-    public float coolSpon;
-    public float fastSpon;
-    public float largeSpon;
+    public int fireSpon;
+    public int sharperSpon;
+    public int silverSpon;
+    public int helpingSpon;
+    public int coolSpon;
+    public int fastSpon;
+    public int largeSpon;
     public int possession;
     public int multistage;
     public bool nerfedBul;
@@ -101,6 +101,7 @@ public class GunScript : MonoBehaviour
     public int critUnfunny;
     public int fority;
     public int confetti;
+    public int storage;
 
     public float echoDmg;
 
@@ -223,6 +224,7 @@ public class GunScript : MonoBehaviour
         critUnfunny = manager.leftCritUnfunny;
         fority = manager.leftFortify;
         confetti = manager.leftConfetti;
+        storage = manager.leftStorage;
 
         ricochet = manager.leftRicochet;
 
@@ -234,22 +236,10 @@ public class GunScript : MonoBehaviour
         }
 
         //STAT CAPS!
-        if (bulSpd > 500f)
-        {
-            bulSpd = 500f;
-        }
-        if (acc > 25f)
-        {
-            acc = 25f;
-        }
-        if(bulSize > 10f)
-        {
-            bulSize = 10f;
-        }
-        if (magSize < 1)
-        {
-            magSize = 1;
-        }
+        bulSpd = Mathf.Clamp(bulSpd, 0, 500);
+        acc = Mathf.Clamp(acc, 0, 25);
+        bulSize = Mathf.Clamp(bulSize, 0, 10);
+        magSize = Mathf.Clamp(magSize, 1, float.PositiveInfinity);
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
@@ -321,6 +311,7 @@ public class GunScript : MonoBehaviour
         critUnfunny = manager.rightCritUnfunny;
         fority = manager.rightFortify;
         confetti = manager.rightConfetti;
+        storage = manager.rightStorage;
 
         ricochet = manager.rightRicochet;
 
@@ -332,22 +323,10 @@ public class GunScript : MonoBehaviour
         }
 
         //STAT CAPS!
-        if (bulSpd > 500f)
-        {
-            bulSpd = 500f;
-        }
-        if (acc > 25f)
-        {
-            acc = 25f;
-        }
-        if (bulSize > 10f)
-        {
-            bulSize = 10f;
-        }
-        if (magSize < 1)
-        {
-            magSize = 1;
-        }
+        bulSpd = Mathf.Clamp(bulSpd, 0, 500);
+        acc = Mathf.Clamp(acc, 0, 25);
+        bulSize = Mathf.Clamp(bulSize, 0, 10);
+        magSize = Mathf.Clamp(magSize, 1, float.PositiveInfinity);
         LateStatUpdate();
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
@@ -522,14 +501,14 @@ public class GunScript : MonoBehaviour
                     {
                         currentBullets++;
                         Shoot(1f);
-                        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
-                        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                     }
 
                     pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
                 }
-                if(whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(1f); }
-                if(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1,100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(1f); }
+                if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                 if (brokenPen > 0) { brokenPenCounter++; }
             }
         }
@@ -555,14 +534,14 @@ public class GunScript : MonoBehaviour
                 {
                     currentBullets++;
                     Shoot(bowCharge);
-                    if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
-                    if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
                 }
 
                 pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
             }
-            if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]) { Shoot(bowCharge); }
-            if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]) { Shoot(bowCharge); }
+            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
             if (brokenPen > 0) { brokenPenCounter++; }
             bowCharge = 0f;
         }
@@ -620,7 +599,7 @@ public class GunScript : MonoBehaviour
         SetBulStats(spawnedBullet, dmg, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
 
         if (whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
-        if (whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
+        else { player.GetComponent<GunManager>().rightStickToCounters = 0; }
     }
     public virtual void EarlyShoot(bool requireAmmo)
     {
@@ -654,7 +633,7 @@ public class GunScript : MonoBehaviour
         attackTimer = 1;
         bool requireAmmo = true;
         if (bulletFactory > 0) { requireAmmo = false; if(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1) { requireAmmo = true; } }
-        if(brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
+        if (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
 
         if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
         {
@@ -726,8 +705,8 @@ public class GunScript : MonoBehaviour
             {
                 animator.speed = atkSpd * 3f;
             }
-            if(whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
-            if(whatHandThisIsIn == "right") { player.GetComponent<GunManager>().rightStickToCounters = 0; }
+            if(whatHandThisIsIn == "left") { manager.leftStickToCounters = 0; }
+            else{ manager.rightStickToCounters = 0; }
 
             if(manager.healthMan.activeEffects[20].x > 0)
             {
@@ -804,8 +783,6 @@ public class GunScript : MonoBehaviour
 
     void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)
     {
-        //"What?"
-        //"Now, I know that sounds bad"
         givenBullet.GetComponent<BulletScript>().setStats(this, givenDmg, isCrit, bulPir, isWeakpoint, weakPointDamage, bulSpd * givenBowChar, bulSize, 
             ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, 
             helpingSpon * 5f, coolSpon * 5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed, gunkyClaw);

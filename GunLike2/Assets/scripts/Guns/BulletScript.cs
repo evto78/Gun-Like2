@@ -36,7 +36,7 @@ public class BulletScript : MonoBehaviour
     public GameObject pairedBullet;
     public bool isTrigLead;
     bool isGunky;
-    public float myIsHeavy;
+    public int myIsHeavy;
     public int jam;
     bool isFireSpon;
     public GameObject fireSponEffect;
@@ -63,8 +63,6 @@ public class BulletScript : MonoBehaviour
     public Vector3 myPos;
 
     public string whatHandThisComesFrom;
-
-    List<Collider> collisions = new List<Collider>();
 
     public GameObject shockwave;
     public GameObject droppedNerfedBullet;
@@ -116,17 +114,17 @@ public class BulletScript : MonoBehaviour
         if((whatHandThisComesFrom == "left" && pi.leftItems[119] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[119] > 0)) { if (rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); } turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f; }
     }
     public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd,
-        float givenBulSize, bool givenRico, string whatHand, float isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
+        float givenBulSize, bool givenRico, string whatHand, int isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
         float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, int isGunk, int givenGunkClaw)
     {
-        if(Random.Range(1, 100) < chanceForFire) { isFireSpon = true; fireSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForSharper) { isSharperSpon = true; sharperSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForSilver) { isSilverSpon = true; silverSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForHelping) { isHelpingSpon = true; helpingSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForCool) { isCoolSpon = true; coolSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForFastFire) { isFastFireSpon = true; fastSponEffect.SetActive(true); }
-        if(Random.Range(1, 100) < chanceForLarge) { isLargeSpon = true; largeSponEffect.SetActive(true); }
+        isFireSpon = Random.Range(1, 100) < chanceForFire; fireSponEffect.SetActive(isFireSpon);
+        isSharperSpon = Random.Range(1, 100) < chanceForSharper; sharperSponEffect.SetActive(isSharperSpon);
+        isSilverSpon = Random.Range(1, 100) < chanceForSilver; silverSponEffect.SetActive(isSilverSpon);
+        isHelpingSpon = Random.Range(1, 100) < chanceForHelping; helpingSponEffect.SetActive(isHelpingSpon);
+        isCoolSpon = Random.Range(1, 100) < chanceForCool; coolSponEffect.SetActive(isCoolSpon);
+        isFastFireSpon = Random.Range(1, 100) < chanceForFastFire; fastSponEffect.SetActive(isFastFireSpon);
+        isLargeSpon = Random.Range(1, 100) < chanceForLarge; largeSponEffect.SetActive(isLargeSpon);
         isGunky = Random.Range(1,100)<isGunk*20f;
 
         whatHandThisComesFrom = whatHand;
@@ -139,9 +137,8 @@ public class BulletScript : MonoBehaviour
         weakDamage = givenWeakDmg;
         critDamage = gunFiredFrom.critDamage;
         bulSpd = givenBulSpd;
-        if (isLargeSpon) { bulSpd = bulSpd / 2f; }
-        if (isLargeSpon) { transform.localScale = transform.localScale * 3f; }
-        if (isFastFireSpon && firedFrom != null) { firedFrom.isFastFiring = true; }
+        if (isLargeSpon) { bulSpd = bulSpd / 2f; transform.localScale = transform.localScale * 3f; }
+        firedFrom.isFastFiring = isFastFireSpon;
 
         heavySpirits = givenHeavySpirits;
         nuclearBullets = givenNuclearBul;
@@ -150,22 +147,13 @@ public class BulletScript : MonoBehaviour
         jam = givenJam;
         multistage = givenMultistage;
         gunkyClaw = givenGunkClaw;
-        if(whatHandThisComesFrom == "left") { storage = pi.leftItems[95]; }
-        if(whatHandThisComesFrom == "right") { storage = pi.rightItems[95]; }
+        storage = firedFrom.storage;
         critUnfunny = gunFiredFrom.critUnfunny; if (critUnfunny > 0) { criticallyUnfunny(); }
 
         ricochet = givenRico;
         bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
         myIsHeavy = isHeavy;
-        if (isHeavy != 0f || isLargeSpon || isOil || isFlea)
-        {
-            rb.useGravity = true;
-            rb.mass = isHeavy + 1;
-        }
-        else
-        {
-            rb.useGravity = false;
-        }
+        rb.useGravity = isHeavy != 0f || isLargeSpon || isOil || isFlea;
         float bulSize = givenBulSize;
         if (isFlea) { pierce += 10; ricochet = true; bulSize /= 2f; damage = 1; bulSpd = Mathf.Clamp(bulSpd, 5, 25); }
         

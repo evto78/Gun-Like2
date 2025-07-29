@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoubleBarrelScript : GunScript
 {
-    int bulletsQued;
+    int bulletsQued; static int maxBulletsPerFrame = 100;
     public override void AttemptShoot()
     {
         if ((bowAct > 0))
@@ -23,7 +23,7 @@ public class DoubleBarrelScript : GunScript
                     return;
                 }
 
-                if (Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
+                if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
                 else
                 {
                     for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
@@ -61,7 +61,7 @@ public class DoubleBarrelScript : GunScript
                 rushJobTimer = (1f / reSpd) / 2f;
                 return;
             }
-            if (Mathf.CeilToInt(magSize / 2f) > 25) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
+            if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
             else
             {
                 for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
@@ -93,7 +93,7 @@ public class DoubleBarrelScript : GunScript
         {
             if(bowAct > 0)
             {
-                for (int y = 0; y < 30; y++)
+                for (int y = 0; y < maxBulletsPerFrame; y++)
                 {
                     if(bulletsQued < 1) { break; }
                     bulletsQued--;
@@ -104,7 +104,7 @@ public class DoubleBarrelScript : GunScript
             }
             else
             {
-                for (int y = 0; y < 30; y++)
+                for (int y = 0; y < maxBulletsPerFrame; y++)
                 {
                     if(bulletsQued < 1) { break; }
                     bulletsQued--;
