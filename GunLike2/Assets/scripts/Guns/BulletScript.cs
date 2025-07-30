@@ -28,6 +28,7 @@ public class BulletScript : MonoBehaviour
     public bool ricochet = false;
 
     public bool isFlea;
+    public bool isCannonBall;
 
     public int heavySpirits;
     public int nuclearBullets;
@@ -153,7 +154,7 @@ public class BulletScript : MonoBehaviour
         ricochet = givenRico;
         bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
         myIsHeavy = isHeavy;
-        rb.useGravity = isHeavy != 0f || isLargeSpon || isOil || isFlea;
+        rb.useGravity = isHeavy != 0f || isLargeSpon || isOil || isFlea || isCannonBall;
         float bulSize = givenBulSize;
         if (isFlea) { pierce += 10; ricochet = true; bulSize /= 2f; damage = 1; bulSpd = Mathf.Clamp(bulSpd, 5, 25); }
         

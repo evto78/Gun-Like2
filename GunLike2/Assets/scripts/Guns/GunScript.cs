@@ -153,7 +153,7 @@ public class GunScript : MonoBehaviour
         cam = Camera.main;
 
         if(gooEffect != null) { gooEffect.enabled = isGoo; }
-        
+
         LateStart();
     }
     public virtual void LateStart()
@@ -342,7 +342,9 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        if(doorKnob > 0) { firePoint = doorKnobFirePoint; } else { firePoint = normalFirePoint; }
+        animator.SetBool("IsLeft", whatHandThisIsIn == "left");
+
+        if (doorKnob > 0) { firePoint = doorKnobFirePoint; } else { firePoint = normalFirePoint; }
 
         timeSinceShot += Time.deltaTime;
 
