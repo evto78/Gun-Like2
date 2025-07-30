@@ -527,9 +527,10 @@ public class NEWPlayerMovement : MonoBehaviour
         if (onGround)
         {
             Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            if(inputDir == Vector3.zero && !sliding) { flatVel = flatVel / (friction * (1 + Time.deltaTime)); }
+            if(inputDir == Vector3.zero && !sliding) { flatVel = flatVel / (friction * 4 * (1 + Time.deltaTime)); rb.useGravity = false; } else { rb.useGravity = true; }
             flatVel = flatVel / (friction * (1 + Time.deltaTime));
-            rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z);
-        }
+            if((jumpsLeft > 0 || hasFightingWings) && Input.GetKeyDown(KeyCode.Space)) { rb.velocity = new Vector3(flatVel.x, rb.velocity.y, flatVel.z); }
+            else { rb.velocity = new Vector3(flatVel.x, 0, flatVel.z); }
+        } else { rb.useGravity = true; }
     }
 }
