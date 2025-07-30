@@ -15,6 +15,7 @@ public class GameDataManager : MonoBehaviour
     public int roomNumber;
     public HealthManager phm;
     PlayerItem pi;
+    float pointregenTimer;
     //Checking Change
     bool changedLastFrame;
     List<int> leftSnapshot;
@@ -42,6 +43,9 @@ public class GameDataManager : MonoBehaviour
         if (gameTimerActive)
         {
             timeSpent += Time.deltaTime;
+            pointregenTimer += Time.deltaTime;
+            if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
+            
         }
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
         CheckForItemGainAndDestroy();
@@ -99,12 +103,12 @@ public class GameDataManager : MonoBehaviour
 
         pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
         pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
-        float delayTime = 1;
+        float delayTime = 3;
         foreach (EnemySpawner spawner in activeSpawners)
         {
             spawner.myDelay = delayTime;
             spawner.StartSpawning();
-            delayTime += Random.Range(3f, 5f);
+            delayTime += Random.Range(7f, 13f);
         }
     }
 }

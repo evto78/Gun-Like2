@@ -13,6 +13,8 @@ public class AirDropScript : MonoBehaviour
     public int dropCount;
     int dropsDropped;
 
+    LevelBuilder lb;
+
     public GameObject drop;
     void Start()
     {
@@ -20,6 +22,7 @@ public class AirDropScript : MonoBehaviour
         transform.localEulerAngles = Vector3.up * Random.Range(0, 360);
         transform.position = player.position + (Vector3.up * 300f) + (transform.forward * -initialDistance);
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+        lb = GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>();
     }
 
     // Update is called once per frame
@@ -43,6 +46,7 @@ public class AirDropScript : MonoBehaviour
                 spawnedDrop.transform.position -= Vector3.right * Random.Range(-2f, 2f);
 
                 spawnedDrop.transform.localEulerAngles = new Vector3(-30f, Random.Range(0f,360f), 0f);
+                lb.placed.Add(spawnedDrop);
             }
         }
 

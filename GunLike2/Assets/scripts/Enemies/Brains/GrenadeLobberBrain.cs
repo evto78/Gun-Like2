@@ -20,6 +20,8 @@ public class GrenadeLobberBrain : MonoBehaviour
     float cooldownTimer;
     float burstTimer;
     public float lobSpeed;
+    public int maxGrenadesAtOnce;
+    List<GameObject> grenadesSpawned = new List<GameObject>();
     private void Start()
     {
         hm = GetComponent<EnemyHealthManager>();
@@ -34,6 +36,8 @@ public class GrenadeLobberBrain : MonoBehaviour
     }
     private void Update()
     {
+        foreach(GameObject gm in grenadesSpawned) { if(gm == null) { grenadesSpawned.Remove(gm); } }
+
         jammed = hm.activeEffects[3].x > 0;
 
         if (hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 200 && hm.curHp == hm.maxHp))
@@ -78,6 +82,7 @@ public class GrenadeLobberBrain : MonoBehaviour
     }
     void Lob()
     {
+        if(maxGrenadesAtOnce < grenadesSpawned.Count) { return; }
         burstTimer = burstCooldown;
         gunGrenade.GetComponent<Animator>().speed = 1 / (burstCooldown/2f);
         gunGrenade.GetComponent<Animator>().SetTrigger("shoot");
@@ -85,5 +90,6 @@ public class GrenadeLobberBrain : MonoBehaviour
         GameObject spawned = Instantiate(grenade, firePointGrenade.position, firePointGrenade.rotation);
         spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * lobSpeed, ForceMode.Impulse);
         grenadesShotThisBurst++;
+        grenadesSpawned.Add(spawned);
     }
 }

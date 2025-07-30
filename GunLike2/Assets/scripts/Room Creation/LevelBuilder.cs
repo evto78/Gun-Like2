@@ -13,7 +13,7 @@ public class LevelBuilder : MonoBehaviour
     public GameObject debugCube;
     public GameObject supportPillar;
 
-    List<GameObject> placed = new List<GameObject>();
+    public List<GameObject> placed = new List<GameObject>();
     private void Start()
     {
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();

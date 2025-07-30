@@ -55,12 +55,12 @@ public class ShopCrate : MonoBehaviour
         {
             case 0: cost *= 1; break;
             case 1: cost = Mathf.CeilToInt(cost*1.5f); break;
-            case 2: cost *= 4; break;
-            case 3: cost *= 10; break;
-            case 4: cost *= 4; break;
-            case 5: cost *= 4; break;
-            case 6: cost *= 4; break;
-            case 7: cost *= 10; break;
+            case 2: cost *= 2; break;
+            case 3: cost *= 4; break;
+            case 4: cost *= 3; break;
+            case 5: cost *= 3; break;
+            case 6: cost *= 3; break;
+            case 7: cost *= 4; break;
             case 8: cost = Mathf.CeilToInt(cost/1.5f); break;
         }
 

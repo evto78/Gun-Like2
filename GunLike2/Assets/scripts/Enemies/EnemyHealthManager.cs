@@ -503,7 +503,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (didOnDeath) { return; } else { didOnDeath = true; }
 
         if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
-        playerHM.EnemyDied(this, Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
+        playerHM.EnemyDied(this, (((int)gdm.difficulty+1)/2) * Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
 
         //gunlike classic
         if(playerItem.leftItems[38] + playerItem.rightItems[38] > 0)
