@@ -525,6 +525,21 @@ public class EnemyHealthManager : MonoBehaviour
                 SpawnItem(rarityID);
             }
         }
+        //crate crab
+        if (data.enemyName == "Crate Crab")
+        {
+            bool limestoneScale = playerItem.leftItems[178] + playerItem.rightItems[178] > 0; int rarityID;
+            if (limestoneScale)
+            {
+                rarityID = ItemRarity.GetUnWeightedRandRarity();
+            }
+            else
+            {
+                rarityID = ItemRarity.GetWeightedRandRarity();
+            }
+            SpawnItem(rarityID);
+            
+        }
         //gotcha machine
         if (playerItem.leftItems[75] + playerItem.rightItems[75] > 0)
         {

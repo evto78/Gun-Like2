@@ -13,7 +13,7 @@ public class DroneBrain : MonoBehaviour
     EnemyHealthManager hm; HealthManager phm;
     EnemyHealthManager grabableTarget;
     GameObject player;
-    enum holdType { empty, uzi, grenade, nuke} holdType holding;
+    enum holdType { empty, uzi, grenade, nuke, crab} holdType holding;
     public enum state { wander, seeking, attacking} public state curState;
     bool jammed;
     GameObject fop;
@@ -26,6 +26,9 @@ public class DroneBrain : MonoBehaviour
     List<EnemyHealthManager> activeGernades = new List<EnemyHealthManager>();
     [Header("Nukeshell Spider")]
     public GameObject pickUpNuke; public GameObject nuke; Vector3 nukeDivePos; public float nukeSpeed; public float nukeHoverSpeed;
+    [Header("Crate Crab")]
+    public GameObject pickUpCrab; public GameObject crabBullet; public Transform firePointCrab; public ParticleSystem jammedCrab;
+    public float crabCooldown; float cCooldownTimer;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -80,11 +83,13 @@ public class DroneBrain : MonoBehaviour
                     if (Vector2.Distance(new Vector2(transform.position.x,transform.position.z),new Vector2(grabableTarget.transform.position.x,grabableTarget.transform.position.z)) < 5f) 
                     { hoverHeight = 2; }
                     //if on the target, destroy them, and upgrade this drone.
-                    if(Vector3.Distance(transform.position, grabableTarget.transform.position) < 5f)
+                    if(Vector3.Distance(transform.position, grabableTarget.transform.position) < 10f)
                     {
                         switch (grabableTarget.data.enemyName)
                         {
                             case "Uzi Walker": holding = holdType.uzi; pickUpUzi.SetActive(true); break;
+                            case "Balistic Basalisk": holding = holdType.uzi; pickUpUzi.SetActive(true); break;
+                            case "Crate Crab": holding = holdType.crab; pickUpCrab.SetActive(true); break;
                             case "Grenade Lobber": holding = holdType.grenade; pickUpGrenade.SetActive(true); break;
                             case "Nukeshell Spider": holding = holdType.nuke; pickUpNuke.SetActive(true); nukeDivePos = player.transform.position; break;
                         }
@@ -111,6 +116,10 @@ public class DroneBrain : MonoBehaviour
                         hoverSpeed = nukeHoverSpeed;
                         if(nukeDivePos.y > transform.position.y) { hoverHeight += 5 * Time.deltaTime; }
                         else { hoverHeight -= 5 * Time.deltaTime; }
+                        break;
+                    case holdType.crab:
+                        MoveToTarget(player.transform.position, 40);
+                        AttemptShoot();
                         break;
                 }
                 break;
@@ -198,6 +207,15 @@ public class DroneBrain : MonoBehaviour
                 } else { gCooldownTimer = greCooldown; greShot = 0; }
             } else { gCooldownTimer -= Time.deltaTime; }
         }
+        else if (holding == holdType.crab)
+        {
+            if (cCooldownTimer <= 0)
+            {
+                Shoot();
+                cCooldownTimer = crabCooldown;
+            }
+            else { cCooldownTimer -= Time.deltaTime; }
+        }
     }
     bool CanShootUzi()
     {
@@ -235,6 +253,15 @@ public class DroneBrain : MonoBehaviour
             spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * 150f, ForceMode.Impulse);
             spawned.GetComponent<EnemyHealthManager>().refundPoints = false; ;
             greShot++; activeGernades.Add(spawned.GetComponent<EnemyHealthManager>());
+        }
+        else if (holding == holdType.crab)
+        {
+            if (jammed) { jammedCrab.Play(); return; }
+            GameObject spawnedGlob = Instantiate(crabBullet, firePointCrab.position, firePointCrab.rotation);
+            spawnedGlob.GetComponent<CrateCrabGlob>().damage = 6 * hm.baseDamage * hm.difficultyScale * hm.difficultyStatScaling;
+            spawnedGlob.GetComponent<CrateCrabGlob>().ehm = hm;
+            spawnedGlob.GetComponent<CrateCrabGlob>().lifeTimeTimer = Random.Range(10f, 20f);
+            spawnedGlob.GetComponent<Rigidbody>().AddForce(transform.forward * 6, ForceMode.Impulse);
         }
     }
     void MoveToTarget(Vector3 target, float desDistance)
