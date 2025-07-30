@@ -254,8 +254,8 @@ public class GunManager : MonoBehaviour
             rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
         }
         leftGoo = false; rightGoo = false;
-        if(leftHandVal == 10) { leftHandVal = rightHandVal; leftGoo = true; }
-        if(rightHandVal == 10) { rightHandVal = leftHandVal; rightGoo = true; }
+        if(leftHandVal == guns.Count) { leftHandVal = rightHandVal; leftGoo = true; }
+        if(rightHandVal == guns.Count) { rightHandVal = leftHandVal; rightGoo = true; }
         if(leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
         if(rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
         Instantiate(guns[leftHandVal], leftHand.transform);
