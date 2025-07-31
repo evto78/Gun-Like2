@@ -112,7 +112,7 @@ public class BulletScript : MonoBehaviour
     private void Update()
     {
         lifetime += Time.deltaTime;
-        mesh.transform.localScale = intialMeshScale * Mathf.Clamp(lifetime*10f, 0.1f, 1f);
+        if(mesh != null) { mesh.transform.localScale = intialMeshScale * Mathf.Clamp(lifetime * 10f, 0.1f, 1f); }
         if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
         if (rb.velocity.magnitude != 0){ transform.rotation = Quaternion.LookRotation(rb.velocity); }
         if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }

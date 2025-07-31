@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6856463522256569034}
-  - component: {fileID: 4791319844739154470}
+  - component: {fileID: 6370346624277549456}
   - component: {fileID: 3721627582309578008}
   - component: {fileID: 3474942468195493434}
-  - component: {fileID: 1807506501378590884}
+  - component: {fileID: 5353261812710977344}
   m_Layer: 7
   m_Name: ArcherFish
   m_TagString: Untagged
@@ -39,7 +39,7 @@ Transform:
   - {fileID: 1655183268522054884}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4791319844739154470
+--- !u!114 &6370346624277549456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,28 +48,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 2411502404954114123}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3ef1bee0412a4b4b904465c46de642f, type: 3}
+  m_Script: {fileID: 11500000, guid: d49262f8fd193d746aa88a63cca220fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   possessionEffect: {fileID: 4229387458415660356}
   misfireEffect: {fileID: 8797157199550544910}
   confettiEffect: {fileID: 3290861123574292582}
-  gunName: Pistol
+  gunName: Archer Fish
   isGoo: 0
   gooEffect: {fileID: 0}
-  baseMagSize: 50
-  baseAtkSpd: 10
-  baseReSpd: 0.6
-  baseBulSpd: 25
-  baseDmg: 1
-  baseAcc: 2
+  baseMagSize: 66
+  baseAtkSpd: 12
+  baseReSpd: 0.5
+  baseBulSpd: 100
+  baseDmg: 2
+  baseAcc: 0.1
   baseBulSize: 1
   baseBulPir: 0
   baseCritChance: 0
-  baseCritDamage: 1.5
+  baseCritDamage: 2
   baseWeakPointChance: 0
-  baseWeakPointDamage: 1.2
+  baseWeakPointDamage: 1.5
   magSize: 0
   atkSpd: 0
   reSpd: 0
@@ -163,7 +163,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2411502404954114123}
-  m_Mesh: {fileID: -2905949041820075964, guid: 2dcd217bb7cf5e547aaa58f22c7f0599, type: 3}
+  m_Mesh: {fileID: -2905949041820075964, guid: 934e84de6e13cae4e973fdf543273a48, type: 3}
 --- !u!23 &3474942468195493434
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &1807506501378590884
+--- !u!95 &5353261812710977344
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -216,7 +216,7 @@ Animator:
   m_GameObject: {fileID: 2411502404954114123}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b4d0b777c75f2544c87e7e222d3d1511, type: 2}
+  m_Controller: {fileID: 9100000, guid: 20415fe8567ea6142927255d4778f4ad, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5204,7 +5204,7 @@ Transform:
   m_GameObject: {fileID: 4229387458415660356}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0333, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -5400,7 +5400,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.26666668}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.14901961}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5464,7 +5464,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.09
+      scalar: 0.01
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5788,7 +5788,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5928,7 +5928,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.11
+      value: 0.03
       mode: 0
       spread: 0
       speed:
@@ -9954,7 +9954,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9165c976f69e8d747a0359775efeafa0, type: 2}
+  - {fileID: 2100000, guid: 5e7124856c82ef14e862d110717d36a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9975,7 +9975,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 0
+  m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -9996,7 +9996,7 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 2540817853737639666, guid: 6ceaccd0c2c2c1d49ac6705f97497740, type: 3}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}

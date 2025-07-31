@@ -365,11 +365,8 @@ public class GunScript : MonoBehaviour
                 //Debug.Log(hit.transform.gameObject.name);
                 if (hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out eHealthMan))
                 {
-                    if ((eHealthMan.curHp + eHealthMan.armor) <= dmg)
-                    {
-                        target = hit.transform;
-                        break;
-                    }
+                    target = hit.transform;
+                    break;
                 }
                 
             }
