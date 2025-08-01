@@ -10,7 +10,7 @@ public class ChimeraBrain : MonoBehaviour
     public float uziTimer; bool uziActive;
     EnemyHealthManager ehm; public float percentage;
     public float uziHitDmg = 0.5f; public float akHitDmg = 0;
-    float masterDmg; public int milestone;
+    float masterDmg; List<int> milestones;
     TrashOrb trashOrb;
     public GameObject awpHead; Animator awpAnim;
     public GameObject ak47Head; Animator ak47Anim;
@@ -20,7 +20,13 @@ public class ChimeraBrain : MonoBehaviour
     public GameObject droppedUZI; float dropUziTimer;
     void Start()
     {
-        milestone = 80;
+        milestones = new List<int>();
+        milestones.Add(90);
+        milestones.Add(75);
+        milestones.Add(45);
+        milestones.Add(30);
+        milestones.Add(10);
+        milestones.Add(-1);
         ehm = GetComponent<EnemyHealthManager>();
         awpTimer = 12f; akTimer = 8f; uziTimer = 4f; phase = phaseTypes.a;
         masterDmg = ehm.baseDamage * ehm.difficultyScale * ehm.gdm.difficulty;
@@ -68,7 +74,7 @@ public class ChimeraBrain : MonoBehaviour
             case (phaseTypes.c):
                 break;
         }
-        if(percentage < milestone) { trashOrb.PlayHit(); milestone -= 20; }
+        if(milestones.Count > 1 && percentage < milestones[0]) { trashOrb.PlayHit(); milestones.RemoveAt(0); }
         if(dropAkTimer > 0)
         {
             dropAkTimer -= Time.deltaTime;
