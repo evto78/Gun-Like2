@@ -42,22 +42,22 @@ public class EnemyHealthManager : MonoBehaviour
     public GameObject damageText;
     public float latestDamage;
 
-    GameObject player;
-    PlayerItem playerItem;
+    protected GameObject player;
+    protected PlayerItem playerItem;
     public HealthManager playerHM;
 
     public GameDataManager gdm;
 
     public GameObject effectIcon;
-    List<GameObject> icons;
+    protected List<GameObject> icons;
     public Transform effectHolder;
 
-    int featherton;
+    protected int featherton;
 
-    bool died;
+    protected bool died;
     public bool didOnDeath;
 
-    int numOfActiveEffects;
+    protected int numOfActiveEffects;
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -65,8 +65,8 @@ public class EnemyHealthManager : MonoBehaviour
     // w == 1 if effect is positive,0 if effect is neutral, and -1 if effect is negative
 
     List<float> dmgQued = new List<float>();
-    float burnTimer; public bool refundPoints;
-    private void Awake()
+    protected float burnTimer; public bool refundPoints;
+    protected virtual void Awake()
     {
         if (gdm == null)
         {
@@ -116,8 +116,9 @@ public class EnemyHealthManager : MonoBehaviour
         //Make sure is at fullHP
         curHp = maxHp;
         //NOW GO GET EM SOILDER!!!
+        LateAwake();
     }
-
+    void LateAwake() { }
     void Update()
     {
         burnTimer += Time.deltaTime;
@@ -133,7 +134,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
+    public virtual void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
         if (hit == HitType.ht.weak || hit == HitType.ht.critweak || hit == HitType.ht.special) { ignoreArmor = true; }
         foreach(MonoBehaviour brain in brains)
@@ -315,7 +316,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    public void Die()
+    public virtual void Die()
     {
         //on death effects
         OnDeath();
@@ -374,7 +375,7 @@ public class EnemyHealthManager : MonoBehaviour
         int temp = debuffs[Random.Range(0, debuffs.Count)];
         GiveEffect(temp.ToString(), 1f);
     }
-    void ManageEffects()
+    protected virtual void ManageEffects()
     {
         Vector4 q = new Vector4(0, 0, 0, 0);
 
@@ -486,7 +487,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    void PopUpText(string dmgText, HitType.ht hit, Vector3 hitLocation, string source)
+    protected void PopUpText(string dmgText, HitType.ht hit, Vector3 hitLocation, string source)
     {
         GameObject spawnedText = Instantiate(damageText, player.GetComponentInChildren<Canvas>().gameObject.transform);
 

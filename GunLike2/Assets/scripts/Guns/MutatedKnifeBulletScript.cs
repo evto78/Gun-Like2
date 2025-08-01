@@ -5,7 +5,6 @@ using UnityEngine;
 public class MutatedKnifeBulletScript : BulletScript
 {
     float lifetime = 0;
-
     public override void Awake()
     {
         base.Awake();

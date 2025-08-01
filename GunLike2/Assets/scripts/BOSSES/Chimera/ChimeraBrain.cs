@@ -10,10 +10,15 @@ public class ChimeraBrain : MonoBehaviour
     public float uziTimer; bool uziActive;
     EnemyHealthManager ehm; public float percentage;
     public float uziHitDmg; public float akHitDmg;
+    float masterDmg; int milestone;
+    TrashOrb trashOrb;
     void Start()
     {
+        milestone = 90;
         ehm = GetComponent<EnemyHealthManager>();
         awpTimer = 12f; akTimer = 8f; uziTimer = 4f; phase = phaseTypes.a;
+        masterDmg = ehm.baseDamage * ehm.difficultyScale * ehm.gdm.difficulty;
+        trashOrb = GetComponentInChildren<TrashOrb>();
     }
     void Update()
     {
@@ -37,6 +42,7 @@ public class ChimeraBrain : MonoBehaviour
             case (phaseTypes.c):
                 break;
         }
+        if(percentage < milestone) { trashOrb.PlayHit(); milestone -= 10; }
     }
     void TimerManagement()
     {
