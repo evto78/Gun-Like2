@@ -130,12 +130,13 @@ public class BossHealthManager : EnemyHealthManager
             died = true;
             if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
             if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-            Die();
+            Die(true);
         }
     }
 
-    public override void Die()
+    public override void Die(bool sentByHm)
     {
+        if (!sentByHm) { return; }
         //on death effects
         OnDeath();
 

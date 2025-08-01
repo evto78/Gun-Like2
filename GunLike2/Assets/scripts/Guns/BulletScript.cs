@@ -508,10 +508,13 @@ public class BulletScript : MonoBehaviour
         RunOnHit(givenGameObject, hit);
         givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-        {ehm.Die();}
+        {ehm.Die(false);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
         {ehm.GiveEffect("radiation", 1);}
+
+        if(hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 
+        { ChimeraSpesificPointThatWasHurtInformationHandler(hit.collider.transform.parent.parent.parent.name, ehm); }
     }
     void NormalHit(GameObject givenGameObject, RaycastHit hit)
     {
@@ -529,10 +532,22 @@ public class BulletScript : MonoBehaviour
         RunOnHit(givenGameObject, hit); givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
 
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-        {ehm.Die();}
+        {ehm.Die(false);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
         {ehm.GiveEffect("radiation", 1);}
+
+        if (hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 
+        { ChimeraSpesificPointThatWasHurtInformationHandler(hit.collider.transform.parent.parent.parent.name, ehm); }
+    }
+    void ChimeraSpesificPointThatWasHurtInformationHandler(string tar, EnemyHealthManager ehm)
+    {
+        switch (tar)
+        {
+            case "AK47": ehm.brains[0].SendMessage("AK47HIT", SendMessageOptions.DontRequireReceiver); break;
+            case "Awp": ehm.brains[0].SendMessage("AWPHIT", SendMessageOptions.DontRequireReceiver); break;
+            case "Uzi": ehm.brains[0].SendMessage("UZIHIT", SendMessageOptions.DontRequireReceiver); break;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {

@@ -9,16 +9,43 @@ public class ChimeraBrain : MonoBehaviour
     public float akTimer; bool akActive;
     public float uziTimer; bool uziActive;
     EnemyHealthManager ehm; public float percentage;
-    public float uziHitDmg; public float akHitDmg;
-    float masterDmg; int milestone;
+    public float uziHitDmg = 0.5f; public float akHitDmg = 0;
+    float masterDmg; public int milestone;
     TrashOrb trashOrb;
+    public GameObject awpHead; Animator awpAnim;
+    public GameObject ak47Head; Animator ak47Anim;
+    public GameObject uziHead; Animator uziAnim;
+
+    public GameObject droppedAK; float dropAkTimer;
+    public GameObject droppedUZI; float dropUziTimer;
     void Start()
     {
-        milestone = 90;
+        milestone = 80;
         ehm = GetComponent<EnemyHealthManager>();
         awpTimer = 12f; akTimer = 8f; uziTimer = 4f; phase = phaseTypes.a;
         masterDmg = ehm.baseDamage * ehm.difficultyScale * ehm.gdm.difficulty;
         trashOrb = GetComponentInChildren<TrashOrb>();
+
+        awpAnim = awpHead.GetComponentInChildren<Animator>();
+        ak47Anim = ak47Head.GetComponentInChildren<Animator>();
+        uziAnim = uziHead.GetComponentInChildren<Animator>();
+
+        ehm.playerHM.uiMan.bossHealthBars[0].gameObject.SetActive(true);
+        ehm.playerHM.uiMan.bossHealthBars[0].ehm = ehm;
+    }
+    private void OnDestroy()
+    {
+        if(ehm.playerHM.uiMan.bossHealthBars[0] != null)
+        {
+            ehm.playerHM.uiMan.bossHealthBars[0].gameObject.SetActive(false);
+        }
+    }
+    private void OnDisable()
+    {
+        if (ehm.playerHM.uiMan.bossHealthBars[0] != null)
+        {
+            ehm.playerHM.uiMan.bossHealthBars[0].gameObject.SetActive(false);
+        }
     }
     void Update()
     {
@@ -27,22 +54,31 @@ public class ChimeraBrain : MonoBehaviour
         switch (phase) //make sure phase change milestones are correct
         {
             case (phaseTypes.a):
-
-                if (percentage <= 60 && uziHitDmg > akHitDmg) { phase = phaseTypes.ba; } // Uzi Falls off
-                if (percentage <= 60 && akHitDmg > uziHitDmg) { phase = phaseTypes.bb; } // Ak Falls off
+                if (percentage <= 75 && uziHitDmg >= akHitDmg) { phase = phaseTypes.ba; uziAnim.SetTrigger("Fall"); dropUziTimer = 0.45f; awpAnim.SetTrigger("TakeUzi"); } // Uzi Falls off
+                else if (percentage <= 75 && akHitDmg > uziHitDmg) { phase = phaseTypes.bb; ak47Anim.SetTrigger("Fall"); dropAkTimer = 0.45f; awpAnim.SetTrigger("TakeAk"); } // Ak Falls off
                 break;
             case (phaseTypes.ba):
 
-                if (percentage <= 40) { phase = phaseTypes.c; }
+                if (percentage <= 30) { phase = phaseTypes.c; ak47Anim.SetTrigger("Fall"); dropAkTimer = 0.45f; awpAnim.SetTrigger("TakeAk"); }
                 break;
             case (phaseTypes.bb):
 
-                if (percentage <= 40) { phase = phaseTypes.c; }
+                if (percentage <= 30) { phase = phaseTypes.c; uziAnim.SetTrigger("Fall"); dropUziTimer = 0.45f; awpAnim.SetTrigger("TakeUzi"); }
                 break;
             case (phaseTypes.c):
                 break;
         }
-        if(percentage < milestone) { trashOrb.PlayHit(); milestone -= 10; }
+        if(percentage < milestone) { trashOrb.PlayHit(); milestone -= 20; }
+        if(dropAkTimer > 0)
+        {
+            dropAkTimer -= Time.deltaTime;
+            if(dropAkTimer <= 0) { Instantiate(droppedAK, ak47Anim.transform.position, ak47Anim.transform.rotation); ak47Head.SetActive(false); }
+        }
+        if (dropUziTimer > 0)
+        {
+            dropUziTimer -= Time.deltaTime;
+            if (dropUziTimer <= 0) { Instantiate(droppedUZI, uziAnim.transform.position, uziAnim.transform.rotation); uziHead.SetActive(false); }
+        }
     }
     void TimerManagement()
     {
@@ -65,5 +101,17 @@ public class ChimeraBrain : MonoBehaviour
                 if (awpActive) { awpTimer = 4f; awpActive = false; } awpTimer -= Time.deltaTime; if (awpTimer <= 0) { awpActive = true; }
                 break;
         }
+    }
+    public void AWPHIT()
+    {
+
+    }
+    public void AK47HIT()
+    {
+        akHitDmg += 1;
+    }
+    public void UZIHIT()
+    {
+        uziHitDmg += 1;
     }
 }

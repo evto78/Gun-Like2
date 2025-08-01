@@ -42,8 +42,16 @@ public class UIManager : MonoBehaviour
 
     public bool fishing;
 
+    public List<BossHealthBar> bossHealthBars;
+
     private void Start()
     {
+        bossHealthBars.Clear();
+        for(int i = 0; i < playUI.transform.GetChild(0).childCount; i++)
+        {
+            bossHealthBars.Add(playUI.transform.GetChild(0).GetChild(i).GetComponent<BossHealthBar>());
+        }
+
         initalGunkyPngPos = gunkyPng.GetComponent<RectTransform>().position.y;
 
         gunManager = gameObject.GetComponent<GunManager>();

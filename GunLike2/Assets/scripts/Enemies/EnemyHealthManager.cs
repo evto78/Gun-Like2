@@ -125,7 +125,7 @@ public class EnemyHealthManager : MonoBehaviour
         numOfActiveEffects = 0;
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
-        if (curHp <= 0 && !died) { Die(); died = true; }
+        if (curHp <= 0 && !died) { Die(true); died = true; }
 
         if (dmgQued.Count > 0)
         {
@@ -186,7 +186,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die();
+                    Die(true);
                 }
             }
         }
@@ -199,7 +199,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die();
+                    Die(true);
                 }
             }
         }
@@ -278,7 +278,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (curHp <= 0 && !died) { died = true; 
             if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
             if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-            Die();
+            Die(true);
         }
     }
 
@@ -286,7 +286,7 @@ public class EnemyHealthManager : MonoBehaviour
     {
         TakeDamage(curHp * pDmgTaken, true, HitType.ht.normal, transform.position, "self");
 
-        if (curHp <= 0) { Die(); }
+        if (curHp <= 0) { Die(true); }
     }
     public void QueStandardDamage(float damage)
     {
@@ -316,7 +316,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    public virtual void Die()
+    public virtual void Die(bool sendByHm)
     {
         //on death effects
         OnDeath();

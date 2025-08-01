@@ -140,7 +140,7 @@ public class GunScript : MonoBehaviour
     public string whatHandThisIsIn;
     public float littleCharge;
     protected float timeSinceShot;
-    public Transform target;
+    public Transform target; protected float possessionUpdateTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -348,28 +348,32 @@ public class GunScript : MonoBehaviour
 
         timeSinceShot += Time.deltaTime;
 
-        if(possession > 0 && timeSinceShot > 5f)
+        possessionUpdateTimer -= Time.deltaTime;
+        if (possession > 0 && timeSinceShot > 5f)
         {
-            if(currentBullets <= 0) { AttemptReload(); }
+            if (currentBullets <= 0) { AttemptReload(); }
 
             possessionEffect.SetActive(true);
 
-            List<RaycastHit> hits = new List<RaycastHit>();
-
-            hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 10f, Vector3.one * 10f, cam.transform.forward, cam.transform.rotation, 100f));
-
-            EnemyHealthManager eHealthMan;
-            target = null;
-            foreach(RaycastHit hit in hits)
+            if(possessionUpdateTimer <= 0f)
             {
-                //Debug.Log(hit.transform.gameObject.name);
-                if (hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out eHealthMan))
+                possessionUpdateTimer = 0.5f;
+                List<RaycastHit> hits = new List<RaycastHit>();
+
+                hits.InsertRange(0, Physics.BoxCastAll(cam.transform.position + cam.transform.forward * 10f, Vector3.one * 10f, cam.transform.forward, cam.transform.rotation, 100f));
+
+                EnemyHealthManager ehm;
+                target = null;
+                foreach (RaycastHit hit in hits)
                 {
-                    target = hit.transform;
-                    break;
+                    if (hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out ehm))
+                    {
+                        target = hit.transform;
+                        break;
+                    }
                 }
-                
             }
+
             if(target != null)
             {
                 AttemptShoot();
@@ -615,7 +619,7 @@ public class GunScript : MonoBehaviour
             for(int i = 0; i < fleas; i++)
             {
                 GameObject spawnedFlea = Instantiate(fleaBullet, firePoint.position, firePoint.rotation); acc = acc / 1;
-                if (target != null) { spawnedFlea.transform.LookAt(target); timeSinceShot = 5f; }
+                if (target != null) { spawnedFlea.transform.LookAt(target); timeSinceShot = 5; }
                 acc *= 1.5f; spawnedFlea.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc))); acc /= 1.5f;
                 spawnedFlea.GetComponent<BulletScript>().mainCamera = cam;
                 SetBulStats(spawnedFlea, dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
