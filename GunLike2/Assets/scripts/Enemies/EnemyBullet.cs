@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
-    float dmg;
+    public float dmg;
     EnemyHealthManager ehm;
     public void SetStats(float givenDmg, EnemyHealthManager source)
     {

@@ -24,10 +24,7 @@ public class Shockwave : MonoBehaviour
 
         Destroy(gameObject, lifetime/2f);
         lifetimeTimer = 0;
-        //myMeshs.AddRange(gameObject.GetComponentsInChildren<MeshRenderer>());
     }
-
-    // Update is called once per frame
     void Update()
     {
         lifetimeTimer += Time.deltaTime*2f;
