@@ -23,11 +23,16 @@ public class ChimeraBrain : MonoBehaviour
     public GameObject ak47Bullet; public float ak47BulSpd; public float ak47BulDmg;
     public GameObject awpBullet; public float awpBulSpd; public float awpBulDmg;
 
+    List<Target> unassignedTargets = new List<Target>();
+    public GameObject target;
+
     public float uziAcc; public float akAcc; public float awpAcc;
 
     int lastUziAttack = 0; int curUziCycle = 0; float uziBurstTime; float uziCooldownTime; float uziAttackTime; float uziBurstTimer; float uziCooldownTimer; float uziAttackTimer; float uziWait; int uzibulperburst; int uzibulshot;
     int lastAk47Attack = 0; int curAk47Cycle = 0; float akBurstTime; float akCooldownTime; float akAttackTime; float akBurstTimer; float akCooldownTimer; float akAttackTimer; float akWait; int akbulperburst; int akbulshot;
     int lastAwpAttack = 0; int curAwpCycle = 0; float awpCooldownTime; float awpAttackTime; float awpCooldownTimer; float awpAttackTimer; float awpWait;
+
+    Transform player; Transform curUziTarget; Transform curAkTarget; Transform curAwpTarget;
     void Start()
     {
         milestones = new List<int>();
@@ -38,6 +43,7 @@ public class ChimeraBrain : MonoBehaviour
         milestones.Add(10);
         milestones.Add(-1);
         ehm = GetComponent<EnemyHealthManager>();
+        player = ehm.gdm.phm.gameObject.transform;
         awpTimer = 12f; akTimer = 8f; uziTimer = 4f; phase = phaseTypes.a;
         masterDmg = ehm.baseDamage * ehm.difficultyScale * ehm.gdm.difficulty;
         trashOrb = GetComponentInChildren<TrashOrb>();
@@ -179,8 +185,8 @@ public class ChimeraBrain : MonoBehaviour
                 lastUziAttack = Random.Range(0, 2);
                 switch (lastUziAttack)
                 {
-                    case 0: uziBurstTime = 0.05f; uziCooldownTime = 0.5f; uziAttackTime = 2f; uziWait = 0f; uzibulperburst = 5; break;
-                    case 1: uziBurstTime = 0f; uziCooldownTime = 0.025f; uziAttackTime = 2.5f; uziWait = 1f; uzibulperburst = 1; break;
+                    case 0: uziBurstTime = 0.05f; uziCooldownTime = 0.5f; uziAttackTime = 2f; uziWait = 0f; uzibulperburst = 5; curUziTarget = player; break;
+                    case 1: uziBurstTime = 0f; uziCooldownTime = 0.025f; uziAttackTime = 2.5f; uziWait = 1f; uzibulperburst = 1; curUziTarget = player; break;
                 }
                 curUziCycle = 0;
                 break;
@@ -198,7 +204,7 @@ public class ChimeraBrain : MonoBehaviour
                 lastAk47Attack = Random.Range(0, 2);
                 switch (lastAk47Attack)
                 {
-                    case 0: akBurstTime = 0f; akCooldownTime = 0.5f; akAttackTime = 3f; akWait = 2f; akbulperburst = 1; break;
+                    case 0: akBurstTime = 0f; akCooldownTime = 0.5f; akAttackTime = 3f; akWait = 2f; akbulperburst = 1; StartCoroutine(spawnTargetsAk(6, 2f)); break;
                     case 1: akBurstTime = 0f; akCooldownTime = 0f; akAttackTime = 0f; akWait = 0f; akbulperburst = 0; break;
                 }
                 curAk47Cycle = 0;
@@ -271,19 +277,33 @@ public class ChimeraBrain : MonoBehaviour
         {
             case 0:
                 spawnedBul = Instantiate(uziBullet, uziFirepoint.position, uziFirepoint.rotation);
+                spawnedBul.transform.Rotate(new Vector3(Random.Range(-uziAcc, uziAcc), Random.Range(-uziAcc, uziAcc), Random.Range(-uziAcc, uziAcc))); 
                 eb = spawnedBul.GetComponent<EnemyBullet>(); speedMod *= uziBulSpd; dmg *= uziBulDmg;
-                spawnedBul.transform.Rotate(new Vector3(Random.Range(-uziAcc, uziAcc), Random.Range(-uziAcc, uziAcc), Random.Range(-uziAcc, uziAcc))); break;
+                break;
             case 1:
                 spawnedBul = Instantiate(ak47Bullet, ak47Firepoint.position, ak47Firepoint.rotation);
+                spawnedBul.transform.Rotate(new Vector3(Random.Range(-akAcc, akAcc), Random.Range(-akAcc, akAcc), Random.Range(-akAcc, akAcc))); 
+                if(unassignedTargets.Count > 0) { spawnedBul.transform.LookAt(unassignedTargets[0].transform); unassignedTargets[0].assignedTar = spawnedBul; unassignedTargets[0].assigned = true; unassignedTargets.RemoveAt(0); }
                 eb = spawnedBul.GetComponent<EnemyBullet>(); speedMod *= ak47BulSpd; dmg *= ak47BulDmg;
-                spawnedBul.transform.Rotate(new Vector3(Random.Range(-akAcc, akAcc), Random.Range(-akAcc, akAcc), Random.Range(-akAcc, akAcc))); break;
+                break;
             case 2:
                 spawnedBul = Instantiate(awpBullet, awpFirepoint.position, awpFirepoint.rotation);
+                spawnedBul.transform.Rotate(new Vector3(Random.Range(-awpAcc, awpAcc), Random.Range(-awpAcc, awpAcc), Random.Range(-awpAcc, awpAcc))); 
                 eb = spawnedBul.GetComponent<EnemyBullet>(); speedMod *= awpBulSpd; dmg *= awpBulDmg;
-                spawnedBul.transform.Rotate(new Vector3(Random.Range(-awpAcc, awpAcc), Random.Range(-awpAcc, awpAcc), Random.Range(-awpAcc, awpAcc))); break;
+                break;
         }
         eb.gameObject.GetComponent<Rigidbody>().AddForce(eb.transform.forward * speedMod, ForceMode.Impulse);
         eb.SetStats(dmg, ehm);
+    }
+    private IEnumerator spawnTargetsAk(int targets, float time)
+    {
+        for(int i = 0; i < targets; i++)
+        {
+            yield return new WaitForSeconds(time / targets);
+            GameObject spawnedTarget = Instantiate(target);
+            spawnedTarget.transform.position = player.position + new Vector3(Random.Range(-20f, 20f), 50, Random.Range(-20f, 20f));
+            unassignedTargets.Add(spawnedTarget.GetComponent<Target>());
+        }
     }
     public void AWPHIT()
     {

@@ -140,7 +140,7 @@ public class GunScript : MonoBehaviour
     public string whatHandThisIsIn;
     public float littleCharge;
     protected float timeSinceShot;
-    public Transform target; protected float possessionUpdateTimer = 0f;
+    public Rigidbody target; protected float possessionUpdateTimer = 0f; Vector3 possessionTarOffset;
 
     // Start is called before the first frame update
     void Start()
@@ -368,7 +368,7 @@ public class GunScript : MonoBehaviour
                 {
                     if (hit.transform.gameObject.TryGetComponent<EnemyHealthManager>(out ehm))
                     {
-                        target = hit.transform;
+                        target = hit.transform.gameObject.GetComponent<Rigidbody>();
                         break;
                     }
                 }
@@ -410,7 +410,7 @@ public class GunScript : MonoBehaviour
                     if(Vector3.Distance(player.position, ehm.transform.position) < dist)
                     {
                         //Debug.Log("Setting target as: " + ehm.gameObject.name);
-                        target = ehm.transform;
+                        target = ehm.transform.gameObject.GetComponent<Rigidbody>();
                         dist = Vector3.Distance(player.position, ehm.transform.position);
                     }
                 }
@@ -619,7 +619,7 @@ public class GunScript : MonoBehaviour
             for(int i = 0; i < fleas; i++)
             {
                 GameObject spawnedFlea = Instantiate(fleaBullet, firePoint.position, firePoint.rotation); acc = acc / 1;
-                if (target != null) { spawnedFlea.transform.LookAt(target); timeSinceShot = 5; }
+                if (target != null) { GetPosessionTargetPos(); spawnedFlea.transform.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5; }
                 acc *= 1.5f; spawnedFlea.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc))); acc /= 1.5f;
                 spawnedFlea.GetComponent<BulletScript>().mainCamera = cam;
                 SetBulStats(spawnedFlea, dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
@@ -665,7 +665,7 @@ public class GunScript : MonoBehaviour
             if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
             else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
             else { spawnedBullet = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            if (target != null) { spawnedBullet.transform.LookAt(target); timeSinceShot = 5f; }
+            if (target != null) { GetPosessionTargetPos(); spawnedBullet.transform.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5f; }
             acc = acc / bowChar;
             spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
             spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
@@ -788,7 +788,10 @@ public class GunScript : MonoBehaviour
         Debug.Log(dmgGiven);
         return dmgGiven;
     }
-
+    void GetPosessionTargetPos()
+    {
+        possessionTarOffset = (Vector3.Distance(target.transform.position, transform.position) * target.velocity) / bulSpd;
+    }
     void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)
     {
         givenBullet.GetComponent<BulletScript>().setStats(this, givenDmg, isCrit, bulPir, isWeakpoint, weakPointDamage, bulSpd * givenBowChar, bulSize, 
