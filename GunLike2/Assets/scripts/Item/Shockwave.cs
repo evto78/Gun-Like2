@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shockwave : MonoBehaviour
 {
+    public bool hurtPlayer;
     public float lifetime;
     public float damage;
     float lifetimeTimer;
@@ -46,14 +47,24 @@ public class Shockwave : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (hurtPlayer)
         {
-            collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
-            if (blinding) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("blind", playerItem.leftItems[125]+playerItem.rightItems[125]); }
-            if (coolSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
-            if (fireSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }
-            if (bleedSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 3f); }
-            if (helpingSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
+            if (collision.gameObject.tag == "Player")
+            {
+                collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null);
+            }
+        }
+        else
+        {
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
+                if (blinding) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("blind", playerItem.leftItems[125] + playerItem.rightItems[125]); }
+                if (coolSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
+                if (fireSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }
+                if (bleedSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 3f); }
+                if (helpingSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
+            }
         }
     }
 }

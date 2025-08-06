@@ -19,7 +19,8 @@ public class Target : MonoBehaviour
     }
     public void Hit()
     {
-        anim.SetTrigger("Hit");
+        if(anim != null) { anim.SetTrigger("Hit"); }
+       
         Destroy(gameObject, 0.05f);
     }
 }

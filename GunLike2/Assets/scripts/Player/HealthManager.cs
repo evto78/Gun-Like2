@@ -721,12 +721,14 @@ public class HealthManager : MonoBehaviour
 			case PlayerEffectType.effectName.depleatedRockDebuff: activeEffects[25] = new Vector4(activeEffects[25].x + stacksToAdd, 0.5f, 0.5f, -1f); break; //Deplaated Rock DEBUFF
 			case PlayerEffectType.effectName.chaosEngine: activeEffects[26] = new Vector4(activeEffects[26].x + stacksToAdd, 3f, 3f, 1f); break; //Chaos Engine
 			case PlayerEffectType.effectName.sunny: activeEffects[27] = new Vector4(stacksToAdd, 1f, 1f, 1f); break; //Sunflower
+			case PlayerEffectType.effectName.smokeBlind: activeEffects[28] = new Vector4(stacksToAdd, 0.1f, 0.1f, -1f); break; //AK47 smoke gernade
 		}
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
 		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, 1f, 1f, 1f); }
 		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, 5f, 5f, 1f); }
+		if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, 0.1f, 0.1f, -1f); }
 	}
 	void ManageEffects()
 	{
@@ -736,11 +738,13 @@ public class HealthManager : MonoBehaviour
 		{
 			q = activeEffects[i];
 
+			if (i == 28) { uiMan.smokeBlindEffect.SetActive(q.x > 0); }
+
 			//if there are any stacks of this effect
 			if (q.x > 0)
 			{
-                //run effects that happen every frame
-                if (i == 21) { curHp = maxHp; }
+				//run effects that happen every frame
+				if (i == 21) { curHp = maxHp; }
 
 				//progress timer and remove stacks as needed
 				if (q.z > 0f)
@@ -802,6 +806,7 @@ public class HealthManager : MonoBehaviour
 					case 25: strToAdd = "depleated rock debuff"; break;
 					case 26: strToAdd = "chaos engine"; break;
 					case 27: strToAdd = "sunny"; break;
+					case 28: strToAdd = "Smoked"; break;
 				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}

@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     public GameObject bowchargeUI;
 
     public GameObject gunkyPng;
+    public GameObject smokeBlindEffect;
     float initalGunkyPngPos;
     float gunkyCounter;
 

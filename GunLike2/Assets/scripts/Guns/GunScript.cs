@@ -15,6 +15,8 @@ public class GunScript : MonoBehaviour
 
     float atkSpeedOverFPSBulQued = 0f;
 
+    public ParticleSystem MuzzleFlash;
+
     //Base stats for this gun
     public float baseMagSize = 15;
     public float baseAtkSpd = 2f;
@@ -501,6 +503,8 @@ public class GunScript : MonoBehaviour
                 }
 
                 Shoot(1f);
+                MuzzleFlash.gameObject.SetActive(currentBullets > 0);
+                if (MuzzleFlash != null) { MuzzleFlash.Play(); }
                 if(pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
                 {
                     acc = acc * 2f;
@@ -540,7 +544,9 @@ public class GunScript : MonoBehaviour
                 for (int i = 0; i < 9; i++)
                 {
                     currentBullets++;
-                    Shoot(bowCharge);
+                    Shoot(bowCharge); 
+                    MuzzleFlash.gameObject.SetActive(currentBullets > 0);
+                    if (MuzzleFlash != null) { MuzzleFlash.Play(); }
                     if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
                             || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
                 }

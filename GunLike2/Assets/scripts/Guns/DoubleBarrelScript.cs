@@ -22,6 +22,8 @@ public class DoubleBarrelScript : GunScript
                     rushJobTimer = (1f / reSpd) / 2f;
                     return;
                 }
+                MuzzleFlash.gameObject.SetActive(currentBullets > 0);
+                if (MuzzleFlash != null) { MuzzleFlash.Play(); }
 
                 if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
                 else
@@ -61,6 +63,9 @@ public class DoubleBarrelScript : GunScript
                 rushJobTimer = (1f / reSpd) / 2f;
                 return;
             }
+            MuzzleFlash.gameObject.SetActive(currentBullets > 0);
+            if (MuzzleFlash != null) { MuzzleFlash.Play(); }
+
             if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
             else
             {
