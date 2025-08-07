@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.UI;
-using TMPro;
-
 
 public class HealthManager : MonoBehaviour
 {
@@ -52,7 +47,7 @@ public class HealthManager : MonoBehaviour
 	float canineToothTimer;
 	public int divineInter;
 	public float divineTimer;
-	EnemyHealthManager lastHitMe;
+	public EnemyHealthManager lastHitMe;
 	EnemyHealthManager markedEnemy;
 	public bool attackedThisRoom;
 	public GameObject egg;
@@ -75,6 +70,7 @@ public class HealthManager : MonoBehaviour
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
 	public PlayerItem playerItem;
+	public LocalSoundManager lsm;
 	GunManager gunManager;
 
 	public int money;
@@ -92,15 +88,19 @@ public class HealthManager : MonoBehaviour
 
 	GameDataManager gdm;
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    private void Awake()
+    {
+		gunManager = gameObject.GetComponent<GunManager>();
+		lsm = gameObject.GetComponent<LocalSoundManager>();
+	}
+    void Start()
 	{
 		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
 		money = 0;
 		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
-		gunManager = gameObject.GetComponent<GunManager>();
 	}
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
@@ -305,7 +305,7 @@ public class HealthManager : MonoBehaviour
 			}
 			else
             {
-				dead = true;
+				dead = true; gdm.SendDataToEmail("Death");
 			}
 		}
 	}

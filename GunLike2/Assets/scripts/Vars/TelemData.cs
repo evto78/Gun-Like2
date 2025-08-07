@@ -10,12 +10,17 @@ public class TelemData
     public List<int> leftInv;
     public List<int> rightInv;
 
+    public string leftGun;
+    public string rightGun;
+
     public int roomNum;
     public float difficulty;
     public float timeElapsed;
 
-    public float currentCash;
+    public int currentCash;
 
     public string sessionNum;
     public string usr;
+
+    public string mostRecentSourceOfDmg;
 }

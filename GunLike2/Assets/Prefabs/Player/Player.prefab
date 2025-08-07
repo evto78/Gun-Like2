@@ -2134,9 +2134,9 @@ GameObject:
   - component: {fileID: 8349940813719318989}
   - component: {fileID: 3056162612049833695}
   - component: {fileID: 7461507813950395447}
+  - component: {fileID: 2952588700287408222}
   - component: {fileID: 1478225087064856635}
   - component: {fileID: 8714330687066646829}
-  - component: {fileID: 2952588700287408222}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2566,6 +2566,7 @@ MonoBehaviour:
   chickenCoopTimer: 0
   divineInter: 0
   divineTimer: 0
+  lastHitMe: {fileID: 0}
   attackedThisRoom: 0
   egg: {fileID: 5547987818857772889, guid: 43ae8778ea2f662458ada846294eac18, type: 3}
   fly: {fileID: 7605912810178913042, guid: 27fc158de3e25f94fbbe1c112987a75e, type: 3}
@@ -2582,6 +2583,7 @@ MonoBehaviour:
   uiMan: {fileID: 7461507813950395447}
   playerMvt: {fileID: 4410490756112149481}
   playerItem: {fileID: 1652207953152809334}
+  lsm: {fileID: 0}
   money: 0
   baseCost: 100
   dead: 0
@@ -2612,6 +2614,7 @@ MonoBehaviour:
   gotchaText: {fileID: 5110675202721966353}
   gunManager: {fileID: 645800364383380793}
   healthManager: {fileID: 3056162612049833695}
+  settings: {fileID: 4090334172396774484}
   mvtScript: {fileID: 4410490756112149481}
   damageText: {fileID: 5471558382887693187, guid: 82cd74ae1539dd84a8ead7f9d43cd72e, type: 3}
   myCanvas: {fileID: 8456530154372773553}
@@ -2628,7 +2631,23 @@ MonoBehaviour:
   isPaused: 0
   fishing: 0
   bossHealthBars:
-  - {fileID: 3543710797185671028}
+  - {fileID: 0}
+--- !u!114 &2952588700287408222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2518637335849271105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a178120dddc77454d8bb97758ac01f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVol: 0
+  musicVol: 0
+  effectVol: 0
+  uiVol: 0
 --- !u!54 &1478225087064856635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2669,18 +2688,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   txt: {fileID: 0}
---- !u!114 &2952588700287408222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2518637335849271105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a178120dddc77454d8bb97758ac01f30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2579564125161379648
 GameObject:
   m_ObjectHideFlags: 0
@@ -15058,7 +15065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: -963.6166, y: -542.0345}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3475996547154112541
@@ -27519,6 +27526,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+--- !u!114 &4090334172396774484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1664979044117265113, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+  m_PrefabInstance: {fileID: 3447779141167734413}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1bc70ce06fd3f488203e74af279cd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6726344143551357112 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8250663241049816629, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}

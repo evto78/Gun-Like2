@@ -23,8 +23,9 @@ public class GameDataManager : MonoBehaviour
     List<int> rightSnapshot;
 
     //TelemnetryDataCollection
+    [Header("DATA COLLECTION")]
     string usrID; int usrSessionNum;
-
+    public bool sendData;
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
@@ -42,7 +43,7 @@ public class GameDataManager : MonoBehaviour
             {
                 appenedLetters = appenedLetters+letters[Random.Range(0,letters.Length)];
             }
-            usrID = appenedLetters+"|"+Random.Range(0, int.MaxValue);
+            usrID = appenedLetters+Random.Range(0, int.MaxValue);
             PlayerPrefs.SetString("USRID", usrID);
             Debug.Log("Usr Id created for this device : " + usrID);
         }
@@ -70,6 +71,8 @@ public class GameDataManager : MonoBehaviour
         leftSnapshot.AddRange(pi.leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
+
+        SendDataToEmail("RunStart");
     }
     private void Update()
     {
@@ -111,6 +114,8 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
+        SendDataToEmail("RoomExit");
+
         gameTimerActive = false;
         roomNumber += 1;
         phm.attackedThisRoom = false;
@@ -120,6 +125,8 @@ public class GameDataManager : MonoBehaviour
         {
             Destroy(ehm.gameObject);
         }
+
+        SendDataToEmail("RoomEnter");
     }
     public void BeginSpawning()
     {
@@ -145,16 +152,65 @@ public class GameDataManager : MonoBehaviour
             delayTime += Random.Range(7f, 13f);
         }
     }
-    public void SendDataToEmail(string eventType)
+    private void OnApplicationQuit()
     {
-        TelemData tdata = new TelemData();
-        PrepareData(tdata);
+        SendDataToEmail("GameClose");
+    }
+    public void SendDataToEmail(string eventT)
+    {
+        if (!sendData) { return; }
+        string eventType = eventT;
+        TelemData tdata = PrepareData();
+
         tdata.eventData = eventType;
 
-        Emailer.SendAnEmail("", "");
+        string msg = "START";
+        msg += "|(UsrID)"+tdata.usr;
+        msg += "|(SessionNum)"+tdata.sessionNum;
+        msg += "|(CurTime)"+tdata.eventTime;
+        msg += "|(LeftGun)"+tdata.leftGun;
+        msg += "|(RightGun)"+tdata.rightGun;
+        msg += "|(TimeE)"+tdata.timeElapsed;
+        msg += "|(Room)"+tdata.roomNum;
+        msg += "|(Diff)"+tdata.difficulty;
+        msg += "|(MRSourceOfDmg)"+tdata.mostRecentSourceOfDmg;
+        msg += "|(Cash)"+tdata.currentCash;
+        string leftInvTxt = "LEFT("+FormatInvToString(tdata.leftInv)+")";
+        string rightInvTxt = "RIGHT("+FormatInvToString(tdata.rightInv)+")";
+        msg += "|(LInv)"+leftInvTxt;
+        msg += "|(RInv)"+rightInvTxt;
+        msg += "|END";
+
+        Emailer.SendAnEmail(msg, eventType);
     }
-    public void PrepareData(TelemData tdata)
+    public string FormatALLInvToString(List<int> inv)
     {
+        string result = "";
+
+        foreach (int item in inv)
+        {
+            result += item + ",";
+        }
+        result.Remove(result.Length - 1);
+
+        return result;
+    }
+    public string FormatInvToString(List<int> inv)
+    {
+        string result = "";
+        int i = 0;
+        foreach (int item in inv)
+        {
+            if(item != 0) { result += "ID:"+i+":" + item + ","; }
+            i++;
+        }
+        if(result != "") { result.Remove(result.Length - 1); }
+
+        return result;
+    }
+    public TelemData PrepareData()
+    {
+        TelemData tdata = new TelemData();
         tdata.usr = usrID;
         tdata.sessionNum = usrSessionNum.ToString();
 
@@ -165,5 +221,9 @@ public class GameDataManager : MonoBehaviour
         tdata.eventTime = System.DateTime.Now.ToString("U");
         tdata.leftInv = pi.leftItems;
         tdata.rightInv = pi.rightItems;
+        tdata.leftGun = pi.gunManager.leftGunScript.gunName;
+        tdata.rightGun = pi.gunManager.rightGunScript.gunName;
+        if(phm.lastHitMe != null && phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
+        return (tdata);
     }
 }

@@ -9,9 +9,10 @@ public class Emailer : MonoBehaviour
 {
     const string kSenderPassword = "rwfj dfxr thtl mfqy ";
     const string kReceiverEmailAddress = "gunlike2data@gmail.com";
+
     void Start()
     { 
-        SendAnEmail("Test message, holy moly!", "Test : 2");
+        //SendAnEmail("Test message, holy moly!", "Test : 2");
     }
     public static void SendAnEmail(string message, string header)
     {

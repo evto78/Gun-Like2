@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8564080581675454355}
   - component: {fileID: 1121413894882205167}
+  - component: {fileID: 2650470925205601915}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: gdm
@@ -52,6 +53,20 @@ MonoBehaviour:
   difficulty: 1
   difficultySelected: 1
   timeSpent: 0
+  timeSpentNoPause: 0
   gameTimerActive: 1
   roomNumber: 0
   phm: {fileID: 0}
+  sendData: 1
+--- !u!114 &2650470925205601915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501721298913198761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cab1bbc2b915c2459c633d5951eb20c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

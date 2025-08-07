@@ -60,8 +60,8 @@ public class ChimeraBrain : MonoBehaviour
         ak47Anim = ak47Head.GetComponentInChildren<Animator>();
         uziAnim = uziHead.GetComponentInChildren<Animator>();
 
-        ehm.playerHM.uiMan.bossHealthBars[0].gameObject.SetActive(true);
-        ehm.playerHM.uiMan.bossHealthBars[0].ehm = ehm;
+        ehm.playerHM.uiMan.bossHealthBars[0].SetActive(true);
+        ehm.playerHM.uiMan.bossHealthBars[0].GetComponent<BossHealthBar>().ehm = ehm;
 
         awpLaserTelegraph = Instantiate(awpLaserTelegraphPrefab).transform;
 

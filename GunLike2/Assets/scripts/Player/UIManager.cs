@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
 
     public GunManager gunManager;
     public HealthManager healthManager;
+    public SettingsScript settings;
 
     public NEWPlayerMovement mvtScript;
 
@@ -43,14 +44,14 @@ public class UIManager : MonoBehaviour
 
     public bool fishing;
 
-    public List<BossHealthBar> bossHealthBars;
-
+    public List<GameObject> bossHealthBars;
     private void Start()
     {
+        
         bossHealthBars.Clear();
         for(int i = 0; i < playUI.transform.GetChild(0).childCount; i++)
         {
-            bossHealthBars.Add(playUI.transform.GetChild(0).GetChild(i).GetComponent<BossHealthBar>());
+            bossHealthBars.Add(playUI.transform.GetChild(0).GetChild(i).gameObject);
         }
 
         initalGunkyPngPos = gunkyPng.GetComponent<RectTransform>().position.y;
@@ -58,6 +59,8 @@ public class UIManager : MonoBehaviour
         gunManager = gameObject.GetComponent<GunManager>();
 
         isPaused = false;
+
+        settings.Apply();
 
         ChangeState("play");
     }
@@ -73,15 +76,12 @@ public class UIManager : MonoBehaviour
             UpdatePlayUI();
             UpdateInventoryUI();
             UpdatePauseUI();
-            
         }
         else
         {
             playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false;
         }
-        
     }
-
     void ManageInput()
     {
         if (isPaused) {Time.timeScale = 0f; }

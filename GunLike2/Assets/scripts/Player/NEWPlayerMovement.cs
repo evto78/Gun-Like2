@@ -19,6 +19,7 @@ public class NEWPlayerMovement : MonoBehaviour
     float pitch = 0.0f;
     float fov;
     float fps;
+    bool dfov;
     //public float minVelFov;
     public float maxVelFov;
 
@@ -75,6 +76,7 @@ public class NEWPlayerMovement : MonoBehaviour
     void Start()
     {
         fov = Mathf.RoundToInt(cam.GetComponent<Camera>().fieldOfView);
+        dfov = PlayerPrefs.GetInt("DFOV") == 1;
         if (PlayerPrefs.HasKey("FOV")) { fov = PlayerPrefs.GetFloat("FOV"); }
         if (PlayerPrefs.HasKey("SENS")) { sensitivity = PlayerPrefs.GetFloat("SENS") / 10f; }
         if (PlayerPrefs.HasKey("FPS")) { fps = PlayerPrefs.GetFloat("FPS"); } else { fps = 120; }
@@ -91,7 +93,14 @@ public class NEWPlayerMovement : MonoBehaviour
         initialHeight = myCollider.height;
         slideDir = Vector3.zero;
     }
-
+    public void UpdateSettings()
+    {
+        dfov = PlayerPrefs.GetInt("DFOV") == 1;
+        if (PlayerPrefs.HasKey("FOV")) { fov = PlayerPrefs.GetFloat("FOV"); }
+        if (PlayerPrefs.HasKey("SENS")) { sensitivity = PlayerPrefs.GetFloat("SENS") / 10f; }
+        if (PlayerPrefs.HasKey("FPS")) { fps = PlayerPrefs.GetFloat("FPS"); } else { fps = 120; }
+        Application.targetFrameRate = Mathf.RoundToInt(fps);
+    }
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
         //base stats
@@ -494,7 +503,7 @@ public class NEWPlayerMovement : MonoBehaviour
         if(rb.velocity.magnitude > 10)
         {
             float t = rb.velocity.magnitude / maxVelFov;
-            if(PlayerPrefs.GetInt("DFOV") == 1) { Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t); }
+            if(dfov) { Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t); }
         }
         
 
