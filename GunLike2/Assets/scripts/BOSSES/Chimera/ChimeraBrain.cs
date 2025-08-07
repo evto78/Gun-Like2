@@ -37,10 +37,12 @@ public class ChimeraBrain : MonoBehaviour
     int lastAk47Attack = 0; int curAk47Cycle = 0; float akBurstTime; float akCooldownTime; float akAttackTime; float akBurstTimer; float akCooldownTimer; float akAttackTimer; float akWait; int akbulperburst; int akbulshot;
     int lastAwpAttack = 0; int curAwpCycle = 0; float awpCooldownTime; float awpAttackTime; float awpCooldownTimer; float awpAttackTimer; float awpWait;
 
-    Transform player; Transform curUziTarget; Transform curAkTarget; Transform curAwpTarget;
-    public GameObject akMag; public GameObject orbit; Transform orbitPoint; public GameObject uziBoomerang;
+    Transform player; Transform curUziTarget; Transform curAkTarget; Transform curAwpTarget; public GameObject awpFlare;
+    public GameObject akMag; public GameObject orbit; Transform orbitPoint; public GameObject uziBoomerang; public GameObject awpTurretPrefab; List<AWPBossTurret> awpBossTurretList = new List<AWPBossTurret>(); public List<Vector3> potentialTurretSpawns; List<Vector3> avaliableSpawns;
     void Start()
     {
+        awpFlare.SetActive(false);
+        avaliableSpawns = potentialTurretSpawns;
         milestones = new List<int>();
         milestones.Add(90);
         milestones.Add(75);
@@ -331,7 +333,12 @@ public class ChimeraBrain : MonoBehaviour
                     lastAwpAttack = Random.Range(0, 2);
                     switch (lastAwpAttack)
                     {
-                        case 0: awpCooldownTime = 0.5f; awpAttackTime = 0.5f; awpWait = 1.5f; curAwpTarget = awpLaserTelegraph.transform; awpLaserTelegraphFollowTimer = 1f; awpLaserTelegraphTimer = 1.5f; break;
+                        case 0: awpCooldownTime = 0.5f; awpAttackTime = 0.5f; awpWait = 1.5f; curAwpTarget = awpLaserTelegraph.transform; awpLaserTelegraphFollowTimer = 1f; awpLaserTelegraphTimer = 1.5f;
+                            for (int i = 0; i < awpBossTurretList.Count; i++)
+                            {
+                                awpBossTurretList[i].PrepareShoot(awpWait + 0.5f*i, awpLaserTelegraphFollowTimer + 0.5f*i);
+                            }
+                            break;
                         case 1: awpCooldownTime = 0.5f; awpAttackTime = 1.5f; awpWait = 0.5f; curAwpTarget = null; StartCoroutine(spawnTargetsAwpTriangulate(0.5f)); break;
                     }
                 }
@@ -340,7 +347,9 @@ public class ChimeraBrain : MonoBehaviour
                     curAwpCycle = 0;
                     awpCooldownTime = 0f; awpAttackTime = 0f; awpWait = 0f; curAwpTarget = null;
                     awpTimer = 8f;
-                    //Hired Help attack
+
+                    awpAnim.SetTrigger("HiredHelp");
+                    StartCoroutine(awpHiredHelp1(2f));
                 }
                 break;
             case 2: break;
@@ -431,6 +440,7 @@ public class ChimeraBrain : MonoBehaviour
         for (int i = 0; i < time/fireRate; i++)
         {
             yield return new WaitForSeconds(fireRate);
+            if(unassignedTargetsUZI.Count > 100) { break; }
             GameObject spawnedTarget = Instantiate(target);
             spawnedTarget.transform.position = Vector3.Lerp(lineStart1.position, lineEnd1.position, ((float)i/(time/fireRate))) + new Vector3(Random.Range(-5f, 5f), 50, Random.Range(-5f, 5f));
             unassignedTargetsUZI.Add(spawnedTarget.GetComponent<Target>());
@@ -473,6 +483,36 @@ public class ChimeraBrain : MonoBehaviour
             spawnedrang.transform.position = uziHead.transform.position;
             spawnedrang.GetComponent<UZIBoomerang>().uziHead = uziHead.transform;
         }
+    }
+    private IEnumerator awpHiredHelp1(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+
+        while(awpBossTurretList.Count < 2)
+        {
+            GameObject spawnedTur = Instantiate(awpTurretPrefab);
+            awpBossTurretList.Add(spawnedTur.GetComponent<AWPBossTurret>());
+            int i = Random.Range(0, avaliableSpawns.Count);
+            spawnedTur.transform.position = avaliableSpawns[i];
+            avaliableSpawns.RemoveAt(i);
+        }
+    }
+    private IEnumerator awpHiredHelp2(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        awpFlare.SetActive(true);
+
+        while (avaliableSpawns.Count > 0)
+        {
+            GameObject spawnedTur = Instantiate(awpTurretPrefab);
+            awpBossTurretList.Add(spawnedTur.GetComponent<AWPBossTurret>());
+            int i = Random.Range(0, avaliableSpawns.Count);
+            spawnedTur.transform.position = avaliableSpawns[i];
+            avaliableSpawns.RemoveAt(i);
+        }
+
+        yield return new WaitForSeconds(2);
+        awpFlare.SetActive(false);
     }
     public void AWPHIT()
     {
