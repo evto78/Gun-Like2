@@ -39,6 +39,7 @@ public class ChimeraBrain : MonoBehaviour
 
     Transform player; Transform curUziTarget; Transform curAkTarget; Transform curAwpTarget; public GameObject awpFlare;
     public GameObject akMag; public GameObject orbit; Transform orbitPoint; public GameObject uziBoomerang; public GameObject awpTurretPrefab; List<AWPBossTurret> awpBossTurretList = new List<AWPBossTurret>(); public List<Vector3> potentialTurretSpawns; List<Vector3> avaliableSpawns;
+    public GameObject nuke; public GameObject nukeTarget; public GameObject earthquake;
     void Start()
     {
         awpFlare.SetActive(false);
@@ -147,6 +148,7 @@ public class ChimeraBrain : MonoBehaviour
         else if (curAwpTarget == null)
         {
             if(unassignedTargetsAWP.Count > 0) { awpHead.transform.LookAt(unassignedTargetsAWP[0].transform); }
+            else { awpHead.transform.localEulerAngles = Vector3.zero; }
         }
         if(awpLaserTelegraphFollowTimer > 0) { awpLaserTelegraphFollowTimer -= Time.deltaTime; awpLaserTelegraph.transform.position = player.position; }
         awpLaserLR.enabled = awpLaserTelegraphTimer > 0; awpLaserTelegraphTimer -= Time.deltaTime;
@@ -352,7 +354,72 @@ public class ChimeraBrain : MonoBehaviour
                     StartCoroutine(awpHiredHelp1(2f));
                 }
                 break;
-            case 2: break;
+            case 2:
+                switch (curAwpCycle)
+                {
+                    case 0://BASIC
+                        lastAwpAttack = Random.Range(0, 2);
+                        switch (lastAwpAttack)
+                        {
+                            case 0:
+                                awpCooldownTime = 0.5f; awpAttackTime = 0.5f; awpWait = 1.5f; curAwpTarget = awpLaserTelegraph.transform; awpLaserTelegraphFollowTimer = 1f; awpLaserTelegraphTimer = 1.5f;
+                                for (int i = 0; i < awpBossTurretList.Count; i++)
+                                {
+                                    awpBossTurretList[i].PrepareShoot(awpWait + 0.5f * i, awpLaserTelegraphFollowTimer + 0.5f * i);
+                                }
+                                break;
+                            case 1: awpCooldownTime = 0.5f; awpAttackTime = 1.5f; awpWait = 0.5f; curAwpTarget = null; StartCoroutine(spawnTargetsAwpTriangulate(0.5f)); break;
+                        }
+                        break;
+                    case 1://BASIC
+                        lastAwpAttack = Random.Range(0, 2);
+                        switch (lastAwpAttack)
+                        {
+                            case 0:
+                                awpCooldownTime = 0.5f; awpAttackTime = 0.5f; awpWait = 1.5f; curAwpTarget = awpLaserTelegraph.transform; awpLaserTelegraphFollowTimer = 1f; awpLaserTelegraphTimer = 1.5f;
+                                for (int i = 0; i < awpBossTurretList.Count; i++)
+                                {
+                                    awpBossTurretList[i].PrepareShoot(awpWait + 0.5f * i, awpLaserTelegraphFollowTimer + 0.5f * i);
+                                }
+                                break;
+                            case 1: awpCooldownTime = 0.5f; awpAttackTime = 1.5f; awpWait = 0.5f; curAwpTarget = null; StartCoroutine(spawnTargetsAwpTriangulate(0.5f)); break;
+                        }
+                        break;
+                    case 2://ADVANCED
+                        switch (Random.Range(0, 2))
+                        {
+                            case 0:
+                                awpAnim.SetTrigger("Greeting");
+                                StartCoroutine(awpGreeting());
+                                break;
+                            case 1:
+                                awpAnim.SetTrigger("Earthquake");
+                                StartCoroutine(awpEarthQuake());
+                                break;
+                        }
+                        break;
+                    case 3://BASIC
+                        lastAwpAttack = Random.Range(0, 2);
+                        switch (lastAwpAttack)
+                        {
+                            case 0:
+                                awpCooldownTime = 0.5f; awpAttackTime = 0.5f; awpWait = 1.5f; curAwpTarget = awpLaserTelegraph.transform; awpLaserTelegraphFollowTimer = 1f; awpLaserTelegraphTimer = 1.5f;
+                                for (int i = 0; i < awpBossTurretList.Count; i++)
+                                {
+                                    awpBossTurretList[i].PrepareShoot(awpWait + 0.5f * i, awpLaserTelegraphFollowTimer + 0.5f * i);
+                                }
+                                break;
+                            case 1: awpCooldownTime = 0.5f; awpAttackTime = 1.5f; awpWait = 0.5f; curAwpTarget = null; StartCoroutine(spawnTargetsAwpTriangulate(0.5f)); break;
+                        }
+                        break;
+                    case 4://SPECIAL
+                        awpAnim.SetTrigger("Overload");
+                        StartCoroutine(awpOverload());
+                        curAwpCycle = 0;
+                        awpTimer = 6f;
+                        break;
+                }
+                break;
         }
         awpCooldownTimer = 0f; awpAttackTimer = awpAttackTime;
 
@@ -513,6 +580,35 @@ public class ChimeraBrain : MonoBehaviour
 
         yield return new WaitForSeconds(2);
         awpFlare.SetActive(false);
+    }
+    private IEnumerator awpOverload()
+    {
+        curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
+        yield return new WaitForSeconds(2);
+        GameObject spawnedTarget = Instantiate(nukeTarget);
+        spawnedTarget.transform.position = player.transform.position + Vector3.up * 50f;
+        unassignedTargetsAWP.Add(spawnedTarget.GetComponent<Target>());
+        yield return new WaitForSeconds(2);
+        GameObject spawnedNuke = Instantiate(nuke);
+        spawnedNuke.transform.position = unassignedTargetsAWP[0].transform.position;
+        Shoot(2);
+    }
+    private IEnumerator awpGreeting()
+    {
+        curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
+        yield return new WaitForSeconds(2);
+
+        yield return new WaitForSeconds(2);
+    }
+    private IEnumerator awpEarthQuake()
+    {
+        curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
+        yield return new WaitForSeconds(1);
+        Shoot(2);
+        yield return new WaitForSeconds(1);
+        Shoot(2);
+        yield return new WaitForSeconds(1);
+        Shoot(2);
     }
     public void AWPHIT()
     {

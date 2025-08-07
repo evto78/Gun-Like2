@@ -71,7 +71,7 @@ public class SettingsScript : MonoBehaviour
         Application.targetFrameRate= Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS"));
         if(Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS")) == 120) { Application.targetFrameRate = -1; }
 
-        if (gdm == null) { gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); }
+        if (gdm == null && GameObject.FindGameObjectWithTag("gdm") != null) { gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); }
         if (gdm == null) { return; }
         gdm.phm.playerMvt.UpdateSettings();
         gdm.phm.lsm.UpdateSettings();
