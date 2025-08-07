@@ -11,6 +11,7 @@ public class GameDataManager : MonoBehaviour
     public float difficulty;
     public float difficultySelected;
     public float timeSpent;
+    public float timeSpentNoPause;
     public bool gameTimerActive;
     public int roomNumber;
     public HealthManager phm;
@@ -21,15 +22,47 @@ public class GameDataManager : MonoBehaviour
     List<int> leftSnapshot;
     List<int> rightSnapshot;
 
+    //TelemnetryDataCollection
+    string usrID; int usrSessionNum;
+
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
         pi = phm.playerItem;
+
+        if (PlayerPrefs.HasKey("USRID"))
+        {
+            usrID = PlayerPrefs.GetString("USRID");
+        }
+        else
+        {
+            string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string appenedLetters = "";
+            for(int i = 0; i < 40; i++)
+            {
+                appenedLetters = appenedLetters+letters[Random.Range(0,letters.Length)];
+            }
+            usrID = appenedLetters+"|"+Random.Range(0, int.MaxValue);
+            PlayerPrefs.SetString("USRID", usrID);
+            Debug.Log("Usr Id created for this device : " + usrID);
+        }
+        if (PlayerPrefs.HasKey("USRSES"))
+        {
+            usrSessionNum = PlayerPrefs.GetInt("USRSES");
+        }
+        else
+        {
+            usrSessionNum = 0;
+            PlayerPrefs.SetInt("USRSES", usrSessionNum);
+        }
+        usrSessionNum++;
+        PlayerPrefs.SetInt("USRSES", usrSessionNum);
+        Debug.Log("Session #" + usrSessionNum + " For this user.");
     }
     private void Start()
     {
         roomNumber = 0;
-        timeSpent = 0;
+        timeSpent = 0; timeSpentNoPause = 0;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
         gameTimerActive = false;
 
@@ -47,6 +80,7 @@ public class GameDataManager : MonoBehaviour
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
             
         }
+        timeSpentNoPause += Time.deltaTime;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
         CheckForItemGainAndDestroy();
     }
@@ -110,5 +144,26 @@ public class GameDataManager : MonoBehaviour
             spawner.StartSpawning();
             delayTime += Random.Range(7f, 13f);
         }
+    }
+    public void SendDataToEmail(string eventType)
+    {
+        TelemData tdata = new TelemData();
+        PrepareData(tdata);
+        tdata.eventData = eventType;
+
+        Emailer.SendAnEmail("", "");
+    }
+    public void PrepareData(TelemData tdata)
+    {
+        tdata.usr = usrID;
+        tdata.sessionNum = usrSessionNum.ToString();
+
+        tdata.difficulty = difficulty;
+        tdata.timeElapsed = timeSpentNoPause;
+        tdata.currentCash = phm.money;
+        tdata.roomNum = roomNumber;
+        tdata.eventTime = System.DateTime.Now.ToString("U");
+        tdata.leftInv = pi.leftItems;
+        tdata.rightInv = pi.rightItems;
     }
 }
