@@ -22,6 +22,9 @@ public class GameDataManager : MonoBehaviour
     List<int> leftSnapshot;
     List<int> rightSnapshot;
 
+    [Header("Bosses")]
+    public GameObject chimera;
+
     //TelemnetryDataCollection
     [Header("DATA COLLECTION")]
     string usrID; int usrSessionNum;
@@ -150,6 +153,15 @@ public class GameDataManager : MonoBehaviour
             spawner.myDelay = delayTime;
             spawner.StartSpawning();
             delayTime += Random.Range(7f, 13f);
+        }
+    }
+    public void SpawnBoss(string boss)
+    {
+        gameTimerActive = true;
+        switch (boss)
+        {
+            case "Chimera": Instantiate(chimera);
+                break;
         }
     }
     private void OnApplicationQuit()

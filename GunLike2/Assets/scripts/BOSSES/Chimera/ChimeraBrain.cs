@@ -98,12 +98,12 @@ public class ChimeraBrain : MonoBehaviour
             case (phaseTypes.ba):
                 if (akActive) { AK47Activate(1); }
                 if (awpActive) { AWPActivate(1); }
-                if (percentage <= 30) { phase = phaseTypes.c; ak47Anim.SetTrigger("Fall"); dropAkTimer = 0.45f; awpAnim.SetTrigger("TakeAk"); }
+                if (percentage <= 30) { phase = phaseTypes.c; ak47Anim.SetTrigger("Fall"); dropAkTimer = 0.45f; awpAnim.SetTrigger("TakeAk"); StartCoroutine(awpHiredHelp2(0)); }
                 break;
             case (phaseTypes.bb):
                 if (uziActive) { UZIActivate(1); }
                 if (awpActive) { AWPActivate(1); }
-                if (percentage <= 30) { phase = phaseTypes.c; uziAnim.SetTrigger("Fall"); dropUziTimer = 0.45f; awpAnim.SetTrigger("TakeUzi"); }
+                if (percentage <= 30) { phase = phaseTypes.c; uziAnim.SetTrigger("Fall"); dropUziTimer = 0.45f; awpAnim.SetTrigger("TakeUzi"); StartCoroutine(awpHiredHelp2(0)); }
                 break;
             case (phaseTypes.c):
                 if (awpActive) { AWPActivate(2); }
@@ -566,9 +566,6 @@ public class ChimeraBrain : MonoBehaviour
     }
     private IEnumerator awpHiredHelp2(float wait)
     {
-        yield return new WaitForSeconds(wait);
-        awpFlare.SetActive(true);
-
         while (avaliableSpawns.Count > 0)
         {
             GameObject spawnedTur = Instantiate(awpTurretPrefab);
@@ -577,9 +574,7 @@ public class ChimeraBrain : MonoBehaviour
             spawnedTur.transform.position = avaliableSpawns[i];
             avaliableSpawns.RemoveAt(i);
         }
-
-        yield return new WaitForSeconds(2);
-        awpFlare.SetActive(false);
+        yield return new WaitForSeconds(0f);
     }
     private IEnumerator awpOverload()
     {
@@ -596,19 +591,51 @@ public class ChimeraBrain : MonoBehaviour
     private IEnumerator awpGreeting()
     {
         curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.8f);
+        float progress = 0f; Vector3 curPos = awpHead.transform.position; Vector3 tarPos = player.transform.position;
+        while(progress < 1)
+        {
+            progress+= Time.deltaTime;
+            awpHead.transform.position = Vector3.Lerp(curPos, tarPos, progress);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
+        progress = 0f; curPos = awpHead.transform.position; tarPos = Vector3.zero;
+        while (progress < 1)
+        {
+            progress += Time.deltaTime;
+            awpHead.transform.position = Vector3.Lerp(curPos, tarPos, progress);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
     }
     private IEnumerator awpEarthQuake()
     {
         curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
         yield return new WaitForSeconds(1);
         Shoot(2);
+        GameObject spawnedQuake = Instantiate(earthquake);
+        spawnedQuake.transform.position = transform.position;
+        if(Physics.Raycast(new Ray(transform.position, -Vector3.up),out RaycastHit hit, 200))
+        {
+            spawnedQuake.transform.position = hit.point;
+        }
         yield return new WaitForSeconds(1);
         Shoot(2);
+        spawnedQuake = Instantiate(earthquake);
+        spawnedQuake.transform.position = transform.position;
+        if (Physics.Raycast(new Ray(transform.position, -Vector3.up), out hit, 200))
+        {
+            spawnedQuake.transform.position = hit.point;
+        }
         yield return new WaitForSeconds(1);
         Shoot(2);
+        spawnedQuake = Instantiate(earthquake);
+        spawnedQuake.transform.position = transform.position;
+        if (Physics.Raycast(new Ray(transform.position, -Vector3.up), out hit, 200))
+        {
+            spawnedQuake.transform.position = hit.point;
+        }
     }
     public void AWPHIT()
     {

@@ -13,6 +13,8 @@ public class LevelBuilder : MonoBehaviour
     public GameObject debugCube;
     public GameObject supportPillar;
 
+    public float roomsToBoss;
+
     public List<GameObject> placed = new List<GameObject>();
     private void Start()
     {
@@ -56,11 +58,79 @@ public class LevelBuilder : MonoBehaviour
     }
     public void Activate()
     {
-        terrain = Terrain.activeTerrains[0];
+        if(gdm.roomNumber >= roomsToBoss - 1)
+        {
+            terrain = Terrain.activeTerrains[0];
 
-        Build(terrain);
+            BuildBoss(terrain);
 
-        gdm.BeginSpawning();
+            gdm.SpawnBoss("Chimera");
+        }
+        else
+        {
+            terrain = Terrain.activeTerrains[0];
+
+            Build(terrain);
+
+            gdm.BeginSpawning();
+        }
+    }
+    void BuildBoss(Terrain lvlTerrain)
+    {
+        if (placed.Count > 0) { foreach (GameObject obj in placed) { Destroy(obj); } placed = new List<GameObject>(); }
+        int resolution = 4;
+        Vector3 tSize = lvlTerrain.terrainData.size;
+        Vector3 tPos = lvlTerrain.transform.position;
+        TerPlaceData[,] tDataFull = new TerPlaceData[Mathf.RoundToInt(tSize.x / resolution), Mathf.RoundToInt(tSize.z / resolution)];
+        int maxHeight = 150;
+        int paddingFromUnplaceable = Mathf.RoundToInt(80f / resolution);
+        List<Vector2> placeableArrayIndex = new List<Vector2>();
+        for (int x = 0; x < tDataFull.GetLength(0); x++)//build height map
+        {
+            for (int z = 0; z < tDataFull.GetLength(1); z++)
+            {
+                Vector3 worldPos = tPos + Vector3.right * x * resolution + Vector3.forward * z * resolution;
+                tDataFull[x, z] = new TerPlaceData();
+                tDataFull[x, z].myTerrain = lvlTerrain;
+                tDataFull[x, z].height = lvlTerrain.SampleHeight(worldPos);
+                tDataFull[x, z].worldPos = worldPos + Vector3.up * tDataFull[x, z].height;
+                tDataFull[x, z].localPos = worldPos - tPos;
+                tDataFull[x, z].arrayPos = new Vector2(x, z);
+            }
+        }
+        for (int x = 0; x < tDataFull.GetLength(0); x++)//check for placeable spots
+        {
+            for (int z = 0; z < tDataFull.GetLength(1); z++)
+            {
+                bool placeable = true;
+                tDataFull[x, z].placeable = false;
+                if (tDataFull[x, z].height > maxHeight) { placeable = false; }
+                else
+                {
+                    for (int i = 0; i < paddingFromUnplaceable; i++)
+                    {
+                        if (tDataFull[x + i, z].height > maxHeight ||
+                            tDataFull[x, z + i].height > maxHeight ||
+                            tDataFull[x + i, z + i].height > maxHeight ||
+                            tDataFull[x - i, z].height > maxHeight ||
+                            tDataFull[x, z - i].height > maxHeight ||
+                            tDataFull[x - i, z - i].height > maxHeight ||
+                            tDataFull[x - i, z + i].height > maxHeight ||
+                            tDataFull[x + i, z - i].height > maxHeight)
+                        { placeable = false; break; }
+                    }
+                }
+                if (placeable)
+                {
+                    tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
+                    //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
+                }
+            }
+        }
+        foreach (PlaceableObjectChances obj in chancesFeatures)
+        {
+            AttemptPlaceFeature(chancesFeatures[chancesFeatures.IndexOf(obj)], placeableArrayIndex, lvlTerrain, tDataFull, tPos, resolution);
+        }
     }
     void Build(Terrain lvlTerrain)
     {
