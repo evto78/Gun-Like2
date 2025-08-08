@@ -80179,6 +80179,7 @@ GameObject:
   - component: {fileID: 1529832955820338268}
   - component: {fileID: 1712168944102107141}
   - component: {fileID: 119516712403152436}
+  - component: {fileID: 5018294397481529140}
   - component: {fileID: 1298262242640978340}
   - component: {fileID: 3569020837874589621}
   m_Layer: 9
@@ -80314,6 +80315,22 @@ MonoBehaviour:
   didOnDeath: 0
   activeEffects: []
   refundPoints: 0
+--- !u!114 &5018294397481529140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5157512765189112442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c00cfab5477db644b99d176480db568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monoSounds:
+  - {fileID: 8300000, guid: d6c6be1253f7f0645895216caaa24d0e, type: 3}
+  soundNames:
+  - Bayonett Pullout
 --- !u!54 &1298262242640978340
 Rigidbody:
   m_ObjectHideFlags: 0

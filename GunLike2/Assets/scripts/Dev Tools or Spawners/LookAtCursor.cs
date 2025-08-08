@@ -9,15 +9,18 @@ public class LookAtCursor : MonoBehaviour
     RaycastHit hit;
     public LayerMask mask;
 
+    public bool delay; float delayTimer;
+
     public bool staticCamera;
 
     void Start()
     {
-
+        delayTimer = 1f;
     }
 
     void Update()
     {
+        if(delay && delayTimer > 0) { delayTimer -= Time.deltaTime; return; }
         if (staticCamera)
         {
             RaycastHit distance;

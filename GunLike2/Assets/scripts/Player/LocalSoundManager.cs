@@ -8,6 +8,13 @@ public class LocalSoundManager : MonoBehaviour
     public float musicVol;
     public float effectVol;
     public float uiVol;
+    public int channels;
+    public Transform sourceHolder;
+    List<AudioSource> lowPriorSources; int lastLowSource = 0;
+    List<AudioSource> medPriorSources; int lastMedSource = 0;
+    List<AudioSource> highPriorSources; int lastHighSource = 0;
+    List<AudioSource> ultPriorSources; int lastUltSource = 0;
+    public enum SoundType { music, effect, ui, other }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +32,29 @@ public class LocalSoundManager : MonoBehaviour
         musicVol = PlayerPrefs.GetFloat("MUSICVOL");
         effectVol = PlayerPrefs.GetFloat("EFFECTVOL");
         uiVol = PlayerPrefs.GetFloat("UIVOL");
+    }
+    public void PlayLocalSound(AudioClip incomingClip, SoundType type, int prior)
+    {
+        AudioSource source = PickSource(prior);
+        switch (type)
+        {
+            case SoundType.music: source.volume = (musicVol / 100f) * (masterVol / 100f); break;
+            case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
+            case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
+            case SoundType.other: source.volume = (masterVol / 100f); break;
+        }
+        source.clip = incomingClip;
+        source.Play();
+    }
+    AudioSource PickSource(int prior)
+    {
+        switch (prior)
+        {
+            case 0: lastLowSource++; if (lastLowSource >= lowPriorSources.Count) { lastLowSource = 0; } return lowPriorSources[lastLowSource];
+            case 1: lastMedSource++; if (lastMedSource >= medPriorSources.Count) { lastMedSource = 0; } return medPriorSources[lastMedSource];
+            case 2: lastHighSource++; if (lastHighSource >= highPriorSources.Count) { lastHighSource = 0; } return highPriorSources[lastHighSource];
+            case 3: lastUltSource++; if (lastUltSource >= ultPriorSources.Count) { lastUltSource = 0; } return ultPriorSources[lastUltSource];
+        }
+        return lowPriorSources[0];
     }
 }

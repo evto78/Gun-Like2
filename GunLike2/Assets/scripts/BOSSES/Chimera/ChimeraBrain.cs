@@ -9,6 +9,7 @@ public class ChimeraBrain : MonoBehaviour
     public float akTimer; bool akActive;
     public float uziTimer; bool uziActive;
     EnemyHealthManager ehm; public float percentage;
+    SoundLibraryManager soundManager;
     public float uziHitDmg = 0.5f; public float akHitDmg = 0;
     float masterDmg; List<int> milestones;
     TrashOrb trashOrb;
@@ -42,6 +43,7 @@ public class ChimeraBrain : MonoBehaviour
     public GameObject nuke; public GameObject nukeTarget; public GameObject earthquake;
     void Start()
     {
+        soundManager = GetComponent<SoundLibraryManager>();
         awpFlare.SetActive(false);
         avaliableSpawns = potentialTurretSpawns;
         milestones = new List<int>();
@@ -590,6 +592,7 @@ public class ChimeraBrain : MonoBehaviour
     }
     private IEnumerator awpGreeting()
     {
+        soundManager.PlaySoundByName("Bayonett Pullout");
         curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
         yield return new WaitForSeconds(1.8f);
         float progress = 0f; Vector3 curPos = awpHead.transform.position; Vector3 tarPos = player.transform.position;
