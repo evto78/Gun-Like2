@@ -14,7 +14,11 @@ public class WeaponSelection : MonoBehaviour
     int leftHandVal;
     int rightHandVal;
     public Button readyBtn;
-
+    MainMenuManager menuManager;
+    private void Awake()
+    {
+        menuManager = GameObject.Find("Main Menu Manager").GetComponent<MainMenuManager>();
+    }
     private void Start()
     {
         leftHandVal = 0;

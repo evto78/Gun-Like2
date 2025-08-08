@@ -272,7 +272,6 @@ public class GunManager : MonoBehaviour
             rightGunScript.isGoo = true;
             gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
         }
-        // ^^^ doesn't work for some reason, idk why but i guess it is fine for now. ^^^
 
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;

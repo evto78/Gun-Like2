@@ -21,18 +21,29 @@ public class GameDataManager : MonoBehaviour
     bool changedLastFrame;
     List<int> leftSnapshot;
     List<int> rightSnapshot;
+    [Header("SaveData")]
+    public GameObject saveDataReaderPrefab;
+    public SaveFileReadWrite instance;
+    public List<SaveFileReadWrite.GunInformation> gunInfo = new List<SaveFileReadWrite.GunInformation>();
 
     [Header("Bosses")]
     public GameObject chimera;
 
     //TelemnetryDataCollection
     [Header("DATA COLLECTION")]
-    string usrID; int usrSessionNum;
+    public string usrID; public int usrSessionNum;
     public bool sendData;
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
         pi = phm.playerItem;
+
+        if(instance == null)
+        {
+            GameObject spawnedSaveData = Instantiate(saveDataReaderPrefab);
+            instance = spawnedSaveData.GetComponent<SaveFileReadWrite>();
+            instance.gdm = this;
+        }
 
         if (PlayerPrefs.HasKey("USRID"))
         {
@@ -74,7 +85,16 @@ public class GameDataManager : MonoBehaviour
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
 
+        RequestSaveData();
         SendDataToEmail("RunStart");
+    }
+    public void RequestSaveData()
+    {
+        if(instance == null) { return; }
+        if(instance.data != null)
+        {
+            gunInfo = instance.data.gunInfo;
+        }
     }
     private void Update()
     {
@@ -163,8 +183,17 @@ public class GameDataManager : MonoBehaviour
                 break;
         }
     }
+    private void OnDisable()
+    {
+        instance.RequestDataUpdate();
+    }
+    private void OnDestroy()
+    {
+        instance.RequestDataUpdate();
+    }
     private void OnApplicationQuit()
     {
+        instance.RequestDataUpdate();
         SendDataToEmail("GameClose");
     }
     public void SendDataToEmail(string eventT)

@@ -9,8 +9,11 @@ public class MainMenuManager : MonoBehaviour
     Camera cam;
     bool starting;
     public List<GameObject> uiTOHIDE; bool loading;
+    public SaveFileReadWrite instance;
+    WeaponSelection weaponSelect;
     private void Awake()
     {
+        weaponSelect = GameObject.Find("BEHINDDOORUI").GetComponent<WeaponSelection>();
         Time.timeScale = 1f;
     }
     void Start()
@@ -18,16 +21,6 @@ public class MainMenuManager : MonoBehaviour
         Time.timeScale = 1f;
         cam = Camera.main;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (starting && cam.transform.localScale.x == 2)
-        {
-            //
-        }
-    }
-
     public void Play(string what)
     {
         if(what == "new")
@@ -44,6 +37,12 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
+    void UpdateGunInfo()
+    {
+        instance.data.gunInfo[PlayerPrefs.GetInt("leftHandGunSelect")].runs++;
+        instance.data.gunInfo[PlayerPrefs.GetInt("rightHandGunSelect")].runs++;
+        instance.UpdateSaveFile();
+    }
     public void ExitGameButton()
     {
         Application.Quit();
@@ -51,9 +50,10 @@ public class MainMenuManager : MonoBehaviour
     public void LoadLevel()
     {
         if (loading) { return; } loading = true;
-        StartCoroutine(LoadYourAsyncScene("Level Generation"));
+        UpdateGunInfo();
+        StartCoroutine(LoadAsyncScene("Level Generation"));
     }
-    IEnumerator LoadYourAsyncScene(string sceneName)
+    IEnumerator LoadAsyncScene(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
 
