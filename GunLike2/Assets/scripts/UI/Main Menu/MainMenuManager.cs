@@ -8,7 +8,7 @@ public class MainMenuManager : MonoBehaviour
     public RemoteDoor bgDoor;
     Camera cam;
     bool starting;
-    public List<GameObject> uiTOHIDE;
+    public List<GameObject> uiTOHIDE; bool loading;
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -50,6 +50,16 @@ public class MainMenuManager : MonoBehaviour
     }
     public void LoadLevel()
     {
-        SceneManager.LoadScene("Level Generation");
+        if (loading) { return; } loading = true;
+        StartCoroutine(LoadYourAsyncScene("Level Generation"));
+    }
+    IEnumerator LoadYourAsyncScene(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
     }
 }

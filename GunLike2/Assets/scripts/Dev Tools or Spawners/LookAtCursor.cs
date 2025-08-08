@@ -9,6 +9,8 @@ public class LookAtCursor : MonoBehaviour
     RaycastHit hit;
     public LayerMask mask;
 
+    public bool staticCamera;
+
     void Start()
     {
 
@@ -16,16 +18,28 @@ public class LookAtCursor : MonoBehaviour
 
     void Update()
     {
-        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
-
-        transform.localEulerAngles = Vector3.zero;
-
-        if (Physics.Raycast(ray, out hit, float.MaxValue, mask))
+        if (staticCamera)
         {
-            Vector3 targetPoint = hit.point;
+            RaycastHit distance;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out distance))
+            {
+                transform.LookAt(distance.point);
+            }
+        }
+        else
+        {
+            Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit hit;
 
-            transform.LookAt(targetPoint);
+            transform.localEulerAngles = Vector3.zero;
+
+            if (Physics.Raycast(ray, out hit, float.MaxValue, mask))
+            {
+                Vector3 targetPoint = hit.point;
+
+                transform.LookAt(targetPoint);
+            }
         }
     }
 }

@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class WeaponSelectButton : MonoBehaviour
+{
+    TextMeshProUGUI txt; public Vector2 minMax;
+    public Image txtBg;
+    // Start is called before the first frame update
+    void Start()
+    {
+        txt = GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    public void Hover(bool isHover)
+    {
+        if (!Application.isPlaying) { return; }
+        if (isHover)
+        {
+            txt.color = new Color(255, 255, 255, minMax.y);
+            txtBg.color = new Color(0, 0, 0, minMax.y/2f);
+        }
+        else
+        {
+            txt.color = new Color(255, 255, 255, minMax.x);
+            txtBg.color = new Color(0, 0, 0, minMax.x/2f);
+        }
+    }
+}
