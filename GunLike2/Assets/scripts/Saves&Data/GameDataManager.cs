@@ -61,7 +61,6 @@ public class GameDataManager : MonoBehaviour
         }
         usrSessionNum++;
         PlayerPrefs.SetInt("USRSES", usrSessionNum);
-        Debug.Log("Session #" + usrSessionNum + " For this user.");
     }
     private void Start()
     {
