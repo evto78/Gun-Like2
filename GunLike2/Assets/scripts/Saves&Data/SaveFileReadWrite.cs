@@ -26,6 +26,7 @@ public class SaveFileReadWrite : MonoBehaviour
         public int kills;
         public float totalDamage;
         public float damageRecord;
+        public int bulletsFired;
         public int magSizeRecord;
         public int itemsCollected;
         public float accuracy;
@@ -60,7 +61,7 @@ public class SaveFileReadWrite : MonoBehaviour
                 menuManager = gm.GetComponent<MainMenuManager>();
             }
         }
-        if(gdm != null) { gdm.instance = this; gdm.RequestSaveData(); }
+        if(gdm != null) { gdm.instance = this; }
         if(menuManager != null) { menuManager.instance = this; }
 
         createdNew = false;
@@ -70,14 +71,44 @@ public class SaveFileReadWrite : MonoBehaviour
 
         CheckEmpty();
         if (!createdNew) { Deserialize(); }
+
+        data.usrSessions++;
+        PlayerPrefs.SetInt("USRSES", data.usrSessions);
+    }
+    private void Update()
+    {
+        if(gdm == null && menuManager == null)
+        {
+            //Try to find GDM
+            foreach (GameObject gm in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if (gm.name == "CoreProcesses")
+                {
+                    gdm = gm.GetComponentInChildren<GameDataManager>();
+                }
+                if (gm.tag == "gdm")
+                {
+                    gdm = gm.GetComponent<GameDataManager>();
+                }
+            }
+            if (gdm != null) { gdm.instance = this; }
+            //Try to find Main Menu Manager
+            foreach (GameObject gm in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if (gm.name == "Main Menu Manager")
+                {
+                    menuManager = gm.GetComponent<MainMenuManager>();
+                }
+            }
+            if (menuManager != null) { menuManager.instance = this; }
+        }
     }
     public bool RequestDataUpdate()
     {
-        if (data == null || gdm == null) { return false; }
+        if (data == null) { return false; }
 
-        data.usrID = gdm.usrID;
-        data.usrSessions = gdm.usrSessionNum;
-        data.gunInfo = gdm.gunInfo;
+        if(gdm != null) { gdm.UpdateRecords(); }
+
         UpdateSaveFile();
         return true;
     }
@@ -86,6 +117,32 @@ public class SaveFileReadWrite : MonoBehaviour
         SaveDataFile newData;
         newData = new SaveDataFile();
         newData.usrID = "NEW";
+        if (PlayerPrefs.HasKey("USRID"))
+        {
+            newData.usrID = PlayerPrefs.GetString("USRID");
+        }
+        else
+        {
+            string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string appenedLetters = "";
+            for (int i = 0; i < 40; i++)
+            {
+                appenedLetters = appenedLetters + letters[Random.Range(0, letters.Length)];
+            }
+            newData.usrID = appenedLetters + Random.Range(0, int.MaxValue);
+            PlayerPrefs.SetString("USRID", newData.usrID);
+            Debug.Log("Usr Id created for this device : " + newData.usrID);
+        }
+        if (PlayerPrefs.HasKey("USRSES"))
+        {
+            newData.usrSessions = PlayerPrefs.GetInt("USRSES");
+        }
+        else
+        {
+            newData.usrSessions = 0;
+            PlayerPrefs.SetInt("USRSES", newData.usrSessions);
+        }
+
         newData.gunInfo = new List<GunInformation>();
         for (int i = 0; i < 12; i++)
         {
@@ -103,6 +160,7 @@ public class SaveFileReadWrite : MonoBehaviour
                     newData.gunInfo[i].kills = 0;
                     newData.gunInfo[i].totalDamage = 0;
                     newData.gunInfo[i].damageRecord = 0;
+                    newData.gunInfo[i].bulletsFired = 0;
                     newData.gunInfo[i].magSizeRecord = 0;
                     newData.gunInfo[i].itemsCollected = 0;
                     newData.gunInfo[i].accuracy = 0;
@@ -120,6 +178,7 @@ public class SaveFileReadWrite : MonoBehaviour
                     newData.gunInfo[i].kills = 0;
                     newData.gunInfo[i].totalDamage = 0;
                     newData.gunInfo[i].damageRecord = 0;
+                    newData.gunInfo[i].bulletsFired = 0;
                     newData.gunInfo[i].magSizeRecord = 0;
                     newData.gunInfo[i].itemsCollected = 0;
                     newData.gunInfo[i].accuracy = 0;
@@ -190,6 +249,7 @@ public class SaveFileReadWrite : MonoBehaviour
         gunInfo.kills = 0;
         gunInfo.totalDamage = 0;
         gunInfo.damageRecord = 0;
+        gunInfo.bulletsFired = 0;
         gunInfo.magSizeRecord = 0;
         gunInfo.itemsCollected = 0;
         gunInfo.accuracy = 0;
@@ -227,6 +287,32 @@ public class SaveFileReadWrite : MonoBehaviour
         {
             File.Delete(filePath);
             CreateSaveData();
+        }
+
+        if (PlayerPrefs.HasKey("USRID"))
+        {
+            data.usrID = PlayerPrefs.GetString("USRID");
+        }
+        else
+        {
+            string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string appenedLetters = "";
+            for (int i = 0; i < 40; i++)
+            {
+                appenedLetters = appenedLetters + letters[Random.Range(0, letters.Length)];
+            }
+            data.usrID = appenedLetters + Random.Range(0, int.MaxValue);
+            PlayerPrefs.SetString("USRID", data.usrID);
+            Debug.Log("Usr Id created for this device : " + data.usrID);
+        }
+        if (PlayerPrefs.HasKey("USRSES"))
+        {
+            data.usrSessions = PlayerPrefs.GetInt("USRSES");
+        }
+        else
+        {
+            data.usrSessions = 0;
+            PlayerPrefs.SetInt("USRSES", data.usrSessions);
         }
     }
     public void UpdateSaveFile()

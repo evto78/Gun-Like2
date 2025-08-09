@@ -13,6 +13,7 @@ public class BossHealthManager : EnemyHealthManager
 
     public override void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
+        sourceOfLastDamage = source;
         if (hit == HitType.ht.weak || hit == HitType.ht.critweak || hit == HitType.ht.special) { ignoreArmor = true; }
         foreach (MonoBehaviour brain in brains)
         {
@@ -100,6 +101,10 @@ public class BossHealthManager : EnemyHealthManager
 
         if (source == "left")
         {
+            //saveData
+            playerItem.gunManager.leftDamageDATA += dmgTaken; playerItem.gunManager.leftHitsDATA++;
+            if (dmgTaken > playerItem.gunManager.leftMaxDmgDATA) { playerItem.gunManager.leftMaxDmgDATA = dmgTaken; }
+
             //irradiated battle plans
             float chance = playerItem.leftItems[80] * 25f; if (chance > 50) { chance = 50; }
             if (Random.Range(1, 100) < chance)
@@ -111,6 +116,10 @@ public class BossHealthManager : EnemyHealthManager
         }
         else if (source == "right")
         {
+            //saveData
+            playerItem.gunManager.rightDamageDATA += dmgTaken; playerItem.gunManager.rightHitsDATA++;
+            if (dmgTaken > playerItem.gunManager.rightMaxDmgDATA) { playerItem.gunManager.rightMaxDmgDATA = dmgTaken; }
+
             //irradiated battle plans
             float chance = playerItem.rightItems[80] * 25f; if (chance > 50) { chance = 50; }
             if (Random.Range(1, 100) < chance)
@@ -131,16 +140,17 @@ public class BossHealthManager : EnemyHealthManager
             died = true;
             if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
             if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-            Die(true);
+            Die(true, source);
         }
     }
 
-    public override void Die(bool sentByHm)
+    public override void Die(bool sentByHm, string source)
     {
         if (!sentByHm) { return; }
         //on death effects
         OnDeath();
 
+        if (source == "left" || sourceOfLastDamage == "left") { playerItem.gunManager.leftKillsDATA++; } else if (source == "right" || sourceOfLastDamage == "right") { playerItem.gunManager.rightKillsDATA++; }
         //on actual destruction
         Destroy(gameObject);
     }

@@ -104,6 +104,8 @@ public class BulletScript : MonoBehaviour
         turbineCharge = 0;
 
         gm.totalLiveBullets++;
+        if(whatHandThisComesFrom == "left") { gm.leftBulletsFiredDATA++; }
+        if(whatHandThisComesFrom == "right") { gm.rightBulletsFiredDATA++; }
     }
     private void OnDestroy()
     {
@@ -508,7 +510,7 @@ public class BulletScript : MonoBehaviour
         RunOnHit(givenGameObject, hit);
         givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-        {ehm.Die(false);}
+        {ehm.Die(false, whatHandThisComesFrom);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
         {ehm.GiveEffect("radiation", 1);}
@@ -532,7 +534,7 @@ public class BulletScript : MonoBehaviour
         RunOnHit(givenGameObject, hit); givenGameObject.SendMessage("OnHit", SendMessageOptions.DontRequireReceiver);
 
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
-        {ehm.Die(false);}
+        {ehm.Die(false, whatHandThisComesFrom);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
         {ehm.GiveEffect("radiation", 1);}

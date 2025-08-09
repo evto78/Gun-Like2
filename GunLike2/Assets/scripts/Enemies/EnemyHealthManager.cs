@@ -66,6 +66,8 @@ public class EnemyHealthManager : MonoBehaviour
 
     List<float> dmgQued = new List<float>();
     protected float burnTimer; public bool refundPoints;
+
+    protected string sourceOfLastDamage;
     protected virtual void Awake()
     {
         if (gdm == null)
@@ -125,7 +127,7 @@ public class EnemyHealthManager : MonoBehaviour
         numOfActiveEffects = 0;
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
-        if (curHp <= 0 && !died) { Die(true); died = true; }
+        if (curHp <= 0 && !died) { Die(true, ""); died = true; }
 
         if (dmgQued.Count > 0)
         {
@@ -136,6 +138,7 @@ public class EnemyHealthManager : MonoBehaviour
 
     public virtual void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
+        sourceOfLastDamage = source;
         if (hit == HitType.ht.weak || hit == HitType.ht.critweak || hit == HitType.ht.special) { ignoreArmor = true; }
         foreach(MonoBehaviour brain in brains)
         {
@@ -186,7 +189,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die(true);
+                    Die(true, source);
                 }
             }
         }
@@ -199,7 +202,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die(true);
+                    Die(true, source);
                 }
             }
         }
@@ -249,6 +252,10 @@ public class EnemyHealthManager : MonoBehaviour
 
         if(source == "left")
         {
+            //saveData
+            playerItem.gunManager.leftDamageDATA += dmgTaken; playerItem.gunManager.leftHitsDATA++;
+            if(dmgTaken > playerItem.gunManager.leftMaxDmgDATA) { playerItem.gunManager.leftMaxDmgDATA = dmgTaken; }
+
             //irradiated battle plans
             float chance = playerItem.leftItems[80] * 25f; if(chance > 50) { chance = 50; }
             if (Random.Range(1,100)<chance)
@@ -260,6 +267,10 @@ public class EnemyHealthManager : MonoBehaviour
         }
         else if (source == "right")
         {
+            //saveData
+            playerItem.gunManager.rightDamageDATA += dmgTaken; playerItem.gunManager.rightHitsDATA++;
+            if (dmgTaken > playerItem.gunManager.rightMaxDmgDATA) { playerItem.gunManager.rightMaxDmgDATA = dmgTaken; }
+
             //irradiated battle plans
             float chance = playerItem.rightItems[80] * 25f; if(chance > 50) { chance = 50; }
             if (Random.Range(1, 100) < chance)
@@ -278,15 +289,15 @@ public class EnemyHealthManager : MonoBehaviour
         if (curHp <= 0 && !died) { died = true; 
             if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
             if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-            Die(true);
+            Die(true, source);
         }
     }
 
-    public void TakePercentDamage(float pDmgTaken)
+    public void TakePercentDamage(float pDmgTaken, string source)
     {
         TakeDamage(curHp * pDmgTaken, true, HitType.ht.normal, transform.position, "self");
 
-        if (curHp <= 0) { Die(true); }
+        if (curHp <= 0) { Die(true, source); }
     }
     public void QueStandardDamage(float damage)
     {
@@ -316,12 +327,13 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    public virtual void Die(bool sendByHm)
+    public virtual void Die(bool sendByHm, string source)
     {
         //on death effects
         OnDeath();
 
         //on actual destruction
+        if(source == "left" || sourceOfLastDamage == "left") { playerItem.gunManager.leftKillsDATA++; } else if(source == "right" || sourceOfLastDamage == "right") { playerItem.gunManager.rightKillsDATA++; }
         if (data != null && refundPoints){gdm.pointsLeft += data.pointCost / 1.5f;} // refund some points
         Destroy(gameObject);
     }
@@ -329,8 +341,6 @@ public class EnemyHealthManager : MonoBehaviour
     {
         if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); }
     }
-
-    //GiveEffect("radiation", 1f)
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {
         int effectID = -1;

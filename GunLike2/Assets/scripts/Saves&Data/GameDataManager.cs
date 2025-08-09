@@ -24,7 +24,7 @@ public class GameDataManager : MonoBehaviour
     [Header("SaveData")]
     public GameObject saveDataReaderPrefab;
     public SaveFileReadWrite instance;
-    public List<SaveFileReadWrite.GunInformation> gunInfo = new List<SaveFileReadWrite.GunInformation>();
+    bool requesting = false;
 
     [Header("Bosses")]
     public GameObject chimera;
@@ -37,44 +37,19 @@ public class GameDataManager : MonoBehaviour
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
         pi = phm.playerItem;
-
-        if(instance == null)
+    }
+    private void Start()
+    {
+        if (instance == null)
         {
             GameObject spawnedSaveData = Instantiate(saveDataReaderPrefab);
             instance = spawnedSaveData.GetComponent<SaveFileReadWrite>();
             instance.gdm = this;
+
+            usrID = instance.data.usrID;
+            usrSessionNum = instance.data.usrSessions;
         }
 
-        if (PlayerPrefs.HasKey("USRID"))
-        {
-            usrID = PlayerPrefs.GetString("USRID");
-        }
-        else
-        {
-            string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string appenedLetters = "";
-            for(int i = 0; i < 40; i++)
-            {
-                appenedLetters = appenedLetters+letters[Random.Range(0,letters.Length)];
-            }
-            usrID = appenedLetters+Random.Range(0, int.MaxValue);
-            PlayerPrefs.SetString("USRID", usrID);
-            Debug.Log("Usr Id created for this device : " + usrID);
-        }
-        if (PlayerPrefs.HasKey("USRSES"))
-        {
-            usrSessionNum = PlayerPrefs.GetInt("USRSES");
-        }
-        else
-        {
-            usrSessionNum = 0;
-            PlayerPrefs.SetInt("USRSES", usrSessionNum);
-        }
-        usrSessionNum++;
-        PlayerPrefs.SetInt("USRSES", usrSessionNum);
-    }
-    private void Start()
-    {
         roomNumber = 0;
         timeSpent = 0; timeSpentNoPause = 0;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
@@ -85,16 +60,7 @@ public class GameDataManager : MonoBehaviour
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
 
-        RequestSaveData();
         SendDataToEmail("RunStart");
-    }
-    public void RequestSaveData()
-    {
-        if(instance == null) { return; }
-        if(instance.data != null)
-        {
-            gunInfo = instance.data.gunInfo;
-        }
     }
     private void Update()
     {
@@ -108,6 +74,10 @@ public class GameDataManager : MonoBehaviour
         timeSpentNoPause += Time.deltaTime;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
         CheckForItemGainAndDestroy();
+    }
+    private void LateUpdate()
+    {
+        requesting = false;
     }
     void CheckForItemGainAndDestroy()
     {
@@ -185,16 +155,15 @@ public class GameDataManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        instance.RequestDataUpdate();
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
     }
     private void OnDestroy()
     {
-        instance.RequestDataUpdate();
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
     }
     private void OnApplicationQuit()
     {
-        instance.RequestDataUpdate();
-        SendDataToEmail("GameClose");
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
     }
     public void SendDataToEmail(string eventT)
     {
@@ -265,5 +234,24 @@ public class GameDataManager : MonoBehaviour
         tdata.rightGun = pi.gunManager.rightGunScript.gunName;
         if(phm.lastHitMe != null && phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
         return (tdata);
+    }
+    public void UpdateRecords()
+    {
+        GunManager gm = pi.gunManager;
+        int leftGun = gm.leftHandVal; SaveFileReadWrite.GunInformation infoL = instance.data.gunInfo[leftGun];
+        int rightGun = gm.rightHandVal; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
+        infoL.kills += gm.leftKillsDATA; infoR.kills += gm.rightKillsDATA;
+        infoL.totalDamage += gm.leftDamageDATA; infoR.totalDamage += gm.rightDamageDATA;
+        if (gm.leftMaxDmgDATA > infoL.damageRecord) { infoL.damageRecord = gm.leftMaxDmgDATA; }
+        if (gm.rightMaxDmgDATA > infoR.damageRecord) { infoR.damageRecord = gm.rightMaxDmgDATA; }
+        infoL.bulletsFired += gm.leftBulletsFiredDATA; infoR.bulletsFired += gm.rightBulletsFiredDATA;
+        if (gm.leftGunScript.magSize > infoL.magSizeRecord) { infoL.magSizeRecord = (int)gm.leftGunScript.magSize; }
+        if (gm.rightGunScript.magSize > infoR.magSizeRecord) { infoR.magSizeRecord = (int)gm.rightGunScript.magSize; }
+        infoL.itemsCollected += gm.leftItemsCollectedDATA; infoR.itemsCollected += gm.rightItemsCollectedDATA;
+        infoL.elapsedTimeHeld += timeSpentNoPause; infoR.elapsedTimeHeld += timeSpentNoPause;
+        infoL.accuracy = (((infoL.accuracy/100)+(gm.leftBulletsFiredDATA/(gm.leftHitsDATA+1)))/2)*100f;
+        infoR.accuracy = (((infoR.accuracy/100)+(gm.rightBulletsFiredDATA/(gm.rightHitsDATA+1)))/2)*100f;
+        if (difficulty > infoL.difficulyReachedRecord) { infoL.difficulyReachedRecord = (int)difficulty; }
+        if (difficulty > infoR.difficulyReachedRecord) { infoR.difficulyReachedRecord = (int)difficulty; }
     }
 }

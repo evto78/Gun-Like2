@@ -5,10 +5,15 @@ using UnityEngine;
 public class SoundLibraryManager : MonoBehaviour
 {
     public enum SoundType { music,effect,ui,other}
-    public List<AudioClip> monoSounds;
-    public List<SoundType> soundTypes;
-    public List<string> soundNames;
-    public List<AudioSource> soundSources;
+    public class Sounds
+    {
+        public AudioClip monoSound;
+        public SoundType soundType;
+        public string soundName;
+        public AudioSource source;
+        public int priority;
+    }
+    public List<Sounds> sounds;
     LocalSoundManager soundManager;
     GameDataManager gdm;
     float masterVol;
@@ -24,25 +29,24 @@ public class SoundLibraryManager : MonoBehaviour
         effectVol = soundManager.effectVol;
         uiVol = soundManager.uiVol;
     }
-    public void PlaySoundByName(string key)
+    public void PlaySoundByName(int key)
     {
-        if (!soundNames.Contains(key)) { return; }
-        int i = soundNames.IndexOf(key);
-        if (soundSources[i] != null)
+        int i = key;
+        if (sounds[i].source != null)
         {
-            soundSources[i].clip = monoSounds[i];
-            switch (soundTypes[i])
+            sounds[i].source.clip = sounds[i].monoSound;
+            switch (sounds[i].soundType)
             {
-                case SoundType.music: soundSources[i].volume = (musicVol/100f)*(masterVol/100f); break;
-                case SoundType.effect: soundSources[i].volume = (effectVol / 100f) * (masterVol / 100f); break;
-                case SoundType.ui: soundSources[i].volume = (uiVol / 100f) * (masterVol / 100f); break;
-                case SoundType.other: soundSources[i].volume = (masterVol / 100f); break;
+                case SoundType.music: sounds[i].source.volume = (musicVol/100f)*(masterVol/100f); break;
+                case SoundType.effect: sounds[i].source.volume = (effectVol / 100f) * (masterVol / 100f); break;
+                case SoundType.ui: sounds[i].source.volume = (uiVol / 100f) * (masterVol / 100f); break;
+                case SoundType.other: sounds[i].source.volume = (masterVol / 100f); break;
             }
-            soundSources[i].Play();
+            sounds[i].source.Play();
         }
         else
         {
-            soundManager.PlayLocalSound(monoSounds[i], LocalSoundManager.SoundType.music, 0); //FIX!!@!!
+            soundManager.PlayLocalSound(sounds[i].monoSound, sounds[i].soundType.ToString(), 0);
         }
     }
 }

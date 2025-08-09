@@ -232,6 +232,11 @@ public class PlayerItem : MonoBehaviour
                 if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[100]--; }
             }
         }
+        switch (hand)
+        {
+            case "left": gunManager.leftItemsCollectedDATA+=amount; break;
+            case "right": gunManager.rightItemsCollectedDATA+=amount; break;
+        }
     }
     public void ItemPressedInInv(int id, string hand)
     {

@@ -592,7 +592,7 @@ public class ChimeraBrain : MonoBehaviour
     }
     private IEnumerator awpGreeting()
     {
-        soundManager.PlaySoundByName("Bayonett Pullout");
+        soundManager.PlaySoundByName(0);
         curAwpTarget = null; awpHead.transform.localEulerAngles = Vector3.zero;
         yield return new WaitForSeconds(1.8f);
         float progress = 0f; Vector3 curPos = awpHead.transform.position; Vector3 tarPos = player.transform.position;

@@ -213,8 +213,8 @@ public class GunManager : MonoBehaviour
     public int rightStorage;
 
     public bool rightRicochet = false;
-    int leftHandVal;
-    int rightHandVal;
+    public int leftHandVal;
+    public int rightHandVal;
 
     public GameObject gunkyAxe;
     public GameObject microwave;
@@ -238,6 +238,18 @@ public class GunManager : MonoBehaviour
 
     GooColorShift gcsL; GooColorShift gcsR;
     bool leftGoo; bool rightGoo;
+
+    [Header("SaveDataInfo")]
+    public int leftKillsDATA;
+    public float leftDamageDATA; public float leftMaxDmgDATA; public int leftHitsDATA;
+    public int leftBulletsFiredDATA;
+    public int leftItemsCollectedDATA;
+    public float leftAccuracyDATA;
+    public int rightKillsDATA;
+    public float rightDamageDATA; public float rightMaxDmgDATA; public int rightHitsDATA;
+    public int rightBulletsFiredDATA;
+    public int rightItemsCollectedDATA;
+    public float rightAccuracyDATA;
 
     private void Start()
     {

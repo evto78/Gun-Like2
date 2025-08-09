@@ -33,8 +33,16 @@ public class LocalSoundManager : MonoBehaviour
         effectVol = PlayerPrefs.GetFloat("EFFECTVOL");
         uiVol = PlayerPrefs.GetFloat("UIVOL");
     }
-    public void PlayLocalSound(AudioClip incomingClip, SoundType type, int prior)
+    public void PlayLocalSound(AudioClip incomingClip, string givinType, int prior)
     {
+        SoundType type = SoundType.music;
+        switch (givinType)
+        {
+            case "music": type = SoundType.music; break;
+            case "effect": type = SoundType.effect; break;
+            case "ui": type = SoundType.ui; break;
+            case "other": type = SoundType.other; break;
+        }
         AudioSource source = PickSource(prior);
         switch (type)
         {
