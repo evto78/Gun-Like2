@@ -4,21 +4,33 @@ using UnityEngine;
 
 public class ChimeraCutsceneMesh : MonoBehaviour
 {
+    GameDataManager gdm;
     public Vector3 startPos;
     public Vector3 startRot;
     public float introTimer; Animator anim; public GameObject bossPrefab; bool spawned; GameObject spawnedBoss; Vector3 lastBossPos;
-    public float outroTimer;
+    public float outroTimer; bool outroing;
     void Start()
     {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        anim = GetComponentInChildren<Animator>();
+
         transform.position = startPos;
         transform.eulerAngles = startRot;
         spawned = false;
     }
     void Update()
     {
-        introTimer -= Time.deltaTime;
-        if(introTimer < 0 && !spawned) { transform.GetChild(0).gameObject.SetActive(false); spawnedBoss = Instantiate(bossPrefab, transform.position, transform.rotation); spawned = true; }
-        if (spawned && spawnedBoss == null) { transform.position = lastBossPos; transform.GetChild(0).gameObject.SetActive(true); anim.SetTrigger("Outro"); }
-        else if (spawned) { lastBossPos = spawnedBoss.transform.position; }
+        if (outroing)
+        {
+            outroTimer -= Time.deltaTime;
+            if(outroTimer < 0) {gdm.BossKilled("Chimera"); Destroy(gameObject); }
+        }
+        else
+        {
+            introTimer -= Time.deltaTime;
+            if (introTimer < 0 && !spawned) { transform.GetChild(0).gameObject.SetActive(false); spawnedBoss = Instantiate(bossPrefab, transform.position, transform.rotation); spawned = true; }
+            if (spawned && spawnedBoss != null) { lastBossPos = spawnedBoss.transform.position; }
+            if (spawned && spawnedBoss == null) { transform.position = lastBossPos; transform.GetChild(0).gameObject.SetActive(true); anim.SetTrigger("Outro"); outroTimer = 1.5f; outroing = true; }
+        }
     }
 }

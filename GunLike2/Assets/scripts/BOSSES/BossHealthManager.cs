@@ -8,7 +8,6 @@ public class BossHealthManager : EnemyHealthManager
     {
         base.Awake();
         transform.localScale = Vector3.one;
-        gdm.SendDataToEmail("BossReached");
     }
 
     public override void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)

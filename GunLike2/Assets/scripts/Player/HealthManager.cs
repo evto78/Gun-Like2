@@ -305,7 +305,7 @@ public class HealthManager : MonoBehaviour
 			}
 			else
             {
-				dead = true; gdm.SendDataToEmail("Death");
+				dead = true; gdm.instance.AddEmailToQue("Death");
 			}
 		}
 	}

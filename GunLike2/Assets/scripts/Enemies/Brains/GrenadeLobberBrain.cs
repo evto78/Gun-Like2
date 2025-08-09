@@ -22,6 +22,7 @@ public class GrenadeLobberBrain : MonoBehaviour
     public float lobSpeed;
     public int maxGrenadesAtOnce;
     List<GameObject> grenadesSpawned = new List<GameObject>();
+    List<GameObject> toBeDeleted = new List<GameObject>();
     private void Start()
     {
         hm = GetComponent<EnemyHealthManager>();
@@ -36,7 +37,13 @@ public class GrenadeLobberBrain : MonoBehaviour
     }
     private void Update()
     {
-        foreach(GameObject gm in grenadesSpawned) { if(gm == null) { grenadesSpawned.Remove(gm); } }
+        for(int i = 0; i < grenadesSpawned.Count; i++)
+        {
+            if (grenadesSpawned[i] == null) { toBeDeleted.Add(grenadesSpawned[i]); }
+        } foreach(GameObject gm in toBeDeleted)
+        {
+            grenadesSpawned.Remove(gm);
+        } toBeDeleted = new List<GameObject>();
 
         jammed = hm.activeEffects[3].x > 0;
 

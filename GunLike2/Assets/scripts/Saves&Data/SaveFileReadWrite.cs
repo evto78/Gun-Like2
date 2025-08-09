@@ -12,6 +12,7 @@ public class SaveFileReadWrite : MonoBehaviour
         public string usrID = "NULL";
         public int usrSessions;
         public List<GunInformation> gunInfo;
+        public BossInformation ChimeraInfo;
     }
     [System.Serializable]
     public class GunInformation
@@ -33,14 +34,30 @@ public class SaveFileReadWrite : MonoBehaviour
         public float elapsedTimeHeld;
         public int difficulyReachedRecord;
     }
+    [System.Serializable]
+    public class BossInformation
+    {
+        public int timesFought = 0;
+        public int timesDefeated = 0;
+        public float timeToKillRecord = 99999f;
+    }
 
     string file; bool createdNew;
     string filePath; string fileName = "SaveData.json";
     public SaveDataFile data;
     public GameDataManager gdm;
     public MainMenuManager menuManager;
+
+    //TelemnetryDataCollection
+    [Header("DATA COLLECTION")]
+    public bool sendData;
+    public List<string> emailQueContent = new List<string>();
+    public List<string> emailQueEvent = new List<string>();
+
     private void Awake()
     {
+        emailQueContent = new List<string>();
+        emailQueEvent = new List<string>();
         //Try to find GDM
         foreach (GameObject gm in SceneManager.GetActiveScene().GetRootGameObjects())
         {
@@ -237,6 +254,8 @@ public class SaveFileReadWrite : MonoBehaviour
                     break;
             }
         }
+        newData.ChimeraInfo = new BossInformation();
+
         return newData;
     }
     void BasicNulGunInfoAssembler(GunInformation gunInfo)
@@ -259,6 +278,8 @@ public class SaveFileReadWrite : MonoBehaviour
     private void OnApplicationQuit()
     {
         Serialize();
+        AddEmailToQue("GameClose");
+        SendAllEmails();
     }
     void CheckEmpty()
     {
@@ -322,5 +343,91 @@ public class SaveFileReadWrite : MonoBehaviour
     void Serialize()
     {
         File.WriteAllText(filePath, JsonUtility.ToJson(data));
+    }
+    public void AddEmailToQue(string eventT)
+    {
+        if (PlayerPrefs.GetInt("SENDDATA") != 1) { return; }
+        Debug.Log("Adding " + eventT + " to que");
+
+        TelemData tdata = PrepareData();
+
+        tdata.eventData = eventT;
+
+        string msg = "START";
+        msg += "|(UsrID)" + data.usrID;
+        msg += "|(TriggeredEvent)" + eventT;
+        msg += "|(SessionNum)" + data.usrSessions;
+        msg += "|(CurTime)" + tdata.eventTime;
+        msg += "|(LeftGun)" + tdata.leftGun;
+        msg += "|(RightGun)" + tdata.rightGun;
+        msg += "|(TimeE)" + tdata.timeElapsed;
+        msg += "|(Room)" + tdata.roomNum;
+        msg += "|(Diff)" + tdata.difficulty;
+        msg += "|(MRSourceOfDmg)" + tdata.mostRecentSourceOfDmg;
+        msg += "|(Cash)" + tdata.currentCash;
+        string leftInvTxt = "LEFT(" + FormatInvToString(tdata.leftInv) + ")";
+        string rightInvTxt = "RIGHT(" + FormatInvToString(tdata.rightInv) + ")";
+        msg += "|(LInv)" + leftInvTxt;
+        msg += "|(RInv)" + rightInvTxt;
+        msg += "|END";
+
+        emailQueEvent.Add(eventT);
+        emailQueContent.Add(msg);
+    }
+    void SendAllEmails()
+    {
+        Debug.Log("Emails to send: " + emailQueContent.Count);
+        for(int i = 0; i < emailQueContent.Count; i++)
+        {
+            Debug.Log("Sending: " + emailQueEvent[i]);
+            SendDataToEmail(emailQueEvent[i], emailQueContent[i]);
+        }
+    }
+    public void SendDataToEmail(string eventT, string content)
+    {
+        Emailer.SendAnEmail(content, eventT);
+    }
+    public string FormatALLInvToString(List<int> inv)
+    {
+        string result = "";
+
+        foreach (int item in inv)
+        {
+            result += item + ",";
+        }
+        result.Remove(result.Length - 1);
+
+        return result;
+    }
+    public string FormatInvToString(List<int> inv)
+    {
+        string result = "";
+        int i = 0;
+        foreach (int item in inv)
+        {
+            if (item != 0) { result += "ID:" + i + ":" + item + ","; }
+            i++;
+        }
+        if (result != "") { result.Remove(result.Length - 1); }
+
+        return result;
+    }
+    public TelemData PrepareData()
+    {
+        TelemData tdata = new TelemData();
+        tdata.usr = data.usrID;
+        tdata.sessionNum = data.usrSessions.ToString();
+
+        tdata.difficulty = gdm.difficulty;
+        tdata.timeElapsed = gdm.timeSpentNoPause;
+        tdata.currentCash = gdm.phm.money;
+        tdata.roomNum = gdm.roomNumber;
+        tdata.eventTime = System.DateTime.Now.ToString("U");
+        tdata.leftInv = gdm.pi.leftItems;
+        tdata.rightInv = gdm.pi.rightItems;
+        tdata.leftGun = gdm.pi.gunManager.leftGunScript.gunName;
+        tdata.rightGun = gdm.pi.gunManager.rightGunScript.gunName;
+        if (gdm.phm.lastHitMe != null && gdm.phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = gdm.phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
+        return (tdata);
     }
 }

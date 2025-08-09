@@ -15,7 +15,7 @@ public class GameDataManager : MonoBehaviour
     public bool gameTimerActive;
     public int roomNumber;
     public HealthManager phm;
-    PlayerItem pi;
+    public PlayerItem pi;
     float pointregenTimer;
     //Checking Change
     bool changedLastFrame;
@@ -27,12 +27,8 @@ public class GameDataManager : MonoBehaviour
     bool requesting = false;
 
     [Header("Bosses")]
-    public GameObject chimera;
+    public GameObject chimera; float timeTakenToDefeatChimera;
 
-    //TelemnetryDataCollection
-    [Header("DATA COLLECTION")]
-    public string usrID; public int usrSessionNum;
-    public bool sendData;
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
@@ -45,9 +41,6 @@ public class GameDataManager : MonoBehaviour
             GameObject spawnedSaveData = Instantiate(saveDataReaderPrefab);
             instance = spawnedSaveData.GetComponent<SaveFileReadWrite>();
             instance.gdm = this;
-
-            usrID = instance.data.usrID;
-            usrSessionNum = instance.data.usrSessions;
         }
 
         roomNumber = 0;
@@ -59,8 +52,6 @@ public class GameDataManager : MonoBehaviour
         leftSnapshot.AddRange(pi.leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
-
-        SendDataToEmail("RunStart");
     }
     private void Update()
     {
@@ -69,7 +60,7 @@ public class GameDataManager : MonoBehaviour
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
-            
+
         }
         timeSpentNoPause += Time.deltaTime;
         difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
@@ -106,8 +97,6 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
-        SendDataToEmail("RoomExit");
-
         gameTimerActive = false;
         roomNumber += 1;
         phm.attackedThisRoom = false;
@@ -118,10 +107,11 @@ public class GameDataManager : MonoBehaviour
             Destroy(ehm.gameObject);
         }
 
-        SendDataToEmail("RoomEnter");
+        instance.AddEmailToQue("RoomEnter");
     }
     public void BeginSpawning()
     {
+        if(roomNumber == 0) { instance.AddEmailToQue("RunStart"); }
         gameTimerActive = true;
 
         List<EnemySpawner> newOrder = new List<EnemySpawner>();
@@ -149,91 +139,48 @@ public class GameDataManager : MonoBehaviour
         gameTimerActive = true;
         switch (boss)
         {
-            case "Chimera": Instantiate(chimera);
+            case "Chimera": 
+                Instantiate(chimera); instance.AddEmailToQue("BossSpawned"); instance.data.ChimeraInfo.timesFought++; timeTakenToDefeatChimera = 0f; StartCoroutine(ChimeraBossTimer());
                 break;
         }
     }
+    public void BossKilled(string boss)
+    {
+        gameTimerActive = false;
+        switch (boss)
+        {
+            case "Chimera":
+                instance.AddEmailToQue("BossKilled");
+                GunManager gm = pi.gunManager;
+                int leftGun = gm.leftHandVal; SaveFileReadWrite.GunInformation infoL = instance.data.gunInfo[leftGun];
+                int rightGun = gm.rightHandVal; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
+                infoL.winningRuns++; infoR.winningRuns++;
+                instance.data.ChimeraInfo.timesDefeated++;
+                if(timeTakenToDefeatChimera < instance.data.ChimeraInfo.timeToKillRecord) { instance.data.ChimeraInfo.timeToKillRecord = timeTakenToDefeatChimera; }
+                break;
+        }
+    }
+    IEnumerator ChimeraBossTimer()
+    {
+        Debug.Log("Started");
+        while (gameTimerActive)
+        {
+            timeTakenToDefeatChimera += Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log("Ended: "+timeTakenToDefeatChimera);
+    }
     private void OnDisable()
     {
-        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; }
     }
     private void OnDestroy()
     {
-        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; }
     }
     private void OnApplicationQuit()
     {
-        if (!requesting) { instance.RequestDataUpdate(); requesting = true; SendDataToEmail("GameClose"); }
-    }
-    public void SendDataToEmail(string eventT)
-    {
-        if (!sendData) { return; }
-        string eventType = eventT;
-        TelemData tdata = PrepareData();
-
-        tdata.eventData = eventType;
-
-        string msg = "START";
-        msg += "|(UsrID)"+tdata.usr;
-        msg += "|(SessionNum)"+tdata.sessionNum;
-        msg += "|(CurTime)"+tdata.eventTime;
-        msg += "|(LeftGun)"+tdata.leftGun;
-        msg += "|(RightGun)"+tdata.rightGun;
-        msg += "|(TimeE)"+tdata.timeElapsed;
-        msg += "|(Room)"+tdata.roomNum;
-        msg += "|(Diff)"+tdata.difficulty;
-        msg += "|(MRSourceOfDmg)"+tdata.mostRecentSourceOfDmg;
-        msg += "|(Cash)"+tdata.currentCash;
-        string leftInvTxt = "LEFT("+FormatInvToString(tdata.leftInv)+")";
-        string rightInvTxt = "RIGHT("+FormatInvToString(tdata.rightInv)+")";
-        msg += "|(LInv)"+leftInvTxt;
-        msg += "|(RInv)"+rightInvTxt;
-        msg += "|END";
-
-        Emailer.SendAnEmail(msg, eventType);
-    }
-    public string FormatALLInvToString(List<int> inv)
-    {
-        string result = "";
-
-        foreach (int item in inv)
-        {
-            result += item + ",";
-        }
-        result.Remove(result.Length - 1);
-
-        return result;
-    }
-    public string FormatInvToString(List<int> inv)
-    {
-        string result = "";
-        int i = 0;
-        foreach (int item in inv)
-        {
-            if(item != 0) { result += "ID:"+i+":" + item + ","; }
-            i++;
-        }
-        if(result != "") { result.Remove(result.Length - 1); }
-
-        return result;
-    }
-    public TelemData PrepareData()
-    {
-        TelemData tdata = new TelemData();
-        tdata.usr = usrID;
-        tdata.sessionNum = usrSessionNum.ToString();
-
-        tdata.difficulty = difficulty;
-        tdata.timeElapsed = timeSpentNoPause;
-        tdata.currentCash = phm.money;
-        tdata.roomNum = roomNumber;
-        tdata.eventTime = System.DateTime.Now.ToString("U");
-        tdata.leftInv = pi.leftItems;
-        tdata.rightInv = pi.rightItems;
-        tdata.leftGun = pi.gunManager.leftGunScript.gunName;
-        tdata.rightGun = pi.gunManager.rightGunScript.gunName;
-        if(phm.lastHitMe != null && phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
-        return (tdata);
+        if (!requesting) { instance.RequestDataUpdate(); requesting = true; }
     }
     public void UpdateRecords()
     {

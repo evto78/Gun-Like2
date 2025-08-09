@@ -75,7 +75,6 @@ public class SettingsScript : MonoBehaviour
         if (gdm == null) { return; }
         gdm.phm.playerMvt.UpdateSettings();
         gdm.phm.lsm.UpdateSettings();
-        gdm.sendData = PlayerPrefs.GetInt("SENDDATA") == 1;
     }
     private void Update()
     {
