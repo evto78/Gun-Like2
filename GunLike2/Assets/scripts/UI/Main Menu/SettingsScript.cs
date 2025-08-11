@@ -23,7 +23,7 @@ public class SettingsScript : MonoBehaviour
         if (!built) { BuildAll(); }
         
         built = true;
-        //Debug.Log("Applying Settings...");
+
         Apply();
         if (SceneManager.GetActiveScene().name == "Main Menu") { tab.SetActive(false); }
     }
@@ -72,9 +72,12 @@ public class SettingsScript : MonoBehaviour
         if(Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS")) == 120) { Application.targetFrameRate = -1; }
 
         if (gdm == null && GameObject.FindGameObjectWithTag("gdm") != null) { gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); }
-        if (gdm == null) { return; }
-        gdm.phm.playerMvt.UpdateSettings();
-        gdm.phm.lsm.UpdateSettings();
+        if (gdm != null) { gdm.phm.playerMvt.UpdateSettings(); gdm.phm.lsm.UpdateSettings(); }
+        try
+        {
+            if (gdm == null) { Camera.main.gameObject.GetComponent<LocalSoundManager>().UpdateSettings(); }
+        }
+        catch {  }
     }
     private void Update()
     {
