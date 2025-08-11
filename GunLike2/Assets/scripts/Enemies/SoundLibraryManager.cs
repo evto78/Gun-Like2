@@ -46,7 +46,7 @@ public class SoundLibraryManager : MonoBehaviour
         }
         else
         {
-            soundManager.PlayLocalSound(sounds[i].monoSound, sounds[i].soundType.ToString(), 0);
+            soundManager.PlayLocalSound(sounds[i].monoSound, sounds[i].soundType.ToString(), sounds[i].priority);
         }
     }
 }

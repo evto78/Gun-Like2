@@ -13,12 +13,6 @@ public class WeaponSelectButton : MonoBehaviour
     {
         txt = GetComponentInChildren<TextMeshProUGUI>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void Hover(bool isHover)
     {
         if (!Application.isPlaying) { return; }
