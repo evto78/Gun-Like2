@@ -29,11 +29,11 @@ public class UiSoundPlayer : MonoBehaviour
     }
     public void UIHoverSound(int difficulty)
     {
-        lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty].monoSound, SoundType.ui.ToString(), 0);
+        lsm.PlayLocalSound(soundsUIGUNBUTTON[0].monoSound, SoundType.ui.ToString(), 0);
     }
     public void UISelectSound(int difficulty)
     {
-        lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty+1].monoSound, SoundType.ui.ToString(), 1);
+        lsm.PlayLocalSound(soundsUIGUNBUTTON[1].monoSound, SoundType.ui.ToString(), 1);
     }
     public void UIDifficultySound(int difficulty)
     {

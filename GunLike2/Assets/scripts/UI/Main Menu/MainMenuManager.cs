@@ -13,7 +13,7 @@ public class MainMenuManager : MonoBehaviour
     public List<GameObject> uiTOHIDE; bool loading;
     public SaveFileReadWrite instance;
     WeaponSelection weaponSelect;
-    UiSoundPlayer usp;
+    public UiSoundPlayer usp;
     public int selectedDifficulty;
     [System.Serializable]
     public class DiffDetail
@@ -37,11 +37,13 @@ public class MainMenuManager : MonoBehaviour
     List<MutatedRule> rarity1Rules = new List<MutatedRule>();
     List<MutatedRule> rarity2Rules = new List<MutatedRule>();
     List<MutatedRule> rarity3Rules = new List<MutatedRule>();
-    List<int> currentMutatedRules = new List<int>();
+    public List<int> currentMutatedRules = new List<int>();
     public Transform mutatedRulesHolder; public TextMeshProUGUI mutationIDText; public string mutationID;
     Animator camAnim;
+    public GameObject attachedUI;
     private void Awake()
     {
+        attachedUI.SetActive(true);
         weaponSelect = GameObject.Find("BEHINDDOORUI").GetComponent<WeaponSelection>();
         usp = GetComponent<UiSoundPlayer>();
         Time.timeScale = 1f;
@@ -84,6 +86,15 @@ public class MainMenuManager : MonoBehaviour
                 }
                 usp.UIDifficultySound(selectedDifficulty);
                 PlayerPrefs.SetInt("SELECTEDDIFFICULTY", selectedDifficulty);
+                if (selectedDifficulty == 4)
+                {//get mutated rules id
+                    PlayerPrefs.SetInt("MUTATEDRULE1", currentMutatedRules[0]);
+                    PlayerPrefs.SetInt("MUTATEDRULE2", currentMutatedRules[1]);
+                    PlayerPrefs.SetInt("MUTATEDRULE3", currentMutatedRules[2]);
+                    PlayerPrefs.SetInt("MUTATEDRULE4", currentMutatedRules[3]);
+                    PlayerPrefs.SetInt("MUTATEDRULE5", currentMutatedRules[4]);
+                    PlayerPrefs.SetInt("MUTATEDRULE6", currentMutatedRules[5]);
+                }
             }
         }
     }
@@ -141,6 +152,7 @@ public class MainMenuManager : MonoBehaviour
     }
     public void UpdateDifficultyDisplayedInfo(int input)
     {
+        selectedDifficulty = input;
         if(input == curDifDisplay) { return; } curDifDisplay = input;
         foreach(DiffDetail dd in difficultyInfo) { dd.detailsHolder.SetActive(false); }
         difficultyInfo[input].detailsHolder.SetActive(true);
@@ -149,26 +161,122 @@ public class MainMenuManager : MonoBehaviour
     }
     void GenerateMutatedRules()
     {
-        mutationID = "";
+        List<int> nonStackables = new List<int>(); nonStackables.InsertRange(0, new int[] { 2,3,8,10,11 });
+        int metaAttemptsLeft = 100;
         currentMutatedRules = new List<int>();
-        for(int i = 0; i < mutatedRulesHolder.childCount; i++)
+        while(currentMutatedRules.Count < 6 && metaAttemptsLeft > 0)
         {
-            TextMeshProUGUI ruleTxt = mutatedRulesHolder.GetChild(i).GetComponent<TextMeshProUGUI>();
-            int ruleRarity = Random.Range(0,100);
-            if (ruleRarity < 50) { ruleRarity = 0; }
-            else if (ruleRarity < 80) { ruleRarity = 1; }
-            else if (ruleRarity < 95) { ruleRarity = 2; }
-            else if (ruleRarity < 100) { ruleRarity = 3; }
-            int index;
-            switch (ruleRarity)
+            metaAttemptsLeft--;
+            mutationID = "";
+            currentMutatedRules = new List<int>();
+            for (int i = 0; i < mutatedRulesHolder.childCount; i++)
             {
-                case 0: index = Random.Range(0,rarity0Rules.Count); ruleTxt.text = rarity0Rules[index].rule; ruleTxt.color = rarity0Rules[index].color; currentMutatedRules.Add(rarity0Rules[index].id); mutationID += rarity0Rules[index].id + "|"; break;
-                case 1: index = Random.Range(0,rarity1Rules.Count); ruleTxt.text = rarity1Rules[index].rule; ruleTxt.color = rarity1Rules[index].color; currentMutatedRules.Add(rarity1Rules[index].id); mutationID += rarity1Rules[index].id + "|"; break;
-                case 2: index = Random.Range(0,rarity2Rules.Count); ruleTxt.text = rarity2Rules[index].rule; ruleTxt.color = rarity2Rules[index].color; currentMutatedRules.Add(rarity2Rules[index].id); mutationID += rarity2Rules[index].id + "|"; break;
-                case 3: index = Random.Range(0,rarity3Rules.Count); ruleTxt.text = rarity3Rules[index].rule; ruleTxt.color = rarity3Rules[index].color; currentMutatedRules.Add(rarity3Rules[index].id); mutationID += rarity3Rules[index].id + "|"; break;
+                TextMeshProUGUI ruleTxt = mutatedRulesHolder.GetChild(i).GetComponent<TextMeshProUGUI>();
+                int index;
+                int ruleRarity = Random.Range(0, 100);
+                if (ruleRarity < 50) { ruleRarity = 0; }
+                else if (ruleRarity < 80) { ruleRarity = 1; }
+                else if (ruleRarity < 95) { ruleRarity = 2; }
+                else if (ruleRarity < 100) { ruleRarity = 3; }
+                switch (ruleRarity)
+                {
+                    case 0: index = Random.Range(0, rarity0Rules.Count); ruleTxt.text = rarity0Rules[index].rule; ruleTxt.color = rarity0Rules[index].color; currentMutatedRules.Add(rarity0Rules[index].id); mutationID += rarity0Rules[index].id + "|"; break;
+                    case 1: index = Random.Range(0, rarity1Rules.Count); ruleTxt.text = rarity1Rules[index].rule; ruleTxt.color = rarity1Rules[index].color; currentMutatedRules.Add(rarity1Rules[index].id); mutationID += rarity1Rules[index].id + "|"; break;
+                    case 2: index = Random.Range(0, rarity2Rules.Count); ruleTxt.text = rarity2Rules[index].rule; ruleTxt.color = rarity2Rules[index].color; currentMutatedRules.Add(rarity2Rules[index].id); mutationID += rarity2Rules[index].id + "|"; break;
+                    case 3: index = Random.Range(0, rarity3Rules.Count); ruleTxt.text = rarity3Rules[index].rule; ruleTxt.color = rarity3Rules[index].color; currentMutatedRules.Add(rarity3Rules[index].id); mutationID += rarity3Rules[index].id + "|"; break;
+                }
+                index = currentMutatedRules[currentMutatedRules.Count - 1];
+                List<int> prevRules = new List<int>(); prevRules.AddRange(currentMutatedRules);
+                prevRules.RemoveAt(prevRules.Count - 1);
+                if (nonStackables.Contains(index) && prevRules.Contains(index))
+                {
+                    currentMutatedRules = new List<int>();
+                }
+                ruleTxt.text += GetSpesificRandMutatedValue(index, i.ToString()); 
             }
+            mutationID.Remove(mutationID.Length - 1);
+            mutationIDText.text = "Current Mutation: " + mutationID;
         }
-        mutationID.Remove(mutationID.Length-1);
-        mutationIDText.text = "Current Mutation: " + mutationID;
+    }
+    string GetSpesificRandMutatedValue(int type, string slot)
+    {
+        string output = "";
+        
+        switch (type)
+        {
+            case 7: PlayerPrefs.SetInt("MUTATEDRULEDOUBLESTATSLOT"+slot, Random.Range(0,29));
+                switch (PlayerPrefs.GetInt("MUTATEDRULEDOUBLESTATSLOT" + slot))
+                {
+                    case 0: output += "Speed"; break;
+                    case 1: output += "Sprint Speed"; break;
+                    case 2: output += "Jump Height"; break;
+                    case 3: output += "Number Of Jumps"; break;
+                    case 4: output += "Crit Chance"; break;
+                    case 5: output += "Crit Damage"; break;
+                    case 6: output += "Weak Spot Damage"; break;
+                    case 7: output += "Damage"; break;
+                    case 8: output += "Attack Speed"; break;
+                    case 9: output += "Reload Speed"; break;
+                    case 10: output += "Magazine Size"; break;
+                    case 11: output += "Accuracy"; break;
+                    case 12: output += "Bullet Speed"; break;
+                    case 13: output += "Bullet Size"; break;
+                    case 14: output += "Pierce"; break;
+                    case 15: output += "Crit Chance"; break;
+                    case 16: output += "Crit Damage"; break;
+                    case 17: output += "Weak Spot Damage"; break;
+                    case 18: output += "Damage"; break;
+                    case 19: output += "Attack Speed"; break;
+                    case 20: output += "Reload Speed"; break;
+                    case 21: output += "Magazine Size"; break;
+                    case 22: output += "Accuracy"; break;
+                    case 23: output += "Bullet Speed"; break;
+                    case 24: output += "Bullet Size"; break;
+                    case 25: output += "Pierce"; break;
+                    case 26: output += "Max HP"; break;
+                    case 27: output += "Passive HP Regen"; break;
+                    case 28: output += "Armor"; break;
+                }
+                break;
+            case 9: PlayerPrefs.SetInt("MUTATEDRULEHALFSTATSLOT"+slot, Random.Range(0, 29));
+                switch (PlayerPrefs.GetInt("MUTATEDRULEHALFSTATSLOT" + slot))
+                {
+                    case 0: output += "Speed"; break;
+                    case 1: output += "Sprint Speed"; break;
+                    case 2: output += "Jump Height"; break;
+                    case 3: output += "Number Of Jumps"; break;
+                    case 4: output += "Crit Chance"; break;
+                    case 5: output += "Crit Damage"; break;
+                    case 6: output += "Weak Spot Damage"; break;
+                    case 7: output += "Damage"; break;
+                    case 8: output += "Attack Speed"; break;
+                    case 9: output += "Reload Speed"; break;
+                    case 10: output += "Magazine Size"; break;
+                    case 11: output += "Accuracy"; break;
+                    case 12: output += "Bullet Speed"; break;
+                    case 13: output += "Bullet Size"; break;
+                    case 14: output += "Pierce"; break;
+                    case 15: output += "Crit Chance"; break;
+                    case 16: output += "Crit Damage"; break;
+                    case 17: output += "Weak Spot Damage"; break;
+                    case 18: output += "Damage"; break;
+                    case 19: output += "Attack Speed"; break;
+                    case 20: output += "Reload Speed"; break;
+                    case 21: output += "Magazine Size"; break;
+                    case 22: output += "Accuracy"; break;
+                    case 23: output += "Bullet Speed"; break;
+                    case 24: output += "Bullet Size"; break;
+                    case 25: output += "Pierce"; break;
+                    case 26: output += "Max HP"; break;
+                    case 27: output += "Passive HP Regen"; break;
+                    case 28: output += "Armor"; break;
+                }
+                break;
+            case 10:
+                List<Spawnable> options = new List<Spawnable>(); options.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
+                PlayerPrefs.SetString("MUTATEDRULELONEENEMYSLOT"+slot, options[Random.Range(0, options.Count)].enemyName); output += PlayerPrefs.GetString("MUTATEDRULELONEENEMYSLOT"+slot); break;
+        }
+
+        return output;
     }
 }

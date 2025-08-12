@@ -104,7 +104,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
         ManageEffects();
         //Check if mutated
-        if (playerHM.massMutation > 0 && Random.Range(1, 100) < 2.5f + ((playerHM.massMutation - 1) * 5f))
+        if ((playerHM.massMutation > 0 && Random.Range(1, 100) < 2.5f + ((playerHM.massMutation - 1) * 5f)) || gdm.mutatedRules.Contains(3))
         {
             GiveEffect("mutated", 1);
             baseMaxHp *= 2f;
@@ -514,6 +514,9 @@ public class EnemyHealthManager : MonoBehaviour
         if (didOnDeath) { return; } else { didOnDeath = true; }
 
         if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
+        
+        foreach(int rule in gdm.mutatedRules) { if(rule == 4) { moneyDrop *= 2; } }
+
         playerHM.EnemyDied(this, (((int)gdm.difficulty+1)/2) * Random.Range(moneyDrop - dropVariance, moneyDrop + dropVariance));
 
         //gunlike classic
@@ -534,6 +537,37 @@ public class EnemyHealthManager : MonoBehaviour
                     rarityID = ItemRarity.GetWeightedRandRarity();
                 }
                 SpawnItem(rarityID);
+            }
+        }
+        //Mutated Rules
+        foreach(int rule in gdm.mutatedRules) 
+        {
+            switch (rule)
+            {
+                case 1:
+                    if( Random.Range(0, 100) < 25)
+                    {
+                        GameObject createdGrowthExplosion = Instantiate(gdm.phm.expGrowthExplosion, transform.position, transform.rotation);
+                        createdGrowthExplosion.GetComponent<ExplosiveGrowthScript>().Explode(3, maxHp);
+                    }
+                    break;
+                case 6:
+                    if (Random.Range(0, 100) <= 5)
+                    {
+                        int rand = Random.Range(1, 101);
+                        int rarityID = 0;
+                        bool limestoneScale = playerItem.leftItems[178] + playerItem.rightItems[178] > 0;
+                        if (limestoneScale)
+                        {
+                            rarityID = ItemRarity.GetUnWeightedRandRarity();
+                        }
+                        else
+                        {
+                            rarityID = ItemRarity.GetWeightedRandRarity();
+                        }
+                        SpawnItem(rarityID);
+                    }
+                    break;
             }
         }
         //crate crab

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NEWPlayerMovement : MonoBehaviour
 {
-    public Rigidbody rb;
+    public Rigidbody rb; bool noGravity;
 
     // Particle Effects
     public GameObject slamEffect;
@@ -104,6 +104,7 @@ public class NEWPlayerMovement : MonoBehaviour
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
         //base stats
+        noGravity = false;
         float rightmoveSpeedMult = 1f; float rightmoveSpeedDiv = 1f; float leftmoveSpeedMult = 1f; float leftmoveSpeedDiv = 1f;
         float sprintMoveSpeedMult = 1f; float sprintMoveSpeedDiv = 1f;
         float jumpForceMult = 1f; float jumpForceDiv = 1f;
@@ -207,31 +208,46 @@ public class NEWPlayerMovement : MonoBehaviour
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
         {
-            if (playerItem.leftIFPStatToBuff == 0) { moveSpeed = moveSpeed * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 2) { jumpForce = jumpForce * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenLeftItems[22] * 2)); }
-
-            if (playerItem.leftIFPStatToDeBuff == 0) { moveSpeed = moveSpeed * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 2) { jumpForce = jumpForce * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenLeftItems[22])); }
+            switch (playerItem.leftIFPStatToBuff)
+            {
+                case 0: moveSpeed = moveSpeed * (givenLeftItems[22] * 2); break;
+                case 1: sprintMoveSpeed = sprintMoveSpeed * (givenLeftItems[22] * 2); break;
+                case 2: jumpForce = jumpForce * (givenLeftItems[22] * 2); break;
+                case 3: numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenLeftItems[22] * 2)); break;
+            }
+            switch (playerItem.leftIFPStatToDeBuff)
+            {
+                case 0: moveSpeed = moveSpeed * (0.9f / givenLeftItems[22]); break;
+                case 1: sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenLeftItems[22]); break;
+                case 2: jumpForce = jumpForce * (0.9f / givenLeftItems[22]); break;
+                case 3: numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenLeftItems[22])); break;
+            }
         }
         if (givenRightItems[22] > 0)
         {
-            if (playerItem.rightIFPStatToBuff == 0) { moveSpeed = moveSpeed * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 2) { jumpForce = jumpForce * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenRightItems[22] * 2)); }
-
-            if (playerItem.rightIFPStatToDeBuff == 0) { moveSpeed = moveSpeed * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 1) { sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 2) { jumpForce = jumpForce * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 3) { numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenRightItems[22])); }
+            switch (playerItem.rightIFPStatToBuff)
+            {
+                case 0: moveSpeed = moveSpeed * (givenRightItems[22] * 2); break;
+                case 1: sprintMoveSpeed = sprintMoveSpeed * (givenRightItems[22] * 2); break;
+                case 2: jumpForce = jumpForce * (givenRightItems[22] * 2); break;
+                case 3: numberOfJumps = Mathf.FloorToInt(numberOfJumps * (givenRightItems[22] * 2)); break;
+            }
+            switch (playerItem.rightIFPStatToDeBuff)
+            {
+                case 0: moveSpeed = moveSpeed * (0.9f / givenRightItems[22]); break;
+                case 1: sprintMoveSpeed = sprintMoveSpeed * (0.9f / givenRightItems[22]); break;
+                case 2: jumpForce = jumpForce * (0.9f / givenRightItems[22]); break;
+                case 3: numberOfJumps = Mathf.FloorToInt(numberOfJumps * (0.9f / givenRightItems[22])); break;
+            }
         }
+        //Mutated Rules Modifiers
+        moveSpeed *= healthMan.gdm.mutatedStatModifiers[0];
+        sprintMoveSpeed *= healthMan.gdm.mutatedStatModifiers[1];
+        jumpForce *= healthMan.gdm.mutatedStatModifiers[2];
+        numberOfJumps = Mathf.CeilToInt(numberOfJumps * healthMan.gdm.mutatedStatModifiers[3]);
+        if (healthMan.gdm.mutatedRules.Contains(11)) { rb.useGravity = false; noGravity = true; }
 
         //status effect buffs / debuffs
-
         if (effectList[9].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[15].x > 0f) { sprintMoveSpeed = sprintMoveSpeed / ((givenLeftItems[17] + givenRightItems[17]) / 10f + 1f); }
         if (effectList[16].x > 0f) { jumpForce = jumpForce * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); sprintMoveSpeed = sprintMoveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 10f + 1f); }
@@ -272,16 +288,14 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!onGround) 
+        if (!onGround && !noGravity) 
         {
             if (playerItem.leftItems[93] + playerItem.rightItems[93] > 0)
             {
-                //Debug.Log("Force: " + -Vector3.up * 10 * Time.deltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
                 rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
             }
             else
             {
-                //Debug.Log(-Vector3.up * 10 * Time.deltaTime * gravityModifier);
                 rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier);
             }
         }

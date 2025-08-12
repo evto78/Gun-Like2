@@ -165,6 +165,27 @@ public class PlayerItem : MonoBehaviour
         }
         rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
     }
+    private void Start()
+    {
+        if (GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().mutatedRules.Contains(12))
+        {
+            foreach(int rule in healthManager.gdm.mutatedRules)
+            {
+                if(rule == 12) { 
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                }
+            }
+        }
+    }
     private void Update()
     {
         //Stat Update

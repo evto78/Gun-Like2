@@ -265,30 +265,40 @@ public class GunManager : MonoBehaviour
         {
             rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
         }
-        leftGoo = false; rightGoo = false;
-        if(leftHandVal == guns.Count) { leftHandVal = rightHandVal; leftGoo = true; }
-        if(rightHandVal == guns.Count) { rightHandVal = leftHandVal; rightGoo = true; }
-        if(leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
-        if(rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
-        Instantiate(guns[leftHandVal], leftHand.transform);
-        Instantiate(guns[rightHandVal], rightHand.transform);
-        leftGunScript = leftHand.GetComponentInChildren<GunScript>(); 
-        if(leftGoo) 
-        { 
-            leftGunScript.isGoo = true; 
-            gcsL = leftGunScript.gameObject.AddComponent<GooColorShift>();  gcsL.speed = 20f; gcsL.randomness = 1.3f; leftGunScript.gooEffect = gcsL;
-        }
-        rightGunScript = rightHand.GetComponentInChildren<GunScript>(); 
-        if(rightGoo) 
-        { 
-            rightGunScript.isGoo = true;
-            gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
-        }
+        SetGuns(leftHandVal, rightHandVal);
 
         healthMan = GetComponent<HealthManager>();
         effectList = healthMan.activeEffects;
 
         GrabMeshRenders();
+    }
+    void SetGuns(int leftGun, int rightGun)
+    {
+        leftGoo = false; rightGoo = false;
+        if (leftGun == guns.Count) { leftGun = rightGun; leftGoo = true; }
+        if (rightGun == guns.Count) { rightGun = leftGun; rightGoo = true; }
+        if (leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
+        if (rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
+        Instantiate(guns[leftGun], leftHand.transform);
+        Instantiate(guns[rightGun], rightHand.transform);
+        leftGunScript = leftHand.GetComponentInChildren<GunScript>();
+        if (leftGoo)
+        {
+            leftGunScript.isGoo = true;
+            gcsL = leftGunScript.gameObject.AddComponent<GooColorShift>(); gcsL.speed = 20f; gcsL.randomness = 1.3f; leftGunScript.gooEffect = gcsL;
+        }
+        rightGunScript = rightHand.GetComponentInChildren<GunScript>();
+        if (rightGoo)
+        {
+            rightGunScript.isGoo = true;
+            gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
+        }
+    }
+    public void RandomizeHeldGuns()
+    {
+        Vector2 rand = new Vector2(Random.Range(0, guns.Count + 1), Random.Range(0, guns.Count + 1));
+        if(rand.x == guns.Count && rand.y == guns.Count) { rand.x = 0; }
+        SetGuns((int)rand.x, (int)rand.y);
     }
     void GrabMeshRenders()
     {
@@ -868,57 +878,78 @@ public class GunManager : MonoBehaviour
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
         {
-            if (playerItem.leftIFPStatToBuff == 4) { leftCritChance = leftCritChance * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 5) { leftCritDamage = leftCritDamage * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 6) { leftWeakPointDamage = leftWeakPointDamage * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 7) { leftDmg = leftDmg * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 8) { leftAtkSpd = leftAtkSpd * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 9) { leftReSpd = leftReSpd * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 10) { leftMagSize = leftMagSize * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 11) { leftAcc = leftAcc * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 12) { leftBulSpd = leftBulSpd * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 13) { leftBulSize = leftBulSize * (givenLeftItems[22] * 2); }
-            if (playerItem.leftIFPStatToBuff == 14) { leftBulPir = leftBulPir * (givenLeftItems[22] * 2); }
-
-            if (playerItem.leftIFPStatToDeBuff == 4) { leftCritChance = leftCritChance * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 5) { leftCritDamage = leftCritDamage * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 6) { leftWeakPointDamage = leftWeakPointDamage * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 7) { leftDmg = leftDmg * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 8) { leftAtkSpd = leftAtkSpd * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 9) { leftReSpd = leftReSpd * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 10) { leftMagSize = leftMagSize * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 11) { leftAcc = leftAcc * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 12) { leftBulSpd = leftBulSpd * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 13) { leftBulSize = leftBulSize * (0.9f / givenLeftItems[22]); }
-            if (playerItem.leftIFPStatToDeBuff == 14) { leftBulPir = Mathf.FloorToInt(leftBulPir * (0.9f / givenLeftItems[22])); }
+            switch (playerItem.leftIFPStatToBuff)
+            {
+                case 4: leftCritChance = leftCritChance * (givenLeftItems[22] * 2); break;
+                case 5: leftCritDamage = leftCritDamage * (givenLeftItems[22] * 2); break;
+                case 6: leftWeakPointDamage = leftWeakPointDamage * (givenLeftItems[22] * 2); break;
+                case 7: leftDmg = leftDmg * (givenLeftItems[22] * 2); break;
+                case 8: leftAtkSpd = leftAtkSpd * (givenLeftItems[22] * 2); break;
+                case 9: leftReSpd = leftReSpd * (givenLeftItems[22] * 2); break;
+                case 10: leftMagSize = leftMagSize * (givenLeftItems[22] * 2); break;
+                case 11: leftAcc = leftAcc * (givenLeftItems[22] * 2); break;
+                case 12: leftBulSpd = leftBulSpd * (givenLeftItems[22] * 2); break;
+                case 13: leftBulSize = leftBulSize * (givenLeftItems[22] * 2); break;
+                case 14: leftBulPir = leftBulPir * (givenLeftItems[22] * 2); break;
+            }
+            switch (playerItem.leftIFPStatToDeBuff)
+            {
+                case 4: leftCritChance = leftCritChance * (0.9f / givenLeftItems[22]); break;
+                case 5: leftCritDamage = leftCritDamage * (0.9f / givenLeftItems[22]); break;
+                case 6: leftWeakPointDamage = leftWeakPointDamage * (0.9f / givenLeftItems[22]); break;
+                case 7: leftDmg = leftDmg * (0.9f / givenLeftItems[22]); break;
+                case 8: leftAtkSpd = leftAtkSpd * (0.9f / givenLeftItems[22]); break;
+                case 9: leftReSpd = leftReSpd * (0.9f / givenLeftItems[22]); break;
+                case 10: leftMagSize = leftMagSize * (0.9f / givenLeftItems[22]); break;
+                case 11: leftAcc = leftAcc * (0.9f / givenLeftItems[22]); break;
+                case 12: leftBulSpd = leftBulSpd * (0.9f / givenLeftItems[22]); break;
+                case 13: leftBulSize = leftBulSize * (0.9f / givenLeftItems[22]); break;
+                case 14: leftBulPir = Mathf.FloorToInt(leftBulPir * (0.9f / givenLeftItems[22])); break;
+            }
         }
         if (givenRightItems[22] > 0)
         {
-            if (playerItem.rightIFPStatToBuff == 15) { rightCritChance = rightCritChance * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 16) { rightCritDamage = rightCritDamage * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 17) { rightWeakPointDamage = rightWeakPointDamage * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 18) { rightDmg = rightDmg * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 19) { rightAtkSpd = rightAtkSpd * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 20) { rightReSpd = rightReSpd * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 21) { rightMagSize = rightMagSize * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 22) { rightAcc = rightAcc * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 23) { rightBulSpd = rightBulSpd * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 24) { rightBulSize = rightBulSize * (givenRightItems[22] * 2); }
-            if (playerItem.rightIFPStatToBuff == 25) { rightBulPir = rightBulPir * (givenRightItems[22] * 2); }
-
-            if (playerItem.rightIFPStatToDeBuff == 15) { rightCritChance = rightCritChance * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 16) { rightCritDamage = rightCritDamage * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 17) { rightWeakPointDamage = rightWeakPointDamage * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 18) { rightDmg = rightDmg * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 19) { rightAtkSpd = rightAtkSpd * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 20) { rightReSpd = rightReSpd * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 21) { rightMagSize = rightMagSize * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 22) { rightAcc = rightAcc * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 23) { rightBulSpd = rightBulSpd * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 24) { rightBulSize = rightBulSize * (0.9f / givenRightItems[22]); }
-            if (playerItem.rightIFPStatToDeBuff == 25) { rightBulPir = Mathf.FloorToInt(rightBulPir * (0.9f / givenRightItems[22])); }
+            switch (playerItem.rightIFPStatToBuff)
+            {
+                case 4: rightCritChance = rightCritChance * (givenRightItems[22] * 2); break;
+                case 5: rightCritDamage = rightCritDamage * (givenRightItems[22] * 2); break;
+                case 6: rightWeakPointDamage = rightWeakPointDamage * (givenRightItems[22] * 2); break;
+                case 7: rightDmg = rightDmg * (givenRightItems[22] * 2); break;
+                case 8: rightAtkSpd = rightAtkSpd * (givenRightItems[22] * 2); break;
+                case 9: rightReSpd = rightReSpd * (givenRightItems[22] * 2); break;
+                case 10: rightMagSize = rightMagSize * (givenRightItems[22] * 2); break;
+                case 11: rightAcc = rightAcc * (givenRightItems[22] * 2); break;
+                case 12: rightBulSpd = rightBulSpd * (givenRightItems[22] * 2); break;
+                case 13: rightBulSize = rightBulSize * (givenRightItems[22] * 2); break;
+                case 14: rightBulPir = rightBulPir * (givenRightItems[22] * 2); break;
+            }
+            switch (playerItem.rightIFPStatToDeBuff)
+            {
+                case 4: rightCritChance = rightCritChance * (0.9f / givenRightItems[22]); break;
+                case 5: rightCritDamage = rightCritDamage * (0.9f / givenRightItems[22]); break;
+                case 6: rightWeakPointDamage = rightWeakPointDamage * (0.9f / givenRightItems[22]); break;
+                case 7: rightDmg = rightDmg * (0.9f / givenRightItems[22]); break;
+                case 8: rightAtkSpd = rightAtkSpd * (0.9f / givenRightItems[22]); break;
+                case 9: rightReSpd = rightReSpd * (0.9f / givenRightItems[22]); break;
+                case 10: rightMagSize = rightMagSize * (0.9f / givenRightItems[22]); break;
+                case 11: rightAcc = rightAcc * (0.9f / givenRightItems[22]); break;
+                case 12: rightBulSpd = rightBulSpd * (0.9f / givenRightItems[22]); break;
+                case 13: rightBulSize = rightBulSize * (0.9f / givenRightItems[22]); break;
+                case 14: rightBulPir = Mathf.FloorToInt(rightBulPir * (0.9f / givenRightItems[22])); break;
+            }
         }
-
+        //Mutated Modifiers
+        leftCritChance *= healthMan.gdm.mutatedStatModifiers[4]; rightCritChance *= healthMan.gdm.mutatedStatModifiers[4];
+        leftCritDamage *= healthMan.gdm.mutatedStatModifiers[5]; rightCritDamage *= healthMan.gdm.mutatedStatModifiers[5];
+        leftWeakPointDamage *= healthMan.gdm.mutatedStatModifiers[6]; rightWeakPointDamage *= healthMan.gdm.mutatedStatModifiers[6];
+        leftDmg *= healthMan.gdm.mutatedStatModifiers[7]; rightDmg *= healthMan.gdm.mutatedStatModifiers[7];
+        leftAtkSpd *= healthMan.gdm.mutatedStatModifiers[8]; rightAtkSpd *= healthMan.gdm.mutatedStatModifiers[8];
+        leftReSpd *= healthMan.gdm.mutatedStatModifiers[9]; rightReSpd *= healthMan.gdm.mutatedStatModifiers[9];
+        leftMagSize *= healthMan.gdm.mutatedStatModifiers[10]; rightMagSize *= healthMan.gdm.mutatedStatModifiers[10];
+        leftAcc *= healthMan.gdm.mutatedStatModifiers[11]; rightAcc *= healthMan.gdm.mutatedStatModifiers[11];
+        leftBulSpd *= healthMan.gdm.mutatedStatModifiers[12]; rightBulSpd *= healthMan.gdm.mutatedStatModifiers[12];
+        leftBulSize *= healthMan.gdm.mutatedStatModifiers[13]; rightBulSize *= healthMan.gdm.mutatedStatModifiers[13];
+        leftBulPir = Mathf.CeilToInt(leftBulPir * healthMan.gdm.mutatedStatModifiers[14]); rightBulPir = Mathf.CeilToInt(rightBulPir*healthMan.gdm.mutatedStatModifiers[14]);
         //One in the chamber
         if (givenLeftItems[180] > 0) { leftMagSize = 0f; }
         if (givenRightItems[180] > 0) { rightMagSize = 0f; }

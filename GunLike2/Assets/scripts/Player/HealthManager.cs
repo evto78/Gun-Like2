@@ -86,7 +86,7 @@ public class HealthManager : MonoBehaviour
 	public WishUI wishPopUp;
 	public int wishes;
 
-	GameDataManager gdm;
+	public GameDataManager gdm;
 
     // Start is called before the first frame update
     private void Awake()
@@ -205,24 +205,38 @@ public class HealthManager : MonoBehaviour
 		//Irradiated French Pastry
 		if (givenLeftItems[22] > 0)
         {
-			if (playerItem.leftIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (givenLeftItems[22] * 2)); }
-			if (playerItem.leftIFPStatToBuff == 27) { healthRegen = healthRegen * (givenLeftItems[22] * 2); }
-			if (playerItem.leftIFPStatToBuff == 28) { armor = armor * (givenLeftItems[22] * 2); }
-
-			if (playerItem.leftIFPStatToDeBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenLeftItems[22])); }
-			if (playerItem.leftIFPStatToDeBuff == 27) { healthRegen = healthRegen * (0.9f / givenLeftItems[22]); }
-			if (playerItem.leftIFPStatToDeBuff == 28) { armor = armor * (0.9f / givenLeftItems[22]); }
+            switch (playerItem.leftIFPStatToBuff)
+            {
+				case 26: maxHp = Mathf.FloorToInt(maxHp * (givenLeftItems[22] * 2)); break;
+				case 27: healthRegen = healthRegen * (givenLeftItems[22] * 2); break;
+				case 28: armor = armor * (givenLeftItems[22] * 2); break;
+            }
+			switch (playerItem.leftIFPStatToDeBuff)
+            {
+				case 26: maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenLeftItems[22])); break;
+				case 27: healthRegen = healthRegen * (0.9f / givenLeftItems[22]); break;
+				case 28: armor = armor * (0.9f / givenLeftItems[22]); break;
+			}
 		}
 		if (givenRightItems[22] > 0)
 		{
-			if (playerItem.rightIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (givenRightItems[22] * 2)); }
-			if (playerItem.rightIFPStatToBuff == 27) { healthRegen = healthRegen * (givenRightItems[22] * 2); }
-			if (playerItem.rightIFPStatToBuff == 28) { armor = armor * (givenRightItems[22] * 2); }
-
-			if (playerItem.rightIFPStatToBuff == 26) { maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenRightItems[22])); }
-			if (playerItem.rightIFPStatToBuff == 27) { healthRegen = healthRegen * (0.9f / givenRightItems[22]); }
-			if (playerItem.rightIFPStatToBuff == 28) { armor = armor * (0.9f / givenRightItems[22]); }
+			switch (playerItem.rightIFPStatToBuff)
+			{
+				case 26: maxHp = Mathf.FloorToInt(maxHp * (givenRightItems[22] * 2)); break;
+				case 27: healthRegen = healthRegen * (givenRightItems[22] * 2); break;
+				case 28: armor = armor * (givenRightItems[22] * 2); break;
+			}
+			switch (playerItem.rightIFPStatToDeBuff)
+			{
+				case 26: maxHp = Mathf.FloorToInt(maxHp * (0.9f / givenRightItems[22])); break;
+				case 27: healthRegen = healthRegen * (0.9f / givenRightItems[22]); break;
+				case 28: armor = armor * (0.9f / givenRightItems[22]); break;
+			}
 		}
+		//Mutated Rules Modifiers
+		maxHp *= gdm.mutatedStatModifiers[26];
+		healthRegen *= gdm.mutatedStatModifiers[27];
+		armor *= gdm.mutatedStatModifiers[28];
 
 		//status effect buffs / debuffs
 
@@ -617,7 +631,7 @@ public class HealthManager : MonoBehaviour
 			}
 			regenTimer = 2f;
 
-			if (expGrowth > 0 && (!wasFromExpGrowth || Random.Range(1, 100) < 16))
+			if (expGrowth > 0 && (!wasFromExpGrowth || Random.Range(0, 100) < 15))
 			{
 				GameObject createdGrowthExplosion = Instantiate(expGrowthExplosion, transform.position, transform.rotation);
 				createdGrowthExplosion.GetComponent<ExplosiveGrowthScript>().Explode(expGrowth, damageTaken);

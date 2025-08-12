@@ -26,11 +26,13 @@ public class EnemySpawner : MonoBehaviour
         {
             if(s.type == Spawnable.Type.walker && !canSpawnWalker) { temp.Add(s); }
             if(s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
+            if (gdm.mutatedRules.Count > 0 && gdm.mutatedRules.Contains(2) && s.enemyName == "Crate Crab") { temp.Remove(s); }
         }
-        foreach(Spawnable s in temp)
+        foreach (Spawnable s in temp)
         {
             spawnableEnemies.Remove(s);
         }
+        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); }
     }
     private void OnDestroy()
     {
@@ -48,6 +50,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if (s.type == Spawnable.Type.walker && !canSpawnWalker) { temp.Add(s); }
             if (s.difficultyRequirement > gdm.difficulty) { temp.Add(s); }
+            if (gdm.mutatedRules.Count > 0 && gdm.mutatedRules.Contains(2) && s.enemyName == "Crate Crab") { temp.Remove(s); }
         }
         foreach (Spawnable s in temp)
         {
@@ -57,6 +60,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if (thing.pointCost < minCost) { minCost = thing.pointCost; }
         }
+        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); }
     }
     private void Update()
     {

@@ -657,16 +657,17 @@ public class GunScript : MonoBehaviour
         }
         if (currentBullets > 0 || !requireAmmo)
         {
+            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd, ForceMode.Impulse); }
             timeSinceShot = 0f;
             if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)) { inkCounter++; } else if (brokenInk > 0) { inkCounter = 0; requireAmmo = false; }
             EarlyShoot(requireAmmo);
             if (requireAmmo)
             {
                 currentBullets--;
-                if (triggerHappy > 0) { currentBullets--; }
-                if (currentBullets < 0) { currentBullets = 0; }
+                currentBullets -= Mathf.Clamp(triggerHappy, 0, 1);
+                currentBullets = Mathf.Clamp(currentBullets, 0, int.MaxValue);
             }
-            if (echoDmg > 0) { dmg += echoDmg; echoDmg = 0; }
+            dmg += echoDmg; echoDmg = 0;
             GameObject spawnedBullet;
             if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
             else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }

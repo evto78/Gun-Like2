@@ -4,23 +4,35 @@ using UnityEngine;
 
 public class GameDataManager : MonoBehaviour
 {
+    [Header("Info")]
     public List<EnemyHealthManager> activeEhms = new List<EnemyHealthManager>();
     public List<EnemySpawner> activeSpawners = new List<EnemySpawner>();
-    public Vector2 basePoints; public float flatPointsPerDifficulty;
-    public float pointsLeft;
-    public float difficulty;
-    public float difficultySelected;
-    public float timeSpent;
-    public float timeSpentNoPause;
-    public bool gameTimerActive;
-    public int roomNumber;
     public HealthManager phm;
     public PlayerItem pi;
-    float pointregenTimer;
     //Checking Change
     bool changedLastFrame;
     List<int> leftSnapshot;
     List<int> rightSnapshot;
+    
+    [Header("Difficulty")]
+    public float difficulty;
+    public int difficultyIDSelected;
+    float difficultyProgressionModifier;
+    public List<int> mutatedRules = new List<int>();
+    public List<float> mutatedStatModifiers = new List<float>();
+    public Spawnable mutatedEnemySelected;
+
+    [Header("Timer")]
+    public float timeSpent;
+    public float timeSpentNoPause;
+    public bool gameTimerActive;
+
+    [Header("Points System")]
+    float pointregenTimer;
+    public int roomNumber;
+    public Vector2 basePoints; public float flatPointsPerDifficulty;
+    public float pointsLeft;
+
     [Header("SaveData")]
     public GameObject saveDataReaderPrefab;
     public SaveFileReadWrite instance;
@@ -33,6 +45,34 @@ public class GameDataManager : MonoBehaviour
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
         pi = phm.playerItem;
+
+        mutatedEnemySelected = null;
+        mutatedRules = new List<int>();
+        mutatedStatModifiers = new List<float>(); for (int i = 0; i < 29; i++) { mutatedStatModifiers.Add(1f); }
+
+        difficultyIDSelected = 1;
+        if (PlayerPrefs.HasKey("SELECTEDDIFFICULTY"))
+        {
+            difficultyIDSelected = PlayerPrefs.GetInt("SELECTEDDIFFICULTY");
+            switch (difficultyIDSelected)
+            {
+                case 0:
+                    difficultyProgressionModifier = 0.5f;
+                    break;
+                case 1:
+                    difficultyProgressionModifier = 1f;
+                    break;
+                case 2:
+                    difficultyProgressionModifier = 2f;
+                    break;
+                case 3:
+                    difficultyProgressionModifier = 5f;
+                    break;
+                case 4:
+                    ReadAndApplyMutatedRules();
+                    break;
+            }
+        }
     }
     private void Start()
     {
@@ -45,13 +85,55 @@ public class GameDataManager : MonoBehaviour
 
         roomNumber = 0;
         timeSpent = 0; timeSpentNoPause = 0;
-        difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
+        difficulty = Mathf.RoundToInt((difficultyProgressionModifier * timeSpent / 300f) + 1f);
         gameTimerActive = false;
 
         leftSnapshot = new List<int>();
         leftSnapshot.AddRange(pi.leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
+    }
+    void ReadAndApplyMutatedRules()
+    {
+        mutatedRules = new List<int>();
+        mutatedStatModifiers = new List<float>(); for (int i = 0; i < 29; i++) { mutatedStatModifiers.Add(1f); }
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE1"));
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE2"));
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE3"));
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE4"));
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE5"));
+        mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE6"));
+        difficultyProgressionModifier = 1f;
+        for(int i = 0; i < mutatedRules.Count; i++)
+        {
+            int rule = mutatedRules[i];
+            switch (rule)
+            {
+                case 0: difficultyProgressionModifier += 1f; break; // +1x difficulty progression
+                case 1: break; // Enemies have a chance to explode - Handled outside
+                case 2: break; // Crate Crabs can be spawned naturaly - Handled outside
+                case 3: break; // All enemies are "Mutated" - Handled outside
+                case 4: break; // 3x cash drop on enemy killed - Handled outside
+                case 5: difficultyProgressionModifier += 2f; break; // +2x difficulty progression
+                case 6: break; // Enemies have a chance to drop an item on death - Handled outside
+                case 7: MutatedRandomStatMult(2f, i); break; // 2x to a random stat
+                case 8: break; // Guns are randomized after every room
+                case 9: MutatedRandomStatMult(0.5f, i); break; // 0.5x to a random stat
+                case 10: List<Spawnable> options = new List<Spawnable>(); options.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
+                    foreach(Spawnable enemy in options) { if(enemy.enemyName == PlayerPrefs.GetString("MUTATEDRULELONEENEMYSLOT"+i.ToString())) { mutatedEnemySelected = enemy; } } 
+                    break; // All enemies are now a random enemy - Handled outside
+                case 11: break; // No gravity, shooting knocks you back relative to bulspeed - Handled outsde
+                case 12: break; // Start with 5 random items on each gun - Handled outside
+            }
+        }
+    }
+    void MutatedRandomStatMult(float mult, int slot)
+    {
+        switch (mult)
+        {
+            case 0.5f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEHALFSTATSLOT"+slot.ToString())] *= mult; break;
+            case 2f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEDOUBLESTATSLOT"+slot.ToString())] *= mult; break;
+        }
     }
     private void Update()
     {
@@ -60,10 +142,9 @@ public class GameDataManager : MonoBehaviour
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
-
         }
         timeSpentNoPause += Time.deltaTime;
-        difficulty = Mathf.RoundToInt((difficultySelected * timeSpent / 300f) + 1f);
+        difficulty = Mathf.RoundToInt((difficultyProgressionModifier * timeSpent / 300f) + 1f);
         CheckForItemGainAndDestroy();
     }
     private void LateUpdate()
@@ -97,6 +178,7 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
+        if (mutatedRules.Contains(8)) { phm.playerItem.gunManager.RandomizeHeldGuns(); }
         gameTimerActive = false;
         roomNumber += 1;
         phm.attackedThisRoom = false;
