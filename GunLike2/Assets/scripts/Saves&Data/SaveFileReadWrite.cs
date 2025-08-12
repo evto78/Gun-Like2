@@ -376,10 +376,8 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     void SendAllEmails()
     {
-        Debug.Log("Emails to send: " + emailQueContent.Count);
         for(int i = 0; i < emailQueContent.Count; i++)
         {
-            Debug.Log("Sending: " + emailQueEvent[i]);
             SendDataToEmail(emailQueEvent[i], emailQueContent[i]);
         }
     }

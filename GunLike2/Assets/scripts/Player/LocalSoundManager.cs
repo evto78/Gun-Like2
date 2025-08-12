@@ -106,8 +106,8 @@ public class LocalSoundManager : MonoBehaviour
                 case "ui": type = SoundType.ui; break;
                 case "other": type = SoundType.other; break;
             }
-            AudioSource source = PickSource(prior);
-            if (source.isPlaying) { source = PickSource(prior + 1); } //switch to a higher channel if the previous one is busy
+            AudioSource source = PickSource(prior, incomingClip);
+            if (source.isPlaying) { source = PickSource(prior + 1, incomingClip); } //switch to a higher channel if the previous one is busy
             switch (type)
             {
                 case SoundType.music: source.volume = (musicVol / 100f) * (masterVol / 100f); break;
@@ -120,17 +120,17 @@ public class LocalSoundManager : MonoBehaviour
             source.Play();
         }
     }
-    AudioSource PickSource(int prior)
+    AudioSource PickSource(int prior, AudioClip clip)
     {
         switch (prior)
         {
-            case -1: lastNoSource++; if (lastNoSource >= noPriorSources.Count) { lastNoSource = 0; } return noPriorSources[lastNoSource];
-            case 0: lastLowSource++; if (lastLowSource >= lowPriorSources.Count) { lastLowSource = 0; } return lowPriorSources[lastLowSource];
-            case 1: lastMedSource++; if (lastMedSource >= medPriorSources.Count) { lastMedSource = 0; } return medPriorSources[lastMedSource];
-            case 2: lastHighSource++; if (lastHighSource >= highPriorSources.Count) { lastHighSource = 0; } return highPriorSources[lastHighSource];
-            case 3: lastUltSource++; if (lastUltSource >= ultPriorSources.Count) { lastUltSource = 0; } return ultPriorSources[lastUltSource];
-            case 4: return (PickSource(0));
+            case -1: lastNoSource++; if (lastNoSource >= noPriorSources.Count) { lastNoSource = 0; } noHeldClip[lastNoSource] = clip; return noPriorSources[lastNoSource];
+            case 0: lastLowSource++; if (lastLowSource >= lowPriorSources.Count) { lastLowSource = 0; } lowHeldClip[lastLowSource] = clip; return lowPriorSources[lastLowSource];
+            case 1: lastMedSource++; if (lastMedSource >= medPriorSources.Count) { lastMedSource = 0; } medHeldClip[lastMedSource] = clip; return medPriorSources[lastMedSource];
+            case 2: lastHighSource++; if (lastHighSource >= highPriorSources.Count) { lastHighSource = 0; } highHeldClip[lastHighSource] = clip; return highPriorSources[lastHighSource];
+            case 3: lastUltSource++; if (lastUltSource >= ultPriorSources.Count) { lastUltSource = 0; } ultHeldClip[lastUltSource] = clip; return ultPriorSources[lastUltSource];
+            case 4: return (PickSource(0, clip));
         }
-        return PickSource(0);
+        return PickSource(0, clip);
     }
 }

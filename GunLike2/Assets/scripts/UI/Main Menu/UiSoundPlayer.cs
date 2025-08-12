@@ -29,17 +29,14 @@ public class UiSoundPlayer : MonoBehaviour
     }
     public void UIHoverSound(int difficulty)
     {
-        Debug.Log("UI Playing: " + soundsUIGUNBUTTON[difficulty].soundName);
         lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty].monoSound, SoundType.ui.ToString(), 0);
     }
     public void UISelectSound(int difficulty)
     {
-        Debug.Log("UI Playing: " + soundsUIGUNBUTTON[difficulty+1].soundName);
         lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty+1].monoSound, SoundType.ui.ToString(), 1);
     }
     public void UIDifficultySound(int difficulty)
     {
-        Debug.Log("UI Playing: " + soundsUIGUNBUTTON[difficulty+2].soundName);
         lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty+2].monoSound, SoundType.ui.ToString(), 2);
     }
 }
