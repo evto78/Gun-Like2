@@ -32,7 +32,9 @@ public class EnemySpawner : MonoBehaviour
         {
             spawnableEnemies.Remove(s);
         }
-        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); }
+        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); 
+            if(gdm.mutatedEnemySelected.type == Spawnable.Type.walker && !canSpawnWalker) { spawnableEnemies = new List<Spawnable>(); }
+        }
     }
     private void OnDestroy()
     {
@@ -60,7 +62,9 @@ public class EnemySpawner : MonoBehaviour
         {
             if (thing.pointCost < minCost) { minCost = thing.pointCost; }
         }
-        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); }
+        if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected);
+            if (gdm.mutatedEnemySelected.type == Spawnable.Type.walker && !canSpawnWalker) { spawnableEnemies = new List<Spawnable>(); }
+        }
     }
     private void Update()
     {

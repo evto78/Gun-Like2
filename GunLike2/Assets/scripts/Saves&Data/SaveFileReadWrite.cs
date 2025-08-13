@@ -48,7 +48,6 @@ public class SaveFileReadWrite : MonoBehaviour
     public GameDataManager gdm;
     public MainMenuManager menuManager;
 
-    //TelemnetryDataCollection
     [Header("DATA COLLECTION")]
     public bool sendData;
     public List<string> emailQueContent = new List<string>();
@@ -373,6 +372,12 @@ public class SaveFileReadWrite : MonoBehaviour
 
         emailQueEvent.Add(eventT);
         emailQueContent.Add(msg);
+        ConvertEmailDataToJson(tdata, eventT);
+    }
+    void ConvertEmailDataToJson(TelemData data, string eventT)
+    {
+        emailQueEvent.Add("JSON : "+eventT);
+        emailQueContent.Add(JsonUtility.ToJson(data));
     }
     void SendAllEmails()
     {
@@ -417,6 +422,7 @@ public class SaveFileReadWrite : MonoBehaviour
         tdata.sessionNum = data.usrSessions.ToString();
 
         tdata.difficulty = gdm.difficulty;
+        tdata.selectedDifficulty = gdm.difficultyIDSelected;
         tdata.timeElapsed = gdm.timeSpentNoPause;
         tdata.currentCash = gdm.phm.money;
         tdata.roomNum = gdm.roomNumber;

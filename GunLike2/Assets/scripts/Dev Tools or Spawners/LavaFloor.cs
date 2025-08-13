@@ -18,6 +18,7 @@ public class LavaFloor : MonoBehaviour
             if(lifetime > 0)
             {
                 lifetime -= Time.deltaTime;
+                if(lifetime / initialLifetime <= 0) { Destroy(gameObject); return; }
                 transform.localScale = Vector3.one * (lifetime / initialLifetime);
             }
             else { Destroy(gameObject); }

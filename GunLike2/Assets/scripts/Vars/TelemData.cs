@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class TelemData
 {
     public string eventData;
@@ -15,6 +15,7 @@ public class TelemData
 
     public int roomNum;
     public float difficulty;
+    public int selectedDifficulty;
     public float timeElapsed;
 
     public int currentCash;

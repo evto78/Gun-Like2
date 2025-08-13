@@ -657,7 +657,7 @@ public class GunScript : MonoBehaviour
         }
         if (currentBullets > 0 || !requireAmmo)
         {
-            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd, ForceMode.Impulse); }
+            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd / 2f, ForceMode.Impulse); }
             timeSinceShot = 0f;
             if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)) { inkCounter++; } else if (brokenInk > 0) { inkCounter = 0; requireAmmo = false; }
             EarlyShoot(requireAmmo);

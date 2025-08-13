@@ -169,7 +169,7 @@ public class PlayerItem : MonoBehaviour
     {
         if (GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().mutatedRules.Contains(12))
         {
-            foreach(int rule in healthManager.gdm.mutatedRules)
+            foreach(int rule in GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().mutatedRules)
             {
                 if(rule == 12) { 
                     AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 

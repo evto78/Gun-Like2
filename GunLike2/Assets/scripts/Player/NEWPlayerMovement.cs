@@ -447,6 +447,7 @@ public class NEWPlayerMovement : MonoBehaviour
         }
 
         //Limit Velocity realative to speed
+        if (noGravity) { return; }
         Vector3 limitedVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         if (isSprinting)
