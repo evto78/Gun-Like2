@@ -14685,7 +14685,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_MaskInteraction: 0
   m_Autodestruct: 0
-  m_Emitting: 1
+  m_Emitting: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &3180318761251026746
 GameObject:
@@ -24596,6 +24596,7 @@ MonoBehaviour:
   pierce: 0
   ricochet: 1
   isFlea: 0
+  isCannonBall: 0
   heavySpirits: 0
   nuclearBullets: 0
   introTrig: 0
@@ -24620,12 +24621,14 @@ MonoBehaviour:
   whatHandThisComesFrom: 
   shockwave: {fileID: 2550807905415200008, guid: ce8bdb4a01367db4baf4233a81e2a2b5, type: 3}
   droppedNerfedBullet: {fileID: 5707690133665621131, guid: 6f6c47c26a401c04fbbb142fc0e69cb8, type: 3}
+  gunFiredFrom: {fileID: 0}
   lavaBlob: {fileID: 3942878847808459278, guid: 0d28d6126c1347640a582849023d84f0, type: 3}
   sniperTowerAlly: {fileID: 3830075297302595315, guid: 1c1e4270ede868f49b9c146162069df6, type: 3}
   zipMissle: {fileID: 4644725047424944300, guid: a9b9cc3d819a1ba4b87da868000bdebf, type: 3}
   web: {fileID: 1547401116769222481, guid: fb31adf49b5027d488b1ef3d42421004, type: 3}
   darkBranch: {fileID: 1185027759057181458, guid: 5a5ee0a272fdb25428d5d6c43131dcbe, type: 3}
   stickyNote: {fileID: 6072791394911611373, guid: 9d6d1f2c7b92fe646b7f07a04f8d62a4, type: 3}
+  tr: {fileID: 4159633132946429091}
 --- !u!1 &6612778798135407848
 GameObject:
   m_ObjectHideFlags: 0

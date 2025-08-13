@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class MutatedKnifeBulletScript : BulletScript
 {
-    float lifetime = 0;
-    public override void Awake()
+    float lifetimeKnife = 0;
+    private void Awake()
     {
-        base.Awake();
-        mesh.transform.localEulerAngles = mesh.transform.localEulerAngles + Vector3.forward * (Random.Range(0f,360f));
+        mesh.transform.localEulerAngles = mesh.transform.localEulerAngles + Vector3.forward * (Random.Range(0f, 360f));
     }
 
     public override void DetectCollision(Vector3 force)
     {
+        if (collided) { return; }
         //ONLY CHANGE IS BOXCAST INSTEAD OF RAYCAST
         myPos = transform.position;
         if (Physics.BoxCast(myPos, gameObject.GetComponentInChildren<BoxCollider>().size, force, out RaycastHit hit, transform.rotation, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
@@ -23,8 +23,8 @@ public class MutatedKnifeBulletScript : BulletScript
 
     private void LateUpdate()
     {
-        lifetime += Time.deltaTime;
-        if (lifetime > 0.1f && !collided)
+        lifetimeKnife += Time.deltaTime;
+        if (lifetimeKnife > 0.1f && !collided)
         {
             pierce = 0;
             RunOnCollide(gameObject, new RaycastHit());

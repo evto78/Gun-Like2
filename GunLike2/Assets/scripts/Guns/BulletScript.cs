@@ -10,6 +10,7 @@ public class BulletScript : MonoBehaviour
 
     public GameObject bulletPrefab;
 
+
     protected bool collided = false;
     Vector3 collidedPos;
 
@@ -72,7 +73,7 @@ public class BulletScript : MonoBehaviour
     protected HealthManager hm;
     protected PlayerItem pi;
     protected GunManager gm;
-    protected GunScript gunFiredFrom;
+    public GunScript gunFiredFrom;
 
     public GameObject lavaBlob;
     public GameObject sniperTowerAlly;
@@ -81,36 +82,35 @@ public class BulletScript : MonoBehaviour
     public GameObject darkBranch;
     public GameObject stickyNote;
 
-    float lifetime; Vector3 intialMeshScale;
-    public virtual void Awake()
-    {
-        intialMeshScale = mesh.transform.localScale;
-        mesh.transform.localScale = intialMeshScale * lifetime;
-        if(gunFiredFrom != null)
-        {
-            hm = gunFiredFrom.manager.healthMan;
-            pi = gunFiredFrom.manager.playerItem;
-            gm = gunFiredFrom.manager;
-        }
-        else
-        {
-            hm = GameObject.Find("Player").GetComponent<HealthManager>();
-            pi = hm.playerItem;
-            gm = pi.gunManager;
-        }
+    [SerializeField] TrailRenderer tr;
 
-        rb = GetComponent<Rigidbody>();
+    float lifetime; Vector3 intialMeshScale;
+    private void Start()
+    {
+        tr.emitting = true;
         Destroy(gameObject, 30f);
         collided = false;
         turbineCharge = 0;
 
         gm.totalLiveBullets++;
-        if(whatHandThisComesFrom == "left") { gm.leftBulletsFiredDATA++; }
-        if(whatHandThisComesFrom == "right") { gm.rightBulletsFiredDATA++; }
+        if (whatHandThisComesFrom == "left") { gm.leftBulletsFiredDATA++; }
+        if (whatHandThisComesFrom == "right") { gm.rightBulletsFiredDATA++; }
+    }
+    public void MiniSetUp()
+    {
+        tr.emitting = false;
+        intialMeshScale = mesh.transform.localScale;
+        mesh.transform.localScale = intialMeshScale * lifetime;
+        hm = gunFiredFrom.manager.healthMan;
+        pi = gunFiredFrom.manager.playerItem;
+        gm = gunFiredFrom.manager;
+        rb = GetComponent<Rigidbody>();
+        collided = false;
+        turbineCharge = 0;
     }
     private void OnDestroy()
     {
-        gm.totalLiveBullets--;
+        if(gm != null) { gm.totalLiveBullets--; }
     }
     private void Update()
     {
@@ -127,6 +127,7 @@ public class BulletScript : MonoBehaviour
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
         float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, int isGunk, int givenGunkClaw)
     {
+        return;
         isFireSpon = Random.Range(1, 100) < chanceForFire; fireSponEffect.SetActive(isFireSpon);
         isSharperSpon = Random.Range(1, 100) < chanceForSharper; sharperSponEffect.SetActive(isSharperSpon);
         isSilverSpon = Random.Range(1, 100) < chanceForSilver; silverSponEffect.SetActive(isSilverSpon);
@@ -161,7 +162,7 @@ public class BulletScript : MonoBehaviour
         turbine = gunFiredFrom.turbine;
 
         ricochet = givenRico;
-        bool isOil = (whatHandThisComesFrom == "left" && pi.leftItems[118] > 0) || (whatHandThisComesFrom == "right" && pi.rightItems[118] > 0);
+        bool isOil = gunFiredFrom.oilGun>0;
         myIsHeavy = isHeavy;
         rb.useGravity = isHeavy != 0f || isLargeSpon || isOil || isFlea || isCannonBall;
         float bulSize = givenBulSize;

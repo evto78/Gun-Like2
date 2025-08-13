@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class GunScript : MonoBehaviour
 {
@@ -151,6 +152,9 @@ public class GunScript : MonoBehaviour
     {
         reservoirSize = 250;
         manager = gameObject.GetComponentInParent<GunManager>();
+        if(whatHandThisIsIn == "left") { bulletReservoir = manager.preinstatiatedAmmoBoxLeft; }
+        if(whatHandThisIsIn == "right") { bulletReservoir = manager.preinstatiatedAmmoBoxRight; }
+        bulletType = BulletType.standard;
 
         currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
@@ -235,14 +239,7 @@ public class GunScript : MonoBehaviour
         turbine = manager.leftTurbine;
         oilGun = manager.leftOilGun;
 
-        if (nerfedBul) { bulletType = BulletType.nerf; }
-        if (oilGun > 0) { bulletType = BulletType.oil; }
-        switch (gunName)
-        {
-            case "Archer Fish": if (bulletType != BulletType.oil) { bulletType = BulletType.standard; } break;
-            case "Hand Cannon": bulletType = BulletType.standard; break;
-            case "Mutated Knife": bulletType = BulletType.standard; break;
-        }
+        BulletTypeHandler();
 
         ricochet = manager.leftRicochet;
 
@@ -332,14 +329,7 @@ public class GunScript : MonoBehaviour
         turbine = manager.rightTurbine;
         oilGun = manager.rightOilGun;
 
-        if (nerfedBul) { bulletType = BulletType.nerf; }
-        if (oilGun>0) { bulletType = BulletType.oil; }
-        switch (gunName)
-        {
-            case "Archer Fish": if (bulletType != BulletType.oil) { bulletType = BulletType.standard; } break;
-            case "Hand Cannon": bulletType = BulletType.standard; break;
-            case "Mutated Knife": bulletType = BulletType.standard; break;
-        }
+        BulletTypeHandler();
 
         ricochet = manager.rightRicochet;
 
@@ -363,7 +353,19 @@ public class GunScript : MonoBehaviour
     {
         
     }
-
+    void BulletTypeHandler()
+    {
+        BulletType prev = bulletType;
+        if (nerfedBul) { bulletType = BulletType.nerf; }
+        if (oilGun > 0) { bulletType = BulletType.oil; }
+        switch (gunName)
+        {
+            case "Archer Fish": if (bulletType != BulletType.oil) { bulletType = BulletType.standard; } break;
+            case "Hand Cannon": bulletType = BulletType.standard; break;
+            case "Mutated Knife": bulletType = BulletType.standard; break;
+        }
+        if (bulletType != prev) { ClearPreInstatiated(); }
+    }
     // Update is called once per frame
     public virtual void Update()
     {
@@ -626,62 +628,100 @@ public class GunScript : MonoBehaviour
     }
     void ClearPreInstatiated()
     {
+        Debug.Log("Clearing...");
         for(int i = 0; i < bulletReservoir.childCount; i++) { Destroy(bulletReservoir.GetChild(0).gameObject); }
     }
     void PreInstatiateBullets()
     {
-        int fps = (int)(1f / Time.unscaledDeltaTime);
-        if (fps < Application.targetFrameRate - 5) { return;}
+        //int fps = (int)(1f / Time.unscaledDeltaTime);
+        //if (fps < Application.targetFrameRate - 5) { Debug.Log("FramerateTooLow"); return;}
+        if(bulletReservoir == null) { return; }
+        
         if (bulletReservoir.childCount < reservoirSize)
         {
+            GameObject spawned; BulletScript spawnedBS;
             switch (bulletType)
             {
-                case BulletType.standard: Instantiate(pistolBullet, bulletReservoir); break;
-                case BulletType.oil: Instantiate(oilBullet, bulletReservoir); break;
-                case BulletType.nerf: Instantiate(nerfedPistolBullet, bulletReservoir); break;
+                case BulletType.oil: spawned = Instantiate(oilBullet, bulletReservoir); break;
+                case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet, bulletReservoir); break;
+                case BulletType.standard: spawned = Instantiate(pistolBullet, bulletReservoir); break;
+                default: spawned = Instantiate(pistolBullet, bulletReservoir); break;
             }
+            spawnedBS = spawned.GetComponent<BulletScript>();
+            //mini setup
+            spawnedBS.gunFiredFrom = this;
+            spawnedBS.MiniSetUp();
+            spawned.SetActive(false);
         }
         if (manager.preinstatiatedAmmoBoxFleas.childCount < fleas * 10)
         {
-            Instantiate(fleaBullet, manager.preinstatiatedAmmoBoxFleas);
+            GameObject spawned; BulletScript spawnedBS;
+            spawned = Instantiate(fleaBullet, manager.preinstatiatedAmmoBoxFleas); 
+            spawnedBS = spawned.GetComponent<BulletScript>();
+            //mini setup
+            spawnedBS.gunFiredFrom = this;
+            spawnedBS.MiniSetUp();
+            spawned.SetActive(false);
         }
     }
-    Transform PullBulletFromPreInstatiation()
+    Transform PullBulletFromPreInstatiation(bool flea)
     {
-        Transform bulletPulled = bulletReservoir.GetChild(0);
-        bulletPulled.transform.parent = null; return bulletPulled;
+        switch (flea)
+        {
+            case true:
+                if (manager.preinstatiatedAmmoBoxFleas.childCount > 0)
+                {
+                    Transform bulletPulled = manager.preinstatiatedAmmoBoxFleas.GetChild(0);
+                    bulletPulled.transform.parent = null; bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                }
+                else
+                {
+                    return Instantiate(fleaBullet).transform;
+                }
+            case false:
+                if (bulletReservoir.childCount > 0)
+                {
+                    Transform bulletPulled = bulletReservoir.GetChild(0);
+                    bulletPulled.transform.parent = null; bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                }
+                else
+                {
+                    GameObject spawned;
+                    switch (bulletType)
+                    {
+                        case BulletType.standard: spawned = Instantiate(pistolBullet); return spawned.transform;
+                        case BulletType.oil: spawned = Instantiate(oilBullet); return spawned.transform;
+                        case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet); return spawned.transform;
+                    }
+                }
+                break;
+        }
+        return null;
     }
     public void SpawnBulletAtPos(Vector3 pos)
     {
         //pretty much just for improvised storage
-        GameObject spawnedBullet;
-        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet); }
-        else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet); }
-        else { spawnedBullet = Instantiate(pistolBullet); }
-        spawnedBullet.transform.position = pos;
-        spawnedBullet.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
-        spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
+        Transform spawnedBullet = PullBulletFromPreInstatiation(false); BulletScript bs = spawnedBullet.GetComponent<BulletScript>();
+        spawnedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation);
+        spawnedBullet.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
 
-        SetBulStats(spawnedBullet, dmg, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
+        SetBulStats(bs, dmg, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
 
-        if (whatHandThisIsIn == "left") { player.GetComponent<GunManager>().leftStickToCounters = 0; }
-        else { player.GetComponent<GunManager>().rightStickToCounters = 0; }
+        if (whatHandThisIsIn == "left") { manager.leftStickToCounters = 0; } else { manager.rightStickToCounters = 0; }
     }
     public virtual void EarlyShoot(bool requireAmmo)
     {
-        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge+=0.2f; }
-        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge+=0.2f; }
+        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0)) { littleCharge+=0.2f; }
         if (tacticalCompress > 0 && tacticalReload > 0) { dmg = dmg * (1 + (tacticalCompress / (10f / tacticalCompress))); tacticalCompress = 0; }
         if (brokenPen > 0 && brokenPenCounter >= 10) { dmg *= 2f + (1.5f * brokenPen - 1f); }
 
         if (fleas>0&&Random.Range(1,100)<16){
             for(int i = 0; i < fleas; i++)
             {
-                GameObject spawnedFlea = Instantiate(fleaBullet, firePoint.position, firePoint.rotation); acc = acc / 1;
-                if (target != null) { GetPosessionTargetPos(); spawnedFlea.transform.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5; }
-                acc *= 1.5f; spawnedFlea.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc))); acc /= 1.5f;
-                spawnedFlea.GetComponent<BulletScript>().mainCamera = cam;
-                SetBulStats(spawnedFlea, dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
+                Transform spawnedFlea = PullBulletFromPreInstatiation(true); acc = acc / 1; spawnedFlea.SetPositionAndRotation(firePoint.position,firePoint.rotation);
+                if (target != null) { GetPosessionTargetPos(); spawnedFlea.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5; }
+                acc *= 1.5f; spawnedFlea.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc))); acc /= 1.5f;
+                SetBulStats(spawnedFlea.GetComponent<BulletScript>(), dmg * 1, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), 1);
             }
         }
 
@@ -693,8 +733,7 @@ public class GunScript : MonoBehaviour
         if (currentBullets < 1 && smokingGun > 0) { smokingGunCounter++; if (smokingGunCounter >= 2) { manager.healthMan.GiveEffect(PlayerEffectType.effectName.smokingGun, 1f); } AttemptReload(); return; }
         if (currentBullets > 0 && carvedBone <= 0) { animator.SetBool("NoAmmo", false); }
         if (confetti > 0) { confettiEffect.GetComponent<ParticleSystem>().Play(); }
-        animator.SetTrigger("Shooting");
-        animator.speed = atkSpd * 1.5f;
+        animator.speed = atkSpd * 1.2f;
         isFastFiring = false;
         shooting = true;
         attackTimer = 1;
@@ -710,46 +749,31 @@ public class GunScript : MonoBehaviour
         }
         if (currentBullets > 0 || !requireAmmo)
         {
-            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd / 2f, ForceMode.Impulse); }
+            animator.SetTrigger("ForceFire");
+            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd / 3f, ForceMode.Impulse); }
             timeSinceShot = 0f;
             if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)) { inkCounter++; } else if (brokenInk > 0) { inkCounter = 0; requireAmmo = false; }
             EarlyShoot(requireAmmo);
-            if (requireAmmo)
-            {
-                currentBullets--;
-                currentBullets -= Mathf.Clamp(triggerHappy, 0, 1);
-                currentBullets = Mathf.Clamp(currentBullets, 0, int.MaxValue);
-            }
+            if (requireAmmo) { currentBullets--; currentBullets -= Mathf.Clamp(triggerHappy, 0, 1); currentBullets = Mathf.Clamp(currentBullets, 0, int.MaxValue); }
             dmg += echoDmg; echoDmg = 0;
-            GameObject spawnedBullet;
-            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            else if (nerfedBul) { spawnedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            else { spawnedBullet = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            if (target != null) { GetPosessionTargetPos(); spawnedBullet.transform.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5f; }
+
+            Transform spawnedBullet = PullBulletFromPreInstatiation(false); spawnedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript bulBS = spawnedBullet.GetComponent<BulletScript>();
+
+            if (target != null) { GetPosessionTargetPos(); spawnedBullet.LookAt(target.transform.position + possessionTarOffset); timeSinceShot = 5f; }
             acc = acc / bowChar;
-            spawnedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
-            spawnedBullet.GetComponent<BulletScript>().mainCamera = cam;
-            GameObject spawnedBulletB;
-            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedBulletB = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            else if (nerfedBul) { spawnedBulletB = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            else { spawnedBulletB = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-            if (introTrig > 0)
-            {
-                spawnedBullet.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBulletB, true);
-                spawnedBulletB.GetComponent<BulletScript>().IntroTrigSetUp(spawnedBullet, false);
-            }
-            else{Destroy(spawnedBulletB);}
+            spawnedBullet.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
 
-            SetBulStats(spawnedBullet, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
+            SetBulStats(bulBS, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
 
             if (introTrig > 0)
             {
-                acc = acc / bowChar;
-                if(masterTrig > 0) {acc += 2f;}
-                else {acc += 4;}
-                spawnedBulletB.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
-                spawnedBulletB.GetComponent<BulletScript>().mainCamera = cam;
-                SetBulStats(spawnedBulletB, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
+                Transform spawnedBulletB = PullBulletFromPreInstatiation(false); spawnedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript bulBBS = spawnedBullet.GetComponent<BulletScript>();
+                acc = acc / bowChar; 
+                bulBS.IntroTrigSetUp(spawnedBulletB.gameObject, true);
+                bulBBS.IntroTrigSetUp(spawnedBullet.gameObject, false);
+                if (masterTrig > 0) {acc += 2f;} else {acc += 4;}
+                spawnedBulletB.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
+                SetBulStats(bulBBS, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
             }
             
             if (forkedBarrel > 0)
@@ -757,54 +781,46 @@ public class GunScript : MonoBehaviour
                 int bulletsSpawned = 1; if (Random.Range(1, 100) < (forkedBarrel - 1f) * 20f) { bulletsSpawned++; }
                 for(int i = 0; i < bulletsSpawned; i++)
                 {
-                    GameObject spawnedForkedBullet;
-                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[118] > 0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[118] > 0)) { spawnedForkedBullet = Instantiate(oilBullet, firePoint.transform.position, firePoint.transform.rotation); }
-                    else if (nerfedBul) { spawnedForkedBullet = Instantiate(nerfedPistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-                    else { spawnedForkedBullet = Instantiate(pistolBullet, firePoint.transform.position, firePoint.transform.rotation); }
-
+                    Transform spawnedForkedBullet = PullBulletFromPreInstatiation(false); spawnedForkedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript forkBS = spawnedForkedBullet.GetComponent<BulletScript>();
                     acc += 4;
-                    spawnedForkedBullet.transform.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
-                    spawnedForkedBullet.GetComponent<BulletScript>().mainCamera = cam;
-                    SetBulStats(spawnedForkedBullet, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
+                    spawnedForkedBullet.Rotate(new Vector3(Random.Range(-acc, acc), Random.Range(-acc, acc), Random.Range(-acc, acc)));
+                    SetBulStats(forkBS, dmg * bowChar, (Random.Range(1, 100) < critChance), (Random.Range(1, 100) < weakPointChance), bowChar);
                 }
             }
 
-            if (isFastFiring)
-            {
-                animator.speed = atkSpd * 3f;
-            }
-            if(whatHandThisIsIn == "left") { manager.leftStickToCounters = 0; }
-            else{ manager.rightStickToCounters = 0; }
+            if (isFastFiring) { animator.speed = atkSpd * 3f; }
 
-            if(manager.healthMan.activeEffects[20].x > 0)
-            {
-                currentBullets = Mathf.RoundToInt(magSize);
-            }
+            if(whatHandThisIsIn == "left") { manager.leftStickToCounters = 0; } else{ manager.rightStickToCounters = 0; }
+
+            if(manager.healthMan.activeEffects[20].x > 0) { currentBullets = Mathf.RoundToInt(magSize); }
 
             if(grenadeAttach > 0 && grenadeAttachTimer < 0)
             {
-                GameObject spawnedGrenade = Instantiate(grenade);
-                spawnedGrenade.transform.position = firePoint.transform.position + firePoint.transform.forward;
-                spawnedGrenade.GetComponent<GrenadeAttachment>().damage = dmg * 10f;
-                spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = false;
-                spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 4f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
-                spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
+                Transform spawnedGrenade = Instantiate(grenade).transform; GrenadeAttachment ga = spawnedGrenade.GetComponent<GrenadeAttachment>(); Rigidbody grb = spawnedGrenade.GetComponent<Rigidbody>();
+                spawnedGrenade.position = firePoint.transform.position + firePoint.transform.forward;
+                ga.damage = dmg * 10f; ga.isGas = false;
+                grb.AddForce((Vector3.up * 4f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
+                grb.AddTorque(spawnedGrenade.right * 30f, ForceMode.Impulse);
                 grenadeAttachTimer = manager.playerItem.FindObjByID(107).baseCooldown;
             }
             if (gasGrenadeAttach > 0 && gasGrenadeAttachTimer < 0)
             {
-                GameObject spawnedGrenade = Instantiate(grenade);
-                spawnedGrenade.transform.position = firePoint.transform.position + firePoint.transform.up / 2f + firePoint.transform.forward;
-                spawnedGrenade.GetComponent<GrenadeAttachment>().damage = dmg * 10f;
-                spawnedGrenade.GetComponent<GrenadeAttachment>().isGas = true;
-                spawnedGrenade.GetComponent<Rigidbody>().AddForce((Vector3.up * 6f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
-                spawnedGrenade.GetComponent<Rigidbody>().AddTorque(spawnedGrenade.transform.right * 30f, ForceMode.Impulse);
+                Transform spawnedGrenade = Instantiate(grenade).transform; GrenadeAttachment ga = spawnedGrenade.GetComponent<GrenadeAttachment>(); Rigidbody grb = spawnedGrenade.GetComponent<Rigidbody>();
+                spawnedGrenade.position = firePoint.transform.position + firePoint.transform.up / 2f + firePoint.transform.forward;
+                ga.damage = dmg * 10f; ga.isGas = true;
+                grb.AddForce((Vector3.up * 6f) + (firePoint.transform.forward * 20f), ForceMode.Impulse);
+                grb.AddTorque(spawnedGrenade.right * 30f, ForceMode.Impulse);
                 gasGrenadeAttachTimer = manager.playerItem.FindObjByID(108).baseCooldown; ;
             }
         }
         else if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[117]>0) || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[117] > 0))
         {
             manager.Kick(whatHandThisIsIn);
+        }
+        else
+        {
+            animator.SetBool("NoAmmo", true);
+            animator.SetTrigger("Shooting");
         }
     }
     float RiggedSlotMachine(float incomingDamage)
@@ -852,9 +868,10 @@ public class GunScript : MonoBehaviour
     {
         possessionTarOffset = (Vector3.Distance(target.transform.position, transform.position) * target.velocity) / bulSpd;
     }
-    void SetBulStats(GameObject givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)
+    void SetBulStats(BulletScript givenBullet, float givenDmg, bool isCrit, bool isWeakpoint, float givenBowChar)
     {
-        givenBullet.GetComponent<BulletScript>().setStats(this, givenDmg, isCrit, bulPir, isWeakpoint, weakPointDamage, bulSpd * givenBowChar, bulSize, 
+        givenBullet.mainCamera = cam;
+        givenBullet.setStats(this, givenDmg, isCrit, bulPir, isWeakpoint, weakPointDamage, bulSpd * givenBowChar, bulSize, 
             ricochet, whatHandThisIsIn, heavyBul, heavySpirits, nuclearBul, introTrig, jam, fireSpon * 5f, sharperSpon * 5f, silverSpon * 20f, 
             helpingSpon * 5f, coolSpon * 5f, fastSpon * 10f, largeSpon * 5f, advTrig, multistage, gunkyBlessed, gunkyClaw);
     }
