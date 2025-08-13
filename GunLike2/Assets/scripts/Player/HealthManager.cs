@@ -87,7 +87,7 @@ public class HealthManager : MonoBehaviour
 	public int wishes;
 
 	public GameDataManager gdm;
-
+	public bool freeRelaxedRevive;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -237,9 +237,15 @@ public class HealthManager : MonoBehaviour
 		maxHp *= gdm.mutatedStatModifiers[26];
 		healthRegen *= gdm.mutatedStatModifiers[27];
 		armor *= gdm.mutatedStatModifiers[28];
+        //OtherDifficultyModifiers
+        switch (gdm.difficultyIDSelected)
+        {
+			case 0: maxHp *= 2f; healthRegen *= 2f; break;
+			case 2: healthRegen *= 0.75f; break;
+			case 3: healthRegen *= 0.6f; break;
+        }
 
 		//status effect buffs / debuffs
-
 		if (activeEffects[14].x > 0f) { healthRegen = healthRegen / (orgGum / 10f + 1f); }
 		if (activeEffects[6].x > 0f) { armor = armor * (orgGum / 10f + 1f); }
 		if (activeEffects[8].x > 0f) { healthRegen = healthRegen * (orgGum / 10f + 1f); }
@@ -317,6 +323,12 @@ public class HealthManager : MonoBehaviour
 				curHp = maxHp;
 				playerItem.rightItems[116]--;
 			}
+			else if (freeRelaxedRevive)
+            {
+				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f);
+				curHp = maxHp;
+				freeRelaxedRevive = false;
+			}
 			else
             {
 				dead = true; gdm.instance.AddEmailToQue("Death");
@@ -332,6 +344,7 @@ public class HealthManager : MonoBehaviour
         {
 			GiveEffect(PlayerEffectType.effectName.activeReactor, 1);
         }
+		if(gdm.difficultyIDSelected == 0){moneyDropped *= 2;} 
 
 		money += moneyDropped; money += 10 * (playerItem.leftItems[177] + playerItem.rightItems[177]);
 

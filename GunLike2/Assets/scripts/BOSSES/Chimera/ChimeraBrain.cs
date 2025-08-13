@@ -38,6 +38,8 @@ public class ChimeraBrain : MonoBehaviour
     int lastAk47Attack = 0; int curAk47Cycle = 0; float akBurstTime; float akCooldownTime; float akAttackTime; float akBurstTimer; float akCooldownTimer; float akAttackTimer; float akWait; int akbulperburst; int akbulshot;
     int lastAwpAttack = 0; int curAwpCycle = 0; float awpCooldownTime; float awpAttackTime; float awpCooldownTimer; float awpAttackTimer; float awpWait;
 
+    float timerSpeedModifier;
+
     Transform player; Transform curUziTarget; Transform curAkTarget; Transform curAwpTarget; public GameObject awpFlare;
     public GameObject akMag; public GameObject orbit; Transform orbitPoint; public GameObject uziBoomerang; public GameObject awpTurretPrefab; List<AWPBossTurret> awpBossTurretList = new List<AWPBossTurret>(); public List<Vector3> potentialTurretSpawns; List<Vector3> avaliableSpawns;
     public GameObject nuke; public GameObject nukeTarget; public GameObject earthquake;
@@ -69,6 +71,9 @@ public class ChimeraBrain : MonoBehaviour
         awpLaserTelegraph = Instantiate(awpLaserTelegraphPrefab).transform;
 
         orbitPoint = Instantiate(orbit).transform.GetChild(0);
+
+        timerSpeedModifier = 1f;
+        if(ehm.gdm.difficultyIDSelected == 0) { timerSpeedModifier = 0.8f; }
     }
     private void OnDestroy()
     {
@@ -429,23 +434,23 @@ public class ChimeraBrain : MonoBehaviour
     }
     void TimerManagement()
     {
-        switch (phase) //make sure timer is correct
+        switch (phase)
         {
             case (phaseTypes.a):
-                if (awpActive) { awpTimer = 12f; awpActive = false; } awpTimer -= Time.deltaTime; if (awpTimer <= 0) { awpActive = true; }
-                if (akActive) { akTimer = 8f; akActive = false; } akTimer -= Time.deltaTime; if (akTimer <= 0) { akActive = true; }
-                if (uziActive) { uziTimer = 4f; uziActive = false; } uziTimer -= Time.deltaTime; if (uziTimer <= 0) { uziActive = true; }
+                if (awpActive) { awpTimer = 12f; awpActive = false; } awpTimer -= Time.deltaTime * timerSpeedModifier; if (awpTimer <= 0) { awpActive = true; }
+                if (akActive) { akTimer = 8f; akActive = false; } akTimer -= Time.deltaTime * timerSpeedModifier; if (akTimer <= 0) { akActive = true; }
+                if (uziActive) { uziTimer = 4f; uziActive = false; } uziTimer -= Time.deltaTime * timerSpeedModifier; if (uziTimer <= 0) { uziActive = true; }
                 break;
             case (phaseTypes.ba):
-                if (awpActive) { awpTimer = 6f; awpActive = false; } awpTimer -= Time.deltaTime; if (awpTimer <= 0) { awpActive = true; }
-                if (akActive) { akTimer = 4f; akActive = false; } akTimer -= Time.deltaTime; if (akTimer <= 0) { akActive = true; }
+                if (awpActive) { awpTimer = 6f; awpActive = false; } awpTimer -= Time.deltaTime * timerSpeedModifier; if (awpTimer <= 0) { awpActive = true; }
+                if (akActive) { akTimer = 4f; akActive = false; } akTimer -= Time.deltaTime * timerSpeedModifier; if (akTimer <= 0) { akActive = true; }
                 break;
             case (phaseTypes.bb):
-                if (awpActive) { awpTimer = 6f; awpActive = false; } awpTimer -= Time.deltaTime; if (awpTimer <= 0) { awpActive = true; }
-                if (uziActive) { uziTimer = 2f; uziActive = false; } uziTimer -= Time.deltaTime; if (uziTimer <= 0) { uziActive = true; }
+                if (awpActive) { awpTimer = 6f; awpActive = false; } awpTimer -= Time.deltaTime * timerSpeedModifier; if (awpTimer <= 0) { awpActive = true; }
+                if (uziActive) { uziTimer = 2f; uziActive = false; } uziTimer -= Time.deltaTime * timerSpeedModifier; if (uziTimer <= 0) { uziActive = true; }
                 break;
             case (phaseTypes.c):
-                if (awpActive) { awpTimer = 4f; awpActive = false; } awpTimer -= Time.deltaTime; if (awpTimer <= 0) { awpActive = true; }
+                if (awpActive) { awpTimer = 4f; awpActive = false; } awpTimer -= Time.deltaTime * timerSpeedModifier; if (awpTimer <= 0) { awpActive = true; }
                 break;
         }
     }

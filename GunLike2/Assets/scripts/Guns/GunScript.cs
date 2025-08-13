@@ -635,8 +635,13 @@ public class GunScript : MonoBehaviour
     }
     void ClearPreInstatiated()
     {
-        if(bulletReservoir.childCount == 0) { return; }
-        for(int i = 0; i < bulletReservoir.childCount; i++) { Destroy(bulletReservoir.GetChild(0).gameObject); }
+        if(bulletReservoir.childCount == 0) { return; } int count = bulletReservoir.childCount;
+        for (int i = 0; i < count; i++) 
+        { 
+            GameObject bul = bulletReservoir.GetChild(0).gameObject;
+            bul.transform.SetParent(null);
+            Destroy(bul);
+        }
     }
     void PreInstatiateBullets()
     {

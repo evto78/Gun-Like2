@@ -57,7 +57,7 @@ public class GameDataManager : MonoBehaviour
             switch (difficultyIDSelected)
             {
                 case 0:
-                    difficultyProgressionModifier = 0.5f;
+                    difficultyProgressionModifier = 0.5f; phm.freeRelaxedRevive = true;//2x base HP and HP REGEN, 2x more cash dropped from enemies, bosses are less aggresive
                     break;
                 case 1:
                     difficultyProgressionModifier = 1f;
