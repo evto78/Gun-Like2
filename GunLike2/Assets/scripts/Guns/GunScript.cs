@@ -672,7 +672,7 @@ public class GunScript : MonoBehaviour
                 if (manager.preinstatiatedAmmoBoxFleas.childCount > 0)
                 {
                     Transform bulletPulled = manager.preinstatiatedAmmoBoxFleas.GetChild(0);
-                    bulletPulled.transform.parent = null; bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                    bulletPulled.SetParent(null); bulletPulled.gameObject.SetActive(true); return bulletPulled;
                 }
                 else
                 {
@@ -682,7 +682,7 @@ public class GunScript : MonoBehaviour
                 if (bulletReservoir.childCount > 0)
                 {
                     Transform bulletPulled = bulletReservoir.GetChild(0);
-                    bulletPulled.transform.parent = null; bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                    bulletPulled.SetParent(null); bulletPulled.gameObject.SetActive(true); return bulletPulled;
                 }
                 else
                 {
