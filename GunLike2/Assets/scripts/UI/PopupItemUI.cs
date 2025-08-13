@@ -7,32 +7,38 @@ using TMPro;
 public class PopupItemUI : MonoBehaviour
 {
     public GameObject popupNotif;
-
-    // Start is called before the first frame update
-    void Start()
+    class popupData
     {
-
+        public int change; public ItemObject data;
     }
-
-    // Update is called once per frame
-    void Update()
+    List<popupData> popupQue = new List<popupData>();
+    int activePopups;
+    private void Update()
     {
-        
+        if(popupQue.Count == 0 || transform.childCount > 10) { return; }
+        PrintFromQue();
     }
-
-    public void CreateNotif(int id, int change)
+    void PrintFromQue()
     {
-        ItemObject fetchedObject;
+        int change = popupQue[0].change; ItemObject data = popupQue[0].data;
         GameObject spawnedNotif = Instantiate(popupNotif);
-        spawnedNotif.transform.SetParent(transform);
-        spawnedNotif.transform.position = Vector3.zero;
-        fetchedObject = Resources.Load<ItemObject>("Items/" + id.ToString());
+        Transform t = spawnedNotif.transform;
+        t.SetParent(transform);
+        t.position = Vector3.zero;
 
-        spawnedNotif.transform.GetChild(1).GetComponent<Image>().sprite = fetchedObject.itemSprite;
-        if(change > 0) {spawnedNotif.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "+"+change.ToString();}
-        else{spawnedNotif.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = change.ToString();}
-        spawnedNotif.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = fetchedObject.itemName;
-
-        Destroy(spawnedNotif, 2f);
+        t.GetChild(1).GetComponent<Image>().sprite = data.itemSprite;
+        if (change > 0) { t.GetChild(2).GetComponent<TextMeshProUGUI>().text = "+" + change.ToString(); }
+        else { t.GetChild(2).GetComponent<TextMeshProUGUI>().text = change.ToString(); }
+        t.GetChild(3).GetComponent<TextMeshProUGUI>().text = data.itemName;
+        float lifetime = 3f / (popupQue.Count);
+        Destroy(spawnedNotif, lifetime);
+        popupQue.RemoveAt(0);
+    }
+    public void CreateNotif(int change, ItemObject data)
+    {
+        popupData pData = new popupData();
+        pData.change = change;
+        pData.data = data;
+        popupQue.Add(pData);
     }
 }

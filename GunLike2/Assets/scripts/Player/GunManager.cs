@@ -19,6 +19,8 @@ public class GunManager : MonoBehaviour
     public GameObject rightHand;
     public GunScript rightGunScript;
 
+    public Transform preinstatiatedAmmoBox;
+
     // For bonuses that affect both weapons.
     public float masterAtkSpd = 1f;
     public float masterReSpd = 1f;
@@ -120,6 +122,7 @@ public class GunManager : MonoBehaviour
     public int leftConfetti;
     public int leftEndless;
     public int leftStorage;
+    public int leftTurbine;
 
     public bool leftRicochet = false;
 
@@ -211,6 +214,7 @@ public class GunManager : MonoBehaviour
     public int rightConfetti;
     public int rightEndless;
     public int rightStorage;
+    public int rightTurbine;
 
     public bool rightRicochet = false;
     public int leftHandVal;
@@ -604,6 +608,7 @@ public class GunManager : MonoBehaviour
         leftGasGrenadeAttach = givenLeftItems[108];
         leftWarcry = givenLeftItems[110];
         leftTactReload = givenLeftItems[113];
+        leftTurbine = givenLeftItems[119];
         leftCarvedBone = givenLeftItems[129];
         leftCanineTooth = givenLeftItems[130];
         leftDoorKnob = givenLeftItems[132];
@@ -813,6 +818,7 @@ public class GunManager : MonoBehaviour
         rightGasGrenadeAttach = givenRightItems[108];
         rightWarcry = givenRightItems[110];
         rightTactReload = givenRightItems[113];
+        rightTurbine = givenRightItems[119];
         rightCarvedBone = givenRightItems[129];
         rightCanineTooth = givenRightItems[130];
         rightDoorKnob = givenRightItems[132];

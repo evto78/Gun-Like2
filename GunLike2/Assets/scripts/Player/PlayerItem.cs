@@ -165,24 +165,22 @@ public class PlayerItem : MonoBehaviour
         }
         rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
     }
-    private void Start()
+    public void ItemsFromMutatedModifcataion(List<int> rules)
     {
-        if (GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().mutatedRules.Contains(12))
+        foreach (int rule in rules)
         {
-            foreach(int rule in GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().mutatedRules)
+            if (rule == 12)
             {
-                if(rule == 12) { 
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false); 
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
-                    AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
-                }
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "left", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
+                AddRandItemsFromRarity(1, ItemRarity.GetWeightedRandRarity(), "right", false);
             }
         }
     }
@@ -209,7 +207,7 @@ public class PlayerItem : MonoBehaviour
     }
     public void OnItemDestroy(int id, int amount, string hand)
     {
-        popupUI.CreateNotif(id, amount);
+        popupUI.CreateNotif(amount, FindObjByID(id));
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         if(id == 94) { healthManager.appleBuff += 20; }
         for(int i = 0; i < amount; i++)
@@ -224,7 +222,7 @@ public class PlayerItem : MonoBehaviour
     }
     public void OnItemGain(int id, int amount, string hand)
     {
-        popupUI.CreateNotif(id, amount);
+        popupUI.CreateNotif(amount, FindObjByID(id));
         switch (id)
         {
             case 69: uiManager.VisionOfGunky(); break;

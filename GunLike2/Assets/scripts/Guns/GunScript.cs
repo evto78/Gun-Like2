@@ -106,6 +106,7 @@ public class GunScript : MonoBehaviour
     public int fority;
     public int confetti;
     public int storage;
+    public int turbine;
 
     public float echoDmg;
 
@@ -229,6 +230,7 @@ public class GunScript : MonoBehaviour
         fority = manager.leftFortify;
         confetti = manager.leftConfetti;
         storage = manager.leftStorage;
+        turbine = manager.leftTurbine;
 
         ricochet = manager.leftRicochet;
 
@@ -316,6 +318,7 @@ public class GunScript : MonoBehaviour
         fority = manager.rightFortify;
         confetti = manager.rightConfetti;
         storage = manager.rightStorage;
+        turbine = manager.rightTurbine;
 
         ricochet = manager.rightRicochet;
 

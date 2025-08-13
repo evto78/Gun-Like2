@@ -2164,6 +2164,7 @@ Transform:
   - {fileID: 1597390568023571889}
   - {fileID: 2299057254963354867}
   - {fileID: 7070181385077407177}
+  - {fileID: 3570910980133245658}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4410490756112149481
@@ -2238,6 +2239,7 @@ MonoBehaviour:
   leftGunScript: {fileID: 0}
   rightHand: {fileID: 4083616855686476987}
   rightGunScript: {fileID: 0}
+  preinstatiatedAmmoBox: {fileID: 3570910980133245658}
   masterAtkSpd: 1
   masterReSpd: 1
   masterDmg: 1
@@ -2331,6 +2333,7 @@ MonoBehaviour:
   leftConfetti: 0
   leftEndless: 0
   leftStorage: 0
+  leftTurbine: 0
   leftRicochet: 0
   rightAtkSpd: 1
   rightReSpd: 1
@@ -2413,7 +2416,10 @@ MonoBehaviour:
   rightConfetti: 0
   rightEndless: 0
   rightStorage: 0
+  rightTurbine: 0
   rightRicochet: 0
+  leftHandVal: 0
+  rightHandVal: 0
   gunkyAxe: {fileID: 1846831637977737591, guid: 59bfadda3e8590e42bc773450106de82, type: 3}
   microwave: {fileID: 4375448883670722993, guid: 75c8b4280fb62cd4caf59f0ef6d01826, type: 3}
   darkwave: {fileID: 1110908639168396935, guid: 05345808930cd984195a0360be0fbdb3, type: 3}
@@ -2423,6 +2429,20 @@ MonoBehaviour:
   rightLeg: {fileID: 7340119684266363571}
   totalLiveBullets: 0
   maximumLiveBullets: 2000
+  leftKillsDATA: 0
+  leftDamageDATA: 0
+  leftMaxDmgDATA: 0
+  leftHitsDATA: 0
+  leftBulletsFiredDATA: 0
+  leftItemsCollectedDATA: 0
+  leftAccuracyDATA: 0
+  rightKillsDATA: 0
+  rightDamageDATA: 0
+  rightMaxDmgDATA: 0
+  rightHitsDATA: 0
+  rightBulletsFiredDATA: 0
+  rightItemsCollectedDATA: 0
+  rightAccuracyDATA: 0
 --- !u!114 &1652207953152809334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2594,6 +2614,7 @@ MonoBehaviour:
   stichedEffect: {fileID: 3573673071798421703}
   wishPopUp: {fileID: 1496285125689932001}
   wishes: 0
+  gdm: {fileID: 0}
 --- !u!114 &7461507813950395447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19408,6 +19429,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7100050886937852168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3570910980133245658}
+  m_Layer: 7
+  m_Name: AMMOBOX(PreinstatiatedBullets)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3570910980133245658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7100050886937852168}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 77503973346591702}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7143820427227233074
 GameObject:
   m_ObjectHideFlags: 0
@@ -27236,6 +27288,38 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3185169907635146102, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449703064000930532, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449703064000930532, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449703064000930532, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449703064000930532, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002065250122575101, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002065250122575101, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002065250122575101, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002065250122575101, guid: 769ce52c60f742643bb090cadfc721dc, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

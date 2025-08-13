@@ -92,6 +92,8 @@ public class GameDataManager : MonoBehaviour
         leftSnapshot.AddRange(pi.leftItems);
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
+
+        pi.ItemsFromMutatedModifcataion(mutatedRules);
     }
     void ReadAndApplyMutatedRules()
     {
@@ -157,18 +159,14 @@ public class GameDataManager : MonoBehaviour
         for (int i = 0; i < pi.leftItems.Count; i++)
         {
             leftSnapshot[i] = pi.leftItems[i] - leftSnapshot[i];
-            if (leftSnapshot[i] < 0) { pi.OnItemDestroy(i, leftSnapshot[i], "left"); change = true; }
-            if (leftSnapshot[i] > 0) { pi.OnItemGain(i, leftSnapshot[i], "left"); change = true; }
-        }
-        for (int i = 0; i < pi.rightItems.Count; i++)
-        {
+            if (leftSnapshot[i] < 0) { pi.OnItemDestroy(i, leftSnapshot[i], "left"); change = true; changedLastFrame = true; }
+            if (leftSnapshot[i] > 0) { pi.OnItemGain(i, leftSnapshot[i], "left"); change = true; changedLastFrame = true; }
             rightSnapshot[i] = pi.rightItems[i] - rightSnapshot[i];
-            if (rightSnapshot[i] < 0) { pi.OnItemDestroy(i, rightSnapshot[i], "right"); change = true; }
-            if (rightSnapshot[i] > 0) { pi.OnItemGain(i, rightSnapshot[i], "right"); change = true; }
+            if (rightSnapshot[i] < 0) { pi.OnItemDestroy(i, rightSnapshot[i], "right"); change = true; changedLastFrame = true; }
+            if (rightSnapshot[i] > 0) { pi.OnItemGain(i, rightSnapshot[i], "right"); change = true; changedLastFrame = true; }
         }
-        if (change) { changedLastFrame = true; }
 
-        if (change || (!change && changedLastFrame)) { pi.uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory(); if (!change) { changedLastFrame = false; } }
+        if (changedLastFrame) { pi.uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory(); if (!change) { changedLastFrame = false; } }
 
         leftSnapshot = new List<int>();
         leftSnapshot.AddRange(pi.leftItems);
