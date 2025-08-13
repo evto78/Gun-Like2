@@ -4,7 +4,7 @@ using UnityEngine;
 public class GunScript : MonoBehaviour
 {
     protected Animator animator;
-    public GunManager manager;
+    public GunManager manager; Transform bulletReservoir; int reservoirSize;
     Transform player;
     public GameObject possessionEffect;
     public GameObject misfireEffect;
@@ -107,6 +107,7 @@ public class GunScript : MonoBehaviour
     public int confetti;
     public int storage;
     public int turbine;
+    public int oilGun;
 
     public float echoDmg;
 
@@ -122,7 +123,7 @@ public class GunScript : MonoBehaviour
 
     protected bool ricochet = false;
 
-
+    public enum BulletType { standard, nerf, oil} public BulletType bulletType;
 
     public GameObject pistolBullet;
     public GameObject nerfedPistolBullet;
@@ -148,6 +149,7 @@ public class GunScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        reservoirSize = 250;
         manager = gameObject.GetComponentInParent<GunManager>();
 
         currentBullets = Mathf.RoundToInt(magSize);
@@ -165,7 +167,7 @@ public class GunScript : MonoBehaviour
     }
     public virtual void StatUpdateLeft()
     {
-        whatHandThisIsIn = "left";
+        whatHandThisIsIn = "left"; bulletReservoir = manager.preinstatiatedAmmoBoxLeft;
 
         magSize = Mathf.CeilToInt(baseMagSize * manager.leftMagSize);
         atkSpd = baseAtkSpd * manager.leftAtkSpd;
@@ -231,6 +233,16 @@ public class GunScript : MonoBehaviour
         confetti = manager.leftConfetti;
         storage = manager.leftStorage;
         turbine = manager.leftTurbine;
+        oilGun = manager.leftOilGun;
+
+        if (nerfedBul) { bulletType = BulletType.nerf; }
+        if (oilGun > 0) { bulletType = BulletType.oil; }
+        switch (gunName)
+        {
+            case "Archer Fish": if (bulletType != BulletType.oil) { bulletType = BulletType.standard; } break;
+            case "Hand Cannon": bulletType = BulletType.standard; break;
+            case "Mutated Knife": bulletType = BulletType.standard; break;
+        }
 
         ricochet = manager.leftRicochet;
 
@@ -247,13 +259,12 @@ public class GunScript : MonoBehaviour
         bulSize = Mathf.Clamp(bulSize, 0, 10);
         magSize = Mathf.Clamp(magSize, 1, float.PositiveInfinity);
         LateStatUpdate();
-        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
-        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
+        if (manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
     }
 
     public virtual void StatUpdateRight()
     {
-        whatHandThisIsIn = "right";
+        whatHandThisIsIn = "right"; bulletReservoir = manager.preinstatiatedAmmoBoxRight;
 
         magSize = Mathf.CeilToInt(baseMagSize * manager.rightMagSize);
         atkSpd = baseAtkSpd * manager.rightAtkSpd;
@@ -319,6 +330,16 @@ public class GunScript : MonoBehaviour
         confetti = manager.rightConfetti;
         storage = manager.rightStorage;
         turbine = manager.rightTurbine;
+        oilGun = manager.rightOilGun;
+
+        if (nerfedBul) { bulletType = BulletType.nerf; }
+        if (oilGun>0) { bulletType = BulletType.oil; }
+        switch (gunName)
+        {
+            case "Archer Fish": if (bulletType != BulletType.oil) { bulletType = BulletType.standard; } break;
+            case "Hand Cannon": bulletType = BulletType.standard; break;
+            case "Mutated Knife": bulletType = BulletType.standard; break;
+        }
 
         ricochet = manager.rightRicochet;
 
@@ -335,8 +356,7 @@ public class GunScript : MonoBehaviour
         bulSize = Mathf.Clamp(bulSize, 0, 10);
         magSize = Mathf.Clamp(magSize, 1, float.PositiveInfinity);
         LateStatUpdate();
-        if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { atkSpd += littleCharge; }
-        if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
+        if (manager.playerItem.rightItems[109] > 0) { atkSpd += littleCharge; }
     }
 
     public virtual void LateStatUpdate()
@@ -485,6 +505,9 @@ public class GunScript : MonoBehaviour
         }
 
         rushJobTimer -= Time.deltaTime;
+
+        //Preinstatiation
+        PreInstatiateBullets();
     }
 
     public virtual void AttemptShoot()
@@ -600,6 +623,33 @@ public class GunScript : MonoBehaviour
     {
         if (whatHandThisIsIn == "left" && manager.playerItem.leftItems[109] > 0) { littleCharge = 0f; }
         if (whatHandThisIsIn == "right" && manager.playerItem.rightItems[109] > 0) { littleCharge = 0f; }
+    }
+    void ClearPreInstatiated()
+    {
+        for(int i = 0; i < bulletReservoir.childCount; i++) { Destroy(bulletReservoir.GetChild(0).gameObject); }
+    }
+    void PreInstatiateBullets()
+    {
+        int fps = (int)(1f / Time.unscaledDeltaTime);
+        if (fps < Application.targetFrameRate - 5) { return;}
+        if (bulletReservoir.childCount < reservoirSize)
+        {
+            switch (bulletType)
+            {
+                case BulletType.standard: Instantiate(pistolBullet, bulletReservoir); break;
+                case BulletType.oil: Instantiate(oilBullet, bulletReservoir); break;
+                case BulletType.nerf: Instantiate(nerfedPistolBullet, bulletReservoir); break;
+            }
+        }
+        if (manager.preinstatiatedAmmoBoxFleas.childCount < fleas * 10)
+        {
+            Instantiate(fleaBullet, manager.preinstatiatedAmmoBoxFleas);
+        }
+    }
+    Transform PullBulletFromPreInstatiation()
+    {
+        Transform bulletPulled = bulletReservoir.GetChild(0);
+        bulletPulled.transform.parent = null; return bulletPulled;
     }
     public void SpawnBulletAtPos(Vector3 pos)
     {
