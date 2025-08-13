@@ -127,7 +127,6 @@ public class BulletScript : MonoBehaviour
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
         float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, int isGunk, int givenGunkClaw)
     {
-        
         isFireSpon = Random.Range(1, 100) < chanceForFire; fireSponEffect.SetActive(isFireSpon);
         isSharperSpon = Random.Range(1, 100) < chanceForSharper; sharperSponEffect.SetActive(isSharperSpon);
         isSilverSpon = Random.Range(1, 100) < chanceForSilver; silverSponEffect.SetActive(isSilverSpon);
@@ -560,7 +559,6 @@ public class BulletScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //if (collided) { rb.velocity = Vector3.zero; transform.position = collidedPos; }
         DetectCollision(rb.velocity * 1.5f);
     }
 

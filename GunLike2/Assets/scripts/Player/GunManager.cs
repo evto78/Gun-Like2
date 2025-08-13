@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // <--- REMOVE!
+using TMPro; // <--- REMOVE!
 
 public class GunManager : MonoBehaviour
 {
@@ -18,6 +20,11 @@ public class GunManager : MonoBehaviour
     public GunScript leftGunScript;
     public GameObject rightHand;
     public GunScript rightGunScript;
+
+    public Image leftResFill; // <--- REMOVE!
+    public Image rightResFill; // <--- REMOVE!
+    public TextMeshProUGUI leftResTxt; // <--- REMOVE!
+    public TextMeshProUGUI rightResTxt; // <--- REMOVE!
 
     public Transform preinstatiatedAmmoBoxLeft;
     public Transform preinstatiatedAmmoBoxRight;
@@ -301,6 +308,7 @@ public class GunManager : MonoBehaviour
             rightGunScript.isGoo = true;
             gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
         }
+        leftGunScript.bulletReservoir = preinstatiatedAmmoBoxLeft; rightGunScript.bulletReservoir = preinstatiatedAmmoBoxRight;
     }
     public void RandomizeHeldGuns()
     {
@@ -321,6 +329,10 @@ public class GunManager : MonoBehaviour
     }
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
+        leftResFill.fillAmount = (float)preinstatiatedAmmoBoxLeft.childCount / (float)leftGunScript.reservoirSize; leftResTxt.text = preinstatiatedAmmoBoxLeft.childCount+"/" + leftGunScript.reservoirSize;
+        rightResFill.fillAmount = (float)preinstatiatedAmmoBoxRight.childCount / (float)rightGunScript.reservoirSize; rightResTxt.text = preinstatiatedAmmoBoxRight.childCount + "/" + rightGunScript.reservoirSize;
+        // ^^^^ REMOVE!
+
         leftList.Clear();
         leftList.AddRange(givenLeftItems);
         rightList.Clear();

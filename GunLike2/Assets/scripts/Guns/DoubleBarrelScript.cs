@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoubleBarrelScript : GunScript
 {
-    int bulletsQued; static int maxBulletsPerFrame = 35; float lockedBowCharge = 1;
+    int bulletsQued; static int maxBulletsPerFrame = 100; float lockedBowCharge = 1;
     public override void AttemptShoot()
     {
         if ((bowAct > 0))

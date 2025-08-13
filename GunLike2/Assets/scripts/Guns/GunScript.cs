@@ -5,7 +5,7 @@ using UnityEditor;
 public class GunScript : MonoBehaviour
 {
     protected Animator animator;
-    public GunManager manager; Transform bulletReservoir; int reservoirSize;
+    public GunManager manager; public Transform bulletReservoir; public int reservoirSize;
     Transform player;
     public GameObject possessionEffect;
     public GameObject misfireEffect;
@@ -150,10 +150,9 @@ public class GunScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        firePoint = normalFirePoint;
         reservoirSize = 250;
         manager = gameObject.GetComponentInParent<GunManager>();
-        if(whatHandThisIsIn == "left") { bulletReservoir = manager.preinstatiatedAmmoBoxLeft; }
-        if(whatHandThisIsIn == "right") { bulletReservoir = manager.preinstatiatedAmmoBoxRight; }
         bulletType = BulletType.standard;
 
         currentBullets = Mathf.RoundToInt(magSize);
@@ -171,7 +170,7 @@ public class GunScript : MonoBehaviour
     }
     public virtual void StatUpdateLeft()
     {
-        whatHandThisIsIn = "left"; bulletReservoir = manager.preinstatiatedAmmoBoxLeft;
+        whatHandThisIsIn = "left";
 
         magSize = Mathf.CeilToInt(baseMagSize * manager.leftMagSize);
         atkSpd = baseAtkSpd * manager.leftAtkSpd;
@@ -241,6 +240,9 @@ public class GunScript : MonoBehaviour
 
         BulletTypeHandler();
 
+        if(bulletReservoir == null) { bulletReservoir = manager.preinstatiatedAmmoBoxLeft; }
+        if (firePoint != null) { bulletReservoir.position = firePoint.position; bulletReservoir.rotation = firePoint.rotation; }
+
         ricochet = manager.leftRicochet;
 
         if (perfectedScope > 0 && acc < baseAcc)
@@ -261,7 +263,7 @@ public class GunScript : MonoBehaviour
 
     public virtual void StatUpdateRight()
     {
-        whatHandThisIsIn = "right"; bulletReservoir = manager.preinstatiatedAmmoBoxRight;
+        whatHandThisIsIn = "right";
 
         magSize = Mathf.CeilToInt(baseMagSize * manager.rightMagSize);
         atkSpd = baseAtkSpd * manager.rightAtkSpd;
@@ -330,6 +332,9 @@ public class GunScript : MonoBehaviour
         oilGun = manager.rightOilGun;
 
         BulletTypeHandler();
+       
+        if(bulletReservoir == null) { bulletReservoir = manager.preinstatiatedAmmoBoxRight; }
+        if(firePoint != null) { bulletReservoir.position = firePoint.position; bulletReservoir.rotation = firePoint.rotation; }
 
         ricochet = manager.rightRicochet;
 
@@ -405,6 +410,8 @@ public class GunScript : MonoBehaviour
             {
                 AttemptShoot();
             }
+
+            
         }
         else { target = null; possessionEffect.SetActive(false); }
         //laserPointer
@@ -628,41 +635,75 @@ public class GunScript : MonoBehaviour
     }
     void ClearPreInstatiated()
     {
-        Debug.Log("Clearing...");
+        if(bulletReservoir.childCount == 0) { return; }
         for(int i = 0; i < bulletReservoir.childCount; i++) { Destroy(bulletReservoir.GetChild(0).gameObject); }
     }
     void PreInstatiateBullets()
     {
-        //int fps = (int)(1f / Time.unscaledDeltaTime);
-        //if (fps < Application.targetFrameRate - 5) { Debug.Log("FramerateTooLow"); return;}
         if(bulletReservoir == null) { return; }
-        
-        if (bulletReservoir.childCount < reservoirSize)
+        if (magSize > reservoirSize) { reservoirSize = (int)magSize * 2; } // risk of shooting all bullets in reserve each shot, increase max
+        reservoirSize = Mathf.Clamp(reservoirSize, 100, 1000);
+        int bulletsToReserveThisFrame = 1; // default recovery speed [1 every frame] (lowest cost)
+        switch ((int)(10*((float)bulletReservoir.childCount / (float)reservoirSize)))
         {
-            GameObject spawned; BulletScript spawnedBS;
-            switch (bulletType)
+            case 0: bulletsToReserveThisFrame = 20; break; // RESERVE IS EMPTY!!! FULL POWER!!!!
+            case 1: bulletsToReserveThisFrame = 20; break;
+            case 2: bulletsToReserveThisFrame = 15; break;
+            case 3: bulletsToReserveThisFrame = 10; break;
+            case 4: bulletsToReserveThisFrame = 3; break;
+            case 5: bulletsToReserveThisFrame = 3; break;
+            case 6: bulletsToReserveThisFrame = 2; break;
+            case 7: bulletsToReserveThisFrame = 2; break;
+            case 8: bulletsToReserveThisFrame = 1; break;
+            case 9: bulletsToReserveThisFrame = 1; break;
+            case 10: return; // reserve is full :) we can be chill now. Hell, go home early PreInstantiateBullets() function.
+        }
+
+        for (int i = 0; i < bulletsToReserveThisFrame; i++)
+        {
+            if (bulletReservoir.childCount < reservoirSize)
             {
-                case BulletType.oil: spawned = Instantiate(oilBullet, bulletReservoir); break;
-                case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet, bulletReservoir); break;
-                case BulletType.standard: spawned = Instantiate(pistolBullet, bulletReservoir); break;
-                default: spawned = Instantiate(pistolBullet, bulletReservoir); break;
+                GameObject spawned; BulletScript spawnedBS;
+                switch (bulletType)
+                {
+                    case BulletType.oil: spawned = Instantiate(oilBullet, bulletReservoir); break;
+                    case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet, bulletReservoir); break;
+                    case BulletType.standard: spawned = Instantiate(pistolBullet, bulletReservoir); break;
+                    default: spawned = Instantiate(pistolBullet, bulletReservoir); break;
+                }
+                spawnedBS = spawned.GetComponent<BulletScript>();
+                //mini setup
+                spawnedBS.gunFiredFrom = this;
+                spawnedBS.MiniSetUp();
+                spawned.SetActive(false);
             }
-            spawnedBS = spawned.GetComponent<BulletScript>();
-            //mini setup
-            spawnedBS.gunFiredFrom = this;
-            spawnedBS.MiniSetUp();
-            spawned.SetActive(false);
+            if (manager.preinstatiatedAmmoBoxFleas.childCount < fleas * 10)
+            {
+                GameObject spawned; BulletScript spawnedBS;
+                spawned = Instantiate(fleaBullet, manager.preinstatiatedAmmoBoxFleas);
+                spawnedBS = spawned.GetComponent<BulletScript>();
+                //mini setup
+                spawnedBS.gunFiredFrom = this;
+                spawnedBS.MiniSetUp();
+                spawned.SetActive(false);
+            }
         }
-        if (manager.preinstatiatedAmmoBoxFleas.childCount < fleas * 10)
+    }
+    void QuickAddToReserve()
+    {
+        GameObject spawned; BulletScript spawnedBS;
+        switch (bulletType)
         {
-            GameObject spawned; BulletScript spawnedBS;
-            spawned = Instantiate(fleaBullet, manager.preinstatiatedAmmoBoxFleas); 
-            spawnedBS = spawned.GetComponent<BulletScript>();
-            //mini setup
-            spawnedBS.gunFiredFrom = this;
-            spawnedBS.MiniSetUp();
-            spawned.SetActive(false);
+            case BulletType.oil: spawned = Instantiate(oilBullet, bulletReservoir); break;
+            case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet, bulletReservoir); break;
+            case BulletType.standard: spawned = Instantiate(pistolBullet, bulletReservoir); break;
+            default: spawned = Instantiate(pistolBullet, bulletReservoir); break;
         }
+        spawnedBS = spawned.GetComponent<BulletScript>();
+        //mini setup
+        spawnedBS.gunFiredFrom = this;
+        spawnedBS.MiniSetUp();
+        spawned.SetActive(false);
     }
     Transform PullBulletFromPreInstatiation(bool flea)
     {
@@ -671,8 +712,8 @@ public class GunScript : MonoBehaviour
             case true:
                 if (manager.preinstatiatedAmmoBoxFleas.childCount > 0)
                 {
-                    Transform bulletPulled = manager.preinstatiatedAmmoBoxFleas.GetChild(0);
-                    bulletPulled.SetParent(null); bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                    Transform bulletPulled = manager.preinstatiatedAmmoBoxFleas.GetChild(0); bulletPulled.gameObject.SetActive(true);
+                    bulletPulled.SetParent(null);  return bulletPulled;
                 }
                 else
                 {
@@ -681,22 +722,16 @@ public class GunScript : MonoBehaviour
             case false:
                 if (bulletReservoir.childCount > 0)
                 {
-                    Transform bulletPulled = bulletReservoir.GetChild(0);
-                    bulletPulled.SetParent(null); bulletPulled.gameObject.SetActive(true); return bulletPulled;
+                    Transform bulletPulled = bulletReservoir.GetChild(0); bulletPulled.gameObject.SetActive(true);
+                    bulletPulled.SetParent(null); return bulletPulled;
                 }
                 else
                 {
-                    GameObject spawned;
-                    switch (bulletType)
-                    {
-                        case BulletType.standard: spawned = Instantiate(pistolBullet); return spawned.transform;
-                        case BulletType.oil: spawned = Instantiate(oilBullet); return spawned.transform;
-                        case BulletType.nerf: spawned = Instantiate(nerfedPistolBullet); return spawned.transform;
-                    }
+                    QuickAddToReserve();
+                    Transform bulletPulled = bulletReservoir.GetChild(0); bulletPulled.gameObject.SetActive(true);
+                    bulletPulled.SetParent(null); return bulletPulled;
                 }
-                break;
         }
-        return null;
     }
     public void SpawnBulletAtPos(Vector3 pos)
     {
@@ -767,7 +802,7 @@ public class GunScript : MonoBehaviour
 
             if (introTrig > 0)
             {
-                Transform spawnedBulletB = PullBulletFromPreInstatiation(false); spawnedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript bulBBS = spawnedBullet.GetComponent<BulletScript>();
+                Transform spawnedBulletB = PullBulletFromPreInstatiation(false); spawnedBulletB.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript bulBBS = spawnedBulletB.GetComponent<BulletScript>();
                 acc = acc / bowChar; 
                 bulBS.IntroTrigSetUp(spawnedBulletB.gameObject, true);
                 bulBBS.IntroTrigSetUp(spawnedBullet.gameObject, false);
