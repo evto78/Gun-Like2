@@ -114,13 +114,20 @@ public class BulletScript : MonoBehaviour
     }
     private void Update()
     {
+        if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
+        if (collided) { return; }
+
         lifetime += Time.deltaTime;
         //if (mesh != null) { mesh.transform.localScale = intialMeshScale * Mathf.Clamp(lifetime * 10f, 0.1f, 1f); }
-        //if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
         transform.rotation = Quaternion.LookRotation(rb.velocity+(Vector3.forward/100));
 
         if (turbine > 1 && rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); } 
         turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f;
+    }
+    private void FixedUpdate()
+    {
+        if (collided) { return; }
+        DetectCollision(rb.velocity * 1.5f);
     }
     public void setStats(GunScript firedFrom, float givenDmg, bool isCritHit, int givenPierce, bool isAutoWeakHit, float givenWeakDmg, float givenBulSpd,
         float givenBulSize, bool givenRico, string whatHand, int isHeavy, int givenHeavySpirits, int givenNuclearBul, int givenIntroTrig,
@@ -557,14 +564,9 @@ public class BulletScript : MonoBehaviour
     {
         if (!collided) { RunOnCollide(collision.gameObject, new RaycastHit()); }
     }
-    private void FixedUpdate()
-    {
-        DetectCollision(rb.velocity * 1.5f);
-    }
 
     public virtual void DetectCollision(Vector3 force)
     {
-        if (collided) { return; }
         myPos = transform.position;
         if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
         {

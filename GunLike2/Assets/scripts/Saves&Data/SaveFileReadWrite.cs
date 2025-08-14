@@ -349,10 +349,13 @@ public class SaveFileReadWrite : MonoBehaviour
         Debug.Log("Adding " + eventT + " to que");
 
         TelemData tdata = PrepareData();
-
         tdata.eventData = eventT;
 
-        string msg = "START";
+        emailQueEvent.Add("JSON : " + eventT);
+        emailQueContent.Add(JsonUtility.ToJson(tdata));
+
+        //    \/ OLD NON-JSON FORMAT \/
+        /*string msg = "START";
         msg += "|(UsrID)" + data.usrID;
         msg += "|(TriggeredEvent)" + eventT;
         msg += "|(SessionNum)" + data.usrSessions;
@@ -371,13 +374,7 @@ public class SaveFileReadWrite : MonoBehaviour
         msg += "|END";
 
         emailQueEvent.Add(eventT);
-        emailQueContent.Add(msg);
-        ConvertEmailDataToJson(tdata, eventT);
-    }
-    void ConvertEmailDataToJson(TelemData data, string eventT)
-    {
-        emailQueEvent.Add("JSON : "+eventT);
-        emailQueContent.Add(JsonUtility.ToJson(data));
+        emailQueContent.Add(msg);*/
     }
     void SendAllEmails()
     {

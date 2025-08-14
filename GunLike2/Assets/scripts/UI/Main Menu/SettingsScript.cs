@@ -15,6 +15,7 @@ public class SettingsScript : MonoBehaviour
     public Toggle fullscreen;
     public Toggle vsync;
     public TMP_Dropdown resolution;
+    public TMP_Dropdown bulletDisplayType;
     public Toggle sendGameData;
     public Toggle dfov;
     bool built = false;
@@ -53,9 +54,16 @@ public class SettingsScript : MonoBehaviour
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
         fullscreen.isOn = Screen.fullScreen;
         vsync.isOn = PlayerPrefs.GetInt("VSYNC") == 1;
-        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 0) { Screen.SetResolution(1920, 1080, Screen.fullScreen); resolution.value = 0; }
-        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 1) { Screen.SetResolution(2560, 1080, Screen.fullScreen); resolution.value = 1; }
-        if (PlayerPrefs.HasKey("RES") && PlayerPrefs.GetInt("RES") == 2) { Screen.SetResolution(2560, 1440, Screen.fullScreen); resolution.value = 2; }
+        if (!PlayerPrefs.HasKey("BULLETDISPLAYTYPE")) { PlayerPrefs.SetInt("BULLETDISPLAYTYPE", 2); bulletDisplayType.value = 2; } 
+        else { bulletDisplayType.value = PlayerPrefs.GetInt("BULLETDISPLAYTYPE"); }
+        if (!PlayerPrefs.HasKey("RES")) { PlayerPrefs.SetInt("RES", 0); }
+        resolution.value = PlayerPrefs.GetInt("RES");
+        switch (resolution.value)
+        {
+            case 0: Screen.SetResolution(1920, 1080, Screen.fullScreen); resolution.value = 0; break;
+            case 1: Screen.SetResolution(2560, 1080, Screen.fullScreen); resolution.value = 1; break;
+            case 2: Screen.SetResolution(2560, 1440, Screen.fullScreen); resolution.value = 2; break;
+        }
     }
     public void Apply()
     {
@@ -108,9 +116,16 @@ public class SettingsScript : MonoBehaviour
     public void ChangeResolution(int input)
     {
         PlayerPrefs.SetInt("RES", resolution.value);
-        if(resolution.value == 0) { Screen.SetResolution(1920, 1080, Screen.fullScreen); }
-        if(resolution.value == 1) { Screen.SetResolution(2560, 1080, Screen.fullScreen); }
-        if(resolution.value == 2) { Screen.SetResolution(2560, 1440, Screen.fullScreen); }
+        switch (resolution.value)
+        {
+            case 0: Screen.SetResolution(1920, 1080, Screen.fullScreen); break;
+            case 1: Screen.SetResolution(2560, 1080, Screen.fullScreen); break;
+            case 2: Screen.SetResolution(2560, 1440, Screen.fullScreen); break;
+        }
+    }
+    public void ChangeBulletDisplayType(int input)
+    {
+        PlayerPrefs.SetInt("BULLETDISPLAYTYPE", bulletDisplayType.value);
     }
     void BuildKeys()
     {
