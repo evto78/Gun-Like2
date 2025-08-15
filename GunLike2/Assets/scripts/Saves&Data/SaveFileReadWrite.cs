@@ -52,6 +52,7 @@ public class SaveFileReadWrite : MonoBehaviour
     public bool sendData;
     public List<string> emailQueContent = new List<string>();
     public List<string> emailQueEvent = new List<string>();
+    List<int> fpsHistory = new List<int>();
 
     private void Awake()
     {
@@ -346,35 +347,12 @@ public class SaveFileReadWrite : MonoBehaviour
     public void AddEmailToQue(string eventT)
     {
         if (PlayerPrefs.GetInt("SENDDATA") != 1) { return; }
-        Debug.Log("Adding " + eventT + " to que");
 
         TelemData tdata = PrepareData();
         tdata.eventData = eventT;
 
         emailQueEvent.Add("JSON : " + eventT);
         emailQueContent.Add(JsonUtility.ToJson(tdata));
-
-        //    \/ OLD NON-JSON FORMAT \/
-        /*string msg = "START";
-        msg += "|(UsrID)" + data.usrID;
-        msg += "|(TriggeredEvent)" + eventT;
-        msg += "|(SessionNum)" + data.usrSessions;
-        msg += "|(CurTime)" + tdata.eventTime;
-        msg += "|(LeftGun)" + tdata.leftGun;
-        msg += "|(RightGun)" + tdata.rightGun;
-        msg += "|(TimeE)" + tdata.timeElapsed;
-        msg += "|(Room)" + tdata.roomNum;
-        msg += "|(Diff)" + tdata.difficulty;
-        msg += "|(MRSourceOfDmg)" + tdata.mostRecentSourceOfDmg;
-        msg += "|(Cash)" + tdata.currentCash;
-        string leftInvTxt = "LEFT(" + FormatInvToString(tdata.leftInv) + ")";
-        string rightInvTxt = "RIGHT(" + FormatInvToString(tdata.rightInv) + ")";
-        msg += "|(LInv)" + leftInvTxt;
-        msg += "|(RInv)" + rightInvTxt;
-        msg += "|END";
-
-        emailQueEvent.Add(eventT);
-        emailQueContent.Add(msg);*/
     }
     void SendAllEmails()
     {
@@ -429,6 +407,22 @@ public class SaveFileReadWrite : MonoBehaviour
         tdata.leftGun = gdm.pi.gunManager.leftGunScript.gunName;
         tdata.rightGun = gdm.pi.gunManager.rightGunScript.gunName;
         if (gdm.phm.lastHitMe != null && gdm.phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = gdm.phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
+
+        tdata.fpsHistory = new List<int>(); tdata.fpsAdv = 0; tdata.fpsMax = 0; tdata.fpsMin = int.MaxValue;
+        if(gdm != null)
+        {
+            fpsHistory = fpsHistory = gdm.PullFPSInfo();
+            if (fpsHistory.Count > 0)
+            {
+                foreach (int frame in fpsHistory)
+                {
+                    tdata.fpsHistory.Add(frame); tdata.fpsAdv += frame; if (frame > tdata.fpsMax) { tdata.fpsMax = frame; }
+                    if (frame < tdata.fpsMin) { tdata.fpsMin = frame; }
+                }
+                tdata.fpsAdv /= fpsHistory.Count;
+            }
+        }
+        
         return (tdata);
     }
 }

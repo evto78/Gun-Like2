@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-	public GearUI gearscript; // used by gdm
 	List<List<int>> rarityList = new List<List<int>>();
 
 	public List<Vector4> activeEffects = new List<Vector4>();

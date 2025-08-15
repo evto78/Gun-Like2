@@ -155,6 +155,7 @@ public class GunScript : MonoBehaviour
         manager = gameObject.GetComponentInParent<GunManager>();
         bulletType = BulletType.standard;
 
+        magSize = Mathf.CeilToInt(baseMagSize * manager.leftMagSize);
         currentBullets = Mathf.RoundToInt(magSize);
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").transform;
@@ -163,7 +164,6 @@ public class GunScript : MonoBehaviour
         if(gooEffect != null) { gooEffect.enabled = isGoo; }
 
         LateStart();
-        Reload();
     }
     public virtual void LateStart()
     {

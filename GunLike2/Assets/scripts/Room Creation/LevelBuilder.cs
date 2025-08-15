@@ -13,8 +13,6 @@ public class LevelBuilder : MonoBehaviour
     public GameObject debugCube;
     public GameObject supportPillar;
 
-    public float roomsToBoss;
-
     public List<GameObject> placed = new List<GameObject>();
     private void Start()
     {
@@ -66,8 +64,10 @@ public class LevelBuilder : MonoBehaviour
     }
     public void Activate()
     {
-        if(gdm.roomNumber >= roomsToBoss - 1)
+        gdm.roomsUntilBoss--;
+        if (gdm.roomsUntilBoss <= 0)
         {
+            gdm.roomsUntilBoss = 0;
             terrain = Terrain.activeTerrains[0];
 
             BuildBoss(terrain);

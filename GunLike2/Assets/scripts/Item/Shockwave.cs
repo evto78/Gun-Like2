@@ -51,19 +51,23 @@ public class Shockwave : MonoBehaviour
         {
             if (collision.gameObject.tag == "Player")
             {
-                collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null);
+                HealthManager phm = collision.gameObject.GetComponentInParent<HealthManager>();
+                if(phm == null) { return; }
+                phm.TakeDamage(damage, false, null);
             }
         }
         else
         {
             if (collision.gameObject.tag == "Enemy")
             {
-                collision.gameObject.GetComponentInParent<EnemyHealthManager>().TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
-                if (blinding) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("blind", playerItem.leftItems[125] + playerItem.rightItems[125]); }
-                if (coolSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("frozen", 1f); }
-                if (fireSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("burn", 3f); }
-                if (bleedSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("bleed", 3f); }
-                if (helpingSpon) { collision.gameObject.GetComponentInParent<EnemyHealthManager>().GiveEffect("stiched", 1f); }
+                EnemyHealthManager ehm = collision.gameObject.GetComponentInParent<EnemyHealthManager>();
+                if(ehm == null) { return; }
+                ehm.TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
+                if (blinding) { ehm.GiveEffect("blind", playerItem.leftItems[125] + playerItem.rightItems[125]); }
+                if (coolSpon) { ehm.GiveEffect("frozen", 1f); }
+                if (fireSpon) { ehm.GiveEffect("burn", 3f); }
+                if (bleedSpon) { ehm.GiveEffect("bleed", 3f); }
+                if (helpingSpon) { ehm.GiveEffect("stiched", 1f); }
             }
         }
     }

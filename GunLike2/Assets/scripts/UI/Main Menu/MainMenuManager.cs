@@ -132,7 +132,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (loading) { return; } loading = true;
         UpdateGunInfo();
-        StartCoroutine(LoadAsyncScene("Level Generation"));
+        StartCoroutine(LoadAsyncScene("Area1"));
     }
     IEnumerator LoadAsyncScene(string sceneName)
     {

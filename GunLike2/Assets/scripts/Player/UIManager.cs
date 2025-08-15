@@ -60,6 +60,16 @@ public class UIManager : MonoBehaviour
     public Transform AmmoDisplayRightBack; List<Image> adrbs = new List<Image>(); VerticalLayoutGroup rbVLG = null;
     public List<Sprite> bulletUISPRITES; int ammoDisplayType = 2;
     bool ammoListsBuilt;
+
+    public TextMeshProUGUI intensityTxt; public GearUI difficultyGear;  // used by gdm
+	public GearUI gearscript; // used by gdm
+    public List<GameObject> diffImages;
+
+    public TextMeshProUGUI mutationIDText;
+    public TextMeshProUGUI timer;
+    public List<int> fpsHistory = new List<int>();
+
+    public List<Color> roomNumColors; 
     private void Start()
     {
         ammoListsBuilt = false;
@@ -90,6 +100,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer.text = FormatTimeToTimer((int)healthManager.gdm.timeSpent);
         if (healthManager.dead) { deathUI.SetActive(true); }
         ManageInput();
 
@@ -103,6 +114,15 @@ public class UIManager : MonoBehaviour
         {
             playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false;
         }
+    }
+    string FormatTimeToTimer(int time)
+    {
+        string output = "";
+        int seconds = time; int mins = seconds / 60; int hours = mins / 60;
+        seconds -= mins * 60; mins -= hours * 60;
+        string sOut = seconds.ToString(); string mOut = mins.ToString(); string hOut = hours.ToString();
+        if (sOut.Length < 2) { sOut = "0" + sOut; } if (mOut.Length < 2) { mOut = "0" + mOut; }
+        output = hOut + ":" + mOut + ":" + sOut; return output;
     }
     void ManageInput()
     {
@@ -141,13 +161,14 @@ public class UIManager : MonoBehaviour
             inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
         }
     }
-
+    public List<int> RequestFPSInfo() { return fpsHistory; }
     void UpdatePlayUI()
     {
         if (mvtScript.isSprinting || mvtScript.slamming || mvtScript.sliding) { crosshair.text = "^"; }
         else { crosshair.text = "+"; }
 
         fps = (int)(1f / Time.unscaledDeltaTime);
+        fpsHistory.Add(fps); if (fpsHistory.Count > 240) { fpsHistory.RemoveAt(fpsHistory.Count - 1); }
         fpsText.text = "FPS: " + fps;
 
         moneyText.text = healthManager.money + "$";
@@ -157,6 +178,17 @@ public class UIManager : MonoBehaviour
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
 
         bowchargeUI.SetActive(gunManager.leftBowAct + gunManager.rightBowAct > 0);
+
+        DifficultyVisualsUpdate();
+    }
+    void DifficultyVisualsUpdate()
+    {
+        int diffID = healthManager.gdm.difficultyIDSelected;
+        diffImages[diffID].SetActive(true);
+        string newTxt = ((int)(healthManager.gdm.unroundedDiff * 100f)).ToString(); newTxt.Insert(newTxt.Length - 2, ".");
+        intensityTxt.text = newTxt;
+        int txtColorId = healthManager.gdm.roomsUntilBoss; if(txtColorId > roomNumColors.Count) { txtColorId = roomNumColors.Count; }
+        gearscript.txt.color = roomNumColors[txtColorId-1];
     }
     void BulletSpriteVisuals()
     {
@@ -347,6 +379,13 @@ public class UIManager : MonoBehaviour
     void UpdatePauseUI()
     {
         ammoDisplayType = PlayerPrefs.GetInt("BULLETDISPLAYTYPE");
+        int diffID = healthManager.gdm.difficultyIDSelected;
+        if(diffID == 4)
+        {
+            List<int> mutatedRules = healthManager.gdm.mutatedRules;
+            mutationIDText.transform.parent.gameObject.SetActive(true);
+            mutationIDText.text = mutatedRules[0] + "|" + mutatedRules[1] + "|" + mutatedRules[2] + "|" + mutatedRules[3] + "|" + mutatedRules[4] + "|" + mutatedRules[5];
+        } else { mutationIDText.transform.parent.gameObject.SetActive(false); }
     }
 
     public void VisionOfGunky()

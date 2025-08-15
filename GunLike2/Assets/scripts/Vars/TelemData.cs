@@ -24,4 +24,9 @@ public class TelemData
     public string usr;
 
     public string mostRecentSourceOfDmg;
+
+    public int fpsMax;
+    public int fpsMin;
+    public int fpsAdv;
+    public List<int> fpsHistory;
 }

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using TMPro;
 
 public class GameDataManager : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class GameDataManager : MonoBehaviour
     List<int> rightSnapshot;
     
     [Header("Difficulty")]
-    public float difficulty;
+    public float difficulty; public float unroundedDiff;
     public int difficultyIDSelected;
     float difficultyProgressionModifier;
     public List<int> mutatedRules = new List<int>();
@@ -39,12 +39,15 @@ public class GameDataManager : MonoBehaviour
     bool requesting = false;
 
     [Header("Bosses")]
-    public GameObject chimera; float timeTakenToDefeatChimera;
+    public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
+    GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums;
 
     private void Awake()
     {
+        endGateBlockade = GameObject.Find("EndGateBlockade").GetComponent<GateBlockade>(); endGateBlockade.Toggle(false);
+        roomsUntilBoss = 10;
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
-        phm.gearscript.Turn(roomNumber);
+        phm.uiMan.gearscript.Turn(roomNumber);
         pi = phm.playerItem;
 
         mutatedEnemySelected = null;
@@ -140,6 +143,8 @@ public class GameDataManager : MonoBehaviour
     }
     private void Update()
     {
+        endDoorCounter.text = roomsUntilBoss.ToString();
+        foreach(TextMeshProUGUI tmp in unitNums) { tmp.text = "UNIT " + roomNumber; }
         if (gameTimerActive)
         {
             timeSpent += Time.deltaTime;
@@ -147,7 +152,9 @@ public class GameDataManager : MonoBehaviour
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
         }
         timeSpentNoPause += Time.deltaTime;
-        difficulty = Mathf.RoundToInt((difficultyProgressionModifier * timeSpent / 300f) + 1f);
+        unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
+        difficulty = (int)unroundedDiff;
+        phm.uiMan.difficultyGear.Turn(unroundedDiff);
         CheckForItemGainAndDestroy();
     }
     private void LateUpdate()
@@ -182,8 +189,11 @@ public class GameDataManager : MonoBehaviour
         roomNumber += 1;
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
-        phm.gearscript.Turn(roomNumber);
+        phm.uiMan.gearscript.Turn(roomNumber);
         timeSpent += 120f;
+        unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
+        phm.uiMan.difficultyGear.ResetSpin();
+        phm.uiMan.difficultyGear.Turn(unroundedDiff);
         foreach(EnemyHealthManager ehm in activeEhms)
         {
             Destroy(ehm.gameObject);
@@ -228,7 +238,7 @@ public class GameDataManager : MonoBehaviour
     }
     public void BossKilled(string boss)
     {
-        gameTimerActive = false;
+        gameTimerActive = false; endGateBlockade.Toggle(false);
         switch (boss)
         {
             case "Chimera":
@@ -244,13 +254,12 @@ public class GameDataManager : MonoBehaviour
     }
     IEnumerator ChimeraBossTimer()
     {
-        Debug.Log("Started");
+        endGateBlockade.Toggle(true);
         while (gameTimerActive)
         {
             timeTakenToDefeatChimera += Time.deltaTime;
             yield return null;
         }
-        Debug.Log("Ended: "+timeTakenToDefeatChimera);
     }
     private void OnDisable()
     {
@@ -263,6 +272,10 @@ public class GameDataManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         if (!requesting) { instance.RequestDataUpdate(); requesting = true; }
+    }
+    public List<int> PullFPSInfo()
+    {
+        return phm.uiMan.RequestFPSInfo();
     }
     public void UpdateRecords()
     {
