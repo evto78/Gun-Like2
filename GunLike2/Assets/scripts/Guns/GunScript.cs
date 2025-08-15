@@ -163,6 +163,7 @@ public class GunScript : MonoBehaviour
         if(gooEffect != null) { gooEffect.enabled = isGoo; }
 
         LateStart();
+        Reload();
     }
     public virtual void LateStart()
     {

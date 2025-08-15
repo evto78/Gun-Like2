@@ -44,6 +44,7 @@ public class GameDataManager : MonoBehaviour
     private void Awake()
     {
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
+        phm.gearscript.Turn(roomNumber);
         pi = phm.playerItem;
 
         mutatedEnemySelected = null;
@@ -181,6 +182,7 @@ public class GameDataManager : MonoBehaviour
         roomNumber += 1;
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
+        phm.gearscript.Turn(roomNumber);
         timeSpent += 120f;
         foreach(EnemyHealthManager ehm in activeEhms)
         {
