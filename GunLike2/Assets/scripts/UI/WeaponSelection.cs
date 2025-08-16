@@ -29,10 +29,12 @@ public class WeaponSelection : MonoBehaviour
         if (PlayerPrefs.HasKey("leftHandGunSelect"))
         {
             leftHandVal = PlayerPrefs.GetInt("leftHandGunSelect")+1;
+            if(leftHandVal == 0) { leftHandVal--; }
         }
         if (PlayerPrefs.HasKey("rightHandGunSelect"))
         {
             rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect")+1;
+            if(rightHandVal == 0) { rightHandVal--; }
         }
     }
     private void Update()

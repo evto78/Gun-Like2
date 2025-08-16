@@ -3092,6 +3092,7 @@ Transform:
   - {fileID: 1654806242787384301}
   - {fileID: 9119975998405851526}
   - {fileID: 923039271777794704}
+  - {fileID: 5606200542721319257}
   m_Father: {fileID: 1597390568023571889}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &9087063774693028925
@@ -8329,18 +8330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f55f23b971af6a4285d88a2d4faa6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guns:
-  - {fileID: 2411502404954114123, guid: 3eff952d5f6078b4fa57930df3b95b0f, type: 3}
-  - {fileID: 2140760765002106872, guid: 765f49525dd2c814881ce8d09e1f9858, type: 3}
-  - {fileID: 2411502404954114123, guid: 0e977c439716d104a98e5eccd3e5a442, type: 3}
-  - {fileID: 2411502404954114123, guid: d535b5ee10c2ab648ae53bc0a8ed7660, type: 3}
-  - {fileID: 2411502404954114123, guid: b1b984355d834134e8e7eff6039bfd23, type: 3}
-  - {fileID: 2411502404954114123, guid: af3a05397f1a8d44081f68dbaa585262, type: 3}
-  - {fileID: 2411502404954114123, guid: d6b09a8c1b1b97a41bc6d112f2c975c2, type: 3}
-  - {fileID: 2411502404954114123, guid: 4d312e712390d5649897f1aa160efe1b, type: 3}
-  - {fileID: 2411502404954114123, guid: c200fcb1fb85d9641b8c32cdd39acbd1, type: 3}
-  - {fileID: 2411502404954114123, guid: 77c517aaf8d2ae340a7d1471ef54da28, type: 3}
-  - {fileID: 2411502404954114123, guid: e1e8f09a066b4be4fb86b0a2f140f46f, type: 3}
+  gunObjectData: []
   healthMan: {fileID: 3056162612049833695}
   playerItem: {fileID: 1652207953152809334}
   leftHand: {fileID: 4580800219663978027}
@@ -8823,7 +8813,7 @@ MonoBehaviour:
   uiVol: 0
   channels: 6
   noOverlapChannels: 6
-  sourceHolder: {fileID: 0}
+  sourceHolder: {fileID: 5606200542721319257}
 --- !u!54 &1478225087064856635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32935,6 +32925,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6020380177553874561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5606200542721319257}
+  m_Layer: 7
+  m_Name: AudioSourceHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5606200542721319257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020380177553874561}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1346939882681731709}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6050543305818380355
 GameObject:
   m_ObjectHideFlags: 0

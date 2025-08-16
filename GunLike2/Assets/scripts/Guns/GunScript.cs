@@ -11,6 +11,7 @@ public class GunScript : MonoBehaviour
     public GameObject misfireEffect;
     public GameObject confettiEffect;
     public string gunName;
+    public GunObjectData.GunType gunType;
     public bool isGoo;
     public GooColorShift gooEffect;
 
@@ -19,7 +20,7 @@ public class GunScript : MonoBehaviour
     public ParticleSystem MuzzleFlash;
 
     //GunData
-    GunObjectData data;
+    public GunObjectData data;
 
     //Base stats for this gun
     public float baseMagSize = 15;

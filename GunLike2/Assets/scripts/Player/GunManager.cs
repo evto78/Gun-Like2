@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GunManager : MonoBehaviour
 {
-    public List<GameObject> guns;
+    public List<GunObjectData> gunObjectData = new List<GunObjectData>();
 
     List<List<int>> rarityList = new List<List<int>>();
     List<int> leftList = new List<int>();
@@ -261,6 +261,9 @@ public class GunManager : MonoBehaviour
 
     private void Start()
     {
+        gunObjectData = new List<GunObjectData>(); gunObjectData.AddRange(Resources.LoadAll<GunObjectData>("Guns"));
+        SortGunObjData();
+
         totalLiveBullets = 0;
         leftHandVal = 0;
         rightHandVal = 1;
@@ -280,15 +283,27 @@ public class GunManager : MonoBehaviour
 
         GrabMeshRenders();
     }
+    void SortGunObjData()
+    {
+        List<int> comparisonList = new List<int>();
+        List<GunObjectData> sortedGunData = new List<GunObjectData>();
+        for (int i = 0; i < gunObjectData.Count; i++) { comparisonList.Add(i - 1); sortedGunData.Add(null); }
+        for (int i = 0; i < gunObjectData.Count; i++)
+        {
+            sortedGunData[comparisonList.IndexOf(gunObjectData[i].id)] = gunObjectData[i];
+        }
+        gunObjectData = sortedGunData;
+    }
     void SetGuns(int leftGun, int rightGun)
     {
         leftGoo = false; rightGoo = false;
         if (leftGun == -1) { leftGun = rightGun; leftGoo = true; }
         if (rightGun == -1) { rightGun = leftGun; rightGoo = true; }
+        leftGun++; rightGun++;
         if (leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
         if (rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
-        Instantiate(guns[leftGun], leftHand.transform);
-        Instantiate(guns[rightGun], rightHand.transform);
+        IndividualGunSetUp(Instantiate(gunObjectData[leftGun].gunPrefab, leftHand.transform), gunObjectData[leftGun]);
+        IndividualGunSetUp(Instantiate(gunObjectData[rightGun].gunPrefab, rightHand.transform), gunObjectData[rightGun]);
         leftGunScript = leftHand.GetComponentInChildren<GunScript>();
         if (leftGoo)
         {
@@ -303,10 +318,31 @@ public class GunManager : MonoBehaviour
         }
         leftGunScript.bulletReservoir = preinstatiatedAmmoBoxLeft; rightGunScript.bulletReservoir = preinstatiatedAmmoBoxRight;
     }
+    void IndividualGunSetUp(GameObject gunPrefab, GunObjectData gData)
+    {
+        GunScript gs = gunPrefab.GetComponent<GunScript>();
+
+        gs.gunName = gData.gunName;
+        gs.gunType = gData.gunType;
+        gs.data = gData;
+        gs.pistolBullet = gData.bulletPrefab;
+        gs.baseAcc = gData.baseAcc;
+        gs.baseAtkSpd = gData.baseAtkSpd;
+        gs.baseBulPir = gData.baseBulPir;
+        gs.baseBulSize = gData.baseBulSize;
+        gs.baseBulSpd = gData.baseBulSpd;
+        gs.baseCritChance = gData.baseCritChance;
+        gs.baseCritDamage = gData.baseCritDamage;
+        gs.baseDmg = gData.baseDmg;
+        gs.baseMagSize = gData.baseMagSize;
+        gs.baseReSpd = gData.baseReSpd;
+        gs.baseWeakPointChance = gData.baseWeakPointChance;
+        gs.baseWeakPointDamage = gData.baseWeakPointDamage;
+    }
     public void RandomizeHeldGuns()
     {
-        Vector2 rand = new Vector2(Random.Range(0, guns.Count + 1), Random.Range(0, guns.Count + 1));
-        if(rand.x == guns.Count && rand.y == guns.Count) { rand.x = 0; }
+        Vector2 rand = new Vector2(Random.Range(-1, gunObjectData.Count), Random.Range(-1, gunObjectData.Count));
+        if(rand.x == rand.y) { rand.x++; if (rand.x >= gunObjectData.Count) { rand.x = -1; } }
         SetGuns((int)rand.x, (int)rand.y);
     }
     void GrabMeshRenders()
@@ -331,7 +367,7 @@ public class GunManager : MonoBehaviour
         int daEagleIgnoredLeft = 0;
         int daEagleIgnoredRight = 0;
         //da eagle ignores common
-        if(leftGunScript.gunName == "Da Eagle")
+        if(leftGunScript.gunType == GunObjectData.GunType.DaEagle)
         {
             for(int i = 0; i < givenLeftItems.Count; i++)
             {
@@ -342,7 +378,7 @@ public class GunManager : MonoBehaviour
                 }
             }
         }
-        if (rightGunScript.gunName == "Da Eagle")
+        if (rightGunScript.gunType == GunObjectData.GunType.DaEagle)
         {
             for (int i = 0; i < givenRightItems.Count; i++)
             {
@@ -971,12 +1007,12 @@ public class GunManager : MonoBehaviour
         leftGunScript.StatUpdateLeft();
 
         //undo any changes made
-        if(leftGunScript.gunName == "Da Eagle")
+        if(leftGunScript.gunType == GunObjectData.GunType.DaEagle)
         {
             givenLeftItems.Clear();
             givenLeftItems.AddRange(leftList);
         }
-        if(rightGunScript.gunName == "Da Eagle")
+        if(rightGunScript.gunType == GunObjectData.GunType.DaEagle)
         {
             givenRightItems.Clear();
             givenRightItems.AddRange(rightList);

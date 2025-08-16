@@ -280,8 +280,8 @@ public class GameDataManager : MonoBehaviour
     public void UpdateRecords()
     {
         GunManager gm = pi.gunManager;
-        int leftGun = gm.leftHandVal; SaveFileReadWrite.GunInformation infoL = instance.data.gunInfo[leftGun];
-        int rightGun = gm.rightHandVal; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
+        int leftGun = gm.leftHandVal + 1; SaveFileReadWrite.GunInformation infoL = instance.data.gunInfo[leftGun];
+        int rightGun = gm.rightHandVal + 1; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
         infoL.kills += gm.leftKillsDATA; infoR.kills += gm.rightKillsDATA;
         infoL.totalDamage += gm.leftDamageDATA; infoR.totalDamage += gm.rightDamageDATA;
         if (gm.leftMaxDmgDATA > infoL.damageRecord) { infoL.damageRecord = gm.leftMaxDmgDATA; }

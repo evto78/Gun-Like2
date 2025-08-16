@@ -232,15 +232,15 @@ public class UIManager : MonoBehaviour
                 switch (gunManager.leftGunScript.bulletType)
                 {
                     case GunScript.BulletType.standard:
-                        switch (gunManager.leftGunScript.gunName)
+                        switch (gunManager.leftGunScript.gunType)
                         {
-                            case "Aero-Rifle": leftSprite = bulletUISPRITES[2]; break;
-                            case "Vector3": leftSprite = bulletUISPRITES[2]; break;
-                            case "Bulk-Fed Double Barrel": leftSprite = bulletUISPRITES[1]; break;
-                            case "Crossbow": leftSprite = bulletUISPRITES[3]; break;
-                            case "Archer Fish": leftSprite = bulletUISPRITES[5]; break;
-                            case "Hand Cannon": leftSprite = bulletUISPRITES[4]; break;
-                            case "Mutated Knife": leftSprite = bulletUISPRITES[8]; break;
+                            case GunObjectData.GunType.AeroRifle: leftSprite = bulletUISPRITES[2]; break;
+                            case GunObjectData.GunType.Vector3: leftSprite = bulletUISPRITES[2]; break;
+                            case GunObjectData.GunType.BulkFedDoubleBarrel: leftSprite = bulletUISPRITES[1]; break;
+                            case GunObjectData.GunType.Crossbow: leftSprite = bulletUISPRITES[3]; break;
+                            case GunObjectData.GunType.ArcherFish: leftSprite = bulletUISPRITES[5]; break;
+                            case GunObjectData.GunType.HandCannon: leftSprite = bulletUISPRITES[4]; break;
+                            case GunObjectData.GunType.MutatedKnife: leftSprite = bulletUISPRITES[8]; break;
                             default: leftSprite = bulletUISPRITES[0]; break;
                         }
                         break;
@@ -250,15 +250,15 @@ public class UIManager : MonoBehaviour
                 switch (gunManager.rightGunScript.bulletType)
                 {
                     case GunScript.BulletType.standard:
-                        switch (gunManager.rightGunScript.gunName)
+                        switch (gunManager.rightGunScript.gunType)
                         {
-                            case "Aero-Rifle": rightSprite = bulletUISPRITES[2]; break;
-                            case "Vector3": rightSprite = bulletUISPRITES[2]; break;
-                            case "Bulk-Fed Double Barrel": rightSprite = bulletUISPRITES[1]; break;
-                            case "Crossbow": rightSprite = bulletUISPRITES[3]; break;
-                            case "Archer Fish": rightSprite = bulletUISPRITES[5]; break;
-                            case "Hand Cannon": rightSprite = bulletUISPRITES[4]; break;
-                            case "Mutated Knife": rightSprite = bulletUISPRITES[8]; break;
+                            case GunObjectData.GunType.AeroRifle: rightSprite = bulletUISPRITES[2]; break;
+                            case GunObjectData.GunType.Vector3: rightSprite = bulletUISPRITES[2]; break;
+                            case GunObjectData.GunType.BulkFedDoubleBarrel: rightSprite = bulletUISPRITES[1]; break;
+                            case GunObjectData.GunType.Crossbow: rightSprite = bulletUISPRITES[3]; break;
+                            case GunObjectData.GunType.ArcherFish: rightSprite = bulletUISPRITES[5]; break;
+                            case GunObjectData.GunType.HandCannon: rightSprite = bulletUISPRITES[4]; break;
+                            case GunObjectData.GunType.MutatedKnife: rightSprite = bulletUISPRITES[8]; break;
                             default: rightSprite = bulletUISPRITES[0]; break;
                         }
                         break;
