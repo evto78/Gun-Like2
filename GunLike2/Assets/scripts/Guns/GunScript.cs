@@ -18,6 +18,9 @@ public class GunScript : MonoBehaviour
 
     public ParticleSystem MuzzleFlash;
 
+    //GunData
+    GunObjectData data;
+
     //Base stats for this gun
     public float baseMagSize = 15;
     public float baseAtkSpd = 2f;

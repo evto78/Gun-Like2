@@ -23,20 +23,9 @@ public class UiSoundPlayer : MonoBehaviour
     }
     public List<Sounds> soundsOTHER; //no sepesific order
     public List<SimpleSounds> soundsUIGUNBUTTON; //0: lowest hover, 1: lowest select, 2: lowest difficulty select. 3: norm hover, 4: norm select, 5: norm difficulty select, etc
-    public void PlaySoundByKey(int i)
-    {
-        lsm.PlayLocalSound(soundsOTHER[i].monoSound, soundsOTHER[i].soundType.ToString(), soundsOTHER[i].priority);
-    }
-    public void UIHoverSound(int difficulty)
-    {
-        lsm.PlayLocalSound(soundsUIGUNBUTTON[0].monoSound, SoundType.ui.ToString(), 0);
-    }
-    public void UISelectSound(int difficulty)
-    {
-        lsm.PlayLocalSound(soundsUIGUNBUTTON[1].monoSound, SoundType.ui.ToString(), 1);
-    }
-    public void UIDifficultySound(int difficulty)
-    {
-        lsm.PlayLocalSound(soundsUIGUNBUTTON[difficulty+2].monoSound, SoundType.ui.ToString(), 2);
-    }
+    public void PlayNoOverlapSoundByKey(int i) { lsm.PlayNonOverlapSound(soundsOTHER[i].monoSound, soundsOTHER[i].soundType.ToString()); }
+    public void PlaySoundByKey(int i) { lsm.PlayLocalSound(soundsOTHER[i].monoSound, soundsOTHER[i].soundType.ToString(), soundsOTHER[i].priority); }
+    public void UIHoverSound(int difficulty) { lsm.PlayNonOverlapSound(soundsUIGUNBUTTON[0].monoSound, SoundType.ui.ToString()); }
+    public void UISelectSound(int difficulty) { lsm.PlayNonOverlapSound(soundsUIGUNBUTTON[1].monoSound, SoundType.ui.ToString()); }
+    public void UIDifficultySound(int difficulty) { lsm.PlayNonOverlapSound(soundsUIGUNBUTTON[difficulty+2].monoSound, SoundType.ui.ToString()); }
 }

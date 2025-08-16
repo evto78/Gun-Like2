@@ -7,6 +7,7 @@ using TMPro;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public List<GunObjectData> gunObjectData;
     public RemoteDoor bgDoor;
     Camera cam;
     bool starting;
@@ -43,11 +44,24 @@ public class MainMenuManager : MonoBehaviour
     public GameObject attachedUI;
     private void Awake()
     {
+        gunObjectData = new List<GunObjectData>(); gunObjectData.AddRange(Resources.LoadAll<GunObjectData>("Guns"));
+        SortGunObjData();
         attachedUI.SetActive(true);
         weaponSelect = GameObject.Find("BEHINDDOORUI").GetComponent<WeaponSelection>();
         usp = GetComponent<UiSoundPlayer>();
         Time.timeScale = 1f;
         if (PlayerPrefs.HasKey("SELECTEDDIFFICULTY")) { selectedDifficulty = PlayerPrefs.GetInt("SELECTEDDIFFICULTY"); } else { selectedDifficulty = 1; PlayerPrefs.SetInt("SELECTEDDIFFICULTY", 1); }
+    }
+    void SortGunObjData()
+    {
+        List<int> comparisonList = new List<int>();
+        List<GunObjectData> sortedGunData = new List<GunObjectData>();
+        for (int i = 0; i < gunObjectData.Count; i++) { comparisonList.Add(i-1); sortedGunData.Add(null); }
+        for (int i = 0; i < gunObjectData.Count; i++)
+        {
+            sortedGunData[comparisonList.IndexOf(gunObjectData[i].id)] = gunObjectData[i];
+        }
+        gunObjectData = sortedGunData;
     }
     void Start()
     {
@@ -120,8 +134,11 @@ public class MainMenuManager : MonoBehaviour
     }
     void UpdateGunInfo()
     {
-        instance.data.gunInfo[PlayerPrefs.GetInt("leftHandGunSelect")].runs++;
-        instance.data.gunInfo[PlayerPrefs.GetInt("rightHandGunSelect")].runs++;
+        int tempLeft = PlayerPrefs.GetInt("leftHandGunSelect"); int tempRight = PlayerPrefs.GetInt("rightHandGunSelect");
+        if(tempLeft == -1) { tempLeft = instance.data.gunInfo.Count - 1; }
+        if(tempRight == -1) { tempRight = instance.data.gunInfo.Count - 1; }
+        instance.data.gunInfo[tempLeft].runs++;
+        instance.data.gunInfo[tempRight].runs++;
         instance.UpdateSaveFile();
     }
     public void ExitGameButton()

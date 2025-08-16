@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad266e3cb3bbdc48b6e0cdf3d2effb0, type: 3}
+  m_Name: Little Gun
+  m_EditorClassIdentifier: 
+  gunName: Little Gun
+  icon: {fileID: 21300000, guid: 129333292dc6e61428a1004378d4077d, type: 3}
+  descriptionText: Weak now, but has great potential.
+  effectText:
+  - After every shot, gain stacking attack speed
+  - The stacking buff is reset on reloading
+  gunType: 5
+  id: 5
+  gunPrefab: {fileID: 2411502404954114123, guid: af3a05397f1a8d44081f68dbaa585262, type: 3}
+  bulletPrefab: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
+  baseMagSize: 16
+  baseAtkSpd: 2
+  baseReSpd: 0.5
+  baseBulSpd: 80
+  baseDmg: 6
+  baseAcc: 1
+  baseBulSize: 1
+  baseBulPir: 0
+  baseCritChance: 0
+  baseCritDamage: 2
+  baseWeakPointChance: 0
+  baseWeakPointDamage: 1.5
+  shootClips: []
+  reloadClips: []
+  noAmmoClips: []

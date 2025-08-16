@@ -6,7 +6,8 @@ using TMPro;
 
 public class WeaponSelection : MonoBehaviour
 {
-    public List<Sprite> sprites;
+    public Sprite hand;
+    List<GunObjectData> gunObjectData;
     //0 is null
     //from there goes down the list
     public Image leftHand;
@@ -21,6 +22,7 @@ public class WeaponSelection : MonoBehaviour
     }
     private void Start()
     {
+        gunObjectData = menuManager.gunObjectData;
         leftHandVal = 0;
         rightHandVal = 0;
 
@@ -35,17 +37,14 @@ public class WeaponSelection : MonoBehaviour
     }
     private void Update()
     {
-        leftHand.sprite = sprites[leftHandVal];
-        rightHand.sprite = sprites[rightHandVal];
+        if(leftHandVal == -1) { leftHand.sprite = gunObjectData[0].icon; }
+        else if (leftHandVal == 0) { leftHand.sprite = hand; }
+        else { leftHand.sprite = gunObjectData[leftHandVal].icon; }
+        if(rightHandVal == -1) { rightHand.sprite = gunObjectData[0].icon; }
+        else if (rightHandVal == 0) { rightHand.sprite = hand; }
+        else { rightHand.sprite = gunObjectData[rightHandVal].icon; }
 
-        if((leftHandVal > 0 && rightHandVal > 0) && (leftHandVal != rightHandVal))
-        {
-            readyBtn.interactable = true;
-        }
-        else
-        {
-            readyBtn.interactable = false;
-        }
+        readyBtn.interactable = (leftHandVal != 0 && rightHandVal != 0) && (leftHandVal != rightHandVal);
     }
     public void SelectWeapon(int id)
     {
@@ -62,8 +61,13 @@ public class WeaponSelection : MonoBehaviour
             leftHandVal = id;
         }
 
-        PlayerPrefs.SetInt("leftHandGunSelect", leftHandVal -1);
-        PlayerPrefs.SetInt("rightHandGunSelect", rightHandVal -1);
+        int leftSetVal = leftHandVal; int rightSetVal = rightHandVal;
+
+        if(leftSetVal != -1) { leftSetVal -= 1; }
+        if(rightSetVal != -1) { rightSetVal -= 1; }
+
+        PlayerPrefs.SetInt("leftHandGunSelect", leftSetVal);
+        PlayerPrefs.SetInt("rightHandGunSelect", rightSetVal);
     }
     public void DeselectWeapon(string hand)
     {

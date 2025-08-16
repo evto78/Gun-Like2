@@ -8,18 +8,20 @@ public class LocalSoundManager : MonoBehaviour
     public float musicVol;
     public float effectVol;
     public float uiVol;
-    public int channels;
+    public int channels; public int noOverlapChannels;
     public Transform sourceHolder;
     List<AudioSource> noPriorSources; int lastNoSource = 0;
     List<AudioSource> lowPriorSources; int lastLowSource = 0;
     List<AudioSource> medPriorSources; int lastMedSource = 0;
     List<AudioSource> highPriorSources; int lastHighSource = 0;
     List<AudioSource> ultPriorSources; int lastUltSource = 0;
+    List<AudioSource> noOverlapSources; int lastNoOverlapSource = 0;
     List<AudioClip> noHeldClip;
     List<AudioClip> lowHeldClip;
     List<AudioClip> medHeldClip;
     List<AudioClip> highHeldClip;
     List<AudioClip> ultHeldClip;
+    List<AudioClip> noOverlapHeldClip;
     public enum SoundType { music, effect, ui, other }
     // Start is called before the first frame update
     void Start()
@@ -29,11 +31,13 @@ public class LocalSoundManager : MonoBehaviour
         medPriorSources = new List<AudioSource>();
         highPriorSources = new List<AudioSource>();
         ultPriorSources = new List<AudioSource>();
+        noOverlapSources = new List<AudioSource>();
         noHeldClip = new List<AudioClip>();
         lowHeldClip = new List<AudioClip>();
         medHeldClip = new List<AudioClip>();
         highHeldClip = new List<AudioClip>();
         ultHeldClip = new List<AudioClip>();
+        noOverlapHeldClip = new List<AudioClip>();
         for (int i = 0; i < channels; i++)
         {
             noPriorSources.Add(sourceHolder.gameObject.AddComponent<AudioSource>()); noHeldClip.Add(null);
@@ -50,6 +54,11 @@ public class LocalSoundManager : MonoBehaviour
             AudioSourceSetUp(25, highPriorSources[i]);
             AudioSourceSetUp(0, ultPriorSources[i]);
         }
+        for (int i = 0; i < noOverlapChannels; i++)
+        {
+            noOverlapSources.Add(sourceHolder.gameObject.AddComponent<AudioSource>()); noOverlapHeldClip.Add(null);
+            AudioSourceSetUp(60, noOverlapSources[i]);
+        }
     }
     void AudioSourceSetUp(int priority, AudioSource source)
     {
@@ -64,6 +73,54 @@ public class LocalSoundManager : MonoBehaviour
         musicVol = PlayerPrefs.GetFloat("MUSICVOL");
         effectVol = PlayerPrefs.GetFloat("EFFECTVOL");
         uiVol = PlayerPrefs.GetFloat("UIVOL");
+    }
+    public void PlayNonOverlapSound(AudioClip incomingClip, string givinType)
+    {
+        AudioSource exsistingSource = null;
+        if (noOverlapHeldClip.Contains(incomingClip)) { exsistingSource = noOverlapSources[noOverlapHeldClip.IndexOf(incomingClip)]; }
+        SoundType type = SoundType.music;
+        
+        if (exsistingSource != null) 
+        {
+            switch (givinType)
+            {
+                case "music": type = SoundType.music; break;
+                case "effect": type = SoundType.effect; break;
+                case "ui": type = SoundType.ui; break;
+                case "other": type = SoundType.other; break;
+            }
+            switch (type)
+            {
+                case SoundType.music: exsistingSource.volume = (musicVol / 100f) * (masterVol / 100f); break;
+                case SoundType.effect: exsistingSource.volume = (effectVol / 100f) * (masterVol / 100f); break;
+                case SoundType.ui: exsistingSource.volume = (uiVol / 100f) * (masterVol / 100f); break;
+                case SoundType.other: exsistingSource.volume = (masterVol / 100f); break;
+            }
+            if (exsistingSource.volume == 0) { return; }
+            exsistingSource.Stop(); exsistingSource.Play(); 
+        } 
+        else
+        {
+            lastNoOverlapSource++; if(lastNoOverlapSource >= noOverlapSources.Count) { lastNoOverlapSource = 0; }
+            switch (givinType)
+            {
+                case "music": type = SoundType.music; break;
+                case "effect": type = SoundType.effect; break;
+                case "ui": type = SoundType.ui; break;
+                case "other": type = SoundType.other; break;
+            }
+            AudioSource source = noOverlapSources[lastNoOverlapSource];
+            switch (type)
+            {
+                case SoundType.music: source.volume = (musicVol / 100f) * (masterVol / 100f); break;
+                case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
+                case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
+                case SoundType.other: source.volume = (masterVol / 100f); break;
+            }
+            if (source.volume == 0) { return; }
+            source.clip = incomingClip;
+            source.Stop(); source.Play();
+        }
     }
     public void PlayLocalSound(AudioClip incomingClip, string givinType, int prior)
     {

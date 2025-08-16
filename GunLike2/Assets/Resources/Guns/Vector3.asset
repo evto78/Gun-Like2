@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad266e3cb3bbdc48b6e0cdf3d2effb0, type: 3}
+  m_Name: Vector3
+  m_EditorClassIdentifier: 
+  gunName: Vector3
+  icon: {fileID: 21300000, guid: cc1f1861d54f2f34da4fec7f81adb4cf, type: 3}
+  descriptionText: The peak of stability, with a smart twist.
+  effectText:
+  - Accuracy cannot get worse than base
+  - Increase attack speed relative to accuracy
+  - +20% attack speed when magazine size is prime
+  - +50% dmg if bullets left in magazine is prime
+  gunType: 3
+  id: 3
+  gunPrefab: {fileID: 2411502404954114123, guid: d535b5ee10c2ab648ae53bc0a8ed7660, type: 3}
+  bulletPrefab: {fileID: 6495255335360224864, guid: 5c7338816d2a8b9478010fdc26de8f15, type: 3}
+  baseMagSize: 25
+  baseAtkSpd: 3
+  baseReSpd: 1
+  baseBulSpd: 120
+  baseDmg: 5
+  baseAcc: 1
+  baseBulSize: 0.75
+  baseBulPir: 0
+  baseCritChance: 0
+  baseCritDamage: 2
+  baseWeakPointChance: 0
+  baseWeakPointDamage: 1.5
+  shootClips: []
+  reloadClips: []
+  noAmmoClips: []

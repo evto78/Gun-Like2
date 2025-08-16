@@ -41,7 +41,7 @@ public class PlaySoundOnHoverOver : Selectable
         }
         else
         {
-            if (isMainMenu) { mainMenu.usp.UISelectSound(0); }
+            if (isMainMenu) { mainMenu.usp.UIHoverSound(0); }
             else { Debug.LogError("NO WHERE TO PLAY SOUND"); } //IN LEVEL SOUND OVERHOVER
         }
     }
