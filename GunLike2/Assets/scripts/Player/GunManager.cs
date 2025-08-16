@@ -283,8 +283,8 @@ public class GunManager : MonoBehaviour
     void SetGuns(int leftGun, int rightGun)
     {
         leftGoo = false; rightGoo = false;
-        if (leftGun == guns.Count) { leftGun = rightGun; leftGoo = true; }
-        if (rightGun == guns.Count) { rightGun = leftGun; rightGoo = true; }
+        if (leftGun == -1) { leftGun = rightGun; leftGoo = true; }
+        if (rightGun == -1) { rightGun = leftGun; rightGoo = true; }
         if (leftHand.transform.childCount > 0) { Destroy(leftHand.transform.GetChild(0).gameObject); }
         if (rightHand.transform.childCount > 0) { Destroy(rightHand.transform.GetChild(0).gameObject); }
         Instantiate(guns[leftGun], leftHand.transform);
