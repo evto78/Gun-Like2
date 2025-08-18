@@ -6,12 +6,12 @@ using TMPro;
 
 public class WeaponSelectButton : MonoBehaviour
 {
-    TextMeshProUGUI txt; public Vector2 minMax;
-    public Image txtBg;
-    // Start is called before the first frame update
+    TextMeshProUGUI txt; public Vector2 minMax; public int id;
+    public Image txtBg; WeaponSelection weaponSelection;
     void Start()
     {
         txt = GetComponentInChildren<TextMeshProUGUI>();
+        weaponSelection = GetComponentInParent<WeaponSelection>();
     }
     public void Hover(bool isHover)
     {
@@ -20,6 +20,7 @@ public class WeaponSelectButton : MonoBehaviour
         {
             txt.color = new Color(255, 255, 255, minMax.y);
             txtBg.color = new Color(0, 0, 0, minMax.y/2f);
+            weaponSelection.WeaponHover(id);
         }
         else
         {

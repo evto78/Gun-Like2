@@ -77,10 +77,10 @@ public class EnemySpawner : MonoBehaviour
     void Spawn(Spawnable thing)
     {
         if(attempts > 25) { return; }
-        if (thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); }
+        if (thing.pointCost > gdm.pointsLeft) { attempts++; Spawn(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); return; }
         gdm.pointsLeft -= thing.pointCost;
 
-        for(int i = 0; i < Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y); i++){
+        for (int i = 0; i < Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y); i++){
             GameObject spawned = Instantiate(thing.thingToSpawn, spawnPoint.position, spawnPoint.rotation); spawned.GetComponent<EnemyHealthManager>().gdm = gdm;
         }
     }

@@ -8,20 +8,20 @@ public class WeaponSelection : MonoBehaviour
 {
     public Sprite hand;
     List<GunObjectData> gunObjectData;
-    //0 is null
-    //from there goes down the list
     public Image leftHand;
     public Image rightHand;
     int leftHandVal;
     int rightHandVal;
     public Button readyBtn;
     MainMenuManager menuManager;
+    public WeaponInfoDisplay infoDisplay;
     private void Awake()
     {
         menuManager = GameObject.Find("Main Menu Manager").GetComponent<MainMenuManager>();
     }
     private void Start()
     {
+        infoDisplay.gameObject.SetActive(false);
         gunObjectData = menuManager.gunObjectData;
         leftHandVal = 0;
         rightHandVal = 0;
@@ -47,6 +47,11 @@ public class WeaponSelection : MonoBehaviour
         else { rightHand.sprite = gunObjectData[rightHandVal].icon; }
 
         readyBtn.interactable = (leftHandVal != 0 && rightHandVal != 0) && (leftHandVal != rightHandVal);
+    }
+    public void WeaponHover(int id)
+    {
+        infoDisplay.gameObject.SetActive(true);
+        infoDisplay.InfoUpdate(gunObjectData[id]);
     }
     public void SelectWeapon(int id)
     {

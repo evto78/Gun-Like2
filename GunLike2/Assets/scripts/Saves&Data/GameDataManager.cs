@@ -150,6 +150,7 @@ public class GameDataManager : MonoBehaviour
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
+            if(pointsLeft < 10) { pointregenTimer += Time.deltaTime; }
         }
         timeSpentNoPause += Time.deltaTime;
         unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;

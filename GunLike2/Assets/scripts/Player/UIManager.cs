@@ -168,7 +168,7 @@ public class UIManager : MonoBehaviour
         else { crosshair.text = "+"; }
 
         fps = (int)(1f / Time.unscaledDeltaTime);
-        fpsHistory.Add(fps); if (fpsHistory.Count > 240) { fpsHistory.RemoveAt(fpsHistory.Count - 1); }
+        fpsHistory.Add(fps); if (fpsHistory.Count > 240) { fpsHistory.RemoveAt(0); }
         fpsText.text = "FPS: " + fps;
 
         moneyText.text = healthManager.money + "$";

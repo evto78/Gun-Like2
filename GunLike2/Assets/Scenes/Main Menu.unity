@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1336,6 +1336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 3
   txtBg: {fileID: 931033320}
 --- !u!1 &60281809
 GameObject:
@@ -7665,6 +7666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 180233268}
+  - component: {fileID: 180233269}
   m_Layer: 0
   m_Name: WeaponInfo
   m_TagString: Untagged
@@ -7688,6 +7690,22 @@ Transform:
   - {fileID: 931236656}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -27.622, z: 0}
+--- !u!114 &180233269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180233267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18734259ca14031488f76ffdc39a07ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 1083836094}
+  description: {fileID: 998126174}
+  textLine: {fileID: 2212915170416168596, guid: 30a7d1d60f373a74cbc0b8cca8bcd322, type: 3}
+  effectListHolder: {fileID: 585881222}
 --- !u!1 &192759669
 GameObject:
   m_ObjectHideFlags: 0
@@ -7982,6 +8000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 4
   txtBg: {fileID: 1005512714}
 --- !u!1 &221579880
 GameObject:
@@ -14065,6 +14084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 1
   txtBg: {fileID: 258849586}
 --- !u!1 &336647282
 GameObject:
@@ -18130,6 +18150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 6
   txtBg: {fileID: 1931453070}
 --- !u!1 &535441258
 GameObject:
@@ -21463,6 +21484,7 @@ MonoBehaviour:
   leftHand: {fileID: 1600963959}
   rightHand: {fileID: 577964192}
   readyBtn: {fileID: 163119746}
+  infoDisplay: {fileID: 180233269}
 --- !u!1 &710680002
 GameObject:
   m_ObjectHideFlags: 0
@@ -22572,6 +22594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 0
   txtBg: {fileID: 869802234}
 --- !u!1 &773549681
 GameObject:
@@ -28341,6 +28364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 5
   txtBg: {fileID: 1496866944}
 --- !u!1 &876809980
 GameObject:
@@ -35874,6 +35898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 7
   txtBg: {fileID: 933369163}
 --- !u!1 &1000944788
 GameObject:
@@ -36861,6 +36886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 2
   txtBg: {fileID: 1080904723}
 --- !u!1 &1080904721
 GameObject:
@@ -43473,6 +43499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 9
   txtBg: {fileID: 1642181021}
 --- !u!1 &1184103829
 GameObject:
@@ -46638,6 +46665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 8
   txtBg: {fileID: 2067797279}
 --- !u!1 &1402436223
 GameObject:
@@ -50295,6 +50323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 10
   txtBg: {fileID: 1212890131}
 --- !u!1 &1640323859
 GameObject:
@@ -67746,6 +67775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMax: {x: 0, y: 80}
+  id: 11
   txtBg: {fileID: 1868850411}
 --- !u!1 &1810988300
 GameObject:

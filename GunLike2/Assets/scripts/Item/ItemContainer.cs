@@ -76,7 +76,6 @@ public class ItemContainer : MonoBehaviour
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * Random.Range(150f, 200f));
         spawnedItem.GetComponent<ItemPossibility>().SetRarity(iD, false);
         spawnedItem.GetComponent<ItemPossibility>().rarityList = raritys;
-        
     }
     public void Interact()
     {
