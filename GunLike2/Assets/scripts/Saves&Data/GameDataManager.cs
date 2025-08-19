@@ -31,7 +31,7 @@ public class GameDataManager : MonoBehaviour
     float pointregenTimer;
     public int roomNumber;
     public Vector2 basePoints; public float flatPointsPerDifficulty;
-    public float pointsLeft;
+    public float pointsLeft; public bool pointsLocked;
 
     [Header("SaveData")]
     public GameObject saveDataReaderPrefab;
@@ -40,7 +40,7 @@ public class GameDataManager : MonoBehaviour
 
     [Header("Bosses")]
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
-    GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums;
+    public GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums; public ExitGateConsole exitConsole;
 
     private void Awake()
     {
@@ -97,6 +97,8 @@ public class GameDataManager : MonoBehaviour
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
 
+        endGateBlockade.Toggle(true); exitConsole.SetUp(false, null);
+
         pi.ItemsFromMutatedModifcataion(mutatedRules);
     }
     void ReadAndApplyMutatedRules()
@@ -145,13 +147,13 @@ public class GameDataManager : MonoBehaviour
     {
         endDoorCounter.text = roomsUntilBoss.ToString();
         foreach(TextMeshProUGUI tmp in unitNums) { tmp.text = "UNIT " + roomNumber; }
-        if (gameTimerActive)
+        if (gameTimerActive && !pointsLocked)
         {
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
             if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
             if(pointsLeft < 10) { pointregenTimer += Time.deltaTime; }
-        }
+        } else if (pointsLocked) { pointsLeft = 0f; }
         timeSpentNoPause += Time.deltaTime;
         unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
         difficulty = (int)unroundedDiff;
@@ -191,6 +193,8 @@ public class GameDataManager : MonoBehaviour
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
         phm.uiMan.gearscript.Turn(roomNumber);
+        endGateBlockade.Toggle(true);
+        exitConsole.SetUp(false, null);
         timeSpent += 120f;
         unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
         phm.uiMan.difficultyGear.ResetSpin();
@@ -204,6 +208,7 @@ public class GameDataManager : MonoBehaviour
     }
     public void BeginSpawning()
     {
+        pointsLocked = false;
         if(roomNumber == 0) { instance.AddEmailToQue("RunStart"); }
         gameTimerActive = true;
 
@@ -230,10 +235,12 @@ public class GameDataManager : MonoBehaviour
     public void SpawnBoss(string boss)
     {
         gameTimerActive = true;
+        
         switch (boss)
         {
             case "Chimera": 
-                Instantiate(chimera); instance.AddEmailToQue("BossSpawned"); instance.data.ChimeraInfo.timesFought++; timeTakenToDefeatChimera = 0f; StartCoroutine(ChimeraBossTimer());
+                EnemyHealthManager behm = Instantiate(chimera).GetComponent<EnemyHealthManager>(); instance.AddEmailToQue("BossSpawned"); instance.data.ChimeraInfo.timesFought++; timeTakenToDefeatChimera = 0f; StartCoroutine(ChimeraBossTimer());
+                exitConsole.SetUp(true, behm); endGateBlockade.Toggle(true);
                 break;
         }
     }

@@ -76,7 +76,7 @@ public class KnifeBrain : MonoBehaviour
             target = player;
         }
 
-        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp))
+        if((hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp)) && !hm.gdm.pointsLocked)
         {//Player is invisible. (via circus mask)
             curState = state.wander;
         } else if(curState == state.wander)

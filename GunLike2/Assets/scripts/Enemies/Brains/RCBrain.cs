@@ -5,11 +5,12 @@ using UnityEngine;
 public class RCBrain : MonoBehaviour
 {
     public List<Transform> wheels;
-    Rigidbody rb; public float speed; public float turnSpeed; public float articifalCorrectionSpeed;
+    Rigidbody rb; public float speed; public float turnSpeed; public float articifalCorrectionSpeed; float speedModifier;
     public ParticleSystem fixingEffect;
     Transform player; EnemyHealthManager ehm; float stuckTimer; bool fixing; float timeSinceCollision = 0f;
     void Start()
     {
+        speedModifier = 1f;
         ehm = GetComponent<EnemyHealthManager>();
         player = ehm.gdm.phm.transform;
         rb = GetComponent<Rigidbody>();
@@ -24,6 +25,8 @@ public class RCBrain : MonoBehaviour
     }
     void Update()
     {
+        if (ehm.activeEffects[12].x > 0) { speedModifier = 0.5f / (1.5f * (1.1f * (ehm.playerHM.playerItem.leftItems[136] + ehm.playerHM.playerItem.rightItems[136]))); } else { speedModifier = 1f; }
+        if (ehm.playerHM.activeEffects[22].x > 0) { return; }
         timeSinceCollision += Time.deltaTime;
         if (fixing) { return; }
         UpdateTireRoation();

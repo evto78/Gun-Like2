@@ -43,7 +43,7 @@ public class DroneBrain : MonoBehaviour
     void Update()
     {
         jammed = hm.activeEffects[3].x > 0;
-        if (phm.activeEffects[22].x > 0)
+        if (phm.activeEffects[22].x > 0 && !hm.gdm.pointsLocked)
         {
             curState = state.wander;
         }

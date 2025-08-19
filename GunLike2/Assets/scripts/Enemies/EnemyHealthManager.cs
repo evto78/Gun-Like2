@@ -334,7 +334,7 @@ public class EnemyHealthManager : MonoBehaviour
 
         //on actual destruction
         if(source == "left" || sourceOfLastDamage == "left") { playerItem.gunManager.leftKillsDATA++; } else if(source == "right" || sourceOfLastDamage == "right") { playerItem.gunManager.rightKillsDATA++; }
-        if (data != null && refundPoints){gdm.pointsLeft += data.pointCost / 1.5f;} // refund some points
+        if (data != null && refundPoints){gdm.pointsLeft += data.pointCost / 4f;} // refund few points
         Destroy(gameObject);
     }
     private void OnDestroy()

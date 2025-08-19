@@ -28,7 +28,7 @@ public class CrateCrabBrain : MonoBehaviour
     }
     void Update()
     {
-        if (hm.playerHM.activeEffects[22].x > 0)
+        if (hm.playerHM.activeEffects[22].x > 0 && !hm.gdm.pointsLocked) 
         {//Player is invisible. (via circus mask)
             curState = state.wander;
             nav.SetState(NavAI.state.wander);

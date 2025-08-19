@@ -319,6 +319,7 @@ public class BulletScript : MonoBehaviour
 
     protected void RunOnCollide(GameObject givenGameObject, RaycastHit hit)
     {
+        if(givenGameObject == null) { return; }
         if(Vector3.Distance(transform.position, gunFiredFrom.manager.transform.position) < 20f) { damage = damage * (1f + 0.1f * gunkyClaw); } else if(Vector3.Distance(transform.position, gunFiredFrom.manager.transform.position) > 20f) { damage = damage * (1f + 0.1f * gunkyClaw); }
         collidedPos = transform.position;
 

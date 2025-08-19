@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI crosshair;
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI gotchaText;//item 75 gotcha
+    public TextMeshProUGUI enemiesLeftText;
+    public List<TextMeshProUGUI> exitConsoleSideViewLines;
+    public GameObject exitConsoleSideView; bool displaySideConsole;
 
     public GunManager gunManager;
     public HealthManager healthManager;
@@ -74,6 +77,7 @@ public class UIManager : MonoBehaviour
     public List<Color> roomNumColors; 
     private void Start()
     {
+        exitConsoleSideView.SetActive(false); displaySideConsole = false;
         ammoListsBuilt = false;
         bossHealthBars.Clear();
         for(int i = 0; i < playUI.transform.GetChild(0).childCount; i++)
@@ -164,6 +168,11 @@ public class UIManager : MonoBehaviour
         }
     }
     public List<int> RequestFPSInfo() { return fpsHistory; }
+    public void GateUnlockUpdate(bool done)
+    {
+        displaySideConsole = !done;
+        exitConsoleSideView.SetActive(!done);
+    }
     void UpdatePlayUI()
     {
         if (mvtScript.isSprinting || mvtScript.slamming || mvtScript.sliding) { crosshair.text = "^"; }
@@ -181,6 +190,8 @@ public class UIManager : MonoBehaviour
         float healthAmount = healthManager.curHp / healthManager.maxHp;
         healthFill.fillAmount = healthAmount;
         healthGear.Turn(healthAmount*5f);
+
+        enemiesLeftText.text = healthManager.gdm.activeEhms.Count.ToString();
 
         bowchargeUI.SetActive(gunManager.leftBowAct + gunManager.rightBowAct > 0);
 

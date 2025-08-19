@@ -15,9 +15,10 @@ public class EnemySpawner : MonoBehaviour
     float minCost; int attempts;
     public bool canSpawnWalker;
     public float myDelay;
-    bool spawningWave; bool pauseTimer;
+    bool spawningWave; bool pauseTimer; public GameObject myLock;
     private void Start()
     {
+        myLock.SetActive(false);
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         pi = gdm.phm.playerItem;
         gdm.activeSpawners.Add(this);
@@ -121,6 +122,7 @@ public class EnemySpawner : MonoBehaviour
     }
     public void StartSpawning()
     {
+        myLock.SetActive(false);
         pauseTimer = true;
         spawningWave = false;
         spawning = true;
@@ -132,6 +134,7 @@ public class EnemySpawner : MonoBehaviour
     }
     private void Update()
     {
+        if (gdm.pointsLocked) { myLock.SetActive(true); }
         if (!pauseTimer) { timer -= spawnRate * Time.deltaTime; }
         if (!spawning || timer > 0 || gdm.pointsLeft < minCost || spawningWave || pauseTimer) { return; }
         attempts = 0;

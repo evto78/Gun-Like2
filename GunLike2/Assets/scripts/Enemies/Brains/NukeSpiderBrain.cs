@@ -39,7 +39,7 @@ public class NukeSpiderBrain : MonoBehaviour
     {
         if (!off)
         {
-            if ((hm.playerHM.activeEffects[22].x > 0) && (curState != state.jumping && curState != state.diving))
+            if (((hm.playerHM.activeEffects[22].x > 0) && (curState != state.jumping && curState != state.diving)) && !hm.gdm.pointsLocked)
             {//Player is invisible (via circus mask).
                 curState = state.idle;
                 nav.SetState(NavAI.state.wander);

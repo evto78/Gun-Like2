@@ -43,7 +43,7 @@ public class UZIWalkerBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 200 && hm.curHp == hm.maxHp))
+        if((hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 200 && hm.curHp == hm.maxHp)) && !hm.gdm.pointsLocked)
         {//Player is invisible. (via circus mask)
             curState = state.idle;
             nav.SetState(NavAI.state.wander);

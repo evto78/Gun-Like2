@@ -55,7 +55,7 @@ public class GrenadeBrain : MonoBehaviour
         bool sub = false;
         subTimer -= Time.deltaTime; if (subTimer <= 0) { sub = true; }
         if (!foundSiblings || secondaryTarget == null) { FindSiblings(); }
-        if(hm.playerHM.activeEffects[22].x > 0)
+        if(hm.playerHM.activeEffects[22].x > 0 && !hm.gdm.pointsLocked)
         {
             curState = state.wander;
         }
