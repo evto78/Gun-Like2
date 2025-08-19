@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI lGunAmmoText;
     public TextMeshProUGUI rGunAmmoText;
     public TextMeshProUGUI healthText;
+    public GearUI healthGear;
+    public Image healthFill;
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
     public TextMeshProUGUI fpsText;
     public TextMeshProUGUI crosshair;
@@ -176,6 +178,9 @@ public class UIManager : MonoBehaviour
         
         BulletSpriteVisuals();
         healthText.text = Mathf.Round(healthManager.curHp) + " / " + Mathf.Round(healthManager.maxHp);
+        float healthAmount = healthManager.curHp / healthManager.maxHp;
+        healthFill.fillAmount = healthAmount;
+        healthGear.Turn(healthAmount*5f);
 
         bowchargeUI.SetActive(gunManager.leftBowAct + gunManager.rightBowAct > 0);
 
