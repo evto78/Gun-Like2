@@ -5,6 +5,11 @@ using UnityEngine;
 public class DoubleBarrelScript : GunScript
 {
     int bulletsQued; static int maxBulletsPerFrame = 100; float lockedBowCharge = 1;
+    public override void LateStatUpdate()
+    {
+        base.LateStatUpdate(); // DAMN
+        reSpd /= 0.75f+(magSize/32f);
+    }
     public override void AttemptShoot()
     {
         if ((bowAct > 0))
@@ -24,6 +29,7 @@ public class DoubleBarrelScript : GunScript
                 }
                 MuzzleFlash.gameObject.SetActive(currentBullets > 0);
                 if (MuzzleFlash != null) { MuzzleFlash.Play(); }
+                shootingThisFrameAudio = false;
 
                 if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
                 else
@@ -31,8 +37,9 @@ public class DoubleBarrelScript : GunScript
                     for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                     {
                         Shoot(1f);
+                        shootingThisFrameAudio = true;
                         if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
-                        ||(whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
+                        || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
                     }
                 }
                 if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
@@ -65,6 +72,7 @@ public class DoubleBarrelScript : GunScript
             }
             MuzzleFlash.gameObject.SetActive(currentBullets > 0);
             if (MuzzleFlash != null) { MuzzleFlash.Play(); }
+            shootingThisFrameAudio = false;
 
             if (Mathf.CeilToInt(magSize / 2f) > maxBulletsPerFrame) { bulletsQued = Mathf.CeilToInt(magSize / 2f); }
             else
@@ -72,6 +80,7 @@ public class DoubleBarrelScript : GunScript
                 for (int i = 0; i < Mathf.CeilToInt(magSize / 2f); i++)
                 {
                     Shoot(bowCharge);
+                    shootingThisFrameAudio = true;
                     if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
                     || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
                 }
@@ -98,6 +107,7 @@ public class DoubleBarrelScript : GunScript
         if(bulletsQued > 0)
         {
             attackTimer = 1f;
+            shootingThisFrameAudio = true;
             if(bowAct > 0)
             {
                 for (int y = 0; y < maxBulletsPerFrame; y++)

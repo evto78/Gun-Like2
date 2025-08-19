@@ -151,9 +151,13 @@ public class GunScript : MonoBehaviour
     protected float timeSinceShot;
     public Rigidbody target; protected float possessionUpdateTimer = 0f; Vector3 possessionTarOffset;
 
-    // Start is called before the first frame update
+    int lastShootClipIndex = 0; protected bool shootingThisFrameAudio;
+    int lastEmptyClipIndex = 0;
+    int lastReloadClipIndex = 0;
+
     void Start()
     {
+        shootingThisFrameAudio = false;
         firePoint = normalFirePoint;
         reservoirSize = 250;
         manager = gameObject.GetComponentInParent<GunManager>();
@@ -523,7 +527,29 @@ public class GunScript : MonoBehaviour
         //Preinstatiation
         PreInstatiateBullets();
     }
-
+    void PlaySound(string soundType)
+    {
+        Debug.Log("Playing gun sound: " + soundType);
+        LocalSoundManager lsm = manager.healthMan.lsm; AudioClip selectedClip;
+        switch (soundType)
+        {
+            case "Shoot":
+                lastShootClipIndex += Random.Range(1, 3); if (lastShootClipIndex >= data.shootClips.Count) { lastShootClipIndex = 0; }
+                selectedClip = data.shootClips[lastShootClipIndex];
+                lsm.PlayLocalSound(selectedClip, "effect", 2);
+                break;
+            case "EmptyShoot":
+                lastEmptyClipIndex += Random.Range(1, 3); if (lastEmptyClipIndex >= data.noAmmoClips.Count) { lastEmptyClipIndex = 0; }
+                selectedClip = data.noAmmoClips[lastEmptyClipIndex];
+                lsm.PlayLocalSound(selectedClip, "effect", 1);
+                break;
+            case "Reload":
+                lastReloadClipIndex += Random.Range(1, 3); if (lastReloadClipIndex >= data.reloadClips.Count) { lastReloadClipIndex = 0; }
+                selectedClip = data.reloadClips[lastReloadClipIndex];
+                lsm.PlayNonOverlapSound(selectedClip, "effect");
+                break;
+        }
+    }
     public virtual void AttemptShoot()
     {
         if ((bowAct > 0))
@@ -541,8 +567,9 @@ public class GunScript : MonoBehaviour
                     rushJobTimer = (1f / reSpd)/2f;
                     return;
                 }
-
+                shootingThisFrameAudio = false;
                 Shoot(1f);
+                shootingThisFrameAudio = true;
                 MuzzleFlash.gameObject.SetActive(currentBullets > 0);
                 if (MuzzleFlash != null) { MuzzleFlash.Play(); }
                 if(pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
@@ -577,14 +604,16 @@ public class GunScript : MonoBehaviour
                 return;
             }
 
+            shootingThisFrameAudio = false;
             Shoot(bowCharge);
+            shootingThisFrameAudio = true;
             if (pumpShotgunAttach > 0 && pumpShotgunAttachTimer < 0)
             {
                 acc = acc * 2f;
                 for (int i = 0; i < 9; i++)
                 {
                     currentBullets++;
-                    Shoot(bowCharge); 
+                    Shoot(bowCharge);
                     MuzzleFlash.gameObject.SetActive(currentBullets > 0);
                     if (MuzzleFlash != null) { MuzzleFlash.Play(); }
                     if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
@@ -611,6 +640,7 @@ public class GunScript : MonoBehaviour
     public void Reload()
     {
         animator.SetTrigger("Reloading");
+        PlaySound("Reload");
         animator.speed = reSpd;
         reloading = true;
         reloadTimer = 1;
@@ -794,6 +824,7 @@ public class GunScript : MonoBehaviour
         }
         if (currentBullets > 0 || !requireAmmo)
         {
+            if (!shootingThisFrameAudio) { PlaySound("Shoot"); }
             animator.SetTrigger("ForceFire");
             if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd / 3f, ForceMode.Impulse); }
             timeSinceShot = 0f;
@@ -866,6 +897,7 @@ public class GunScript : MonoBehaviour
         {
             animator.SetBool("NoAmmo", true);
             animator.SetTrigger("Shooting");
+            if (!shootingThisFrameAudio) { PlaySound("EmptyShoot"); }
         }
     }
     float RiggedSlotMachine(float incomingDamage)

@@ -29,8 +29,6 @@ public class SandbagBrain : MonoBehaviour
         dmg = ehm.baseDamage * ehm.gdm.difficulty * ehm.difficultyScale;
         curState = state.idle;
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (ehm.activeEffects[12].x > 0) { speedModifier = 0.5f / (1.5f * (1.1f * (ehm.playerHM.playerItem.leftItems[136] + ehm.playerHM.playerItem.rightItems[136]))); } else { speedModifier = 1f; }
