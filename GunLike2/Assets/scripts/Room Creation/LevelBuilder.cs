@@ -43,13 +43,13 @@ public class LevelBuilder : MonoBehaviour
             chancesFeatures.Add(temp);
         }
         //Irradiated Difficulty
-        foreach(PlaceableObjectChances poc in chancesObjects){
-            poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.2f), Mathf.CeilToInt(poc.amount.y * 1.2f));
-        }
+        if(gdm.difficultyIDSelected==2){foreach (PlaceableObjectChances poc in chancesObjects) {
+                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.2f), Mathf.CeilToInt(poc.amount.y * 1.2f));
+        }}
         //Nuclear Difficulty
-        foreach (PlaceableObjectChances poc in chancesObjects){
-            poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.5f), Mathf.CeilToInt(poc.amount.y * 1.5f));
-        }
+        if(gdm.difficultyIDSelected==3){foreach (PlaceableObjectChances poc in chancesObjects) {
+                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.5f), Mathf.CeilToInt(poc.amount.y * 1.5f));
+        }}
         //Dirt Stained Coffin (ID 123) (OBJ 4)
         chancesObjects[4].chancePerOne = pi.leftItems[123] + pi.rightItems[123] * 100f;
         chancesObjects[4].chancePerMore = pi.leftItems[123] + pi.rightItems[123] * 25f;
