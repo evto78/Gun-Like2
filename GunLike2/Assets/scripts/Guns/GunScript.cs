@@ -529,6 +529,7 @@ public class GunScript : MonoBehaviour
     }
     void PlaySound(string soundType)
     {
+        return;
         Debug.Log("Playing gun sound: " + soundType);
         LocalSoundManager lsm = manager.healthMan.lsm; AudioClip selectedClip;
         switch (soundType)

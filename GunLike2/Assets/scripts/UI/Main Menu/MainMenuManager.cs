@@ -96,7 +96,7 @@ public class MainMenuManager : MonoBehaviour
                 starting = true;
                 foreach (GameObject go in uiTOHIDE)
                 {
-                    go.SetActive(false);
+                    if (go != null) { go.SetActive(false); }
                 }
                 usp.UIDifficultySound(selectedDifficulty);
                 PlayerPrefs.SetInt("SELECTEDDIFFICULTY", selectedDifficulty);
@@ -121,7 +121,10 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(BackDoorActivate());
         foreach (GameObject go in uiTOHIDE)
         {
-            go.SetActive(true);
+            if (go != null)
+            {
+                go.SetActive(true);
+            }
         }
     }
     IEnumerator BackDoorActivate()
