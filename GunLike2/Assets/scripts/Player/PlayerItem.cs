@@ -430,7 +430,7 @@ public class PlayerItem : MonoBehaviour
                 itemDisplay.SetActive(true);
                 itemDisplay.GetComponent<ItemDisplayScript>().InfoUpdate(hit.collider.gameObject.GetComponentInParent<Item>().itemObj, hitItem);
 
-                if (Input.GetKeyDown(healthManager.gdm.controlsBinds.righInteract) || (Input.GetKey(healthManager.gdm.controlsBinds.righInteract) && Input.GetKey(healthManager.gdm.controlsBinds.sprint)))
+                if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.righInteract) || (Input.GetKey(healthManager.gdm.instance.controlsBinds.righInteract) && Input.GetKey(healthManager.gdm.instance.controlsBinds.sprint)))
                 {
                     int id = hit.collider.gameObject.GetComponentInParent<Item>().WhatItem();
                     rightItems[id] += 1;
@@ -439,7 +439,7 @@ public class PlayerItem : MonoBehaviour
                     if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
                     if(id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
                 }
-                if (Input.GetKeyDown(healthManager.gdm.controlsBinds.leftInteract) || (Input.GetKey(healthManager.gdm.controlsBinds.leftInteract) && Input.GetKey(healthManager.gdm.controlsBinds.sprint)))
+                if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract) || (Input.GetKey(healthManager.gdm.instance.controlsBinds.leftInteract) && Input.GetKey(healthManager.gdm.instance.controlsBinds.sprint)))
                 {
                     int id = hit.collider.gameObject.GetComponentInParent<Item>().WhatItem();
                     leftItems[id] += 1;
@@ -462,7 +462,7 @@ public class PlayerItem : MonoBehaviour
             }
             if(hit.collider.gameObject.tag == "Interactable")
             {
-                if (Input.GetKeyDown(healthManager.gdm.controlsBinds.righInteract) || Input.GetKeyDown(healthManager.gdm.controlsBinds.leftInteract))
+                if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.righInteract) || Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract))
                 {
                     hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
                     if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(PlayerEffectType.effectName.chaosEngine, 1f); }

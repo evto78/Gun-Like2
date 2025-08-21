@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour
     public List<GameObject> uiTOHIDE; bool loading;
     public SaveFileReadWrite instance;
     WeaponSelection weaponSelect;
+    public SettingsScript settings;
     public UiSoundPlayer usp;
     public int selectedDifficulty;
     [System.Serializable]
@@ -51,6 +52,9 @@ public class MainMenuManager : MonoBehaviour
         usp = GetComponent<UiSoundPlayer>();
         Time.timeScale = 1f;
         if (PlayerPrefs.HasKey("SELECTEDDIFFICULTY")) { selectedDifficulty = PlayerPrefs.GetInt("SELECTEDDIFFICULTY"); } else { selectedDifficulty = 1; PlayerPrefs.SetInt("SELECTEDDIFFICULTY", 1); }
+
+        settings.tab.SetActive(true);
+        settings.InitialApply();
     }
     void SortGunObjData()
     {

@@ -74,7 +74,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI timer;
     public List<int> fpsHistory = new List<int>();
 
-    public List<Color> roomNumColors; 
+    public List<Color> roomNumColors;
+    private void Awake()
+    {
+    }
     private void Start()
     {
         exitConsoleSideView.SetActive(false); displaySideConsole = false;
@@ -91,7 +94,12 @@ public class UIManager : MonoBehaviour
 
         isPaused = false;
 
-        settings.Apply();
+        settings.tab.transform.parent.gameObject.SetActive(true);
+        settings.tab.SetActive(true);
+        settings.gameObject.SetActive(true);
+        settings.InitialApply();
+        settings.tab.SetActive(false);
+        settings.tab.transform.parent.gameObject.SetActive(false);
 
         ChangeState("play");
         ammoDisplayType = PlayerPrefs.GetInt("BULLETDISPLAYTYPE");
@@ -135,7 +143,7 @@ public class UIManager : MonoBehaviour
         if (isPaused) {Time.timeScale = 0f; }
         else {Time.timeScale = 1f; }
 
-        if (Input.GetKeyDown(healthManager.gdm.controlsBinds.pauseMenu))
+        if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.pauseMenu))
         {
             if (fishing)
             {
@@ -148,7 +156,7 @@ public class UIManager : MonoBehaviour
                 else if (state == "pause") { ChangeState("play"); }
             }
         }
-        if (Input.GetKeyDown(healthManager.gdm.controlsBinds.openInventory) && !fishing)
+        if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.openInventory) && !fishing)
         {
             if (state == "play") { ChangeState("inventory"); }
             else if (state == "inventory") { ChangeState("play"); }

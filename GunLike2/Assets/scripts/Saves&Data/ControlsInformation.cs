@@ -30,6 +30,7 @@ public class ControlsInformation
 
     public void DefaultControls()
     {
+        walkForward = KeyCode.None;
         walkForward = KeyCode.W;
         walkBackward = KeyCode.S;
         walkLeft = KeyCode.A;

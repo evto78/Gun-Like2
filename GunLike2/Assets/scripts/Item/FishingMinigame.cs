@@ -33,7 +33,7 @@ public class FishingMinigame : MonoBehaviour
         tabletAnimTimer -= Time.deltaTime;
         if (playerNear && gm.playerItem.leftItems[83] + gm.playerItem.rightItems[83] > 0)
         {
-            if (!playerFishing && (Input.GetKeyDown(gdm.controlsBinds.leftInteract) || Input.GetKeyDown(gdm.controlsBinds.righInteract)) && fished == false)
+            if (!playerFishing && (Input.GetKeyDown(gdm.instance.controlsBinds.leftInteract) || Input.GetKeyDown(gdm.instance.controlsBinds.righInteract)) && fished == false)
             {
                 playerFishing = true;
                 Cursor.visible = true;
@@ -52,7 +52,7 @@ public class FishingMinigame : MonoBehaviour
         }
         //Debug.Log("1: "+timesUp);
         //if (tabletAnimTimer <= 0) { timesUp = false; }
-        if (uiman.fishing && (Input.GetKeyDown(gdm.controlsBinds.pauseMenu) || timesUp))
+        if (uiman.fishing && (Input.GetKeyDown(gdm.instance.controlsBinds.pauseMenu) || timesUp))
         {
             playerFishing = false;
             Cursor.visible = false;

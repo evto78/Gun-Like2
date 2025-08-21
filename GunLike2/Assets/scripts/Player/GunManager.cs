@@ -1064,7 +1064,7 @@ public class GunManager : MonoBehaviour
         if (healthMan.dead) { return; }
 
         if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); RightGunUpdate(); }
-        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked)
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked)
         {
             leftGunScript.AttemptReload();
             if (axeCooldown <= 0 && leftGunkyAxe > 0)
@@ -1073,7 +1073,7 @@ public class GunManager : MonoBehaviour
                 axeCooldown = 10f;
             }
         }
-        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked)
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked)
         {
             rightGunScript.AttemptReload();
             if (axeCooldown <= 0 && rightGunkyAxe > 0)
@@ -1088,11 +1088,11 @@ public class GunManager : MonoBehaviour
 
     void leftGunUpdate()
     {
-        if (Input.GetKey(healthMan.gdm.controlsBinds.leftShoot))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.leftShoot))
         {
             leftGunScript.AttemptShoot();
         }
-        if (Input.GetKeyUp(healthMan.gdm.controlsBinds.leftShoot))
+        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.leftShoot))
         {
             leftGunScript.AttemptShootUp(false);
         }
@@ -1100,11 +1100,11 @@ public class GunManager : MonoBehaviour
 
     void RightGunUpdate()
     {
-        if (Input.GetKey(healthMan.gdm.controlsBinds.rightShoot))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.rightShoot))
         {
             rightGunScript.AttemptShoot();
         }
-        if (Input.GetKeyUp(healthMan.gdm.controlsBinds.rightShoot))
+        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.rightShoot))
         {
             rightGunScript.AttemptShootUp(false);
         }

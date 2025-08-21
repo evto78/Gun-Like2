@@ -9,8 +9,12 @@ using TMPro;
 public class SettingsScript : MonoBehaviour
 {
     GameDataManager gdm;
+    MainMenuManager mmm;
     public GameObject tab;
     List<string> keys;
+    public GameObject generalTab;
+    public GameObject controlsTab;
+    public GameObject optimizationTab;
     public List<Slider> sliders;
     public Toggle fullscreen;
     public Toggle vsync;
@@ -26,7 +30,16 @@ public class SettingsScript : MonoBehaviour
         built = true;
 
         Apply();
-        if (SceneManager.GetActiveScene().name == "Main Menu") { tab.SetActive(false); }
+    }
+    public void InitialApply()
+    {
+        generalTab.SetActive(true); controlsTab.SetActive(true); optimizationTab.SetActive(true);
+
+        if (!built) { BuildAll(); } built = true;
+        Apply();
+
+        generalTab.SetActive(true); controlsTab.SetActive(false); optimizationTab.SetActive(false);
+        tab.SetActive(false);
     }
     void BuildAll()
     {
@@ -172,5 +185,13 @@ public class SettingsScript : MonoBehaviour
         vsync.isOn = PlayerPrefs.GetInt("VSYNC") == 1;
         PlayerPrefs.SetInt("RES", 0);
         Screen.SetResolution(1920, 1080, Screen.fullScreen);
+    }
+    public void ResetControls()
+    {
+        if (mmm == null && GameObject.Find("Main Menu Manager") != null) { mmm = GameObject.Find("Main Menu Manager").GetComponent<MainMenuManager>(); }
+        if (mmm != null)
+        {
+            mmm.instance.controlsBinds.DefaultControls();
+        }
     }
 }

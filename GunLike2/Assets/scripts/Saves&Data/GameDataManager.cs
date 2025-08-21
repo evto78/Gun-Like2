@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using TMPro;
+using TMPro;
+using UnityEngine;
 
 public class GameDataManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class GameDataManager : MonoBehaviour
     bool changedLastFrame;
     List<int> leftSnapshot;
     List<int> rightSnapshot;
-    
+
     [Header("Difficulty")]
     public float difficulty; public float unroundedDiff;
     public int difficultyIDSelected;
@@ -37,9 +38,6 @@ public class GameDataManager : MonoBehaviour
     public GameObject saveDataReaderPrefab;
     public SaveFileReadWrite instance;
     bool requesting = false;
-
-    [Header("ControlsData")]
-    public ControlsInformation controlsBinds;
 
     [Header("Bosses")]
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
@@ -115,7 +113,7 @@ public class GameDataManager : MonoBehaviour
         mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE5"));
         mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE6"));
         difficultyProgressionModifier = 1f;
-        for(int i = 0; i < mutatedRules.Count; i++)
+        for (int i = 0; i < mutatedRules.Count; i++)
         {
             int rule = mutatedRules[i];
             switch (rule)
@@ -130,8 +128,9 @@ public class GameDataManager : MonoBehaviour
                 case 7: MutatedRandomStatMult(2f, i); break; // 2x to a random stat
                 case 8: break; // Guns are randomized after every room
                 case 9: MutatedRandomStatMult(0.5f, i); break; // 0.5x to a random stat
-                case 10: List<Spawnable> options = new List<Spawnable>(); options.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
-                    foreach(Spawnable enemy in options) { if(enemy.enemyName == PlayerPrefs.GetString("MUTATEDRULELONEENEMYSLOT"+i.ToString())) { mutatedEnemySelected = enemy; } } 
+                case 10:
+                    List<Spawnable> options = new List<Spawnable>(); options.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
+                    foreach (Spawnable enemy in options) { if (enemy.enemyName == PlayerPrefs.GetString("MUTATEDRULELONEENEMYSLOT" + i.ToString())) { mutatedEnemySelected = enemy; } }
                     break; // All enemies are now a random enemy - Handled outside
                 case 11: break; // No gravity, shooting knocks you back relative to bulspeed - Handled outsde
                 case 12: break; // Start with 5 random items on each gun - Handled outside
@@ -142,21 +141,22 @@ public class GameDataManager : MonoBehaviour
     {
         switch (mult)
         {
-            case 0.5f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEHALFSTATSLOT"+slot.ToString())] *= mult; break;
-            case 2f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEDOUBLESTATSLOT"+slot.ToString())] *= mult; break;
+            case 0.5f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEHALFSTATSLOT" + slot.ToString())] *= mult; break;
+            case 2f: mutatedStatModifiers[PlayerPrefs.GetInt("MUTATEDRULEDOUBLESTATSLOT" + slot.ToString())] *= mult; break;
         }
     }
     private void Update()
     {
         endDoorCounter.text = roomsUntilBoss.ToString();
-        foreach(TextMeshProUGUI tmp in unitNums) { tmp.text = "UNIT " + roomNumber; }
+        foreach (TextMeshProUGUI tmp in unitNums) { tmp.text = "UNIT " + roomNumber; }
         if (gameTimerActive && !pointsLocked)
         {
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
-            if(pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
-            if(pointsLeft < 10) { pointregenTimer += Time.deltaTime; }
-        } else if (pointsLocked) { pointsLeft = 0f; }
+            if (pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
+            if (pointsLeft < 10) { pointregenTimer += Time.deltaTime; }
+        }
+        else if (pointsLocked) { pointsLeft = 0f; }
         timeSpentNoPause += Time.deltaTime;
         unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
         difficulty = (int)unroundedDiff;
@@ -202,7 +202,7 @@ public class GameDataManager : MonoBehaviour
         unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
         phm.uiMan.difficultyGear.ResetSpin();
         phm.uiMan.difficultyGear.Turn(unroundedDiff);
-        foreach(EnemyHealthManager ehm in activeEhms)
+        foreach (EnemyHealthManager ehm in activeEhms)
         {
             Destroy(ehm.gameObject);
         }
@@ -212,12 +212,12 @@ public class GameDataManager : MonoBehaviour
     public void BeginSpawning()
     {
         pointsLocked = false;
-        if(roomNumber == 0) { instance.AddEmailToQue("RunStart"); }
+        if (roomNumber == 0) { instance.AddEmailToQue("RunStart"); }
         gameTimerActive = true;
 
         List<EnemySpawner> newOrder = new List<EnemySpawner>();
         int initialCount = activeSpawners.Count;
-        for(int i = 0; i < initialCount; i++)
+        for (int i = 0; i < initialCount; i++)
         {
             int rand = Random.Range(0, activeSpawners.Count);
             newOrder.Add(activeSpawners[rand]);
@@ -238,10 +238,10 @@ public class GameDataManager : MonoBehaviour
     public void SpawnBoss(string boss)
     {
         gameTimerActive = true;
-        
+
         switch (boss)
         {
-            case "Chimera": 
+            case "Chimera":
                 EnemyHealthManager behm = Instantiate(chimera).GetComponent<EnemyHealthManager>(); instance.AddEmailToQue("BossSpawned"); instance.data.ChimeraInfo.timesFought++; timeTakenToDefeatChimera = 0f; StartCoroutine(ChimeraBossTimer());
                 exitConsole.SetUp(true, behm); endGateBlockade.Toggle(true);
                 break;
@@ -259,7 +259,7 @@ public class GameDataManager : MonoBehaviour
                 int rightGun = gm.rightHandVal; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
                 infoL.winningRuns++; infoR.winningRuns++;
                 instance.data.ChimeraInfo.timesDefeated++;
-                if(timeTakenToDefeatChimera < instance.data.ChimeraInfo.timeToKillRecord) { instance.data.ChimeraInfo.timeToKillRecord = timeTakenToDefeatChimera; }
+                if (timeTakenToDefeatChimera < instance.data.ChimeraInfo.timeToKillRecord) { instance.data.ChimeraInfo.timeToKillRecord = timeTakenToDefeatChimera; }
                 break;
         }
     }
@@ -302,8 +302,8 @@ public class GameDataManager : MonoBehaviour
         if (gm.rightGunScript.magSize > infoR.magSizeRecord) { infoR.magSizeRecord = (int)gm.rightGunScript.magSize; }
         infoL.itemsCollected += gm.leftItemsCollectedDATA; infoR.itemsCollected += gm.rightItemsCollectedDATA;
         infoL.elapsedTimeHeld += timeSpentNoPause; infoR.elapsedTimeHeld += timeSpentNoPause;
-        infoL.accuracy = (((infoL.accuracy/100)+(gm.leftBulletsFiredDATA/(gm.leftHitsDATA+1)))/2)*100f;
-        infoR.accuracy = (((infoR.accuracy/100)+(gm.rightBulletsFiredDATA/(gm.rightHitsDATA+1)))/2)*100f;
+        infoL.accuracy = (((infoL.accuracy / 100) + (gm.leftBulletsFiredDATA / (gm.leftHitsDATA + 1))) / 2) * 100f;
+        infoR.accuracy = (((infoR.accuracy / 100) + (gm.rightBulletsFiredDATA / (gm.rightHitsDATA + 1))) / 2) * 100f;
         if (difficulty > infoL.difficulyReachedRecord) { infoL.difficulyReachedRecord = (int)difficulty; }
         if (difficulty > infoR.difficulyReachedRecord) { infoR.difficulyReachedRecord = (int)difficulty; }
     }

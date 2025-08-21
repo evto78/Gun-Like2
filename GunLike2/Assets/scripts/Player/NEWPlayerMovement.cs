@@ -348,29 +348,29 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void GetInputs()
     {
-        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.sprint)) 
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.sprint)) 
         {
             if (isSprinting) { isSprinting = false; } else { isSprinting = true; }
         } 
-        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.jump))
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.jump))
         {
             Jump();
         }
-        if (Input.GetKey(healthMan.gdm.controlsBinds.jump))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.jump))
         {
             if (planeMode)
             {
                 rb.AddRelativeForce(Vector3.up * planeSpeed * Time.deltaTime);
             }
         }
-        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.slam))
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.slam))
         {
             if (!onGround && !sliding)
             {
                 Slam();
             }
         }
-        if (Input.GetKey(healthMan.gdm.controlsBinds.slide))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.slide))
         {
             if(onGround || sliding)
             {
@@ -393,10 +393,10 @@ public class NEWPlayerMovement : MonoBehaviour
             slidingMod = 2f;
         }
         inputDir = Vector3.zero;
-        if (Input.GetKey(healthMan.gdm.controlsBinds.walkForward)) { inputDir = inputDir + Vector3.forward; }
-        if (Input.GetKey(healthMan.gdm.controlsBinds.walkBackward)) { inputDir = inputDir - Vector3.forward; }
-        if (Input.GetKey(healthMan.gdm.controlsBinds.walkLeft)) { inputDir = inputDir - Vector3.right; }
-        if (Input.GetKey(healthMan.gdm.controlsBinds.walkRight)) { inputDir = inputDir + Vector3.right; }
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkForward)) { inputDir = inputDir + Vector3.forward; }
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkBackward)) { inputDir = inputDir - Vector3.forward; }
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkLeft)) { inputDir = inputDir - Vector3.right; }
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkRight)) { inputDir = inputDir + Vector3.right; }
         inputDir = Vector3.Normalize(inputDir);
     }
     void Move()
