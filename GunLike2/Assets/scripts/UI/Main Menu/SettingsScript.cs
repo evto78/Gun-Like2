@@ -137,18 +137,22 @@ public class SettingsScript : MonoBehaviour
         keys.Add("SENS");
         keys.Add("FPS");
         keys.Add("UIVOL");
+        keys.Add("ENEMYVOL");
+        keys.Add("GUNVOL");
     }
     public void ResetSettings()
     {
         PlayerPrefs.SetInt("FIRSTLOAD", 1);
 
-        PlayerPrefs.SetFloat("MASTERVOL", 100f);
+        PlayerPrefs.SetFloat("MASTERVOL", 75f);
         PlayerPrefs.SetFloat("MUSICVOL", 80f);
         PlayerPrefs.SetFloat("EFFECTVOL", 80f);
         PlayerPrefs.SetFloat("FOV", 80f);
         PlayerPrefs.SetFloat("SENS", 50f);
         PlayerPrefs.SetFloat("FPS", 120f);
         PlayerPrefs.SetFloat("UIVOL", 60f);
+        PlayerPrefs.SetFloat("GUNVOL", 60f);
+        PlayerPrefs.SetFloat("ENEMYVOL", 80f);
         PlayerPrefs.SetInt("SENDDATA", 1);
         PlayerPrefs.SetInt("DFOV", 1);
         int index = 0;

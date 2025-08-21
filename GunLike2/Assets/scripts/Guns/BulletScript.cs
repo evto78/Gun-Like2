@@ -9,7 +9,9 @@ public class BulletScript : MonoBehaviour
     public GameObject mesh;
 
     public GameObject bulletPrefab;
-
+    
+    [System.Serializable] public class BulletSoundEffect { public List<AudioClip> clip; public AudioSource source; }
+    float volume; public List<BulletSoundEffect> bulletSoundEffects; //StandardHit, CritHit/WeakHit, DirtHit
 
     protected bool collided = false;
     Vector3 collidedPos;
@@ -90,7 +92,7 @@ public class BulletScript : MonoBehaviour
         tr.emitting = true;
         Destroy(gameObject, 30f);
         collided = false;
-        turbineCharge = 0;
+        turbineCharge = 1;
 
         gm.totalLiveBullets++;
         if (whatHandThisComesFrom == "left") { gm.leftBulletsFiredDATA++; }
@@ -106,7 +108,7 @@ public class BulletScript : MonoBehaviour
         gm = gunFiredFrom.manager;
         rb = GetComponent<Rigidbody>();
         collided = false;
-        turbineCharge = 0;
+        turbineCharge = 1;
     }
     private void OnDestroy()
     {
@@ -118,11 +120,9 @@ public class BulletScript : MonoBehaviour
         if (collided) { return; }
 
         lifetime += Time.deltaTime;
-        //if (mesh != null) { mesh.transform.localScale = intialMeshScale * Mathf.Clamp(lifetime * 10f, 0.1f, 1f); }
         transform.rotation = Quaternion.LookRotation(rb.velocity+(Vector3.forward/100));
 
-        if (turbine > 1 && rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); } 
-        turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f;
+        if (turbine > 1 && rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f; }
     }
     private void FixedUpdate()
     {
@@ -144,7 +144,9 @@ public class BulletScript : MonoBehaviour
         isGunky = Random.Range(1,100)<isGunk*20f;
 
         whatHandThisComesFrom = whatHand;
-        gunFiredFrom = firedFrom; 
+        gunFiredFrom = firedFrom;
+
+        volume = firedFrom.manager.healthMan.lsm.effectVol;
 
         damage = givenDmg;
         isCrit = isCritHit;
@@ -316,7 +318,22 @@ public class BulletScript : MonoBehaviour
             gunFiredFrom.manager.healthMan.attackedThisRoom = true;
         }
     }
-
+    public void PlaySound(int key, bool detach)
+    {
+        if(volume <= 0) { return; }
+        if(bulletSoundEffects.Count <= key) { return; }
+        BulletSoundEffect sfx = bulletSoundEffects[key];
+        AudioClip clip = sfx.clip[Random.Range(0,sfx.clip.Count)];
+        sfx.source.clip = clip;
+        sfx.source.volume = volume;
+        if (detach) 
+        { 
+            AudioSource instSource = Instantiate(sfx.source.gameObject, transform.position, transform.rotation).GetComponent<AudioSource>();
+            instSource.Play();
+            StartCoroutine(DetachedSound(instSource)); 
+        }
+        else { sfx.source.Play(); }
+    } IEnumerator DetachedSound(AudioSource source) { Destroy(source.gameObject, 5f); while (source.isPlaying && source != null) { yield return new WaitForEndOfFrame(); } if (source != null) { Destroy(source.gameObject); } yield return null; }
     protected void RunOnCollide(GameObject givenGameObject, RaycastHit hit)
     {
         if(givenGameObject == null) { return; }
@@ -490,22 +507,28 @@ public class BulletScript : MonoBehaviour
             if (givenGameObject.tag == "Enemy")
             {
                 WeakPointHit(givenGameObject, hit);
+                PlaySound(1, true);
             }
             else if (givenGameObject.tag == "EnemyWeakPoint")
             {
                 NormalHit(givenGameObject, hit);
+                PlaySound(0, true);
             }
+            else { PlaySound(2, true); }
         }
         else
         {
             if(givenGameObject.tag == "Enemy")
             {
                 NormalHit(givenGameObject, hit);
+                PlaySound(1, true);
             }
             else if (givenGameObject.tag == "EnemyWeakPoint")
             {
                 WeakPointHit(givenGameObject, hit);
+                PlaySound(0, true);
             }
+            else { PlaySound(2, true); }
         }
     }
     void WeakPointHit(GameObject givenGameObject, RaycastHit hit)

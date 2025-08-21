@@ -529,25 +529,23 @@ public class GunScript : MonoBehaviour
     }
     void PlaySound(string soundType)
     {
-        return;
-        Debug.Log("Playing gun sound: " + soundType);
         LocalSoundManager lsm = manager.healthMan.lsm; AudioClip selectedClip;
         switch (soundType)
         {
             case "Shoot":
                 lastShootClipIndex += Random.Range(1, 3); if (lastShootClipIndex >= data.shootClips.Count) { lastShootClipIndex = 0; }
                 selectedClip = data.shootClips[lastShootClipIndex];
-                lsm.PlayLocalSound(selectedClip, "effect", 2);
+                lsm.PlayLocalSound(selectedClip, "gun", 2);
                 break;
             case "EmptyShoot":
                 lastEmptyClipIndex += Random.Range(1, 3); if (lastEmptyClipIndex >= data.noAmmoClips.Count) { lastEmptyClipIndex = 0; }
                 selectedClip = data.noAmmoClips[lastEmptyClipIndex];
-                lsm.PlayLocalSound(selectedClip, "effect", 1);
+                lsm.PlayLocalSound(selectedClip, "gun", 1);
                 break;
             case "Reload":
                 lastReloadClipIndex += Random.Range(1, 3); if (lastReloadClipIndex >= data.reloadClips.Count) { lastReloadClipIndex = 0; }
                 selectedClip = data.reloadClips[lastReloadClipIndex];
-                lsm.PlayNonOverlapSound(selectedClip, "effect");
+                lsm.PlayNonOverlapSound(selectedClip, "gun");
                 break;
         }
     }

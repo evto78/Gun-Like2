@@ -68,6 +68,11 @@ public class EnemyHealthManager : MonoBehaviour
     protected float burnTimer; public bool refundPoints;
 
     protected string sourceOfLastDamage;
+    [Header("Sounds")]
+    float volume;
+    public List<SoundEffect> soundEffects;
+    [System.Serializable]
+    public class SoundEffect { public List<AudioClip> clip; public List<AudioSource> source; public int lastSource = 0; }
     protected virtual void Awake()
     {
         if (gdm == null)
@@ -86,6 +91,11 @@ public class EnemyHealthManager : MonoBehaviour
             playerItem = gdm.phm.playerItem;
             player = gdm.phm.gameObject;
         }
+
+        //Adjust Volume
+        if (!PlayerPrefs.HasKey("ENEMYVOL")) { PlayerPrefs.SetFloat("ENEMYVOL", 80f); }
+        volume = PlayerPrefs.GetFloat("ENEMYVOL") / 100f; InvokeRepeating("CheckForVolumeUpdate", 0.5f, 0.5f);
+        foreach(SoundEffect sfx in soundEffects) { foreach(AudioSource source in sfx.source) { source.volume = volume; } }
 
         //Effect Setup
         activeEffects = new List<Vector4>();
@@ -135,12 +145,30 @@ public class EnemyHealthManager : MonoBehaviour
             dmgQued.RemoveAt(0);
         }
     }
-
+    void CheckForVolumeUpdate() { volume = PlayerPrefs.GetFloat("ENEMYVOL") / 100f; }
+    public void PlaySound(int key, bool interupting, bool oneShot)
+    {
+        if(volume <= 0) { return; }
+        SoundEffect sfx = soundEffects[key]; AudioSource selected = sfx.source[sfx.lastSource];
+        sfx.lastSource++; if(sfx.lastSource >= sfx.source.Count) { sfx.lastSource = 0; }
+        selected.volume = volume;
+        if (selected.isPlaying) { selected.volume /= 3f; }
+        if (interupting) { selected.Stop(); }
+        if (oneShot)
+        {
+            selected.PlayOneShot(sfx.clip[Random.Range(0, sfx.clip.Count)]);
+        }
+        else
+        {
+            selected.clip = sfx.clip[Random.Range(0, sfx.clip.Count)];
+            selected.Play();
+        }
+    }
     public virtual void TakeDamage(float dmgTaken, bool ignoreArmor, HitType.ht hit, Vector3 hitLocation, string source)
     {
         sourceOfLastDamage = source;
         if (hit == HitType.ht.weak || hit == HitType.ht.critweak || hit == HitType.ht.special) { ignoreArmor = true; }
-        foreach(MonoBehaviour brain in brains)
+        foreach (MonoBehaviour brain in brains)
         {
             if(hit == HitType.ht.critweak || hit == HitType.ht.weak)
             {
@@ -160,27 +188,27 @@ public class EnemyHealthManager : MonoBehaviour
         if (activeEffects[0].x > 0) { tempArmor *= 0.25f; }
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
         if (activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
-        if(activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
-        if(playerHM.activeEffects[22].x > 0 && playerItem.leftItems[134]+playerItem.rightItems[134]>1) { dmgTaken *= 1.25f * (playerItem.leftItems[134] + playerItem.rightItems[134] - 1); }
-        if(playerItem.leftItems[146]>0 && source == "left") { dmgTaken *= (1.05f+0.05f * playerItem.leftItems[146])*numOfActiveEffects; }
-        if(playerItem.rightItems[146]>0 && source == "right") { dmgTaken *= (1.05f+0.05f * playerItem.rightItems[146])*numOfActiveEffects; }
+        if (activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
+        if (playerHM.activeEffects[22].x > 0 && playerItem.leftItems[134]+playerItem.rightItems[134]>1) { dmgTaken *= 1.25f * (playerItem.leftItems[134] + playerItem.rightItems[134] - 1); }
+        if (playerItem.leftItems[146]>0 && source == "left") { dmgTaken *= (1.05f+0.05f * playerItem.leftItems[146])*numOfActiveEffects; }
+        if (playerItem.rightItems[146]>0 && source == "right") { dmgTaken *= (1.05f+0.05f * playerItem.rightItems[146])*numOfActiveEffects; }
 
         if (hit != HitType.ht.crit && hit != HitType.ht.critweak && hit != HitType.ht.special)
         {
             if (activeEffects[11].x > 0 && Random.Range(0,2) == 0) { 
-                if(hit == HitType.ht.normal) { hit = HitType.ht.crit; }
-                if(hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
+                if (hit == HitType.ht.normal) { hit = HitType.ht.crit; }
+                if (hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
                 if (source == "left") { dmgTaken *= playerItem.gunManager.leftGunScript.critDamage; }
                 if (source == "right") { dmgTaken *= playerItem.gunManager.rightGunScript.critDamage; }
-                if(playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
+                if (playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
             }
         }
-        else if(activeEffects[11].x > 0 && playerItem.leftItems[130] + playerItem.rightItems[130] > 1)
+        else if (activeEffects[11].x > 0 && playerItem.leftItems[130] + playerItem.rightItems[130] > 1)
         {
             dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1));
         }
 
-        if((source == "left" && playerItem.leftItems[127] > 0))
+        if ((source == "left" && playerItem.leftItems[127] > 0))
         {
             if(curHp >= maxHp)
             {
@@ -193,7 +221,7 @@ public class EnemyHealthManager : MonoBehaviour
                 }
             }
         }
-        if((source == "right" && playerItem.rightItems[127] > 0))
+        if ((source == "right" && playerItem.rightItems[127] > 0))
         {
             if (curHp >= maxHp)
             {
@@ -207,7 +235,7 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        if(activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
+        if (activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
         {
             dmgTaken = dmgTaken * 2f;
         }
@@ -222,7 +250,7 @@ public class EnemyHealthManager : MonoBehaviour
             if (tempArmor >= dmgTaken)
             {
                 curHp -= 1f;
-                latestDamage = 1f;
+                latestDamage = 1f; 
             }
             else
             {
@@ -242,7 +270,7 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        if(playerItem.leftItems[126] + playerItem.rightItems[126] > 0 && dmgTaken >= 2f)
+        if (playerItem.leftItems[126] + playerItem.rightItems[126] > 0 && dmgTaken >= 2f)
         {
             GameObject spawnedPapers = Instantiate(burnedPapers, transform.position, transform.rotation);
             spawnedPapers.GetComponent<BurnedPapers>().damage = dmgTaken;
@@ -250,11 +278,11 @@ public class EnemyHealthManager : MonoBehaviour
             spawnedPapers.transform.localScale = Vector3.one * ((playerItem.leftItems[126] + playerItem.rightItems[126])/2f);
         }
 
-        if(source == "left")
+        if (source == "left")
         {
             //saveData
             playerItem.gunManager.leftDamageDATA += dmgTaken; playerItem.gunManager.leftHitsDATA++;
-            if(dmgTaken > playerItem.gunManager.leftMaxDmgDATA) { playerItem.gunManager.leftMaxDmgDATA = dmgTaken; }
+            if (dmgTaken > playerItem.gunManager.leftMaxDmgDATA) { playerItem.gunManager.leftMaxDmgDATA = dmgTaken; }
 
             //irradiated battle plans
             float chance = playerItem.leftItems[80] * 25f; if(chance > 50) { chance = 50; }

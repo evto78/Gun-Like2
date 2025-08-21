@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class LocalSoundManager : MonoBehaviour
 {
     public float masterVol;
     public float musicVol;
     public float effectVol;
+    public float enemyVol;
+    public float gunVol;
     public float uiVol;
     public int channels; public int noOverlapChannels;
     public Transform sourceHolder;
@@ -22,7 +25,7 @@ public class LocalSoundManager : MonoBehaviour
     List<AudioClip> highHeldClip;
     List<AudioClip> ultHeldClip;
     List<AudioClip> noOverlapHeldClip;
-    public enum SoundType { music, effect, ui, other }
+    public enum SoundType { music, effect, ui, other, enemy, gun }
     // Start is called before the first frame update
     void Start()
     {
@@ -73,28 +76,26 @@ public class LocalSoundManager : MonoBehaviour
         musicVol = PlayerPrefs.GetFloat("MUSICVOL");
         effectVol = PlayerPrefs.GetFloat("EFFECTVOL");
         uiVol = PlayerPrefs.GetFloat("UIVOL");
+        enemyVol = PlayerPrefs.GetFloat("ENEMYVOL");
+        gunVol = PlayerPrefs.GetFloat("GUNVOL");
     }
     public void PlayNonOverlapSound(AudioClip incomingClip, string givinType)
     {
         AudioSource exsistingSource = null;
         if (noOverlapHeldClip.Contains(incomingClip)) { exsistingSource = noOverlapSources[noOverlapHeldClip.IndexOf(incomingClip)]; }
-        SoundType type = SoundType.music;
+        SoundType type = SoundType.other;
         
         if (exsistingSource != null) 
         {
-            switch (givinType)
-            {
-                case "music": type = SoundType.music; break;
-                case "effect": type = SoundType.effect; break;
-                case "ui": type = SoundType.ui; break;
-                case "other": type = SoundType.other; break;
-            }
+            type = GetSoundType(givinType);
             switch (type)
             {
                 case SoundType.music: exsistingSource.volume = (musicVol / 100f) * (masterVol / 100f); break;
                 case SoundType.effect: exsistingSource.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: exsistingSource.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: exsistingSource.volume = (masterVol / 100f); break;
+                case SoundType.enemy: exsistingSource.volume = (enemyVol / 100f); break;
+                case SoundType.gun: exsistingSource.volume = (gunVol / 100f); break;
             }
             if (exsistingSource.volume == 0) { return; }
             exsistingSource.Stop(); exsistingSource.Play(); 
@@ -102,13 +103,7 @@ public class LocalSoundManager : MonoBehaviour
         else
         {
             lastNoOverlapSource++; if(lastNoOverlapSource >= noOverlapSources.Count) { lastNoOverlapSource = 0; }
-            switch (givinType)
-            {
-                case "music": type = SoundType.music; break;
-                case "effect": type = SoundType.effect; break;
-                case "ui": type = SoundType.ui; break;
-                case "other": type = SoundType.other; break;
-            }
+            type = GetSoundType(givinType);
             AudioSource source = noOverlapSources[lastNoOverlapSource];
             switch (type)
             {
@@ -116,6 +111,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: source.volume = (masterVol / 100f); break;
+                case SoundType.enemy: source.volume = (enemyVol / 100f); break;
+                case SoundType.gun: source.volume = (gunVol / 100f); break;
             }
             if (source.volume == 0) { return; }
             source.clip = incomingClip;
@@ -135,34 +132,22 @@ public class LocalSoundManager : MonoBehaviour
         }
         if (existingSource != null)
         {
-            SoundType type = SoundType.music;
-            switch (givinType)
-            {
-                case "music": type = SoundType.music; break;
-                case "effect": type = SoundType.effect; break;
-                case "ui": type = SoundType.ui; break;
-                case "other": type = SoundType.other; break;
-            }
+            SoundType type = GetSoundType(givinType);
             switch (type)
             {
                 case SoundType.music: existingSource.volume = (musicVol / 100f) * (masterVol / 100f); break;
                 case SoundType.effect: existingSource.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: existingSource.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: existingSource.volume = (masterVol / 100f); break;
+                case SoundType.enemy: existingSource.volume = (enemyVol / 100f); break;
+                case SoundType.gun: existingSource.volume = (gunVol / 100f); break;
             }
             if (existingSource.volume == 0) { return; }
             existingSource.Play();
         }
         else
         {
-            SoundType type = SoundType.music;
-            switch (givinType)
-            {
-                case "music": type = SoundType.music; break;
-                case "effect": type = SoundType.effect; break;
-                case "ui": type = SoundType.ui; break;
-                case "other": type = SoundType.other; break;
-            }
+            SoundType type = GetSoundType(givinType);
             AudioSource source = PickSource(prior, incomingClip);
             if (source.isPlaying) { source = PickSource(prior + 1, incomingClip); } //switch to a higher channel if the previous one is busy
             switch (type)
@@ -171,6 +156,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: source.volume = (masterVol / 100f); break;
+                case SoundType.enemy: source.volume = (enemyVol / 100f); break;
+                case SoundType.gun: source.volume = (gunVol / 100f); break;
             }
             if (source.volume == 0) { return; }
             source.clip = incomingClip;
@@ -189,5 +176,18 @@ public class LocalSoundManager : MonoBehaviour
             case 4: return (PickSource(0, clip));
         }
         return PickSource(0, clip);
+    }
+    SoundType GetSoundType(string givinType)
+    {
+        switch (givinType)
+        {
+            case "music": return SoundType.music;
+            case "effect": return SoundType.effect;
+            case "ui": return SoundType.ui;
+            case "enemy": return SoundType.enemy;
+            case "gun": return SoundType.gun;
+            case "other": return SoundType.other;
+            default: return SoundType.other;
+        }
     }
 }
