@@ -83,7 +83,7 @@ public class MainMenuManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && starting) { Back(); }
+        if ((Input.GetKeyDown(instance.controlsBinds.pauseMenu) || Input.GetKeyDown(KeyCode.Escape)) && starting) { Back(); }
     }
     public void Play(string what)
     {

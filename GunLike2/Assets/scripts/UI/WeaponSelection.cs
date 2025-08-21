@@ -48,25 +48,26 @@ public class WeaponSelection : MonoBehaviour
 
         readyBtn.interactable = (leftHandVal != 0 && rightHandVal != 0) && (leftHandVal != rightHandVal);
     }
-    public void WeaponHover(int id)
+    public void WeaponHover(int id, int soundId)
     {
         infoDisplay.gameObject.SetActive(true);
         infoDisplay.InfoUpdate(gunObjectData[id]);
+
+        if (Input.GetMouseButtonDown(0)) { SelectWeapon(id, 0, soundId); }
+        if (Input.GetMouseButtonDown(1)) { SelectWeapon(id, 1, soundId); }
     }
-    public void SelectWeapon(int id)
+    public void SelectWeapon(int id, int input, int soundId)
     {
-        if(leftHandVal == 0)
+        switch (input)
         {
-            leftHandVal = id;
+            case 0:
+                leftHandVal = id;
+                break;
+            case 1:
+                rightHandVal = id;
+                break;
         }
-        else if(rightHandVal == 0)
-        {
-            rightHandVal = id;
-        }
-        else
-        {
-            leftHandVal = id;
-        }
+        menuManager.usp.PlaySoundByKey(soundId);
 
         int leftSetVal = leftHandVal; int rightSetVal = rightHandVal;
 

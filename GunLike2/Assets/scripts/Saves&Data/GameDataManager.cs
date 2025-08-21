@@ -38,6 +38,9 @@ public class GameDataManager : MonoBehaviour
     public SaveFileReadWrite instance;
     bool requesting = false;
 
+    [Header("ControlsData")]
+    public ControlsInformation controlsBinds;
+
     [Header("Bosses")]
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
     public GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums; public ExitGateConsole exitConsole;

@@ -10,6 +10,7 @@ public class FishingMinigame : MonoBehaviour
     GameObject player;
     UIManager uiman;
     GunManager gm;
+    GameDataManager gdm;
     public Animator tabletHolder;
     public GameObject tablet;
     float tabletAnimTimer;
@@ -23,6 +24,7 @@ public class FishingMinigame : MonoBehaviour
         player = GameObject.Find("Player");
         uiman = player.GetComponent<UIManager>();
         gm = player.GetComponent<GunManager>();
+        gdm = gm.healthMan.gdm;
         playerFishing = false;
         tabletScreen.SetActive(false);
     }
@@ -31,7 +33,7 @@ public class FishingMinigame : MonoBehaviour
         tabletAnimTimer -= Time.deltaTime;
         if (playerNear && gm.playerItem.leftItems[83] + gm.playerItem.rightItems[83] > 0)
         {
-            if (!playerFishing && Input.GetKeyDown(KeyCode.E) && fished == false)
+            if (!playerFishing && (Input.GetKeyDown(gdm.controlsBinds.leftInteract) || Input.GetKeyDown(gdm.controlsBinds.righInteract)) && fished == false)
             {
                 playerFishing = true;
                 Cursor.visible = true;
@@ -50,7 +52,7 @@ public class FishingMinigame : MonoBehaviour
         }
         //Debug.Log("1: "+timesUp);
         //if (tabletAnimTimer <= 0) { timesUp = false; }
-        if (uiman.fishing && (Input.GetKeyDown(KeyCode.Escape) || timesUp))
+        if (uiman.fishing && (Input.GetKeyDown(gdm.controlsBinds.pauseMenu) || timesUp))
         {
             playerFishing = false;
             Cursor.visible = false;

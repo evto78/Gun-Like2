@@ -46,19 +46,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeEhms: []
   activeSpawners: []
-  basePoints: {x: 40, y: 60}
-  flatPointsPerDifficulty: 50
-  pointsLeft: 0
+  phm: {fileID: 0}
+  pi: {fileID: 0}
   difficulty: 1
-  difficultySelected: 1
+  unroundedDiff: 0
+  difficultyIDSelected: 0
+  mutatedRules: 
+  mutatedStatModifiers: []
+  mutatedEnemySelected: {fileID: 0}
   timeSpent: 0
   timeSpentNoPause: 0
   gameTimerActive: 1
   roomNumber: 0
-  phm: {fileID: 0}
+  basePoints: {x: 40, y: 60}
+  flatPointsPerDifficulty: 50
+  pointsLeft: 0
+  pointsLocked: 0
   saveDataReaderPrefab: {fileID: 0}
   instance: {fileID: 0}
+  controlsBinds:
+    walkForward: 0
+    walkBackward: 0
+    walkLeft: 0
+    walkRight: 0
+    jump: 0
+    slam: 0
+    slide: 0
+    sprint: 0
+    leftInteract: 0
+    righInteract: 0
+    showMoreInformation: 0
+    leftShoot: 0
+    leftReload: 0
+    rightShoot: 0
+    rightReload: 0
+    pauseMenu: 0
+    openInventory: 0
   chimera: {fileID: 2492430237933944822, guid: 448a4817e75485c4f9e0e1da4bb4351a, type: 3}
-  usrID: 
-  usrSessionNum: 0
-  sendData: 0
+  roomsUntilBoss: 0
+  endGateBlockade: {fileID: 0}
+  endDoorCounter: {fileID: 0}
+  unitNums:
+  - {fileID: 0}
+  - {fileID: 0}
+  exitConsole: {fileID: 0}

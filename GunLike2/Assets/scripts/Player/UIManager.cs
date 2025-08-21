@@ -135,7 +135,7 @@ public class UIManager : MonoBehaviour
         if (isPaused) {Time.timeScale = 0f; }
         else {Time.timeScale = 1f; }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(healthManager.gdm.controlsBinds.pauseMenu))
         {
             if (fishing)
             {
@@ -148,7 +148,7 @@ public class UIManager : MonoBehaviour
                 else if (state == "pause") { ChangeState("play"); }
             }
         }
-        if ((Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.I)) && !fishing)
+        if (Input.GetKeyDown(healthManager.gdm.controlsBinds.openInventory) && !fishing)
         {
             if (state == "play") { ChangeState("inventory"); }
             else if (state == "inventory") { ChangeState("play"); }

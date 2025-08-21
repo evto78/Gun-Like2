@@ -9,6 +9,6 @@ public class WeaponSelectHover : Selectable
     void Update()
     {
         if(wsb == null) { wsb = GetComponentInParent<WeaponSelectButton>(); }
-        wsb.Hover(IsHighlighted());
+        wsb.Hover(IsHighlighted() || IsHighlighted() || IsPressed());
     }
 }

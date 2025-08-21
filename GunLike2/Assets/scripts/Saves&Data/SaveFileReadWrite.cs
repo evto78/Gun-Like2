@@ -41,7 +41,12 @@ public class SaveFileReadWrite : MonoBehaviour
         public int timesDefeated = 0;
         public float timeToKillRecord = 99999f;
     }
+    [Header("CONTROLS")]
+    public ControlsInformation controlsBinds;
+    string controlsFile; bool createdNewControlsFile;
+    string controlsFilePath; string controlsFileName = "ControlsData.json";
 
+    [Header("FILE INFORMATION")]
     string file; bool createdNew;
     string filePath; string fileName = "SaveData.json";
     public SaveDataFile data;
@@ -81,6 +86,14 @@ public class SaveFileReadWrite : MonoBehaviour
         if(gdm != null) { gdm.instance = this; }
         if(menuManager != null) { menuManager.instance = this; }
 
+        SaveDataCheckup();
+        ControlsDataCheckup();
+
+        data.usrSessions++;
+        PlayerPrefs.SetInt("USRSES", data.usrSessions);
+    }
+    void SaveDataCheckup()
+    {
         createdNew = false;
         filePath = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -88,9 +101,16 @@ public class SaveFileReadWrite : MonoBehaviour
 
         CheckEmpty();
         if (!createdNew) { Deserialize(); }
+    }
+    void ControlsDataCheckup()
+    {
+        createdNewControlsFile = false;
+        controlsFilePath = Path.Combine(Application.persistentDataPath, controlsFileName);
 
-        data.usrSessions++;
-        PlayerPrefs.SetInt("USRSES", data.usrSessions);
+        controlsBinds = new ControlsInformation(); controlsBinds.DefaultControls();
+
+        ControlsCheckEmpty();
+        if (!createdNewControlsFile) { ControlsDeserialize(); }
     }
     private void Update()
     {
@@ -277,7 +297,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        Serialize();
+        Serialize(); SerializeControls();
         AddEmailToQue("GameClose");
         SendAllEmails();
     }
@@ -424,5 +444,50 @@ public class SaveFileReadWrite : MonoBehaviour
         }
         
         return (tdata);
+    }
+    void ControlsCheckEmpty()
+    {
+        if (!File.Exists(controlsFilePath))
+        {
+            CreateControlsData();
+        }
+    }
+    void CreateControlsData()
+    {
+        StreamWriter sw = File.CreateText(controlsFilePath); sw.Close();
+        ControlsInformation newData = InitalizeControls();
+        File.WriteAllText(controlsFilePath, JsonUtility.ToJson(newData));
+        controlsFile = JsonUtility.ToJson(newData);
+        controlsBinds = JsonUtility.FromJson<ControlsInformation>(controlsFile);
+        createdNewControlsFile = true;
+    }
+    ControlsInformation InitalizeControls()
+    {
+        ControlsInformation conInfo = new ControlsInformation();
+        conInfo.DefaultControls();
+        return conInfo;
+    }
+    void ControlsDeserialize()
+    {
+        bool makeNew = false;
+        controlsFile = File.ReadAllText(controlsFilePath);
+        try
+        {
+            controlsBinds = JsonUtility.FromJson<ControlsInformation>(controlsFile);
+        }
+        catch { makeNew = true; }
+        if (controlsBinds == null || makeNew)//File is empty or corrupted, write new data to it.
+        {
+            File.Delete(controlsFilePath);
+            CreateControlsData();
+        }
+    }
+    public void UpdateControls()
+    {
+        SerializeControls();
+    }
+    void SerializeControls()
+    {
+        File.WriteAllText(controlsFilePath, JsonUtility.ToJson(controlsBinds));
     }
 }

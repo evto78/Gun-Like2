@@ -46,7 +46,7 @@ public class ItemDisplayScript : MonoBehaviour
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(KeyCode.C))
+        if (Input.GetKey(playerItemScript.healthManager.gdm.controlsBinds.showMoreInformation))
         {
             //id 22 is the irradiated french pastry
             if(selectedItem.id == 22)

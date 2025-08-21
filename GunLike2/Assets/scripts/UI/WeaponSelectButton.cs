@@ -7,6 +7,7 @@ using TMPro;
 public class WeaponSelectButton : MonoBehaviour
 {
     TextMeshProUGUI txt; public Vector2 minMax; public int id;
+    public int soundId;
     public Image txtBg; WeaponSelection weaponSelection;
     void Start()
     {
@@ -20,7 +21,7 @@ public class WeaponSelectButton : MonoBehaviour
         {
             txt.color = new Color(255, 255, 255, minMax.y);
             txtBg.color = new Color(0, 0, 0, minMax.y/2f);
-            weaponSelection.WeaponHover(id);
+            weaponSelection.WeaponHover(id, soundId);
         }
         else
         {

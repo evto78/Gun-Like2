@@ -63,7 +63,7 @@ public class InvItemDisplay : MonoBehaviour
         ItemObject selectedItem = Resources.Load<ItemObject>("Items/" + id.ToString());
 
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(KeyCode.C))
+        if (Input.GetKey(playerItemScript.healthManager.gdm.controlsBinds.showMoreInformation))
         {
             //id 22 is the irradiated french pastry
             if (selectedItem.id == 22)

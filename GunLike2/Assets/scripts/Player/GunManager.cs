@@ -1064,12 +1064,19 @@ public class GunManager : MonoBehaviour
         if (healthMan.dead) { return; }
 
         if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); RightGunUpdate(); }
-        if (Input.GetKeyDown(KeyCode.R) && Cursor.lockState == CursorLockMode.Locked)
+        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked)
         {
             leftGunScript.AttemptReload();
+            if (axeCooldown <= 0 && leftGunkyAxe > 0)
+            {
+                SpawnAxe(Camera.main.transform.forward);
+                axeCooldown = 10f;
+            }
+        }
+        if (Input.GetKeyDown(healthMan.gdm.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked)
+        {
             rightGunScript.AttemptReload();
-
-            if (axeCooldown <= 0 && leftGunkyAxe + rightGunkyAxe > 0)
+            if (axeCooldown <= 0 && rightGunkyAxe > 0)
             {
                 SpawnAxe(Camera.main.transform.forward);
                 axeCooldown = 10f;
@@ -1081,11 +1088,11 @@ public class GunManager : MonoBehaviour
 
     void leftGunUpdate()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetKey(healthMan.gdm.controlsBinds.leftShoot))
         {
             leftGunScript.AttemptShoot();
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetKeyUp(healthMan.gdm.controlsBinds.leftShoot))
         {
             leftGunScript.AttemptShootUp(false);
         }
@@ -1093,11 +1100,11 @@ public class GunManager : MonoBehaviour
 
     void RightGunUpdate()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetKey(healthMan.gdm.controlsBinds.rightShoot))
         {
             rightGunScript.AttemptShoot();
         }
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetKeyUp(healthMan.gdm.controlsBinds.rightShoot))
         {
             rightGunScript.AttemptShootUp(false);
         }
