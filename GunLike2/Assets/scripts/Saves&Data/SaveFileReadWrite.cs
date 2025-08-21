@@ -46,6 +46,12 @@ public class SaveFileReadWrite : MonoBehaviour
     string controlsFile; bool createdNewControlsFile;
     string controlsFilePath; string controlsFileName = "ControlsData.json";
 
+    [Header("SAVED RUNS DATA")]
+    public List<RunSaveData> savedRuns = new List<RunSaveData>();
+    string runFile; bool createdNewRunFile;
+    string runFilePath; string genaricRunFileName = "SavedRun_";
+    RunSaveData acsessedRun;
+
     [Header("FILE INFORMATION")]
     string file; bool createdNew;
     string filePath; string fileName = "SaveData.json";
@@ -489,5 +495,57 @@ public class SaveFileReadWrite : MonoBehaviour
     void SerializeControls()
     {
         File.WriteAllText(controlsFilePath, JsonUtility.ToJson(controlsBinds));
+    }
+    public void SaveRun(int slot)
+    {
+        if(slot > savedRuns.Count || slot < 0) { slot = savedRuns.Count; savedRuns.Add(PrepareRunFile(slot)); }
+        acsessedRun = savedRuns[slot];
+
+        RunSerialize();
+    }
+    RunSaveData PrepareRunFile(int slot)
+    {
+        RunSaveData save = new RunSaveData();
+        save.InitializeData();
+
+        save.runName = "Saved Run #"+slot;
+        save.runCreationDate = System.DateTime.Now.ToString("U");
+
+        save.roomNumber = gdm.roomNumber;
+        save.selectedDifficulty = gdm.difficultyIDSelected;
+        save.currentDifficulty = gdm.unroundedDiff;
+        save.leftInv = gdm.pi.leftItems;
+        save.rightInv = gdm.pi.rightItems;
+        save.leftGun = PlayerPrefs.GetInt("leftHandGunSelect");
+        save.rightGun = PlayerPrefs.GetInt("rightHandGunSelect");
+        save.timeElapsed = gdm.timeSpent;
+        save.unpausedTimeElapsed = gdm.timeSpentNoPause;
+        save.mutationRules = gdm.mutatedRules;
+
+        return save;
+    }
+    public bool LoadRun(int slot)
+    {
+        runFilePath = Path.Combine(Application.persistentDataPath, genaricRunFileName + slot + ".json");
+        acsessedRun = new RunSaveData(); acsessedRun.InitializeData();
+
+        if (RunCheckEmpty())
+        {
+            return false;
+        }
+        else
+        {
+            RunDeserialize();
+            return true;
+        }
+    }
+    bool RunCheckEmpty() { return !File.Exists(runFilePath); }
+    void RunSerialize()
+    {
+        File.WriteAllText(runFilePath, JsonUtility.ToJson(acsessedRun));
+    }
+    void RunDeserialize()
+    {
+
     }
 }

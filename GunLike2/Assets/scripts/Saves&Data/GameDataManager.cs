@@ -196,6 +196,7 @@ public class GameDataManager : MonoBehaviour
         phm.attackedThisRoom = false;
         phm.brokenSpeakerItemDropped = false;
         phm.uiMan.gearscript.Turn(roomNumber);
+        StartCoroutine(HealToFull());
         endGateBlockade.Toggle(true);
         exitConsole.SetUp(false, null);
         timeSpent += 120f;
@@ -208,6 +209,15 @@ public class GameDataManager : MonoBehaviour
         }
 
         instance.AddEmailToQue("RoomEnter");
+    }
+    IEnumerator HealToFull()
+    {
+        for(int i = 0; i < 50; i++)
+        {
+            phm.curHp += phm.maxHp / 50f; if(phm.curHp > phm.maxHp) { phm.curHp = phm.maxHp; }
+            yield return new WaitForEndOfFrame();
+        }
+        yield return null;
     }
     public void BeginSpawning()
     {
