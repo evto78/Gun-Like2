@@ -524,7 +524,6 @@ public class GunScript : MonoBehaviour
 
         rushJobTimer -= Time.deltaTime;
 
-        //Preinstatiation
         PreInstatiateBullets();
     }
     void PlaySound(string soundType)

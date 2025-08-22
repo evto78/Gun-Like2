@@ -48,9 +48,9 @@ public class SaveFileReadWrite : MonoBehaviour
 
     [Header("SAVED RUNS DATA")]
     public List<RunSaveData> savedRuns = new List<RunSaveData>();
-    string runFile; bool createdNewRunFile;
     string runFilePath; string genaricRunFileName = "SavedRun_";
-    RunSaveData acsessedRun;
+    public RunSaveData acsessedRun;
+    public int loadingARun = -1;
 
     [Header("FILE INFORMATION")]
     string file; bool createdNew;
@@ -97,6 +97,18 @@ public class SaveFileReadWrite : MonoBehaviour
 
         data.usrSessions++;
         PlayerPrefs.SetInt("USRSES", data.usrSessions);
+
+        UpdateSavedRunsList();
+    }
+    void UpdateSavedRunsList()
+    {
+        savedRuns = new List<RunSaveData>();
+        for (int i = 0; i < 8; i++) 
+        {
+            if (LoadRun(i)) { savedRuns.Add(acsessedRun); }
+            else { break; }
+        }
+        loadingARun = -1;
     }
     void SaveDataCheckup()
     {
@@ -134,7 +146,7 @@ public class SaveFileReadWrite : MonoBehaviour
                     gdm = gm.GetComponent<GameDataManager>();
                 }
             }
-            if (gdm != null) { gdm.instance = this; }
+            if (gdm != null) { gdm.instance = this; if (loadingARun != -1) { gdm.LoadFromSavedRun(savedRuns[loadingARun]); } }
             //Try to find Main Menu Manager
             foreach (GameObject gm in SceneManager.GetActiveScene().GetRootGameObjects())
             {
@@ -498,17 +510,19 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     public void SaveRun(int slot)
     {
-        if(slot > savedRuns.Count || slot < 0) { slot = savedRuns.Count; savedRuns.Add(PrepareRunFile(slot)); }
+        if(slot >= savedRuns.Count || slot < 0) { slot = savedRuns.Count; savedRuns.Add(PrepareRunFile(slot)); }
         acsessedRun = savedRuns[slot];
+        acsessedRun = PrepareRunFile(slot);
+        runFilePath = Path.Combine(Application.persistentDataPath, genaricRunFileName + slot + ".json");
 
-        RunSerialize();
+        RunSerialize(acsessedRun);
     }
     RunSaveData PrepareRunFile(int slot)
     {
         RunSaveData save = new RunSaveData();
         save.InitializeData();
 
-        save.runName = "Saved Run #"+slot;
+        save.runName = "Saved Run #" + slot;
         save.runCreationDate = System.DateTime.Now.ToString("U");
 
         save.roomNumber = gdm.roomNumber;
@@ -521,31 +535,39 @@ public class SaveFileReadWrite : MonoBehaviour
         save.timeElapsed = gdm.timeSpent;
         save.unpausedTimeElapsed = gdm.timeSpentNoPause;
         save.mutationRules = gdm.mutatedRules;
+        save.cash = gdm.phm.money;
+        save.tickets = gdm.pi.gotchaTickets;
+        save.randomnessSeed = Random.state;
 
         return save;
     }
     public bool LoadRun(int slot)
     {
+        loadingARun = slot;
         runFilePath = Path.Combine(Application.persistentDataPath, genaricRunFileName + slot + ".json");
         acsessedRun = new RunSaveData(); acsessedRun.InitializeData();
 
-        if (RunCheckEmpty())
-        {
-            return false;
-        }
-        else
+        if (RunCheckEmpty()) { return false; } else
         {
             RunDeserialize();
             return true;
         }
     }
     bool RunCheckEmpty() { return !File.Exists(runFilePath); }
-    void RunSerialize()
+    void RunSerialize(RunSaveData run)
     {
-        File.WriteAllText(runFilePath, JsonUtility.ToJson(acsessedRun));
+        if (RunCheckEmpty())
+        {
+            StreamWriter sw = File.CreateText(runFilePath); sw.Close();
+            File.WriteAllText(runFilePath, JsonUtility.ToJson(run));
+        }
+        else
+        {
+            File.WriteAllText(runFilePath, JsonUtility.ToJson(run));
+        }
     }
     void RunDeserialize()
     {
-
+        acsessedRun = JsonUtility.FromJson<RunSaveData>(File.ReadAllText(runFilePath));
     }
 }

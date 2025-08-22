@@ -14,6 +14,9 @@ public class RunSaveData
     public float timeElapsed;
     public float unpausedTimeElapsed;
     public List<int> mutationRules;
+    public int cash;
+    public int tickets;
+    public Random.State randomnessSeed;
 
     public string runName;
     public string runCreationDate;
@@ -33,5 +36,8 @@ public class RunSaveData
         timeElapsed = 0;
         unpausedTimeElapsed = 0;
         mutationRules = new List<int>();
+        cash = 0;
+        tickets = 0;
+        randomnessSeed = Random.state;
     }
 }

@@ -99,7 +99,11 @@ public class PlayerItem : MonoBehaviour
     bool changedLastFrame;
     private void Awake()
     {
-        leftItems = new List<int>(); rightItems = new List<int>();
+        GameDataManager gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+
+        leftItems = new List<int>(); 
+        rightItems = new List<int>(); 
+            
         itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
         SortItemData();
@@ -138,9 +142,10 @@ public class PlayerItem : MonoBehaviour
         horrorItems = new List<int>();
         cooldownItems = new List<int>();
 
-        foreach(ItemObject item in itemData)
+        GameDataManager gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        foreach (ItemObject item in itemData)
         {
-            leftItems.Add(0);rightItems.Add(0);
+            leftItems.Add(0); rightItems.Add(0);
             switch (item.rarity)
             {
                 case ItemObject.rarityType.Common: commonItems.Add(item.id); break;

@@ -75,6 +75,8 @@ public class UIManager : MonoBehaviour
     public List<int> fpsHistory = new List<int>();
 
     public List<Color> roomNumColors;
+
+    public List<SaveSlotButton> saveSlotButtons;
     private void Awake()
     {
     }
@@ -98,6 +100,15 @@ public class UIManager : MonoBehaviour
         settings.tab.SetActive(true);
         settings.gameObject.SetActive(true);
         settings.InitialApply();
+        saveSlotButtons[0].transform.parent.parent.gameObject.SetActive(true);
+        GameDataManager gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        for (int i = 0; i < saveSlotButtons.Count; i++)
+        {
+            if (gdm.instance.savedRuns.Count > i) { saveSlotButtons[i].SaveSlotSetUp(gdm.instance.savedRuns[i]); }
+            else { saveSlotButtons[i].SaveSlotSetUp(null); }
+            saveSlotButtons[i].gameObject.GetComponent<Button>().interactable = true;
+        }
+        saveSlotButtons[0].transform.parent.parent.gameObject.SetActive(false);
         settings.tab.SetActive(false);
         settings.tab.transform.parent.gameObject.SetActive(false);
 
@@ -110,8 +121,15 @@ public class UIManager : MonoBehaviour
             case 2: ammoDisplayDetailHolder.SetActive(true); ammoDisplaySimpleHolder.SetActive(false); break;
         }
     }
-
-    // Update is called once per frame
+    public void UpdateSaveSlots()
+    {
+        for (int i = 0; i < saveSlotButtons.Count; i++)
+        {
+            if (healthManager.gdm.instance.savedRuns.Count > i) { saveSlotButtons[i].SaveSlotSetUp(healthManager.gdm.instance.savedRuns[i]); }
+            else { saveSlotButtons[i].SaveSlotSetUp(null); }
+            saveSlotButtons[i].gameObject.GetComponent<Button>().interactable = true;
+        }
+    }
     void Update()
     {
         timer.text = FormatTimeToTimer((int)healthManager.gdm.timeSpent);
@@ -166,7 +184,8 @@ public class UIManager : MonoBehaviour
     public void ChangeState(string newState)
     {
         state = newState;
-        if (state == "play") { playUI.SetActive(true); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
+        if (state == "play") { playUI.SetActive(true); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
+            saveSlotButtons[0].transform.parent.parent.gameObject.SetActive(false); }
         if (state == "inventory") { playUI.SetActive(false); inventoryUI.SetActive(true); pauseUI.SetActive(false); isPaused = false; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
         if (state == "pause") { playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(true); isPaused = true; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
 
@@ -430,4 +449,5 @@ public class UIManager : MonoBehaviour
         gunkyPng.SetActive(false);
         yield return null;
     }
+    public void SaveRun(int slot) { healthManager.gdm.SaveCurrentRun(slot); UpdateSaveSlots(); }
 }

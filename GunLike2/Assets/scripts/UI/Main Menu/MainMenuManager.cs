@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour
     public List<GameObject> uiTOHIDE; bool loading;
     public SaveFileReadWrite instance;
     WeaponSelection weaponSelect;
+    public Transform continueSlots;
     public SettingsScript settings;
     public UiSoundPlayer usp;
     public int selectedDifficulty;
@@ -84,36 +85,49 @@ public class MainMenuManager : MonoBehaviour
             }
         }
         mutationIDText.text = "Current Mutation: NULL";
+
+        SaveDataButtonSetUp();
+    }
+    public void SaveDataButtonSetUp()
+    {
+        continueSlots.parent.parent.gameObject.SetActive(true);
+        for(int i = 0; i < continueSlots.childCount; i++)
+        {
+            if (i >= instance.savedRuns.Count) { continueSlots.GetChild(i).gameObject.GetComponent<SaveSlotButton>().SaveSlotSetUp(null); }
+            else { continueSlots.GetChild(i).gameObject.GetComponent<SaveSlotButton>().SaveSlotSetUp(instance.savedRuns[i]); }
+        }
+        continueSlots.parent.parent.gameObject.SetActive(false);
     }
     private void Update()
     {
         if ((Input.GetKeyDown(instance.controlsBinds.pauseMenu) || Input.GetKeyDown(KeyCode.Escape)) && starting) { Back(); }
     }
-    public void Play(string what)
+    public void Play(int what)
     {
-        if(what == "new")
+        if (starting) { return; }
+        if (what == -1)
         {
-            if (!starting)
-            {
-                bgDoor.Activate();
-                camAnim.SetBool("Leaving", true);
-                starting = true;
-                foreach (GameObject go in uiTOHIDE)
-                {
-                    if (go != null) { go.SetActive(false); }
-                }
-                usp.UIDifficultySound(selectedDifficulty);
-                PlayerPrefs.SetInt("SELECTEDDIFFICULTY", selectedDifficulty);
-                if (selectedDifficulty == 4)
-                {//get mutated rules id
-                    PlayerPrefs.SetInt("MUTATEDRULE1", currentMutatedRules[0]);
-                    PlayerPrefs.SetInt("MUTATEDRULE2", currentMutatedRules[1]);
-                    PlayerPrefs.SetInt("MUTATEDRULE3", currentMutatedRules[2]);
-                    PlayerPrefs.SetInt("MUTATEDRULE4", currentMutatedRules[3]);
-                    PlayerPrefs.SetInt("MUTATEDRULE5", currentMutatedRules[4]);
-                    PlayerPrefs.SetInt("MUTATEDRULE6", currentMutatedRules[5]);
-                }
+            instance.loadingARun = -1;
+            bgDoor.Activate();
+            camAnim.SetBool("Leaving", true);
+            starting = true;
+            foreach (GameObject go in uiTOHIDE) { if (go != null) { go.SetActive(false); } }
+            usp.UIDifficultySound(selectedDifficulty);
+            PlayerPrefs.SetInt("SELECTEDDIFFICULTY", selectedDifficulty);
+            if (selectedDifficulty == 4)
+            {//get mutated rules id
+                PlayerPrefs.SetInt("MUTATEDRULE1", currentMutatedRules[0]);
+                PlayerPrefs.SetInt("MUTATEDRULE2", currentMutatedRules[1]);
+                PlayerPrefs.SetInt("MUTATEDRULE3", currentMutatedRules[2]);
+                PlayerPrefs.SetInt("MUTATEDRULE4", currentMutatedRules[3]);
+                PlayerPrefs.SetInt("MUTATEDRULE5", currentMutatedRules[4]);
+                PlayerPrefs.SetInt("MUTATEDRULE6", currentMutatedRules[5]);
             }
+        }
+        else
+        {
+            instance.loadingARun = what;
+            LoadLevel(true);
         }
     }
     public void Back()
@@ -152,10 +166,10 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
-    public void LoadLevel()
+    public void LoadLevel(bool continueRun)
     {
         if (loading) { return; } loading = true;
-        UpdateGunInfo();
+        if (!continueRun) { UpdateGunInfo(); }
         StartCoroutine(LoadAsyncScene("Area1"));
     }
     IEnumerator LoadAsyncScene(string sceneName)

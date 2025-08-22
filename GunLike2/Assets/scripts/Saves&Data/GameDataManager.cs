@@ -54,7 +54,10 @@ public class GameDataManager : MonoBehaviour
         mutatedEnemySelected = null;
         mutatedRules = new List<int>();
         mutatedStatModifiers = new List<float>(); for (int i = 0; i < 29; i++) { mutatedStatModifiers.Add(1f); }
-
+        if (instance.loadingARun != -1)
+        {
+            LoadFromSavedRun(instance.savedRuns[instance.loadingARun]);
+        }
         difficultyIDSelected = 1;
         if (PlayerPrefs.HasKey("SELECTEDDIFFICULTY"))
         {
@@ -101,6 +104,47 @@ public class GameDataManager : MonoBehaviour
         endGateBlockade.Toggle(true); exitConsole.SetUp(false, null);
 
         pi.ItemsFromMutatedModifcataion(mutatedRules);
+    }
+    public void LoadFromSavedRun(RunSaveData runSaveData)
+    {
+        roomNumber = runSaveData.roomNumber;
+        difficultyIDSelected = runSaveData.selectedDifficulty; PlayerPrefs.SetInt("SELECTEDDIFFICULTY", difficultyIDSelected);
+        unroundedDiff = runSaveData.currentDifficulty;
+        pi.leftItems = runSaveData.leftInv;
+        pi.rightItems = runSaveData.rightInv;
+        PlayerPrefs.SetInt("leftHandGunSelect", runSaveData.leftGun);
+        PlayerPrefs.SetInt("rightHandGunSelect", runSaveData.rightGun);
+        timeSpent = runSaveData.timeElapsed;
+        timeSpentNoPause = runSaveData.unpausedTimeElapsed;
+        mutatedRules = runSaveData.mutationRules;
+        phm.money = runSaveData.cash;
+        pi.gotchaTickets = runSaveData.tickets;
+        Random.state = runSaveData.randomnessSeed;
+        
+        switch (difficultyIDSelected)
+        {
+            case 0:
+                difficultyProgressionModifier = 0.5f; phm.freeRelaxedRevive = true;//2x base HP and HP REGEN, 2x more cash dropped from enemies, bosses are less aggresive
+                break;
+            case 1:
+                difficultyProgressionModifier = 1f;
+                break;
+            case 2:
+                difficultyProgressionModifier = 2f;
+                break;
+            case 3:
+                difficultyProgressionModifier = 5f;
+                break;
+            case 4:
+                ReadAndApplyMutatedRules();
+                break;
+        }
+
+        StartCoroutine(HealToFull());
+    }
+    public void SaveCurrentRun(int slot)
+    {
+        instance.SaveRun(slot);
     }
     void ReadAndApplyMutatedRules()
     {

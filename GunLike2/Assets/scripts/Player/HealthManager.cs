@@ -96,7 +96,7 @@ public class HealthManager : MonoBehaviour
     void Start()
 	{
 		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
-		money = 0;
+		if (gdm.instance.loadingARun == -1) { money = 0; }
 		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
