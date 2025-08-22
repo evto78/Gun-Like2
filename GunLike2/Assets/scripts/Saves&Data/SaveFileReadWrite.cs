@@ -392,6 +392,16 @@ public class SaveFileReadWrite : MonoBehaviour
         emailQueEvent.Add("JSON : " + eventT);
         emailQueContent.Add(JsonUtility.ToJson(tdata));
     }
+    public void AddFeedbackEmailToQue(string content)
+    {
+        string emailContent = "";
+        TelemData tdata = PrepareData();
+        emailContent += content;
+        emailContent += " [SENT BY: " + tdata.usr + " ]";
+
+        emailQueEvent.Add("FEEDBACK");
+        emailQueContent.Add(emailContent);
+    }
     void SendAllEmails()
     {
         for(int i = 0; i < emailQueContent.Count; i++)

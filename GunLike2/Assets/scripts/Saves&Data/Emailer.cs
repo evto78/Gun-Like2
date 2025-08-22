@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Emailer : MonoBehaviour
 {
-    const string kSenderPassword = "rwfj dfxr thtl mfqy ";
+    const string kSenderPassword = "dztg bdml agxc kzjv ";
     const string kReceiverEmailAddress = "gunlike2data@gmail.com";
     public static void SendAnEmail(string message, string header)
     {
