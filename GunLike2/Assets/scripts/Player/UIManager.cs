@@ -77,9 +77,9 @@ public class UIManager : MonoBehaviour
     public List<Color> roomNumColors;
 
     public List<SaveSlotButton> saveSlotButtons;
-    private void Awake()
-    {
-    }
+
+    public TextMeshProUGUI saveNameBox;
+    
     private void Start()
     {
         exitConsoleSideView.SetActive(false); displaySideConsole = false;
@@ -449,5 +449,5 @@ public class UIManager : MonoBehaviour
         gunkyPng.SetActive(false);
         yield return null;
     }
-    public void SaveRun(int slot) { healthManager.gdm.SaveCurrentRun(slot); UpdateSaveSlots(); }
+    public void SaveRun(int slot) { healthManager.gdm.SaveCurrentRun(slot, saveNameBox.text); UpdateSaveSlots(); }
 }

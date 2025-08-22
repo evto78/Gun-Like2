@@ -18,6 +18,9 @@ public class NuclearExplosion : MonoBehaviour
     {
         myCollider = GetComponent<SphereCollider>();
         brightthingy = GetComponentInChildren<Light>();
+
+        LevelBuilder lb = GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>();
+        if (lb != null) { lb.placed.Add(gameObject); }
     }
 
     // Update is called once per frame

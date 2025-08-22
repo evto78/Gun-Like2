@@ -508,11 +508,12 @@ public class SaveFileReadWrite : MonoBehaviour
     {
         File.WriteAllText(controlsFilePath, JsonUtility.ToJson(controlsBinds));
     }
-    public void SaveRun(int slot)
+    public void SaveRun(int slot, string saveName)
     {
         if(slot >= savedRuns.Count || slot < 0) { slot = savedRuns.Count; savedRuns.Add(PrepareRunFile(slot)); }
         acsessedRun = savedRuns[slot];
         acsessedRun = PrepareRunFile(slot);
+        if(saveName != "") { acsessedRun.runName = saveName + "_" + slot; }
         runFilePath = Path.Combine(Application.persistentDataPath, genaricRunFileName + slot + ".json");
 
         RunSerialize(acsessedRun);

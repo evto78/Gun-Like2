@@ -142,9 +142,9 @@ public class GameDataManager : MonoBehaviour
 
         StartCoroutine(HealToFull());
     }
-    public void SaveCurrentRun(int slot)
+    public void SaveCurrentRun(int slot, string saveName)
     {
-        instance.SaveRun(slot);
+        instance.SaveRun(slot, saveName);
     }
     void ReadAndApplyMutatedRules()
     {

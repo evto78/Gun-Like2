@@ -7,5 +7,7 @@ public class DetachOnLoa : MonoBehaviour
     void Start()
     {
         transform.parent = null;
+        LevelBuilder lb = GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>();
+        if(lb != null) { lb.placed.Add(gameObject); }
     }
 }

@@ -93,16 +93,17 @@ public class SlotMachineInteractable : MonoBehaviour
     {
         switch (id)
         {
-            case 0: StartCoroutine(VendReward(cost*4)); break;
-            case 1: StartCoroutine(VendReward(cost*2)); break;
-            case 2: StartCoroutine(VendReward(cost)); break;
+            case 0: StartCoroutine(VendReward(cost*4)); weightedList.Add(3); break;
+            case 1: StartCoroutine(VendReward(cost*2)); weightedList.Add(3); break;
+            case 2: StartCoroutine(VendReward(cost)); weightedList.Add(3); break;
             case 3: Explode(); break;
-            case 4: cost = (int)(cost*1.5f); costTxt.text = cost.ToString() + "$"; break;
+            case 4: cost += (Mathf.CeilToInt(gdm.phm.baseCost * priceModifier * (int)(gdm.difficulty * (gdm.roomNumber + 1)))); costTxt.text = cost.ToString() + "$"; break;
         }
     }
     void Explode()
     {
         Instantiate(explosion, transform.position, transform.rotation);
+        explosion.GetComponent<NuclearExplosion>().damage = cost / 8;
         Destroy(gameObject);
     }
     IEnumerator VendReward(int winnings)

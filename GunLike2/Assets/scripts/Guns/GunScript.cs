@@ -824,7 +824,7 @@ public class GunScript : MonoBehaviour
         {
             if (!shootingThisFrameAudio) { PlaySound("Shoot"); }
             animator.SetTrigger("ForceFire");
-            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * bulSpd / 3f, ForceMode.Impulse); }
+            if (manager.healthMan.gdm.mutatedRules.Contains(11)) { manager.healthMan.playerMvt.rb.AddForce(-transform.forward * (Mathf.Clamp(bulSpd, 20, 200) / 30f), ForceMode.Impulse); }
             timeSinceShot = 0f;
             if (brokenInk > 0 && inkCounter < Mathf.Clamp(10 - brokenInk, 1, 9)) { inkCounter++; } else if (brokenInk > 0) { inkCounter = 0; requireAmmo = false; }
             EarlyShoot(requireAmmo);

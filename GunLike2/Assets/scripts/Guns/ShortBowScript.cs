@@ -6,15 +6,22 @@ public class ShortBowScript : GunScript
 {
     public override void LateStart()
     {
-        if(transform.parent.name == "left holder")
+        if (manager.leftGunScript == this && manager.playerItem.leftItems[11] < 1)
         {
-            manager.gameObject.GetComponent<PlayerItem>().leftItems[11] += 1;
-            manager.gameObject.GetComponent<PlayerItem>().leftItems[16] += 1;
+            manager.playerItem.leftItems[11] += 1;
         }
-        if (transform.parent.name == "right holder")
+        if (manager.rightGunScript == this && manager.playerItem.rightItems[11] < 1)
         {
-            manager.gameObject.GetComponent<PlayerItem>().rightItems[11] += 1;
-            manager.gameObject.GetComponent<PlayerItem>().rightItems[16] += 1;
+            manager.playerItem.rightItems[11] += 1;
+        }
+
+        if (manager.leftGunScript == this && manager.playerItem.leftItems[16] < 1)
+        {
+            manager.playerItem.leftItems[16] += 1;
+        }
+        if (manager.rightGunScript == this && manager.playerItem.rightItems[16] < 1)
+        {
+            manager.playerItem.rightItems[16] += 1;
         }
     }
 }

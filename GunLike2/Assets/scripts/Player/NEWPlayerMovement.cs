@@ -172,6 +172,8 @@ public class NEWPlayerMovement : MonoBehaviour
         sprintMoveSpeed *= sprintMoveSpeedMult; sprintMoveSpeed /= sprintMoveSpeedDiv;
         jumpForce *= jumpForceMult; jumpForce /= jumpForceDiv;
         gravityModifier *= gravityMult; gravityModifier /= gravityDiv;
+        //No Gravity Check
+        if (healthMan.gdm.mutatedRules.Contains(11)) { moveSpeed /= 4f; sprintMoveSpeed /= 4f; rb.drag = 0.5f; } else { rb.drag = 0.2f; }
         //Item Checks
         if ((givenLeftItems[3] > 0) || (givenRightItems[3] > 0))
         {
@@ -393,6 +395,7 @@ public class NEWPlayerMovement : MonoBehaviour
             slidingMod = 2f;
         }
         inputDir = Vector3.zero;
+        if (healthMan.gdm.mutatedRules.Contains(11) && !onGround) { return; }
         if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkForward)) { inputDir = inputDir + Vector3.forward; }
         if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkBackward)) { inputDir = inputDir - Vector3.forward; }
         if (Input.GetKey(healthMan.gdm.instance.controlsBinds.walkLeft)) { inputDir = inputDir - Vector3.right; }

@@ -6,14 +6,13 @@ public class ArcherFish : GunScript
 {
     public override void LateStart()
     {
-        if (transform.parent.name == "left holder")
+        if (manager.leftGunScript == this && manager.playerItem.leftItems[40] < 1)
         {
-            manager.gameObject.GetComponent<PlayerItem>().leftItems[40] += 1;
+            manager.playerItem.leftItems[40] += 1;
         }
-        if (transform.parent.name == "right holder")
+        if (manager.rightGunScript == this && manager.playerItem.rightItems[40] < 1)
         {
-            manager.gameObject.GetComponent<PlayerItem>().rightItems[40] += 1;
+            manager.playerItem.rightItems[40] += 1;
         }
-
     }
 }

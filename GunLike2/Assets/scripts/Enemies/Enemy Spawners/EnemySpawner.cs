@@ -146,7 +146,7 @@ public class EnemySpawner : MonoBehaviour
     {
         pauseTimer = true;
         bool selected = false; int attemptsLeft = 25;
-        if(weightedSpawnableWaves.Count > 0)
+        if(weightedSpawnableWaves.Count > 0 && gdm.mutatedEnemySelected == null)
         { while (!selected && attemptsLeft > 0)
         {
             SpawnableWave sw = weightedSpawnableWaves[Random.Range(0, weightedSpawnableWaves.Count)];
@@ -191,6 +191,7 @@ public class EnemySpawner : MonoBehaviour
     }
     void SpawnEnemyGiven(Spawnable enemy)
     {
+        if (gdm.pointsLocked) { return; }
         GameObject spawned = Instantiate(enemy.thingToSpawn, spawnPoint.position, spawnPoint.rotation); spawned.GetComponent<EnemyHealthManager>().gdm = gdm;
     }
 }
