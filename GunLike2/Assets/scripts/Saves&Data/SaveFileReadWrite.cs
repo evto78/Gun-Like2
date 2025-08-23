@@ -389,7 +389,7 @@ public class SaveFileReadWrite : MonoBehaviour
         TelemData tdata = PrepareData();
         tdata.eventData = eventT;
 
-        emailQueEvent.Add("JSON : " + eventT);
+        emailQueEvent.Add("JSON");
         emailQueContent.Add(JsonUtility.ToJson(tdata));
     }
     public void AddFeedbackEmailToQue(string content)
