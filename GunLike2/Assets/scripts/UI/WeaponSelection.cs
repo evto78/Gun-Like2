@@ -6,7 +6,8 @@ using TMPro;
 
 public class WeaponSelection : MonoBehaviour
 {
-    public Sprite hand;
+    public Sprite handL;
+    public Sprite handR;
     List<GunObjectData> gunObjectData;
     public Image leftHand;
     public Image rightHand;
@@ -40,10 +41,10 @@ public class WeaponSelection : MonoBehaviour
     private void Update()
     {
         if(leftHandVal == -1) { leftHand.sprite = gunObjectData[0].icon; }
-        else if (leftHandVal == 0) { leftHand.sprite = hand; }
+        else if (leftHandVal == 0) { leftHand.sprite = handL; }
         else { leftHand.sprite = gunObjectData[leftHandVal].icon; }
         if(rightHandVal == -1) { rightHand.sprite = gunObjectData[0].icon; }
-        else if (rightHandVal == 0) { rightHand.sprite = hand; }
+        else if (rightHandVal == 0) { rightHand.sprite = handR; }
         else { rightHand.sprite = gunObjectData[rightHandVal].icon; }
 
         readyBtn.interactable = (leftHandVal != 0 && rightHandVal != 0) && (leftHandVal != rightHandVal);
@@ -52,6 +53,8 @@ public class WeaponSelection : MonoBehaviour
     {
         infoDisplay.gameObject.SetActive(true);
         infoDisplay.InfoUpdate(gunObjectData[id]);
+
+        if(id == 0) { id = -1; }
 
         if (Input.GetMouseButtonDown(0)) { SelectWeapon(id, 0, soundId); }
         if (Input.GetMouseButtonDown(1)) { SelectWeapon(id, 1, soundId); }

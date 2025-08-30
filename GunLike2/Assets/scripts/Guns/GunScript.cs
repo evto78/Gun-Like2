@@ -632,6 +632,11 @@ public class GunScript : MonoBehaviour
         if (!reloading && (currentBullets != magSize || tacticalReload > 0 || runicMag > 0 ))
         {
             Reload();
+            if (manager.axeCooldown <= 0 && manager.leftGunkyAxe > 0)
+            {
+                manager.SpawnAxe(cam.transform.forward);
+                manager.axeCooldown = 10f;
+            }
         }
     }
 
@@ -656,8 +661,8 @@ public class GunScript : MonoBehaviour
         if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
         if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
 
-        if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
-        if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null); }
+        if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber"); }
+        if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber"); }
 
         LateReload();
     }
@@ -813,12 +818,12 @@ public class GunScript : MonoBehaviour
         bool requireAmmo = true;
         if (bulletFactory > 0) { requireAmmo = false; if(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1) { requireAmmo = true; } }
         if (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
-
+        if (requireAmmo && currentBullets < 1 && manager.autoReload && carvedBone < 1) { AttemptReload(); }
         if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
         {
-            manager.healthMan.TakeDamage(1, false, null);
+            manager.healthMan.TakeDamage(1, false, null, "Carved Bone");
             currentBullets++;
-            if (triggerHappy > 0) { currentBullets++; manager.healthMan.TakeDamage(1, false, null); }
+            if (triggerHappy > 0) { currentBullets++; manager.healthMan.TakeDamage(1, false, null, "Carved Bone"); }
         }
         if (currentBullets > 0 || !requireAmmo)
         {

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ExitGateConsole : MonoBehaviour
 {
+    Collider collide;
     bool interacted;
     Animator anim;
     GateBlockade exitGate;
@@ -20,6 +21,7 @@ public class ExitGateConsole : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        collide = GetComponent<Collider>();
         anim = GetComponentInChildren<Animator>();
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         ui = gdm.phm.uiMan;
@@ -31,6 +33,7 @@ public class ExitGateConsole : MonoBehaviour
     }
     public void SetUp(bool isBoss, EnemyHealthManager bossEhm)
     {
+        collide.enabled = true;
         bossRoom = isBoss; 
         anim.SetTrigger("Up");
         consoleTxt.text = "Awaiting Input...";
@@ -72,6 +75,7 @@ public class ExitGateConsole : MonoBehaviour
     IEnumerator UnlockSequence()
     {
         ui.GateUnlockUpdate(false);
+        gdm.PointsRestore();
         consoleTxt.text = "Input Recived!";
         yield return new WaitForSeconds(0.1f);
         consoleTxt.text = "Input Recived! Please Wait...";
@@ -113,6 +117,7 @@ public class ExitGateConsole : MonoBehaviour
         ui.GateUnlockUpdate(true);
         yield return new WaitForSeconds(0.5f);
         exitGate.Toggle(false);
+        collide.enabled = false;
         yield return null;
     }
 }

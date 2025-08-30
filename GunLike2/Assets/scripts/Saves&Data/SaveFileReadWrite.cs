@@ -452,9 +452,9 @@ public class SaveFileReadWrite : MonoBehaviour
         tdata.eventTime = System.DateTime.Now.ToString("U");
         tdata.leftInv = gdm.pi.leftItems;
         tdata.rightInv = gdm.pi.rightItems;
-        tdata.leftGun = gdm.pi.gunManager.leftGunScript.gunName;
-        tdata.rightGun = gdm.pi.gunManager.rightGunScript.gunName;
-        if (gdm.phm.lastHitMe != null && gdm.phm.lastHitMe.data != null) { tdata.mostRecentSourceOfDmg = gdm.phm.lastHitMe.data.enemyName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
+        tdata.leftGun = gdm.pi.gunManager.leftGunScript.gunName; if (gdm.pi.gunManager.leftGunScript.isGoo) { tdata.leftGun = "Shape Changing Goo"; }
+        tdata.rightGun = gdm.pi.gunManager.rightGunScript.gunName; if (gdm.pi.gunManager.rightGunScript.isGoo) { tdata.rightGun = "Shape Changing Goo"; }
+        if (gdm.phm.lastHitMeName != null && gdm.phm.lastHitMeName != null) { tdata.mostRecentSourceOfDmg = gdm.phm.lastHitMeName; } else { tdata.mostRecentSourceOfDmg = "NULL"; }
 
         tdata.fpsHistory = new List<int>(); tdata.fpsAdv = 0; tdata.fpsMax = 0; tdata.fpsMin = int.MaxValue;
         if(gdm != null)

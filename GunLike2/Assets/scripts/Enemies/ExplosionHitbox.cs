@@ -35,7 +35,7 @@ public class ExplosionHitbox : MonoBehaviour
         if(other.gameObject.tag == "Player" && !collided)
         {
             collided = true;
-            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage, false, null);
+            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage, false, null, "Grenade");
             if (doesKnockback)
             {
                 other.gameObject.GetComponent<Rigidbody>().AddForce(((other.transform.position - transform.position).normalized + Vector3.up * 0.1f) * knockback, ForceMode.Impulse);

@@ -60,7 +60,7 @@ public class SandbagBrain : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, ehm);
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, ehm, ehm.data.enemyName);
         }
     }
 }

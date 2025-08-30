@@ -14,7 +14,7 @@ public class Egg : MonoBehaviour
         if(other.gameObject.name == "Player")
         {
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            hm.TakeDamage(-hm.maxHp * (healPer / 100f), false, null);
+            hm.TakeDamage(-hm.maxHp * (healPer / 100f), false, null, "Chicken Coop");
 
             Destroy(gameObject);
         }

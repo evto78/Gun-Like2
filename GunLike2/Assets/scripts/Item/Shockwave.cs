@@ -53,7 +53,7 @@ public class Shockwave : MonoBehaviour
             {
                 HealthManager phm = collision.gameObject.GetComponentInParent<HealthManager>();
                 if(phm == null) { return; }
-                phm.TakeDamage(damage, false, null);
+                phm.TakeDamage(damage, false, null, "Shockwave");
             }
         }
         else

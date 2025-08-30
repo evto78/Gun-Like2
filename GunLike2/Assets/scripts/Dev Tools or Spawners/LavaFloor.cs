@@ -28,7 +28,7 @@ public class LavaFloor : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && timer <= 0)
         {
-            other.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null);
+            other.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null, "Crate Crab");
             timer = tickrate;
         }
     }
@@ -36,7 +36,7 @@ public class LavaFloor : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" && timer <= 0)
         {
-            collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null);
+            collision.gameObject.GetComponentInParent<HealthManager>().TakeDamage(damage, false, null, "Crate Crab");
             timer = tickrate;
         }
     }

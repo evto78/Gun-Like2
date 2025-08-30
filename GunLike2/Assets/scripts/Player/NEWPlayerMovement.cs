@@ -477,7 +477,7 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             if(hasFightingWings && jumpsLeft <= 0)
             {
-                healthMan.TakeDamage(healthMan.curHp / 10f, false, null);
+                healthMan.TakeDamage(healthMan.curHp / 10f, false, null, "Fighting Wings");
             }
 
             jumpsLeft -= 1;

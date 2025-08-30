@@ -22,7 +22,7 @@ public class SandbagLimb : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(sb.dmg, false, sb.ehm);
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(sb.dmg, false, sb.ehm, sb.ehm.data.enemyName);
         }
         ps.Play();
         ehm.PlaySound(0, false, true);

@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour
     public GameObject inventoryUI;
     public GameObject pauseUI;
     public GameObject deathUI;
+    public TextMeshProUGUI killedByText;
     public GameObject bowchargeUI;
 
     public GameObject gunkyPng;
@@ -146,6 +147,8 @@ public class UIManager : MonoBehaviour
         {
             playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false;
         }
+
+        killedByText.text = healthManager.lastHitMeName;
     }
     string FormatTimeToTimer(int time)
     {

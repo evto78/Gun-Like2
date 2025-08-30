@@ -243,6 +243,7 @@ public class GunManager : MonoBehaviour
 
     public int totalLiveBullets;
     public int maximumLiveBullets;
+    public bool autoReload;
 
     GooColorShift gcsL; GooColorShift gcsR;
     bool leftGoo; bool rightGoo;
@@ -282,6 +283,8 @@ public class GunManager : MonoBehaviour
         effectList = healthMan.activeEffects;
 
         GrabMeshRenders();
+
+        healthMan.gdm.instance.AddEmailToQue("RunStart");
     }
     void SortGunObjData()
     {
@@ -1067,20 +1070,11 @@ public class GunManager : MonoBehaviour
         if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked)
         {
             leftGunScript.AttemptReload();
-            if (axeCooldown <= 0 && leftGunkyAxe > 0)
-            {
-                SpawnAxe(Camera.main.transform.forward);
-                axeCooldown = 10f;
-            }
+            
         }
         if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked)
         {
             rightGunScript.AttemptReload();
-            if (axeCooldown <= 0 && rightGunkyAxe > 0)
-            {
-                SpawnAxe(Camera.main.transform.forward);
-                axeCooldown = 10f;
-            }
         }
 
         itemChecks();

@@ -109,7 +109,7 @@ public class BossHealthManager : EnemyHealthManager
             if (Random.Range(1, 100) < chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage, false, this);
+                playerHM.TakeDamage(-latestDamage, false, this, "Irradiated Battle Plans");
                 latestDamage = 0;
             }
         }
@@ -124,7 +124,7 @@ public class BossHealthManager : EnemyHealthManager
             if (Random.Range(1, 100) < chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage, false, this);
+                playerHM.TakeDamage(-latestDamage, false, this, "Irradiated Battle Plans");
                 latestDamage = 0;
             }
         }

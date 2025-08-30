@@ -279,8 +279,8 @@ public class GameDataManager : MonoBehaviour
         }
         activeSpawners = newOrder;
 
-        pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
-        pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
+        PointsRestore();
+        
         float delayTime = 3;
         foreach (EnemySpawner spawner in activeSpawners)
         {
@@ -288,6 +288,11 @@ public class GameDataManager : MonoBehaviour
             spawner.StartSpawning();
             delayTime += Random.Range(7f, 13f);
         }
+    }
+    public void PointsRestore()
+    {
+        pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
+        pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
     }
     public void SpawnBoss(string boss)
     {

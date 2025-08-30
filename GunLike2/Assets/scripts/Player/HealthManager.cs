@@ -47,6 +47,7 @@ public class HealthManager : MonoBehaviour
 	public int divineInter;
 	public float divineTimer;
 	public EnemyHealthManager lastHitMe;
+	public string lastHitMeName;
 	EnemyHealthManager markedEnemy;
 	public bool attackedThisRoom;
 	public GameObject egg;
@@ -444,13 +445,13 @@ public class HealthManager : MonoBehaviour
 
 				if(Random.Range(1,100) > (53 - experimentalImp * 3))
                 {
-					TakeDamage(-1f * healthRegen, false, null);
+					TakeDamage(-1f * healthRegen, false, null, "Experimental Implant");
                 }
                 else
                 {
 					if(curHp > 0.5f * healthRegen)
                     {
-						TakeDamage(0.5f * healthRegen, false, null);
+						TakeDamage(0.5f * healthRegen, false, null, "Experimental Implant");
 					}
                 }
             }
@@ -554,7 +555,7 @@ public class HealthManager : MonoBehaviour
             {
                 switch (wishPopUp.readWish())
                 {
-					case 1: TakeDamage(-maxHp, false, null); GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f); wishPopUp.ready = false; break; //Heal
+					case 1: TakeDamage(-maxHp, false, null, "Wish"); GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f); wishPopUp.ready = false; break; //Heal
 					case 2: money += 5000; wishPopUp.ready = false; break; //Money
 					case 3: for (int i = 0; i < 10; i++) { playerItem.SpawnItem(0, false, 0, false); } wishPopUp.ready = false; break; //Item
 					case 4: WishSmite(); wishPopUp.ready = false; break; //Smite
@@ -603,7 +604,7 @@ public class HealthManager : MonoBehaviour
 			ehm.TakeDamage(1000 * (gunManager.leftDmg + gunManager.rightDmg), false, HitType.ht.special, ehm.transform.position, "self");
         }
     }
-	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source)
+	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName)
 	{
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
@@ -626,9 +627,10 @@ public class HealthManager : MonoBehaviour
 		else
 		{
 			if (Random.Range(1, 100) < evadeChance) { return; }
-			if(activeEffects[27].x>0){ damageTaken /= 2f; }
+			if (activeEffects[27].x>0){ damageTaken /= 2f; }
 			//Damage
 			if (source != null) { lastHitMe = source; }
+			if (sourceName != null) { lastHitMeName = sourceName; }
 			if (damageTaken <= tempArmor)
 			{
 				//armor has absorbed all damage but min dmg is 1
@@ -690,7 +692,7 @@ public class HealthManager : MonoBehaviour
 
 		if (curHp != maxHp && wasAtMax && radioDome > 0)
 		{
-			TakeDamage(maxHp * (15f / 100f), false, null);
+			TakeDamage(maxHp * (15f / 100f), false, null, "Radioactive Dome");
 			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
 			spawnedRadioDome.transform.position = transform.position;
 			spawnedRadioDome.GetComponent<RadioactiveDomes>().damage = maxHp * (15f / 100f);
@@ -785,7 +787,12 @@ public class HealthManager : MonoBehaviour
 					if (q.x > 0f) { q.z = q.y; }
 
 					//run effects that happen when timer ends
-					if (i == 0 || i == 1 || i == 2) { TakeDamage((q.x + 1f)*5f, false, null); }
+					switch (i)
+					{
+						case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed"); break;
+						case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn"); break;
+						case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation"); break;
+                    }
 				}
 			}
 

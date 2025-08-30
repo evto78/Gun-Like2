@@ -21,6 +21,7 @@ public class SettingsScript : MonoBehaviour
     public TMP_Dropdown resolution;
     public TMP_Dropdown bulletDisplayType;
     public Toggle sendGameData;
+    public Toggle autoReload;
     public Toggle dfov;
     bool built = false;
     private void Start()
@@ -60,8 +61,10 @@ public class SettingsScript : MonoBehaviour
         if (!PlayerPrefs.HasKey("FULLSCREEN")) { PlayerPrefs.SetInt("FULLSCREEN", 1); }
         if (!PlayerPrefs.HasKey("VSYNC")) { PlayerPrefs.SetInt("VSYNC", 0); }
         if (!PlayerPrefs.HasKey("SENDDATA")) { PlayerPrefs.SetInt("SENDDATA", 1); }
+        if (!PlayerPrefs.HasKey("AUTORELOAD")) { PlayerPrefs.SetInt("AUTORELOAD", 0); }
         if (!PlayerPrefs.HasKey("DFOV")) { PlayerPrefs.SetInt("DFOV", 1); }
         sendGameData.isOn = PlayerPrefs.GetInt("SENDDATA") == 1;
+        autoReload.isOn = PlayerPrefs.GetInt("AUTORELOAD") == 1;
         dfov.isOn = PlayerPrefs.GetInt("DFOV") == 1;
         Screen.fullScreen = PlayerPrefs.GetInt("FULLSCREEN") == 1;
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
@@ -93,7 +96,7 @@ public class SettingsScript : MonoBehaviour
         if(Mathf.RoundToInt(PlayerPrefs.GetFloat("FPS")) == 120) { Application.targetFrameRate = -1; }
 
         if (gdm == null && GameObject.FindGameObjectWithTag("gdm") != null) { gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); }
-        if (gdm != null) { gdm.phm.playerMvt.UpdateSettings(); gdm.phm.lsm.UpdateSettings(); }
+        if (gdm != null) { gdm.phm.playerMvt.UpdateSettings(); gdm.phm.lsm.UpdateSettings(); gdm.phm.playerItem.gunManager.autoReload = autoReload.isOn; }
         try
         {
             if (gdm == null) { Camera.main.gameObject.GetComponent<LocalSoundManager>().UpdateSettings(); }
@@ -125,6 +128,11 @@ public class SettingsScript : MonoBehaviour
     {
         input = sendGameData.isOn;
         if (input) { PlayerPrefs.SetInt("SENDDATA", 1); } else { PlayerPrefs.SetInt("SENDDATA", 0); }
+    }
+    public void AutoReload(bool input)
+    {
+        input = autoReload.isOn;
+        if (input) { PlayerPrefs.SetInt("AUTORELOAD", 1); } else { PlayerPrefs.SetInt("AUTORELOAD", 0); }
     }
     public void ChangeResolution(int input)
     {
