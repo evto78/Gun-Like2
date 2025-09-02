@@ -89,6 +89,8 @@ public class MainMenuManager : MonoBehaviour
         mutationIDText.text = "Current Mutation: NULL";
 
         SaveDataButtonSetUp();
+
+        //instance.SendSingleEmail();
     }
     public void SaveDataButtonSetUp()
     {

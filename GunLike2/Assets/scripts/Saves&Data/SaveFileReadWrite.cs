@@ -402,6 +402,13 @@ public class SaveFileReadWrite : MonoBehaviour
         emailQueEvent.Add("FEEDBACK");
         emailQueContent.Add(emailContent);
     }
+    public void SendSingleEmail()
+    {
+        if(emailQueContent.Count <= 0) {return; }
+        SendDataToEmail(emailQueEvent[0], emailQueContent[0]);
+        emailQueEvent.RemoveAt(0);
+        emailQueContent.RemoveAt(0);
+    }
     void SendAllEmails()
     {
         for(int i = 0; i < emailQueContent.Count; i++)
