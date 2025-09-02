@@ -125,6 +125,8 @@ public class NukeSpiderBrain : MonoBehaviour
             GameObject spawnedNuke = Instantiate(nuke);
             spawnedNuke.transform.position = transform.position;
             spawnedNuke.GetComponent<NuclearExplosion>().damage = nukeDmg;
+            hm.PlaySound(0, true, true);
+            hm.soundEffects[0].source[0].transform.SetParent(spawnedNuke.transform, false);
             Destroy(gameObject);
         }
     }

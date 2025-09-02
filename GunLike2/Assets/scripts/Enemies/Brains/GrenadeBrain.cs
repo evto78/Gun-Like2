@@ -108,7 +108,10 @@ public class GrenadeBrain : MonoBehaviour
         tickTimer -= Time.deltaTime;
         if(tickTimer <= 0)
         {
+
+            hm.PlaySound(1, true, true);
             explo.SetActive(true);
+            hm.soundEffects[1].source[0].transform.SetParent(explo.transform, false);
             explo.transform.SetParent(null);
             explo.GetComponent<ExplosionHitbox>().damage = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
             Destroy(gameObject);
@@ -131,7 +134,13 @@ public class GrenadeBrain : MonoBehaviour
         {
             ticking = true;
             subTimer = 0f;
+            hm.PlaySound(2,false,true);
+            hm.PlaySound(3,false,true);
         }
 
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        hm.PlaySound(0,false,true);
     }
 }

@@ -243,6 +243,7 @@ public class DroneBrain : MonoBehaviour
             uziBul.GetComponent<EnemyBullet>().SetStats(3 * hm.baseDamage * hm.difficultyScale * hm.difficultyStatScaling, hm);
             uziBul.GetComponent<Rigidbody>().AddForce(uziBul.transform.forward * 1.2f, ForceMode.Impulse);
             bulShot++;
+            hm.PlaySound(1, false, true);
         }
         else if (holding == holdType.grenade && curAmt < maxAtOnce)
         {
@@ -253,6 +254,7 @@ public class DroneBrain : MonoBehaviour
             spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * 150f, ForceMode.Impulse);
             spawned.GetComponent<EnemyHealthManager>().refundPoints = false; ;
             greShot++; activeGernades.Add(spawned.GetComponent<EnemyHealthManager>());
+            hm.PlaySound(0, false, true);
         }
         else if (holding == holdType.crab)
         {

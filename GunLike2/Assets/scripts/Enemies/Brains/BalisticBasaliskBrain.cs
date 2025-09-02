@@ -115,7 +115,7 @@ public class BalisticBasaliskBrain : MonoBehaviour
         spawnedBullet.transform.rotation = firepoint.transform.rotation;
         spawnedBullet.transform.Rotate(new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * accuracy);
         spawnedBullet.GetComponent<EnemyBullet>().SetStats(dmg, hm);
-
+        hm.PlaySound(1,true,true);
         spawnedBullet.GetComponent<Rigidbody>().AddForce(spawnedBullet.transform.forward * bulSpeed, ForceMode.Impulse);
     }
 }

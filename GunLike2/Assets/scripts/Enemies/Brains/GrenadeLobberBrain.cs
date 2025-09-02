@@ -98,5 +98,6 @@ public class GrenadeLobberBrain : MonoBehaviour
         spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * lobSpeed, ForceMode.Impulse);
         grenadesShotThisBurst++;
         grenadesSpawned.Add(spawned);
+        hm.PlaySound(1, true, true);
     }
 }

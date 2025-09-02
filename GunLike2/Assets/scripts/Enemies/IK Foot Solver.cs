@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IKFootSolver : MonoBehaviour
 {
+    EnemyHealthManager ehm;
     public IKFootSolver pairedLeg;
     public Transform hip;
     public float maxStepHeight;
@@ -21,6 +22,8 @@ public class IKFootSolver : MonoBehaviour
         SnapToGround();
         stay = true;
         stepping = false;
+
+        ehm = GetComponentInParent<EnemyHealthManager>();
     }
     void Update()
     {
@@ -60,6 +63,7 @@ public class IKFootSolver : MonoBehaviour
                 SnapToGround();
                 stay = true;
                 stepping = false;
+                if(ehm != null) { if(ehm.data.enemyName == "Uzi Walker" || ehm.data.enemyName == "Grenade Lobber") { ehm.PlaySound(0, false, true); } }
             }
         }
     }
