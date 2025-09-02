@@ -104,6 +104,7 @@ public class KnifeBrain : MonoBehaviour
                     transform.LookAt(player.transform.position);
                     rb.freezeRotation = true;
                     shimmerEffect.Play();
+                    hm.PlaySound(0, true, true);
                     strikeTimer = 0.5f;
                 }
                 break;
@@ -115,7 +116,7 @@ public class KnifeBrain : MonoBehaviour
                     strikeTimer -= Time.deltaTime;
                     rb.velocity = rb.velocity / 1.1f;
 
-                    if (strikeTimer <= 0f) { curState = state.strike; strikeTimer = 2f; }
+                    if (strikeTimer <= 0f) { curState = state.strike; strikeTimer = 2f; hm.PlaySound(2, false, true); }
                 }
                 break;
             case state.strike:
@@ -156,6 +157,7 @@ public class KnifeBrain : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" && curState == state.strike)
         {
+            hm.PlaySound(1, true, true);
             collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, hm, hm.data.enemyName);
 
             gameObject.GetComponent<Rigidbody>().freezeRotation = false;
