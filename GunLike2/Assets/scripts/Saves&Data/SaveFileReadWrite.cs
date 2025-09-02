@@ -60,6 +60,7 @@ public class SaveFileReadWrite : MonoBehaviour
     public MainMenuManager menuManager;
 
     [Header("DATA COLLECTION")]
+    BulkTelemData bulkTelem = new BulkTelemData();
     public bool sendData;
     public List<string> emailQueContent = new List<string>();
     public List<string> emailQueEvent = new List<string>();
@@ -67,6 +68,8 @@ public class SaveFileReadWrite : MonoBehaviour
 
     private void Awake()
     {
+        bulkTelem = new BulkTelemData();
+        bulkTelem.data = new List<TelemData>();
         emailQueContent = new List<string>();
         emailQueEvent = new List<string>();
         //Try to find GDM
@@ -158,17 +161,17 @@ public class SaveFileReadWrite : MonoBehaviour
             if (menuManager != null) { menuManager.instance = this; }
         }
 
-        if (emailQueContent.Count > 0)
-        {
-            StartCoroutine(EmailUpkeep());
-        }
+        //if (emailQueContent.Count > 0)
+        //{
+            //StartCoroutine(EmailUpkeep());
+        //}
     }
-    IEnumerator EmailUpkeep()
-    {
-        Debug.Log("SendingEmail");
-        SendSingleEmail();
-        yield return null;
-    }
+    //IEnumerator EmailUpkeep()
+    //{
+        //Debug.Log("SendingEmail");
+        //SendSingleEmail();
+        //yield return null;
+    //}
     public bool RequestDataUpdate()
     {
         if (data == null) { return false; }
@@ -400,8 +403,9 @@ public class SaveFileReadWrite : MonoBehaviour
         TelemData tdata = PrepareData();
         tdata.eventData = eventT;
 
-        emailQueEvent.Add("JSON");
-        emailQueContent.Add(JsonUtility.ToJson(tdata));
+        bulkTelem.data.Add(tdata);
+        //emailQueEvent.Add("JSON");
+        //emailQueContent.Add(JsonUtility.ToJson(tdata));
     }
     public void AddFeedbackEmailToQue(string content)
     {
@@ -413,19 +417,23 @@ public class SaveFileReadWrite : MonoBehaviour
         emailQueEvent.Add("FEEDBACK");
         emailQueContent.Add(emailContent);
     }
-    public void SendSingleEmail()
-    {
-        if(emailQueContent.Count <= 0) {return; }
-        SendDataToEmail(emailQueEvent[0], emailQueContent[0]);
-        emailQueEvent.RemoveAt(0);
-        emailQueContent.RemoveAt(0);
-    }
+    //public void SendSingleEmail()
+    //{
+        //if(emailQueContent.Count <= 0) {return; }
+        //SendDataToEmail(emailQueEvent[0], emailQueContent[0]);
+        //emailQueEvent.RemoveAt(0);
+        //emailQueContent.RemoveAt(0);
+    //}
     void SendAllEmails()
     {
+        //feedbackEmails
         for(int i = 0; i < emailQueContent.Count; i++)
         {
             SendDataToEmail(emailQueEvent[i], emailQueContent[i]);
         }
+        //JSONEmails
+        if (bulkTelem.data.Count > 0) 
+        { SendDataToEmail("JSON", JsonUtility.ToJson(bulkTelem)); }
     }
     public void SendDataToEmail(string eventT, string content)
     {
