@@ -157,6 +157,17 @@ public class SaveFileReadWrite : MonoBehaviour
             }
             if (menuManager != null) { menuManager.instance = this; }
         }
+
+        if (emailQueContent.Count > 0)
+        {
+            StartCoroutine(EmailUpkeep());
+        }
+    }
+    IEnumerator EmailUpkeep()
+    {
+        Debug.Log("SendingEmail");
+        SendSingleEmail();
+        yield return null;
     }
     public bool RequestDataUpdate()
     {

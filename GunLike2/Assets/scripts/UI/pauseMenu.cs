@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class pauseMenu : MonoBehaviour
 {
+    SaveFileReadWrite instance;
     public void ExitGameButton()
     {
         Application.Quit();
