@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class MainMenuManager : MonoBehaviour
     public SettingsScript settings;
     public UiSoundPlayer usp;
     public int selectedDifficulty;
+    public EventSystem eventS;
     [System.Serializable]
     public class DiffDetail
     {
@@ -107,6 +109,8 @@ public class MainMenuManager : MonoBehaviour
         if (starting) { return; }
         if (what == -1)
         {
+            eventS.SetSelectedGameObject(null); //Deselect buttons
+
             instance.loadingARun = -1;
             bgDoor.Activate();
             camAnim.SetBool("Leaving", true);
