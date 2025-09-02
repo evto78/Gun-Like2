@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameDataManager : MonoBehaviour
 {
@@ -42,9 +43,10 @@ public class GameDataManager : MonoBehaviour
     [Header("Bosses")]
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
     public GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums; public ExitGateConsole exitConsole;
-
+    bool bossKilled;
     private void Awake()
     {
+        bossKilled = false;
         endGateBlockade = GameObject.Find("EndGateBlockade").GetComponent<GateBlockade>(); endGateBlockade.Toggle(false);
         roomsUntilBoss = 10;
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
@@ -234,25 +236,33 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
-        if (mutatedRules.Contains(8)) { phm.playerItem.gunManager.RandomizeHeldGuns(); }
-        gameTimerActive = false;
-        roomNumber += 1;
-        phm.attackedThisRoom = false;
-        phm.brokenSpeakerItemDropped = false;
-        phm.uiMan.gearscript.Turn(roomNumber);
-        StartCoroutine(HealToFull());
-        endGateBlockade.Toggle(true);
-        exitConsole.SetUp(false, null);
-        timeSpent += 120f;
-        unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
-        phm.uiMan.difficultyGear.ResetSpin();
-        phm.uiMan.difficultyGear.Turn(unroundedDiff);
-        foreach (EnemyHealthManager ehm in activeEhms)
+        if (bossKilled)
         {
-            Destroy(ehm.gameObject);
+            PlayerPrefs.SetInt("Victory", 1);
+            SceneManager.LoadScene("ThankYou");
         }
+        else
+        {
+            if (mutatedRules.Contains(8)) { phm.playerItem.gunManager.RandomizeHeldGuns(); }
+            gameTimerActive = false;
+            roomNumber += 1;
+            phm.attackedThisRoom = false;
+            phm.brokenSpeakerItemDropped = false;
+            phm.uiMan.gearscript.Turn(roomNumber);
+            StartCoroutine(HealToFull());
+            endGateBlockade.Toggle(true);
+            exitConsole.SetUp(false, null);
+            timeSpent += 120f;
+            unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
+            phm.uiMan.difficultyGear.ResetSpin();
+            phm.uiMan.difficultyGear.Turn(unroundedDiff);
+            foreach (EnemyHealthManager ehm in activeEhms)
+            {
+                Destroy(ehm.gameObject);
+            }
 
-        instance.AddEmailToQue("RoomEnter");
+            instance.AddEmailToQue("RoomEnter");
+        }
     }
     IEnumerator HealToFull()
     {
@@ -318,6 +328,7 @@ public class GameDataManager : MonoBehaviour
                 int rightGun = gm.rightHandVal; SaveFileReadWrite.GunInformation infoR = instance.data.gunInfo[rightGun];
                 infoL.winningRuns++; infoR.winningRuns++;
                 instance.data.ChimeraInfo.timesDefeated++;
+                bossKilled = true;
                 if (timeTakenToDefeatChimera < instance.data.ChimeraInfo.timeToKillRecord) { instance.data.ChimeraInfo.timeToKillRecord = timeTakenToDefeatChimera; }
                 break;
         }
