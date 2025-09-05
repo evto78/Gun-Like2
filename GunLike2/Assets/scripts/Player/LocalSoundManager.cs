@@ -94,8 +94,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: exsistingSource.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: exsistingSource.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: exsistingSource.volume = (masterVol / 100f); break;
-                case SoundType.enemy: exsistingSource.volume = (enemyVol / 100f); break;
-                case SoundType.gun: exsistingSource.volume = (gunVol / 100f); break;
+                case SoundType.enemy: exsistingSource.volume = (enemyVol / 100f) * (masterVol / 100f); break;
+                case SoundType.gun: exsistingSource.volume = (gunVol / 100f) * (masterVol / 100f); break;
             }
             if (exsistingSource.volume == 0) { return; }
             exsistingSource.Stop(); exsistingSource.Play(); 
@@ -111,8 +111,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: source.volume = (masterVol / 100f); break;
-                case SoundType.enemy: source.volume = (enemyVol / 100f); break;
-                case SoundType.gun: source.volume = (gunVol / 100f); break;
+                case SoundType.enemy: source.volume = (enemyVol / 100f) * (masterVol / 100f); break;
+                case SoundType.gun: source.volume = (gunVol / 100f) * (masterVol / 100f); break;
             }
             if (source.volume == 0) { return; }
             source.clip = incomingClip;
@@ -139,8 +139,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: existingSource.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: existingSource.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: existingSource.volume = (masterVol / 100f); break;
-                case SoundType.enemy: existingSource.volume = (enemyVol / 100f); break;
-                case SoundType.gun: existingSource.volume = (gunVol / 100f); break;
+                case SoundType.enemy: existingSource.volume = (enemyVol / 100f) * (masterVol / 100f); break;
+                case SoundType.gun: existingSource.volume = (gunVol / 100f) * (masterVol / 100f); break;
             }
             if (existingSource.volume == 0) { return; }
             existingSource.Play();
@@ -156,8 +156,8 @@ public class LocalSoundManager : MonoBehaviour
                 case SoundType.effect: source.volume = (effectVol / 100f) * (masterVol / 100f); break;
                 case SoundType.ui: source.volume = (uiVol / 100f) * (masterVol / 100f); break;
                 case SoundType.other: source.volume = (masterVol / 100f); break;
-                case SoundType.enemy: source.volume = (enemyVol / 100f); break;
-                case SoundType.gun: source.volume = (gunVol / 100f); break;
+                case SoundType.enemy: source.volume = (enemyVol / 100f) * (masterVol / 100f); break;
+                case SoundType.gun: source.volume = (gunVol / 100f) * (masterVol / 100f); break;
             }
             if (source.volume == 0) { return; }
             source.clip = incomingClip;

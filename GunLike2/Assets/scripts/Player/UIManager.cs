@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI enemiesLeftText;
     public List<TextMeshProUGUI> exitConsoleSideViewLines;
     public GameObject exitConsoleSideView; bool displaySideConsole;
+    public DeadlineScript deadline;
 
     public GunManager gunManager;
     public HealthManager healthManager;

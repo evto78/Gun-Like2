@@ -30,13 +30,27 @@ public class InvItemDisplay : MonoBehaviour
 
     public float timeSinceUpdate;
     RectTransform rectTran;
+
+    public TextMeshProUGUI detailsBtn;
+    public TextMeshProUGUI leftInteractBtn;
+    public TextMeshProUGUI rightInteractBtn;
+
     private void Start()
     {
         player = GameObject.Find("Player");
         playerItemScript = player.GetComponent<PlayerItem>();
         rectTran = gameObject.GetComponent<RectTransform>();
-    }
 
+        detailsBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.showMoreInformation.ToString();
+        leftInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.leftInteract.ToString();
+        rightInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.righInteract.ToString();
+    }
+    private void OnEnable()
+    {
+        detailsBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.showMoreInformation.ToString();
+        leftInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.leftInteract.ToString();
+        rightInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.righInteract.ToString();
+    }
     private void Update()
     {
         rectTran.position = Input.mousePosition;
@@ -63,7 +77,7 @@ public class InvItemDisplay : MonoBehaviour
         ItemObject selectedItem = Resources.Load<ItemObject>("Items/" + id.ToString());
 
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation))
+        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1)
         {
             //id 22 is the irradiated french pastry
             if (selectedItem.id == 22)

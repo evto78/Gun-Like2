@@ -29,12 +29,24 @@ public class ItemDisplayScript : MonoBehaviour
     public Sprite isGlobal;
     public Sprite notGlobal;
 
+    public TextMeshProUGUI detailsBtn;
+    public TextMeshProUGUI leftInteractBtn;
+    public TextMeshProUGUI rightInteractBtn;
 
     private void Start()
     {
         playerItemScript = player.GetComponent<PlayerItem>();
-    }
 
+        detailsBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.showMoreInformation.ToString();
+        leftInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.leftInteract.ToString();
+        rightInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.righInteract.ToString();
+    }
+    private void OnEnable()
+    {
+        detailsBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.showMoreInformation.ToString();
+        leftInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.leftInteract.ToString();
+        rightInteractBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.righInteract.ToString();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -46,7 +58,7 @@ public class ItemDisplayScript : MonoBehaviour
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation))
+        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1)
         {
             //id 22 is the irradiated french pastry
             if(selectedItem.id == 22)

@@ -29,6 +29,8 @@ public class Item : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerItem = player.GetComponent<PlayerItem>();
         if (playerItem.leftItems[142] + playerItem.rightItems[142] > 0) { SetItemID(143); }
+
+        GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>().placed.Add(gameObject);
     }
 
     public void SetItemID(int givenID)

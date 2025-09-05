@@ -17,6 +17,9 @@ public class RunSaveData
     public int cash;
     public int tickets;
     public Random.State randomnessSeed;
+    public int appleBuff;
+    public float fortifyBuff;
+    public float sunflowerDebuff;
 
     public string runName;
     public string runCreationDate;
@@ -39,5 +42,9 @@ public class RunSaveData
         cash = 0;
         tickets = 0;
         randomnessSeed = Random.state;
+
+        appleBuff = 0;
+        fortifyBuff = 0;
+        sunflowerDebuff = 0;
     }
 }

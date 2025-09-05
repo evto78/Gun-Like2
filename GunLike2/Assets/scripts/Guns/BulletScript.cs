@@ -381,14 +381,14 @@ public class BulletScript : MonoBehaviour
         }
         if (!collided && pierce < 1)
         {
+            if (givenGameObject == null) { return; }
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
             hitParticle.Play();
             Destroy(mesh);
             collided = true;
             gameObject.GetComponent<Collider>().enabled = false;
-            fireSponEffect.transform.parent.SetParent(givenGameObject.transform);
-            Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f, 3f));
+            if (fireSponEffect.transform.parent != null) { fireSponEffect.transform.parent.SetParent(givenGameObject.transform); Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f, 3f)); }
             if (gunFiredFrom.nerfedBul)
             {
                 GameObject dropped = Instantiate(droppedNerfedBullet);

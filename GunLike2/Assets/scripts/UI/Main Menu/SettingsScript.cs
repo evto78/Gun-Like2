@@ -23,6 +23,7 @@ public class SettingsScript : MonoBehaviour
     public Toggle sendGameData;
     public Toggle autoReload;
     public Toggle dfov;
+    public Toggle advDesc;
     bool built = false;
     private void Start()
     {
@@ -63,9 +64,11 @@ public class SettingsScript : MonoBehaviour
         if (!PlayerPrefs.HasKey("SENDDATA")) { PlayerPrefs.SetInt("SENDDATA", 1); }
         if (!PlayerPrefs.HasKey("AUTORELOAD")) { PlayerPrefs.SetInt("AUTORELOAD", 0); }
         if (!PlayerPrefs.HasKey("DFOV")) { PlayerPrefs.SetInt("DFOV", 1); }
+        if (!PlayerPrefs.HasKey("ADVDESC")) { PlayerPrefs.SetInt("ADVDESC", 0); }
         sendGameData.isOn = PlayerPrefs.GetInt("SENDDATA") == 1;
         autoReload.isOn = PlayerPrefs.GetInt("AUTORELOAD") == 1;
         dfov.isOn = PlayerPrefs.GetInt("DFOV") == 1;
+        advDesc.isOn = PlayerPrefs.GetInt("ADVDESC") == 1;
         Screen.fullScreen = PlayerPrefs.GetInt("FULLSCREEN") == 1;
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
         fullscreen.isOn = Screen.fullScreen;
@@ -134,6 +137,11 @@ public class SettingsScript : MonoBehaviour
         input = autoReload.isOn;
         if (input) { PlayerPrefs.SetInt("AUTORELOAD", 1); } else { PlayerPrefs.SetInt("AUTORELOAD", 0); }
     }
+    public void AdvancedDescriptions(bool input)
+    {
+        input = advDesc.isOn;
+        if (input) { PlayerPrefs.SetInt("ADVDESC", 1); } else { PlayerPrefs.SetInt("ADVDESC", 0); }
+    }
     public void ChangeResolution(int input)
     {
         PlayerPrefs.SetInt("RES", resolution.value);
@@ -176,6 +184,8 @@ public class SettingsScript : MonoBehaviour
         PlayerPrefs.SetFloat("ENEMYVOL", 80f);
         PlayerPrefs.SetInt("SENDDATA", 1);
         PlayerPrefs.SetInt("DFOV", 1);
+        PlayerPrefs.SetInt("AUTORELOAD", 1);
+        PlayerPrefs.SetInt("ADVDESC", 0);
         int index = 0;
         foreach (string key in keys)
         {
@@ -191,6 +201,10 @@ public class SettingsScript : MonoBehaviour
         QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSYNC");
         fullscreen.isOn = Screen.fullScreen;
         vsync.isOn = PlayerPrefs.GetInt("VSYNC") == 1;
+        sendGameData.isOn = PlayerPrefs.GetInt("SENDDATA") == 1;
+        autoReload.isOn = PlayerPrefs.GetInt("AUTORELOAD") == 1;
+        dfov.isOn = PlayerPrefs.GetInt("DFOV") == 1;
+        advDesc.isOn = PlayerPrefs.GetInt("ADVDESC") == 1;
         PlayerPrefs.SetInt("RES", 0);
         Screen.SetResolution(1920, 1080, Screen.fullScreen);
     }

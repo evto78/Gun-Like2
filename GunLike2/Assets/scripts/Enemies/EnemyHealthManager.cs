@@ -145,7 +145,7 @@ public class EnemyHealthManager : MonoBehaviour
             dmgQued.RemoveAt(0);
         }
     }
-    void CheckForVolumeUpdate() { volume = PlayerPrefs.GetFloat("ENEMYVOL") / 100f; }
+    void CheckForVolumeUpdate() { volume = (PlayerPrefs.GetFloat("ENEMYVOL") / 100f) * (PlayerPrefs.GetFloat("MASTERVOL") / 100f); }
     public void PlaySound(int key, bool interupting, bool oneShot)
     {
         if(volume <= 0) { return; }

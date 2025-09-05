@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -213,107 +214,24 @@ public class SaveFileReadWrite : MonoBehaviour
         }
 
         newData.gunInfo = new List<GunInformation>();
-        for (int i = 0; i < 12; i++)
+        List<GunObjectData> tmp = new List<GunObjectData>(); tmp.AddRange(Resources.LoadAll<GunObjectData>("Guns"));
+        foreach (GunObjectData obj in tmp) 
         {
-            newData.gunInfo.Add(new GunInformation()); //Write Basic Gun Info
-            switch (i)
-            {
-                case 0: //Pistol
-                    newData.gunInfo[i].gunName = "Pistol";
-                    newData.gunInfo[i].gunID = i;
-                    newData.gunInfo[i].unlocked = true;
-                    newData.gunInfo[i].unlockProgression = 1;
-                    newData.gunInfo[i].runs = 0;
-                    newData.gunInfo[i].deaths = 0;
-                    newData.gunInfo[i].winningRuns = 0;
-                    newData.gunInfo[i].kills = 0;
-                    newData.gunInfo[i].totalDamage = 0;
-                    newData.gunInfo[i].damageRecord = 0;
-                    newData.gunInfo[i].bulletsFired = 0;
-                    newData.gunInfo[i].magSizeRecord = 0;
-                    newData.gunInfo[i].itemsCollected = 0;
-                    newData.gunInfo[i].accuracy = 0;
-                    newData.gunInfo[i].elapsedTimeHeld = 0;
-                    newData.gunInfo[i].difficulyReachedRecord = 0;
-                    break;
-                case 1: //Revolver
-                    newData.gunInfo[i].gunName = "Revolver";
-                    newData.gunInfo[i].gunID = i;
-                    newData.gunInfo[i].unlocked = true;
-                    newData.gunInfo[i].unlockProgression = 1;
-                    newData.gunInfo[i].runs = 0;
-                    newData.gunInfo[i].deaths = 0;
-                    newData.gunInfo[i].winningRuns = 0;
-                    newData.gunInfo[i].kills = 0;
-                    newData.gunInfo[i].totalDamage = 0;
-                    newData.gunInfo[i].damageRecord = 0;
-                    newData.gunInfo[i].bulletsFired = 0;
-                    newData.gunInfo[i].magSizeRecord = 0;
-                    newData.gunInfo[i].itemsCollected = 0;
-                    newData.gunInfo[i].accuracy = 0;
-                    newData.gunInfo[i].elapsedTimeHeld = 0;
-                    newData.gunInfo[i].difficulyReachedRecord = 0;
-                    break;
-                case 2: //BulkFed
-                    newData.gunInfo[i].gunName = "Bulk-Fed Double Barrel";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 3: //Vector3
-                    newData.gunInfo[i].gunName = "Vector3";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 4: //Aero-Rifle
-                    newData.gunInfo[i].gunName = "Aero-Rifle";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 5: //Little Gun
-                    newData.gunInfo[i].gunName = "Little Gun";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 6: //Da Eagle
-                    newData.gunInfo[i].gunName = "Da Eagle";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 7: //Crossbow
-                    newData.gunInfo[i].gunName = "Crossbow";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 8: //Mutated Knife
-                    newData.gunInfo[i].gunName = "Mutated Knife";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 9: //Hand Cannon
-                    newData.gunInfo[i].gunName = "Hand Cannon";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 10: //Archer Fish
-                    newData.gunInfo[i].gunName = "Archer Fish";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-                case 11: //Shape Changing Goo
-                    newData.gunInfo[i].gunName = "Shape Changing Goo";
-                    newData.gunInfo[i].gunID = i;
-                    BasicNulGunInfoAssembler(newData.gunInfo[i]);
-                    break;
-            }
+            GunInformation newInfo = new GunInformation();
+            GunInfoAssembler(newInfo, false, obj);
+            newData.gunInfo.Add(newInfo);
         }
+        
         newData.ChimeraInfo = new BossInformation();
 
         return newData;
     }
-    void BasicNulGunInfoAssembler(GunInformation gunInfo)
+    void GunInfoAssembler(GunInformation gunInfo, bool unlocked, GunObjectData obj)
     {
-        gunInfo.unlocked = false;
-        gunInfo.unlockProgression = 0;
+        gunInfo.gunName = obj.gunName;
+        gunInfo.gunID = obj.id;
+        gunInfo.unlocked = unlocked;
+        if (unlocked || obj.id == 0 || obj.id == 1) { gunInfo.unlockProgression = 1; } else { gunInfo.unlockProgression = 0; }
         gunInfo.runs = 0;
         gunInfo.deaths = 0;
         gunInfo.winningRuns = 0;
@@ -575,6 +493,9 @@ public class SaveFileReadWrite : MonoBehaviour
         save.cash = gdm.phm.money;
         save.tickets = gdm.pi.gotchaTickets;
         save.randomnessSeed = Random.state;
+        save.appleBuff = gdm.phm.appleBuff;
+        save.fortifyBuff = gdm.phm.fortifyBuff;
+        save.sunflowerDebuff = gdm.phm.sunflowerDebuff;
 
         return save;
     }

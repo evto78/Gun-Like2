@@ -284,7 +284,16 @@ public class GunManager : MonoBehaviour
 
         GrabMeshRenders();
 
-        healthMan.gdm.instance.AddEmailToQue("RunStart");
+        if(healthMan.gdm == null) { healthMan.gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); }
+
+        if(healthMan.gdm.instance.loadingARun == -1)
+        {
+            healthMan.gdm.instance.AddEmailToQue("RunStart");
+        }
+        else
+        {
+            healthMan.gdm.instance.AddEmailToQue("RunContinue");
+        }
     }
     void SortGunObjData()
     {

@@ -150,6 +150,8 @@ public class ItemPossibility : MonoBehaviour
                 }
             }
         }
+
+        GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>().placed.Add(gameObject);
     }
 
     public void SetRarity(int givenRarity, bool doesNotMatter)

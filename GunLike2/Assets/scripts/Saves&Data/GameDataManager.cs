@@ -29,6 +29,10 @@ public class GameDataManager : MonoBehaviour
     public float timeSpentNoPause;
     public bool gameTimerActive;
 
+    [Header("Deadline")]
+    public GameObject nukeDrop; bool droppingNukes;
+    float nukeDropTimer = 0f; float nukeDropTimerSpeed = 1f;
+
     [Header("Points System")]
     float pointregenTimer;
     public int roomNumber;
@@ -93,8 +97,11 @@ public class GameDataManager : MonoBehaviour
             instance.gdm = this;
         }
 
-        roomNumber = 0;
-        timeSpent = 0; timeSpentNoPause = 0;
+        if (instance.loadingARun == -1)
+        {
+            roomNumber = 0;
+            timeSpent = 0; timeSpentNoPause = 0;
+        }
         difficulty = Mathf.RoundToInt((difficultyProgressionModifier * timeSpent / 300f) + 1f);
         gameTimerActive = false;
 
@@ -105,11 +112,16 @@ public class GameDataManager : MonoBehaviour
 
         endGateBlockade.Toggle(true); exitConsole.SetUp(false, null);
 
-        pi.ItemsFromMutatedModifcataion(mutatedRules);
+        if (instance.loadingARun == -1)
+        {
+            pi.ItemsFromMutatedModifcataion(mutatedRules);
+        }
+        phm.uiMan.deadline.SetTimer(480f, false, 1f);
     }
     public void LoadFromSavedRun(RunSaveData runSaveData)
     {
         roomNumber = runSaveData.roomNumber;
+        roomsUntilBoss = 10 - roomNumber;
         difficultyIDSelected = runSaveData.selectedDifficulty; PlayerPrefs.SetInt("SELECTEDDIFFICULTY", difficultyIDSelected);
         unroundedDiff = runSaveData.currentDifficulty;
         pi.leftItems = runSaveData.leftInv;
@@ -122,7 +134,15 @@ public class GameDataManager : MonoBehaviour
         phm.money = runSaveData.cash;
         pi.gotchaTickets = runSaveData.tickets;
         Random.state = runSaveData.randomnessSeed;
-        
+        phm.appleBuff = runSaveData.appleBuff;
+        phm.fortifyBuff = runSaveData.fortifyBuff;
+        phm.sunflowerDebuff = runSaveData.sunflowerDebuff;
+
+        phm.uiMan.gearscript.Turn(roomNumber);
+        StartCoroutine(HealToFull());
+        phm.uiMan.difficultyGear.ResetSpin();
+        phm.uiMan.difficultyGear.Turn(unroundedDiff);
+
         switch (difficultyIDSelected)
         {
             case 0:
@@ -208,6 +228,8 @@ public class GameDataManager : MonoBehaviour
         difficulty = (int)unroundedDiff;
         phm.uiMan.difficultyGear.Turn(unroundedDiff);
         CheckForItemGainAndDestroy();
+
+        
     }
     private void LateUpdate()
     {
@@ -256,6 +278,7 @@ public class GameDataManager : MonoBehaviour
             unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
             phm.uiMan.difficultyGear.ResetSpin();
             phm.uiMan.difficultyGear.Turn(unroundedDiff);
+            phm.uiMan.deadline.SetTimer(480f, true, 1f);
             foreach (EnemyHealthManager ehm in activeEhms)
             {
                 Destroy(ehm.gameObject);
@@ -270,6 +293,26 @@ public class GameDataManager : MonoBehaviour
         {
             phm.curHp += phm.maxHp / 50f; if(phm.curHp > phm.maxHp) { phm.curHp = phm.maxHp; }
             yield return new WaitForEndOfFrame();
+        }
+        yield return null;
+    }
+    public void DeadLine()
+    {
+        if (droppingNukes) { return; }
+        droppingNukes = true;
+        StartCoroutine(DeadLineNukes());
+    }
+    IEnumerator DeadLineNukes()
+    {
+        nukeDropTimer = 3f; nukeDropTimerSpeed = 1f;
+        while (droppingNukes)
+        {
+            nukeDropTimerSpeed += 0.1f;
+
+            GameObject droppedNuke = Instantiate(nukeDrop);
+            droppedNuke.transform.position = new Vector3(Random.Range(-220f,220f), 500f, Random.Range(0f,420f));
+
+            yield return new WaitForSeconds(nukeDropTimer / nukeDropTimerSpeed);
         }
         yield return null;
     }
@@ -298,6 +341,8 @@ public class GameDataManager : MonoBehaviour
             spawner.StartSpawning();
             delayTime += Random.Range(7f, 13f);
         }
+
+        phm.uiMan.deadline.SetTimer(480f, true, 1f);
     }
     public void PointsRestore()
     {
