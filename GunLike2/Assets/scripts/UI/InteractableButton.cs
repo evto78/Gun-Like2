@@ -29,7 +29,7 @@ public class InteractableButton : MonoBehaviour
             {
                 foreach (GameObject thing in linkedObjects)
                 {
-                    thing.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
+                    if(thing != null) { thing.SendMessage("Activate", SendMessageOptions.DontRequireReceiver); }
                 }
             }
             if (oneTimePress) { pressed = true; }
