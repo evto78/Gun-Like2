@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -24884,9 +24884,9 @@ MonoBehaviour:
   m_fontSize: 24.2
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -41095,9 +41095,9 @@ MonoBehaviour:
   m_fontSize: 24.2
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -43767,7 +43767,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ': Start with 5 random items on each gun'
+  m_text: ': Difficulty progresses 0.05x faster for every item you own'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8b9dc618e7954904aabd259e4ea116a6, type: 2}
   m_sharedMaterial: {fileID: 3461576264647376082, guid: 8b9dc618e7954904aabd259e4ea116a6, type: 2}
@@ -43776,8 +43776,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278244095
-  m_fontColor: {r: 1, g: 0.8217412, b: 0, a: 1}
+    rgba: 4278255471
+  m_fontColor: {r: 0.43529412, g: 1, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -43794,12 +43794,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.2
+  m_fontSize: 16.9
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -45245,7 +45245,7 @@ Transform:
   m_GameObject: {fileID: 1091199280}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.06, y: 1.24, z: -4.04}
+  m_LocalPosition: {x: -3.48, y: 1.24, z: -4.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -54277,9 +54277,9 @@ MonoBehaviour:
   m_fontSize: 24.2
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -54661,13 +54661,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314245947}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08514328, y: 0.45148477, z: 0.04072949, w: 0.8872729}
-  m_LocalPosition: {x: -1.999, y: -0.681, z: -1.759}
+  m_LocalRotation: {x: 0.24511024, y: -0.36298853, z: 0.17472306, w: 0.8818346}
+  m_LocalPosition: {x: 2.283, y: 2.231, z: -2.564}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1091199281}
-  m_LocalEulerAnglesHint: {x: -10.828, y: 53.964, z: -0.269}
+  m_LocalEulerAnglesHint: {x: 33.996, y: -41.98, z: 9.036}
 --- !u!108 &1314245949
 Light:
   m_ObjectHideFlags: 0
@@ -54682,7 +54682,7 @@ Light:
   m_Color: {r: 1, g: 0.7691731, b: 0.504717, a: 1}
   m_Intensity: 5.67
   m_Range: 4.18
-  m_SpotAngle: 30
+  m_SpotAngle: 61
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
@@ -56027,7 +56027,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ': Start with 5 random items on each gun'
+  m_text: ': Spawned items are automaticly picked up'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8b9dc618e7954904aabd259e4ea116a6, type: 2}
   m_sharedMaterial: {fileID: 3461576264647376082, guid: 8b9dc618e7954904aabd259e4ea116a6, type: 2}
@@ -56057,9 +56057,9 @@ MonoBehaviour:
   m_fontSize: 24.2
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -75265,9 +75265,9 @@ MonoBehaviour:
   m_fontSize: 24.2
   m_fontSizeBase: 24.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 24.2
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -86974,6 +86974,22 @@ MonoBehaviour:
     id: 12
     color: {r: 1, g: 0.8235294, b: 0, a: 1}
     rarity: 0
+  - rule: ': Deadline approaches 20% faster'
+    id: 13
+    color: {r: 0.43529412, g: 1, b: 0, a: 1}
+    rarity: 1
+  - rule: ': Deadline approaches 20% slower'
+    id: 14
+    color: {r: 0.43529412, g: 1, b: 0, a: 1}
+    rarity: 1
+  - rule: ': Difficulty progresses 0.05x faster for every item you own'
+    id: 15
+    color: {r: 0.43529412, g: 1, b: 0, a: 1}
+    rarity: 1
+  - rule: ': Spawned items are automaticly picked up'
+    id: 16
+    color: {r: 0.43529412, g: 1, b: 0, a: 1}
+    rarity: 1
   currentMutatedRules: 
   mutatedRulesHolder: {fileID: 1366782296}
   mutationIDText: {fileID: 1928202855}

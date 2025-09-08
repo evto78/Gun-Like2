@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,6 +33,7 @@ public class GameDataManager : MonoBehaviour
     [Header("Deadline")]
     public GameObject nukeDrop; bool droppingNukes;
     float nukeDropTimer = 0f; float nukeDropTimerSpeed = 1f;
+    float deadlinespeedmod = 1f;
 
     [Header("Points System")]
     float pointregenTimer;
@@ -50,6 +52,7 @@ public class GameDataManager : MonoBehaviour
     bool bossKilled;
     private void Awake()
     {
+        deadlinespeedmod = 1f;
         bossKilled = false;
         endGateBlockade = GameObject.Find("EndGateBlockade").GetComponent<GateBlockade>(); endGateBlockade.Toggle(false);
         roomsUntilBoss = 10;
@@ -178,7 +181,7 @@ public class GameDataManager : MonoBehaviour
         mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE4"));
         mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE5"));
         mutatedRules.Add(PlayerPrefs.GetInt("MUTATEDRULE6"));
-        difficultyProgressionModifier = 1f;
+        difficultyProgressionModifier = 1f; deadlinespeedmod = 1f;
         for (int i = 0; i < mutatedRules.Count; i++)
         {
             int rule = mutatedRules[i];
@@ -192,14 +195,18 @@ public class GameDataManager : MonoBehaviour
                 case 5: difficultyProgressionModifier += 2f; break; // +2x difficulty progression
                 case 6: break; // Enemies have a chance to drop an item on death - Handled outside
                 case 7: MutatedRandomStatMult(2f, i); break; // 2x to a random stat
-                case 8: break; // Guns are randomized after every room
+                case 8: break; // Guns are randomized after every room - Handled outside
                 case 9: MutatedRandomStatMult(0.5f, i); break; // 0.5x to a random stat
                 case 10:
                     List<Spawnable> options = new List<Spawnable>(); options.AddRange(Resources.LoadAll<Spawnable>("Enemies"));
                     foreach (Spawnable enemy in options) { if (enemy.enemyName == PlayerPrefs.GetString("MUTATEDRULELONEENEMYSLOT" + i.ToString())) { mutatedEnemySelected = enemy; } }
-                    break; // All enemies are now a random enemy - Handled outside
+                    break; // All enemies are now a random enemy - Mostly handled outside
                 case 11: break; // No gravity, shooting knocks you back relative to bulspeed - Handled outsde
                 case 12: break; // Start with 5 random items on each gun - Handled outside
+                case 13: deadlinespeedmod += 0.2f; break; // 20% faster deadline
+                case 14: deadlinespeedmod -= 0.2f; break; // 20% slower deadline
+                case 15: break; // Difficulty progresses 0.05x faster for every item you own
+                case 16: break; // Spawned items are automaticly picked up - Handled outside
             }
         }
     }
@@ -224,12 +231,16 @@ public class GameDataManager : MonoBehaviour
         }
         else if (pointsLocked) { pointsLeft = 0f; }
         timeSpentNoPause += Time.deltaTime;
-        unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
+        float itemDiff = 1f; if (mutatedRules.Contains(15)) 
+        {
+            int itemCount = 0;
+            itemCount = pi.leftItems.Sum() + pi.rightItems.Sum();
+            foreach(int i in mutatedRules) { if(i == 15) { itemDiff += 0.05f*itemCount; }} 
+        }
+        unroundedDiff = (difficultyProgressionModifier * itemDiff * timeSpent / 300f) + 1f;
         difficulty = (int)unroundedDiff;
         phm.uiMan.difficultyGear.Turn(unroundedDiff);
         CheckForItemGainAndDestroy();
-
-        
     }
     private void LateUpdate()
     {
@@ -278,7 +289,7 @@ public class GameDataManager : MonoBehaviour
             unroundedDiff = (difficultyProgressionModifier * timeSpent / 300f) + 1f;
             phm.uiMan.difficultyGear.ResetSpin();
             phm.uiMan.difficultyGear.Turn(unroundedDiff);
-            phm.uiMan.deadline.SetTimer(480f, true, 1f);
+            phm.uiMan.deadline.SetTimer(480f, false, 1f);
             foreach (EnemyHealthManager ehm in activeEhms)
             {
                 Destroy(ehm.gameObject);
@@ -342,7 +353,7 @@ public class GameDataManager : MonoBehaviour
             delayTime += Random.Range(7f, 13f);
         }
 
-        phm.uiMan.deadline.SetTimer(480f, true, 1f);
+        phm.uiMan.deadline.SetTimer(480f, true, deadlinespeedmod);
     }
     public void PointsRestore()
     {

@@ -418,6 +418,24 @@ public class PlayerItem : MonoBehaviour
         if(leftItems[55] > 0) { leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; leftItems[56] += 1; leftItems[55] -= 1; }
         if(rightItems[55] > 0) { rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[rarityList[0][Random.Range(0, rarityList[0].Count)]] += 1; rightItems[56] += 1; rightItems[55] -= 1; }
     }
+    public void ForcePickup(int id)
+    {
+        int leftMonkeysPaw = leftItems[176]; int rightMonkeysPaw = rightItems[176];
+        if (Random.Range(0, 2) == 0)
+        {
+            rightItems[id] += 1;
+            if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
+            if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
+            if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+        }
+        else
+        {
+            leftItems[id] += 1;
+            if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
+            if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
+            if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+        }
+    }
     void LookForItem()
     {
         Vector3 camPos = playerCamera.position;
@@ -442,7 +460,7 @@ public class PlayerItem : MonoBehaviour
                     if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
-                    if(id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+                    if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
                 }
                 if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract) || (Input.GetKey(healthManager.gdm.instance.controlsBinds.leftInteract) && Input.GetKey(healthManager.gdm.instance.controlsBinds.sprint)))
                 {
@@ -451,7 +469,7 @@ public class PlayerItem : MonoBehaviour
                     if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (rightItems[86] > 0) { rightItems[id] += 1; rightItems[86]--; }
-                    if(id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+                    if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
                 }
             }
             else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))

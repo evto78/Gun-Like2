@@ -205,7 +205,7 @@ public class MainMenuManager : MonoBehaviour
     }
     void GenerateMutatedRules()
     {
-        List<int> nonStackables = new List<int>(); nonStackables.InsertRange(0, new int[] { 2,3,8,10,11 });
+        List<int> nonStackables = new List<int>(); nonStackables.InsertRange(0, new int[] { 2,3,8,10,11,16 });
         int metaAttemptsLeft = 100;
         currentMutatedRules = new List<int>();
         while(currentMutatedRules.Count < 6 && metaAttemptsLeft > 0)

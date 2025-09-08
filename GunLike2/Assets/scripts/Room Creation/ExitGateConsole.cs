@@ -88,7 +88,7 @@ public class ExitGateConsole : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         line1Txt.text = "Locking Openings... [LOCKED]";
-        gdm.pointsLocked = true;
+        gdm.pointsLocked = true; ui.deadline.SetTimer(480f, false, 1f);
         yield return new WaitForSeconds(0.5f);
         line2Txt.text = "Unlocking Gate... [0/100]"; progression = 0f;
         while (progression < 100)

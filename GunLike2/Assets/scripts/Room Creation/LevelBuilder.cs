@@ -72,6 +72,7 @@ public class LevelBuilder : MonoBehaviour
 
             BuildBoss(terrain);
 
+            gdm.phm.uiMan.deadline.gameObject.SetActive(false);
             gdm.SpawnBoss("Chimera");
         }
         else
@@ -80,6 +81,7 @@ public class LevelBuilder : MonoBehaviour
 
             Build(terrain);
 
+            gdm.phm.uiMan.deadline.gameObject.SetActive(true);
             gdm.BeginSpawning();
         }
     }

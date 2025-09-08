@@ -32,7 +32,14 @@ public class Item : MonoBehaviour
 
         GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>().placed.Add(gameObject);
     }
-
+    private void LateUpdate()
+    {
+        if (playerItem.healthManager.gdm.mutatedRules.Contains(16))
+        {
+            playerItem.ForcePickup(itemID);
+            Taken();
+        }
+    }
     public void SetItemID(int givenID)
     {
         itemObj = Resources.Load<ItemObject>("Items/"+givenID.ToString());

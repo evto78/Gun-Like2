@@ -505,7 +505,7 @@ public class HealthManager : MonoBehaviour
 		if(canineTooth > 0)
         {
 			canineToothTimer -= Time.deltaTime + (Time.deltaTime * clockwork);
-			if (markedEnemy == null && canineToothTimer <= 0f)
+			if (markedEnemy == null && canineToothTimer <= 0f && gdm.activeEhms.Count > 0)
             {
 				markedEnemy = gdm.activeEhms[Random.Range(0, gdm.activeEhms.Count)];
 				markedEnemy.GiveEffect("marked", 1f);
