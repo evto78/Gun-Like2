@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
 
     public GunManager gunManager;
     public HealthManager healthManager;
+    public PlayerItem pi;
     public SettingsScript settings;
 
     public NEWPlayerMovement mvtScript;
@@ -40,6 +41,8 @@ public class UIManager : MonoBehaviour
     public GameObject deathUI;
     public TextMeshProUGUI killedByText;
     public GameObject bowchargeUI;
+    public HeldItemUIElement heldItem;
+    public GameObject recycleBinUI;
 
     public GameObject gunkyPng;
     public GameObject smokeBlindEffect;
@@ -84,6 +87,9 @@ public class UIManager : MonoBehaviour
     
     private void Start()
     {
+        pi = GetComponent<PlayerItem>();
+        heldItem.gameObject.SetActive(false);
+        recycleBinUI.SetActive(false);
         exitConsoleSideView.SetActive(false); displaySideConsole = false;
         ammoListsBuilt = false;
         bossHealthBars.Clear();
@@ -134,6 +140,7 @@ public class UIManager : MonoBehaviour
     }
     void Update()
     {
+        recycleBinUI.SetActive(false);
         timer.text = FormatTimeToTimer((int)healthManager.gdm.timeSpent);
         if (healthManager.dead) { deathUI.SetActive(true); }
         ManageInput();
@@ -150,6 +157,8 @@ public class UIManager : MonoBehaviour
         }
 
         killedByText.text = healthManager.lastHitMeName;
+
+        if (state == "inventory" && pi.itemHeld != -1) { heldItem.gameObject.SetActive(true); heldItem.SetItem(pi.FindObjByID(pi.itemHeld)); } else {  heldItem.gameObject.SetActive(false);}
     }
     string FormatTimeToTimer(int time)
     {

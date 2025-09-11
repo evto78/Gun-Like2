@@ -93,6 +93,7 @@ public class PlayerItem : MonoBehaviour
 
     public int lastItemPressed;
     public string lastItemPressedHand;
+    public int itemHeld = -1; public string itemHeldHand = "left";
 
     public GameObject itemPos;
 
@@ -208,7 +209,7 @@ public class PlayerItem : MonoBehaviour
     }
     private void LateUpdate()
     {
-
+        if (Input.GetMouseButtonUp(0)) { itemHeld = -1; }
     }
     public void OnItemDestroy(int id, int amount, string hand)
     {
@@ -262,54 +263,48 @@ public class PlayerItem : MonoBehaviour
             case "right": gunManager.rightItemsCollectedDATA+=amount; break;
         }
     }
-    public void ItemPressedInInv(int id, string hand)
+    int hoverOverId; string hoverOverHand; public void GetHoverOver(int id, string hand) { hoverOverId = id; hoverOverHand = hand; }
+    public void LetGoOfHeld() { ItemDroppedOnItem(itemHeld, hoverOverId, itemHeldHand, hoverOverHand); }
+    public void ItemDroppedOnItem(int heldId, int droppedOnId, string heldHand, string droppedHand)
     {
-        if(lastItemPressed == 74 && lastItemPressedHand == hand)
+        if(heldId == droppedOnId) return;
+        if (droppedHand == "left")
         {
-            if(hand == "left" && leftItems[74] < 1) { return; }
-            if(hand == "right" && rightItems[74] < 1) { return; }
-            NuclearFission(id, hand);
-        }
-        if(lastItemPressed == 171 && lastItemPressedHand == hand)
-        {
-            if(hand == "left" && gunManager.leftOverCompress < 1) { return; }
-            if(hand == "right" && gunManager.rightOverCompress < 1) { return; }
-            OverridenCompressor(id, hand);
-        }
-        lastItemPressed = id;
-        lastItemPressedHand = hand;
-        uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
-    }
-    void NuclearFission(int id, string hand)
-    {
-        if(hand == "left")
-        {
-            if (rarityList[0].Contains(id)) { leftItems[id]--; }//common
-            if (rarityList[1].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//uncommon
-            if (rarityList[2].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 1, hand, true); }//rare
-            if (rarityList[3].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 2, hand, true); AddRandItemsFromRarity(1, 7, hand, true); }//legendary
-            if (rarityList[4].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//mutated
-            if (rarityList[5].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//haunted
-            if (rarityList[6].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(1, 0, hand, true); AddRandItemsFromRarity(1, 4, hand, true); }//irradiated
-            if (rarityList[7].Contains(id)) { leftItems[id]--; AddRandItemsFromRarity(3, 6, hand, true); AddRandItemsFromRarity(1, 5, hand, true); }//nuclear
+            if (droppedOnId == 74 && leftItems[74] > 0) { NuclearFission(heldId, heldHand, droppedHand); }
+            if (droppedOnId == 171 && leftItems[171] > 0) { OverridenCompressor(heldId, heldHand, droppedHand); }
         }
         else
         {
-            if (rarityList[0].Contains(id)) { rightItems[id]--; }//common
-            if (rarityList[1].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//uncommon
-            if (rarityList[2].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 1, hand, true); }//rare
-            if (rarityList[3].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 2, hand, true); AddRandItemsFromRarity(1, 7, hand, true); }//legendary
-            if (rarityList[4].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//mutated
-            if (rarityList[5].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(2, 0, hand, true); }//haunted
-            if (rarityList[6].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(1, 0, hand, true); AddRandItemsFromRarity(1, 4, hand, true); }//irradiated
-            if (rarityList[7].Contains(id)) { rightItems[id]--; AddRandItemsFromRarity(3, 6, hand, true); AddRandItemsFromRarity(1, 5, hand, true); }//nuclear
+            if (droppedOnId == 74 && rightItems[74] > 0) { NuclearFission(heldId, heldHand, droppedHand); }
+            if (droppedOnId == 171 && rightItems[171] > 0) { OverridenCompressor(heldId, heldHand, droppedHand); }
+        }
+        uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
+    }
+    void NuclearFission(int id, string heldHand, string droppedHand)
+    {
+        if (heldHand == "left") { leftItems[id]--; }
+        else { rightItems[id]--; }
+
+        switch (FindRarityByID(id))
+        {
+            case 0: healthManager.money += Mathf.CeilToInt((healthManager.baseCost * (int)(healthManager.gdm.difficulty * (healthManager.gdm.roomNumber + 1)))/5); break; //common
+            case 1: AddRandItemsFromRarity(2, 0, droppedHand, true); break; //uncommon
+            case 2: AddRandItemsFromRarity(2, 1, droppedHand, true); break; //rare
+            case 3: AddRandItemsFromRarity(2, 2, droppedHand, true); AddRandItemsFromRarity(1, 7, droppedHand, true); break; //legendary
+            case 4: AddRandItemsFromRarity(2, 0, droppedHand, true); break; //mutated
+            case 5: AddRandItemsFromRarity(2, 0, droppedHand, true); break; //haunted
+            case 6: AddRandItemsFromRarity(1, 0, droppedHand, true); AddRandItemsFromRarity(1, 4, droppedHand, true); break; //irradiated
+            case 7: AddRandItemsFromRarity(3, 6, droppedHand, true); AddRandItemsFromRarity(1, 5, droppedHand, true); break; //nuclear
         }
     }
-    void OverridenCompressor(int id, string hand)
+    void OverridenCompressor(int id, string heldHand, string droppedHand)
     {
         int raritySelected = FindRarityByID(id);
-        
-        if(hand == "left")
+        int overCompress = 0;
+        if (droppedHand == "left") { overCompress = gunManager.leftOverCompress; }
+        else { overCompress = gunManager.rightOverCompress; }
+
+        if (heldHand == "left")
         {
             int sumOfItemsFromRarity = 0;
             foreach (int i in rarityList[raritySelected])
@@ -319,8 +314,9 @@ public class PlayerItem : MonoBehaviour
             if (sumOfItemsFromRarity < 3) { return; }
 
             int itemsRequired;
-            if(gunManager.leftOverCompress>1 && Random.Range(1, 100) < 20 * (gunManager.leftOverCompress - 1))
-            {itemsRequired = 1;} else{itemsRequired = 2;}
+            if (overCompress > 1 && Random.Range(1, 100) < 20 * (overCompress - 1))
+            { itemsRequired = 1; }
+            else { itemsRequired = 2; }
             int attempts = 0;
             while (itemsRequired > 0 && attempts < 100)
             {
@@ -328,7 +324,7 @@ public class PlayerItem : MonoBehaviour
                 if (leftItems[randId] > 0 && randId != id) { leftItems[randId]--; itemsRequired--; }
                 attempts++;
             }
-            if(itemsRequired > 0) { return; }
+            if (itemsRequired > 0) { return; }
             leftItems[id]++;
         }
         else
@@ -341,7 +337,7 @@ public class PlayerItem : MonoBehaviour
             if (sumOfItemsFromRarity < 3) { return; }
 
             int itemsRequired;
-            if (gunManager.rightOverCompress > 1 && Random.Range(1, 100) < 20 * (gunManager.rightOverCompress - 1))
+            if (overCompress > 1 && Random.Range(1, 100) < 20 * (overCompress - 1))
             { itemsRequired = 1; }
             else { itemsRequired = 2; }
             int attempts = 0;
@@ -351,7 +347,7 @@ public class PlayerItem : MonoBehaviour
                 if (rightItems[randId] > 0 && randId != id) { rightItems[randId]--; itemsRequired--; }
                 attempts++;
             }
-            if(itemsRequired > 0) { return; }
+            if (itemsRequired > 0) { return; }
             rightItems[id]++;
         }
     }

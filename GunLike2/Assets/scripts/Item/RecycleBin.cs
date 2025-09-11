@@ -12,8 +12,13 @@ public class RecycleBin : MonoBehaviour
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         player = gdm.phm.transform;
     }
-    void Update()
+    void LateUpdate()
     {
-        anim.SetBool("Open", Vector3.Distance(player.position, transform.position) < 15);
+        if(Vector3.Distance(player.position, transform.position) < 15)
+        {
+            anim.SetBool("Open", true);
+            gdm.phm.uiMan.recycleBinUI.SetActive(true);
+        }
+        else { anim.SetBool("Open", false); }
     }
 }
