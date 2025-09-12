@@ -264,7 +264,32 @@ public class PlayerItem : MonoBehaviour
         }
     }
     int hoverOverId; string hoverOverHand; public void GetHoverOver(int id, string hand) { hoverOverId = id; hoverOverHand = hand; }
-    public void LetGoOfHeld() { ItemDroppedOnItem(itemHeld, hoverOverId, itemHeldHand, hoverOverHand); }
+    public void LetGoOfHeld() { ItemDroppedOnItem(itemHeld, hoverOverId, itemHeldHand, hoverOverHand);
+        if (uiManager.recycleBinUI.GetHighlighted()) { 
+            if (itemHeld == -1) { return; }
+
+            uiManager.recycleBinUI.animator.SetTrigger("Deposit");
+
+            int cost = Mathf.CeilToInt((healthManager.baseCost * (int)(healthManager.gdm.difficulty * (healthManager.gdm.roomNumber + 1))) * 0.75f);
+
+            switch (FindRarityByID(itemHeld))
+            {
+                case 0: cost *= 1; break;
+                case 1: cost = Mathf.CeilToInt(cost * 1.5f); break;
+                case 2: cost *= 2; break;
+                case 3: cost *= 4; break;
+                case 4: cost *= 3; break;
+                case 5: cost *= 3; break;
+                case 6: cost *= 3; break;
+                case 7: cost *= 4; break;
+                case 8: cost = 0; break;
+            }
+
+            if(itemHeldHand == "left") { leftItems[itemHeld]--; } else { rightItems[itemHeld]--; }
+            itemHeld = -1;
+            healthManager.money += cost;
+        }
+    }
     public void ItemDroppedOnItem(int heldId, int droppedOnId, string heldHand, string droppedHand)
     {
         if(heldId == droppedOnId) return;

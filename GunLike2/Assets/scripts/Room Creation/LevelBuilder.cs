@@ -44,22 +44,22 @@ public class LevelBuilder : MonoBehaviour
         }
         //Irradiated Difficulty
         if(gdm.difficultyIDSelected==2){foreach (PlaceableObjectChances poc in chancesObjects) {
-                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.2f), Mathf.CeilToInt(poc.amount.y * 1.2f));
+                poc.amount = new Vector2(poc.amount.x, Mathf.CeilToInt(poc.amount.y * 1.2f));
         }}
         //Nuclear Difficulty
         if(gdm.difficultyIDSelected==3){foreach (PlaceableObjectChances poc in chancesObjects) {
-                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.5f), Mathf.CeilToInt(poc.amount.y * 1.5f));
+                poc.amount = new Vector2(poc.amount.x, Mathf.CeilToInt(poc.amount.y * 1.5f));
         }}
         //Dirt Stained Coffin (ID 123) (OBJ 4)
         chancesObjects[4].chancePerOne = pi.leftItems[123] + pi.rightItems[123] * 100f;
         chancesObjects[4].chancePerMore = pi.leftItems[123] + pi.rightItems[123] * 25f;
         //Chaos Engine (ID 185) (ALL)
         if (pi.leftItems[185] + pi.rightItems[185] > 0){foreach (PlaceableObjectChances poc in chancesObjects){
-                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * (1.5f * (pi.leftItems[185] + pi.rightItems[185]))), Mathf.CeilToInt(poc.amount.y * (1.5f * (pi.leftItems[185] + pi.rightItems[185]))));
+                poc.amount = new Vector2(poc.amount.x, Mathf.CeilToInt(poc.amount.y * (1.5f * (pi.leftItems[185] + pi.rightItems[185]))));
         }}
         //High Sky Cloud (ID 188) (ALL)
         if (pi.leftItems[188] + pi.rightItems[188] > 0){foreach (PlaceableObjectChances poc in chancesObjects){
-                poc.amount = new Vector2(Mathf.CeilToInt(poc.amount.x * 1.1f), Mathf.CeilToInt(poc.amount.y * 1.1f));
+                poc.amount = new Vector2(poc.amount.x, Mathf.CeilToInt(poc.amount.y * 1.1f));
         }}
     }
     public void Activate()

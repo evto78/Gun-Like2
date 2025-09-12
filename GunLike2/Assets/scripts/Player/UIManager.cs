@@ -42,7 +42,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI killedByText;
     public GameObject bowchargeUI;
     public HeldItemUIElement heldItem;
-    public GameObject recycleBinUI;
+    public RecycleBinUI recycleBinUI; public float timeSinceRecycleBinUpdate = 0;
 
     public GameObject gunkyPng;
     public GameObject smokeBlindEffect;
@@ -89,7 +89,7 @@ public class UIManager : MonoBehaviour
     {
         pi = GetComponent<PlayerItem>();
         heldItem.gameObject.SetActive(false);
-        recycleBinUI.SetActive(false);
+        recycleBinUI.gameObject.SetActive(false);
         exitConsoleSideView.SetActive(false); displaySideConsole = false;
         ammoListsBuilt = false;
         bossHealthBars.Clear();
@@ -140,7 +140,8 @@ public class UIManager : MonoBehaviour
     }
     void Update()
     {
-        recycleBinUI.SetActive(false);
+        timeSinceRecycleBinUpdate+=Time.deltaTime;
+        if(timeSinceRecycleBinUpdate > 1) { recycleBinUI.gameObject.SetActive(false); }
         timer.text = FormatTimeToTimer((int)healthManager.gdm.timeSpent);
         if (healthManager.dead) { deathUI.SetActive(true); }
         ManageInput();
