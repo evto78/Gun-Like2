@@ -79,14 +79,14 @@ public class EnemyHealthManager : MonoBehaviour
         {
             //Gather references
             gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
-            gdm.activeEhms.Add(this);
+            gdm.activeEhms.Add(this); gdm.activePoints += data.pointCost;
             playerHM = gdm.phm;
             playerItem = gdm.phm.playerItem;
             player = gdm.phm.gameObject;
         }
         else
         {
-            gdm.activeEhms.Add(this);
+            gdm.activeEhms.Add(this); gdm.activePoints += data.pointCost;
             playerHM = gdm.phm;
             playerItem = gdm.phm.playerItem;
             player = gdm.phm.gameObject;
@@ -367,7 +367,7 @@ public class EnemyHealthManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); }
+        if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); gdm.activePoints -= data.pointCost; }
     }
     public void GiveEffect(string effectGiven, float stacksToAdd)
     {

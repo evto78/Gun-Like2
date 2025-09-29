@@ -93,7 +93,7 @@ public class ExitGateConsole : MonoBehaviour
         line2Txt.text = "Unlocking Gate... [0/100]"; progression = 0f;
         while (progression < 100)
         {
-            if(gdm.activeEhms.Count < 10 || (bossRoom && bossHealth == null)) 
+            if(gdm.activeEhms.Count < 15 || (bossRoom && bossHealth == null)) 
             {
                 progression += Time.deltaTime * 5f; line2Txt.color = new Color(1, 1, 1, 1); line3Txt.text = "";
             }

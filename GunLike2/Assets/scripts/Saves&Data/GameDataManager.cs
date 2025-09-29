@@ -9,6 +9,7 @@ public class GameDataManager : MonoBehaviour
 {
     [Header("Info")]
     public List<EnemyHealthManager> activeEhms = new List<EnemyHealthManager>();
+    public float activePoints = 0f;
     public List<EnemySpawner> activeSpawners = new List<EnemySpawner>();
     public HealthManager phm;
     public PlayerItem pi;
@@ -294,6 +295,7 @@ public class GameDataManager : MonoBehaviour
             {
                 Destroy(ehm.gameObject);
             }
+            activePoints = 0f;
 
             instance.AddEmailToQue("RoomEnter");
         }
