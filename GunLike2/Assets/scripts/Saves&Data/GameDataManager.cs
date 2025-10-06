@@ -51,12 +51,16 @@ public class GameDataManager : MonoBehaviour
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
     public GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums; public ExitGateConsole exitConsole;
     bool bossKilled;
+
+    [Header("Intro")]
+    public RoofOpen roofScript;
+
     private void Awake()
     {
         deadlinespeedmod = 1f;
         bossKilled = false;
         endGateBlockade = GameObject.Find("EndGateBlockade").GetComponent<GateBlockade>(); endGateBlockade.Toggle(false);
-        roomsUntilBoss = 10;
+        roomsUntilBoss = 5;
         phm = GameObject.Find("Player").GetComponent<HealthManager>();
         phm.uiMan.gearscript.Turn(roomNumber);
         pi = phm.playerItem;
@@ -91,6 +95,7 @@ public class GameDataManager : MonoBehaviour
                     break;
             }
         }
+        if (roofScript != null) { roofScript.playIntro = roomNumber < 1; }
     }
     private void Start()
     {

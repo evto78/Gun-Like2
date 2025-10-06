@@ -83,6 +83,8 @@ public class LevelBuilder : MonoBehaviour
 
             gdm.phm.uiMan.deadline.gameObject.SetActive(true);
             gdm.BeginSpawning();
+
+            if(gdm.roomNumber < 1 && gdm.roofScript != null && gdm.roofScript.playIntro) { gdm.roofScript.OpenRoof(); }
         }
     }
     void BuildBoss(Terrain lvlTerrain)

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeEhms: []
+  activePoints: 0
   activeSpawners: []
   phm: {fileID: 0}
   pi: {fileID: 0}
@@ -57,6 +58,7 @@ MonoBehaviour:
   timeSpent: 0
   timeSpentNoPause: 0
   gameTimerActive: 1
+  nukeDrop: {fileID: 2655701104386342655, guid: 7f2544d04d4f7c1418d6a608d17f6501, type: 3}
   roomNumber: 0
   basePoints: {x: 40, y: 60}
   flatPointsPerDifficulty: 50
@@ -64,24 +66,6 @@ MonoBehaviour:
   pointsLocked: 0
   saveDataReaderPrefab: {fileID: 0}
   instance: {fileID: 0}
-  controlsBinds:
-    walkForward: 0
-    walkBackward: 0
-    walkLeft: 0
-    walkRight: 0
-    jump: 0
-    slam: 0
-    slide: 0
-    sprint: 0
-    leftInteract: 0
-    righInteract: 0
-    showMoreInformation: 0
-    leftShoot: 0
-    leftReload: 0
-    rightShoot: 0
-    rightReload: 0
-    pauseMenu: 0
-    openInventory: 0
   chimera: {fileID: 2492430237933944822, guid: 448a4817e75485c4f9e0e1da4bb4351a, type: 3}
   roomsUntilBoss: 0
   endGateBlockade: {fileID: 0}
