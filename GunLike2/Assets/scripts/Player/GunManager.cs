@@ -329,6 +329,8 @@ public class GunManager : MonoBehaviour
             gcsR = rightGunScript.gameObject.AddComponent<GooColorShift>(); gcsR.speed = 20f; gcsR.randomness = 1.3f; rightGunScript.gooEffect = gcsR;
         }
         leftGunScript.bulletReservoir = preinstatiatedAmmoBoxLeft; rightGunScript.bulletReservoir = preinstatiatedAmmoBoxRight;
+        leftGunScript.manager = this;
+        rightGunScript.manager = this;
     }
     void IndividualGunSetUp(GameObject gunPrefab, GunObjectData gData)
     {

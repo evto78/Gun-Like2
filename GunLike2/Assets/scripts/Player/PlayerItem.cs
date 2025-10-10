@@ -506,12 +506,8 @@ public class PlayerItem : MonoBehaviour
             }
             if(hit.collider.gameObject.tag == "Interactable")
             {
-                if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.righInteract) || Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract))
-                {
-                    hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
-                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(PlayerEffectType.effectName.chaosEngine, 1f); }
-                }
-                if(hit.collider.gameObject.TryGetComponent<ItemContainer>(out ItemContainer ic))
+                ItemContainer ic;
+                if (hit.collider.gameObject.TryGetComponent<ItemContainer>(out ic))
                 {
                     if (leftItems[128] + rightItems[128] > 0)
                     {
@@ -519,11 +515,32 @@ public class PlayerItem : MonoBehaviour
                         ic.timeSinceEye = 0;
                     }
                 }
+                HandleInteractableOutline(hit.collider.gameObject, hit, ic);
+                if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.righInteract) || Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract))
+                {
+                    hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
+                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(PlayerEffectType.effectName.chaosEngine, 1f); }
+                }
             }
         }
         else
         {
             itemDisplay.SetActive(false);
+        }
+    }
+    void HandleInteractableOutline(GameObject obj, RaycastHit hit, ItemContainer ic)
+    {
+        OutlineScript outlineS; obj.TryGetComponent<OutlineScript>(out outlineS); if (outlineS == null) { return; }
+        if (outlineS.disabledObject) { outlineS.ChangeState(OutlineScript.State.disable); return; }
+        if (outlineS.dangerousObject) { outlineS.ChangeState(OutlineScript.State.danger); return; }
+        if(ic != null)
+        {
+            outlineS.ChangeState(OutlineScript.State.interactable);
+            if (ic.cost > healthManager.money) { outlineS.ChangeState(OutlineScript.State.noMoney); return; }
+        }
+        else
+        {
+            outlineS.ChangeState(OutlineScript.State.interactable);
         }
     }
     void MonkeysPaw(int id, string hand, int amt)
