@@ -84,7 +84,15 @@ public class UIManager : MonoBehaviour
     public List<SaveSlotButton> saveSlotButtons;
 
     public TextMeshProUGUI saveNameBox;
-    
+    [System.Serializable] public class DynamicDangerInfo { public Transform dangerPos; public float timer; public Transform linkedPointer; public Image pointerImg; }
+    [System.Serializable] public class StaticDangerInfo { public Vector3 dangerPos; public float timer; public Transform linkedPointer; public Image pointerImg; }
+    public List<DynamicDangerInfo> dynamicDangers = new List<DynamicDangerInfo>();
+    public List<StaticDangerInfo> staticDangers = new List<StaticDangerInfo>();
+    public float dangerTimer;
+    public Transform indicatorWheelParent;
+    public GameObject hurtPointer;
+    public GameObject warnPointer;
+    public DamageFlash flash;
     private void Start()
     {
         pi = GetComponent<PlayerItem>();
@@ -156,6 +164,8 @@ public class UIManager : MonoBehaviour
         {
             playUI.SetActive(false); inventoryUI.SetActive(false); pauseUI.SetActive(false); isPaused = false;
         }
+
+        ManageDangerSources();
 
         killedByText.text = healthManager.lastHitMeName;
 
@@ -444,7 +454,78 @@ public class UIManager : MonoBehaviour
             mutationIDText.text = mutatedRules[0] + "|" + mutatedRules[1] + "|" + mutatedRules[2] + "|" + mutatedRules[3] + "|" + mutatedRules[4] + "|" + mutatedRules[5];
         } else { mutationIDText.transform.parent.gameObject.SetActive(false); }
     }
+    public void AddDangerSource(Transform dangerSource, Vector3 dangerPos, bool isStatic)
+    {
+        if (isStatic)
+        {
+            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = dangerTimer; return; } }
+            StaticDangerInfo newDI = new StaticDangerInfo();
+            newDI.dangerPos = dangerPos; newDI.timer = dangerTimer;
+            GameObject spawnedPointer = Instantiate(hurtPointer, indicatorWheelParent);
+            newDI.linkedPointer = spawnedPointer.transform;
+            newDI.pointerImg = spawnedPointer.GetComponent<Image>();
+            staticDangers.Add(newDI);
+        }
+        else
+        {
+            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = dangerTimer; return; } }
+            DynamicDangerInfo newDI = new DynamicDangerInfo();
+            newDI.dangerPos = dangerSource; newDI.timer = dangerTimer;
+            GameObject spawnedPointer = Instantiate(hurtPointer, indicatorWheelParent);
+            newDI.linkedPointer = spawnedPointer.transform;
+            newDI.pointerImg = spawnedPointer.GetComponent<Image>();
+            dynamicDangers.Add(newDI);
+        }
+    }
+    public void AddDangerWarnSource(Transform dangerSource, Vector3 dangerPos, bool isStatic)
+    {
+        if (isStatic)
+        {
+            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = dangerTimer; return; } }
+            StaticDangerInfo newDI = new StaticDangerInfo();
+            newDI.dangerPos = dangerPos; newDI.timer = dangerTimer;
+            GameObject spawnedPointer = Instantiate(warnPointer, indicatorWheelParent);
+            newDI.linkedPointer = spawnedPointer.transform;
+            newDI.pointerImg = spawnedPointer.GetComponent<Image>();
+            staticDangers.Add(newDI);
+        }
+        else
+        {
+            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = dangerTimer; return; } }
+            DynamicDangerInfo newDI = new DynamicDangerInfo();
+            newDI.dangerPos = dangerSource; newDI.timer = dangerTimer;
+            GameObject spawnedPointer = Instantiate(warnPointer, indicatorWheelParent);
+            newDI.linkedPointer = spawnedPointer.transform;
+            newDI.pointerImg = spawnedPointer.GetComponent<Image>();
+            dynamicDangers.Add(newDI);
+        }
+    }
+    void ManageDangerSources()
+    {
+        List<DynamicDangerInfo> toBeRemovedDynamic = new List<DynamicDangerInfo>(); List<StaticDangerInfo> toBeRemovedStatic = new List<StaticDangerInfo>();
 
+        foreach (DynamicDangerInfo di in dynamicDangers)
+        {
+            di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1,1,1,Mathf.Lerp(0,0.75f,di.timer)); PointIndicator(di.dangerPos.position, di.linkedPointer);
+            if(di.timer <= 0f || di.dangerPos == null) { toBeRemovedDynamic.Add(di); }
+        }
+        foreach(DynamicDangerInfo di in toBeRemovedDynamic) { Destroy(di.linkedPointer.gameObject); dynamicDangers.Remove(di); }
+
+        foreach (StaticDangerInfo di in staticDangers)
+        {
+            di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1, 1, 1, Mathf.Lerp(0, 0.75f, di.timer)); PointIndicator(di.dangerPos, di.linkedPointer);
+            if (di.timer <= 0f) { toBeRemovedStatic.Add(di); }
+        }
+        foreach (StaticDangerInfo di in toBeRemovedStatic) { Destroy(di.linkedPointer.gameObject); staticDangers.Remove(di); }
+    }
+    void PointIndicator(Vector3 source, Transform pointer)
+    {
+        Vector3 playerPos = new Vector3(transform.position.x, transform.position.z, 0);
+        Vector3 sourcePos = new Vector3(source.x, source.z, 0);
+        Vector3 angleDir = (sourcePos - playerPos).normalized;
+        if (angleDir.x > 0) { pointer.localEulerAngles = Vector3.forward * ((-Vector3.Angle(angleDir, Vector3.up)) + transform.localEulerAngles.y); }
+        else { pointer.localEulerAngles = Vector3.forward * ((Vector3.Angle(angleDir, Vector3.up)) + transform.localEulerAngles.y); }
+    }
     public void VisionOfGunky()
     {
         gunkyCounter = 0;

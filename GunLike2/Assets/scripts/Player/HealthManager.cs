@@ -635,14 +635,16 @@ public class HealthManager : MonoBehaviour
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
-				if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, 1); }
-			}
+				OnDmgTaken(1, wasFromExpGrowth, source, sourceName);
+                if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, 1); }
+            }
 			else
 			{
 				//return new hp with dmg reduced by armor
 				curHp -= (damageTaken - tempArmor);
+				OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, source, sourceName);
 				if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
-			}
+            }
 			regenTimer = 2f;
 
 			if (expGrowth > 0 && (!wasFromExpGrowth || Random.Range(0, 100) < 15))
@@ -715,6 +717,15 @@ public class HealthManager : MonoBehaviour
 			}
 		}
 	}
+	void OnDmgTaken(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName)
+	{
+        if(source != null)
+		{
+			uiMan.AddDangerSource(source.transform, source.transform.position, false);
+		}
+		uiMan.flash.Flash(1f - (curHp/maxHp));
+		uiMan.healthGear.Flash(damageTaken/maxHp);
+    }
 	public void GiveEffect(PlayerEffectType.effectName effectGiven, float stacksToAdd)
 	{
         switch (effectGiven)
