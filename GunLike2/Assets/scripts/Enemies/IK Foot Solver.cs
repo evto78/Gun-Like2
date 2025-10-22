@@ -17,6 +17,7 @@ public class IKFootSolver : MonoBehaviour
     public float stepSpeed;
     Vector3 stayPos;
     public Vector3 nextPos;
+    public float nextPosOffset;
     void Start()
     {
         SnapToGround();
