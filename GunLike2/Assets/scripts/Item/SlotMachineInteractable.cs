@@ -27,6 +27,8 @@ public class SlotMachineInteractable : MonoBehaviour
     bool interacted;
     public float priceModifier = 1;
 
+    int spinsMade = 0; float moneyMade = 0; float netMoneyMade = 0;
+
     public TextMeshProUGUI costTxt;
     void Start()
     {
@@ -45,7 +47,8 @@ public class SlotMachineInteractable : MonoBehaviour
         if (interacted) { return; }
         if (pi.healthManager.money < cost) { return; }
         pi.healthManager.money -= cost;
-        interacted = true;
+        netMoneyMade -= cost;
+        interacted = true; spinsMade++;
         anim.SetTrigger("Spin");
 
         StartCoroutine(SpinWheel(0)); StartCoroutine(SpinWheel(1));
@@ -93,15 +96,16 @@ public class SlotMachineInteractable : MonoBehaviour
     {
         switch (id)
         {
-            case 0: StartCoroutine(VendReward(cost*4)); weightedList.Add(3); break;
-            case 1: StartCoroutine(VendReward(cost*2)); weightedList.Add(3); break;
-            case 2: StartCoroutine(VendReward(cost)); weightedList.Add(3); break;
+            case 0: StartCoroutine(VendReward(cost*4)); weightedList.Add(3); moneyMade += cost * 4; netMoneyMade += cost * 4; break;
+            case 1: StartCoroutine(VendReward(cost*2)); weightedList.Add(3); moneyMade += cost * 2; netMoneyMade += cost * 2; break;
+            case 2: StartCoroutine(VendReward(cost)); weightedList.Add(3); moneyMade += cost; netMoneyMade += cost; break;
             case 3: Explode(); break;
             case 4: cost += (Mathf.CeilToInt(gdm.phm.baseCost * priceModifier * (int)(gdm.difficulty * (gdm.roomNumber + 1)))); costTxt.text = cost.ToString() + "$"; break;
         }
     }
     void Explode()
     {
+        Debug.Log("spins: " + spinsMade + " | money made: " + moneyMade + " | net money made: " + netMoneyMade);
         Instantiate(explosion, transform.position, transform.rotation);
         explosion.GetComponent<NuclearExplosion>().damage = cost / 8;
         Destroy(gameObject);

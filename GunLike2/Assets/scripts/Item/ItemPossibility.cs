@@ -255,10 +255,10 @@ public class ItemPossibility : MonoBehaviour
                     locked = true;
                     lockedPos = transform.position;
                     option1 = Instantiate(item, shrodingerOptions.transform.GetChild(0));
-                    option1.GetComponent<Item>().SetItemID(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+                    option1.GetComponent<Item>().SetItemID(GetItemIDByRarity());
                     option1.GetComponent<Rigidbody>().useGravity = false;
                     option2 = Instantiate(item, shrodingerOptions.transform.GetChild(1));
-                    option2.GetComponent<Item>().SetItemID(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+                    option2.GetComponent<Item>().SetItemID(GetItemIDByRarity());
                     option2.GetComponent<Rigidbody>().useGravity = false;
                     oid1 = option1.GetComponent<Item>().itemID;
                     oid2 = option2.GetComponent<Item>().itemID;
@@ -275,7 +275,7 @@ public class ItemPossibility : MonoBehaviour
             }
             else
             {
-                SpawnItem(rarityList[rarity][Random.Range(0, rarityList[rarity].Count)]);
+                SpawnItem(GetItemIDByRarity());
             }
             
             Destroy(gameObject);
@@ -292,5 +292,9 @@ public class ItemPossibility : MonoBehaviour
         spawnedItem.transform.rotation = transform.rotation;
 
         spawnedItem.GetComponent<Item>().SetItemID(iD);
+    }
+    int GetItemIDByRarity()
+    {
+        return rarityList[rarity][Random.Range(0, rarityList[rarity].Count)];
     }
 }
