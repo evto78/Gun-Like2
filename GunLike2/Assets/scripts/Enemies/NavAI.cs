@@ -15,11 +15,14 @@ public class NavAI : MonoBehaviour
     float wanderTimer = 0;
     Vector3 lastSecondPos; float lspTimer;
 
+    public bool neverIdle;
+
     void Start()
     {
         target = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
         SetState(state.idle);
+        if (neverIdle) { SetState(state.chase); }
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class NavAI : MonoBehaviour
     }
     void Update()
     {
+        if (neverIdle) { SetState(state.chase); }
         switch (navState)
         {
             case state.idle: agent.isStopped = true; break;

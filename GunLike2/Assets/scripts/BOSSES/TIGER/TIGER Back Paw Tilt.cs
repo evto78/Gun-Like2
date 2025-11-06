@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackPawTilt : MonoBehaviour
+public class TIGERBackPawTilt : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
+    public Transform target;
     void Update()
     {
-        
+        transform.LookAt(target);
     }
 }
