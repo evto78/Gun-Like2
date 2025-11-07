@@ -14,6 +14,14 @@ public class SaveFileReadWrite : MonoBehaviour
         public int usrSessions;
         public List<GunInformation> gunInfo;
         public BossInformation ChimeraInfo;
+        public List<UnlockInformation> UnlockInfo;
+    }
+    [System.Serializable]
+    public class UnlockInformation
+    {
+        public int id;
+        public float unlockProgress; // 0 -> 1
+        public string unlockCondition;
     }
     [System.Serializable]
     public class GunInformation
@@ -221,10 +229,42 @@ public class SaveFileReadWrite : MonoBehaviour
             GunInfoAssembler(newInfo, false, obj);
             newData.gunInfo.Add(newInfo);
         }
+
+        newData.UnlockInfo = InitalizeUnlockInfo();
         
         newData.ChimeraInfo = new BossInformation();
 
         return newData;
+    }
+    List<UnlockInformation> InitalizeUnlockInfo()
+    {
+        List<UnlockInformation> tmp = new List<UnlockInformation>();
+
+        List<ItemObject> itemData = new List<ItemObject>();
+        itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
+        SortItemData(itemData);
+        foreach (ItemObject item in itemData)
+        {
+            UnlockInformation newInfo = new UnlockInformation();
+            newInfo.id = item.id;
+            if (item.needsToBeUnlocked) { newInfo.unlockProgress = 0; } else { newInfo.unlockProgress = 1;}
+            newInfo.unlockCondition = item.unlockCondition;
+
+            tmp.Add(newInfo);
+        }
+
+        return tmp;
+    }
+    void SortItemData(List<ItemObject> itemData)
+    {
+        List<int> comparisonList = new List<int>();
+        List<ItemObject> sortedItemData = new List<ItemObject>();
+        for (int i = 0; i < itemData.Count; i++) { comparisonList.Add(i); sortedItemData.Add(null); }
+        for (int i = 0; i < itemData.Count; i++)
+        {
+            sortedItemData[comparisonList.IndexOf(itemData[i].id)] = itemData[i];
+        }
+        itemData = sortedItemData;
     }
     void GunInfoAssembler(GunInformation gunInfo, bool unlocked, GunObjectData obj)
     {

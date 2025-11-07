@@ -66,10 +66,7 @@ public class Item : MonoBehaviour
             player = GameObject.FindWithTag("Player");
             playerItem = player.GetComponent<PlayerItem>();
 
-            for (int i = 0; i < playerItem.rarityList.Count; i++)
-            {
-                if (playerItem.rarityList[i].Contains(itemID)) { mr.material = backgroundList[i]; }
-            }
+            mr.material = backgroundList[playerItem.FindRarityByID(itemID)];
         }
         if (rb.isKinematic) { rb.AddForce(-Vector3.up * 50f, ForceMode.Impulse); }
     }

@@ -11,6 +11,8 @@ public class ItemObject : ScriptableObject
     public enum rarityType { Common, Uncommon, Rare, Legendary, Mutated, Haunted, Irradiated, Nuclear, Unique }
     public rarityType rarity;
     public Sprite itemSprite;
+    public bool needsToBeUnlocked;
+    public string unlockCondition;
     public bool cooldownItem;
     public float baseCooldown;
     public bool globalItem; //Does the item effect only affect the gun it is attached to.

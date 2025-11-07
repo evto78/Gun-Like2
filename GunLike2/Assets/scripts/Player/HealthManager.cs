@@ -292,7 +292,9 @@ public class HealthManager : MonoBehaviour
 		if (curHp > maxHp) { curHp = maxHp; }
 
 		itemChecks();
-		ManageEffects();
+		
+		statusEffectsActive = 0;
+        ManageEffects();
 		DisplayEffects();
 
 		if(curHp <= 0 && activeEffects[21].x < 1) 
@@ -769,6 +771,7 @@ public class HealthManager : MonoBehaviour
 		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, 5f, 5f, 1f); }
 		if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, 0.1f, 0.1f, -1f); }
 	}
+	public int statusEffectsActive;
 	void ManageEffects()
 	{
 		Vector4 q = new Vector4(0, 0, 0, 0);
@@ -782,8 +785,9 @@ public class HealthManager : MonoBehaviour
 			//if there are any stacks of this effect
 			if (q.x > 0)
 			{
-				//run effects that happen every frame
-				if (i == 21) { curHp = maxHp; }
+				statusEffectsActive++;
+                //run effects that happen every frame
+                if (i == 21) { curHp = maxHp; }
 
 				//progress timer and remove stacks as needed
 				if (q.z > 0f)

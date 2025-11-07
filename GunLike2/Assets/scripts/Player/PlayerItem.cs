@@ -65,6 +65,26 @@ public class PlayerItem : MonoBehaviour
     public List<int> unstableItems = new List<int>();
     public List<int> cooldownItems = new List<int>();
     public List<int> horrorItems = new List<int>();
+
+    public int leftCommonItemCount;
+    public int leftUncommonItemCount;
+    public int leftRareItemCount;
+    public int leftLegendaryItemCount;
+    public int leftMutatedItemCount;
+    public int leftHauntedItemCount;
+    public int leftIrradiatedItemCount;
+    public int leftNuclearItemCount;
+    public int leftUniqueItemCount;
+    public int rightCommonItemCount;
+    public int rightUncommonItemCount;
+    public int rightRareItemCount;
+    public int rightLegendaryItemCount;
+    public int rightMutatedItemCount;
+    public int rightHauntedItemCount;
+    public int rightIrradiatedItemCount;
+    public int rightNuclearItemCount;
+    public int rightUniqueItemCount;
+
     [Header("Manager scripts")]
     public NEWPlayerMovement playerMvt;
     public HealthManager healthManager;
@@ -97,10 +117,12 @@ public class PlayerItem : MonoBehaviour
 
     public GameObject itemPos;
 
+    GameDataManager gdm;
+
     bool changedLastFrame;
     private void Awake()
     {
-        GameDataManager gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
 
         leftItems = new List<int>(); 
         rightItems = new List<int>(); 
@@ -143,29 +165,32 @@ public class PlayerItem : MonoBehaviour
         horrorItems = new List<int>();
         cooldownItems = new List<int>();
 
-        GameDataManager gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+        List<SaveFileReadWrite.UnlockInformation> unlockInfo = gdm.instance.data.UnlockInfo;
         foreach (ItemObject item in itemData)
         {
             leftItems.Add(0); rightItems.Add(0);
-            switch (item.rarity)
+            if (unlockInfo[item.id].unlockProgress >= 1) 
             {
-                case ItemObject.rarityType.Common: commonItems.Add(item.id); break;
-                case ItemObject.rarityType.Uncommon: uncommonItems.Add(item.id); break;
-                case ItemObject.rarityType.Rare: rareItems.Add(item.id); break;
-                case ItemObject.rarityType.Legendary: legendaryItems.Add(item.id); break;
-                case ItemObject.rarityType.Mutated: mutatedItems.Add(item.id); break;
-                case ItemObject.rarityType.Haunted: hauntedItems.Add(item.id); break;
-                case ItemObject.rarityType.Irradiated: irradiatedItems.Add(item.id); break;
-                case ItemObject.rarityType.Nuclear: nuclearItems.Add(item.id); break;
-                case ItemObject.rarityType.Unique: uniqueItems.Add(item.id); break;
-            }
-            switch (item.subType)
-            {
-                case ItemObject.itemType.classic: gunLike1Items.Add(item.id); break;
-                case ItemObject.itemType.sponser: sponserItems.Add(item.id); break;
-                case ItemObject.itemType.fish: fishItems.Add(item.id); break;
-                case ItemObject.itemType.unstablePart: unstableItems.Add(item.id); break;
-                case ItemObject.itemType.horror: horrorItems.Add(item.id); break;
+                switch (item.rarity)
+                {
+                    case ItemObject.rarityType.Common: commonItems.Add(item.id); break;
+                    case ItemObject.rarityType.Uncommon: uncommonItems.Add(item.id); break;
+                    case ItemObject.rarityType.Rare: rareItems.Add(item.id); break;
+                    case ItemObject.rarityType.Legendary: legendaryItems.Add(item.id); break;
+                    case ItemObject.rarityType.Mutated: mutatedItems.Add(item.id); break;
+                    case ItemObject.rarityType.Haunted: hauntedItems.Add(item.id); break;
+                    case ItemObject.rarityType.Irradiated: irradiatedItems.Add(item.id); break;
+                    case ItemObject.rarityType.Nuclear: nuclearItems.Add(item.id); break;
+                    case ItemObject.rarityType.Unique: uniqueItems.Add(item.id); break;
+                }
+                switch (item.subType)
+                {
+                    case ItemObject.itemType.classic: gunLike1Items.Add(item.id); break;
+                    case ItemObject.itemType.sponser: sponserItems.Add(item.id); break;
+                    case ItemObject.itemType.fish: fishItems.Add(item.id); break;
+                    case ItemObject.itemType.unstablePart: unstableItems.Add(item.id); break;
+                    case ItemObject.itemType.horror: horrorItems.Add(item.id); break;
+                }
             }
             if (item.cooldownItem) { cooldownItems.Add(item.id); }
         }
@@ -206,6 +231,7 @@ public class PlayerItem : MonoBehaviour
         UpdateModifierList();
 
         CheckForMerge();
+        UpdateRarityCount();
     }
     private void LateUpdate()
     {
@@ -304,6 +330,44 @@ public class PlayerItem : MonoBehaviour
             if (droppedOnId == 171 && rightItems[171] > 0) { OverridenCompressor(heldId, heldHand, droppedHand); }
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
+    }
+    void UpdateRarityCount()
+    {
+        leftCommonItemCount = 0;
+        leftUncommonItemCount = 0;
+        leftRareItemCount = 0;
+        leftLegendaryItemCount = 0;
+        leftMutatedItemCount = 0;
+        leftHauntedItemCount = 0;
+        leftIrradiatedItemCount = 0;
+        leftNuclearItemCount = 0;
+        leftUniqueItemCount = 0;
+
+        rightCommonItemCount = 0;
+        rightUncommonItemCount = 0;
+        rightRareItemCount = 0;
+        rightLegendaryItemCount = 0;
+        rightMutatedItemCount = 0;
+        rightHauntedItemCount = 0;
+        rightIrradiatedItemCount = 0;
+        rightNuclearItemCount = 0;
+        rightUniqueItemCount = 0;
+
+        for(int i = 0; i < leftItems.Count; i++)
+        {
+            switch (FindRarityByID(i))
+            {
+                case 0: leftCommonItemCount += leftItems[i]; rightCommonItemCount += rightItems[i]; break;
+                case 1: leftUncommonItemCount += leftItems[i]; rightUncommonItemCount += rightItems[i]; break;
+                case 2: leftRareItemCount += leftItems[i]; rightRareItemCount += rightItems[i]; break;
+                case 3: leftLegendaryItemCount += leftItems[i]; rightLegendaryItemCount += rightItems[i]; break;
+                case 4: leftMutatedItemCount += leftItems[i]; rightMutatedItemCount += rightItems[i]; break;
+                case 5: leftHauntedItemCount += leftItems[i]; rightHauntedItemCount += rightItems[i]; break;
+                case 6: leftIrradiatedItemCount += leftItems[i]; rightIrradiatedItemCount += rightItems[i]; break;
+                case 7: leftNuclearItemCount += leftItems[i]; rightNuclearItemCount += rightItems[i]; break;
+                case 8: leftUniqueItemCount += leftItems[i]; rightUniqueItemCount += rightItems[i]; break;
+            }
+        }
     }
     void NuclearFission(int id, string heldHand, string droppedHand)
     {
