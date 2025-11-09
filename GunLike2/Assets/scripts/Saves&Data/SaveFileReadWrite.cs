@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -233,7 +234,7 @@ public class SaveFileReadWrite : MonoBehaviour
 
         List<ItemObject> itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
-        SortItemData(itemData);
+        itemData = SortItemData(itemData);
         foreach (ItemObject item in itemData)
         {
             UnlockInformation newInfo = new UnlockInformation();
@@ -243,10 +244,9 @@ public class SaveFileReadWrite : MonoBehaviour
 
             tmp.Add(newInfo);
         }
-
         return tmp;
     }
-    void SortItemData(List<ItemObject> itemData)
+    List<ItemObject> SortItemData(List<ItemObject> itemData)
     {
         List<int> comparisonList = new List<int>();
         List<ItemObject> sortedItemData = new List<ItemObject>();
@@ -255,7 +255,7 @@ public class SaveFileReadWrite : MonoBehaviour
         {
             sortedItemData[comparisonList.IndexOf(itemData[i].id)] = itemData[i];
         }
-        itemData = sortedItemData;
+        return sortedItemData;
     }
     void GunInfoAssembler(GunInformation gunInfo, bool unlocked, GunObjectData obj)
     {
