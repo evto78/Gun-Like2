@@ -606,6 +606,10 @@ public class HealthManager : MonoBehaviour
 			ehm.TakeDamage(1000 * (gunManager.leftDmg + gunManager.rightDmg), false, HitType.ht.special, ehm.transform.position, "self");
         }
     }
+	void KillCounterExplosion(int killstreak)
+	{
+
+	}
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName)
 	{
 		bool wasAtMax = (curHp == maxHp);
@@ -763,6 +767,7 @@ public class HealthManager : MonoBehaviour
 			case PlayerEffectType.effectName.chaosEngine: activeEffects[26] = new Vector4(activeEffects[26].x + stacksToAdd, 3f, 3f, 1f); break; //Chaos Engine
 			case PlayerEffectType.effectName.sunny: activeEffects[27] = new Vector4(stacksToAdd, 1f, 1f, 1f); break; //Sunflower
 			case PlayerEffectType.effectName.smokeBlind: activeEffects[28] = new Vector4(stacksToAdd, 0.1f, 0.1f, -1f); break; //AK47 smoke gernade
+			case PlayerEffectType.effectName.killstreak: activeEffects[29] = new Vector4(activeEffects[29].x + stacksToAdd, 3f, 3f, 1f); break; //Killstreak counter
 		}
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
@@ -807,6 +812,7 @@ public class HealthManager : MonoBehaviour
 						case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed"); break;
 						case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn"); break;
 						case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation"); break;
+						case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
                     }
 				}
 			}
@@ -855,6 +861,7 @@ public class HealthManager : MonoBehaviour
 					case 26: strToAdd = "chaos engine"; break;
 					case 27: strToAdd = "sunny"; break;
 					case 28: strToAdd = "Smoked"; break;
+					case 29: strToAdd = "Killstreak"; break;
 				}
 				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}

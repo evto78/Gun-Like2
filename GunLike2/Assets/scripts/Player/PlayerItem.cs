@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerItem : MonoBehaviour
 {
@@ -56,8 +57,9 @@ public class PlayerItem : MonoBehaviour
     public List<int> irradiatedItems = new List<int>();
     public List<int> nuclearItems = new List<int>();
     public List<int> uniqueItems = new List<int>();
-
+    
     public List<List<int>> rarityList = new List<List<int>>();
+    public List<ItemObject> lockedItems = new List<ItemObject>();
 
     public List<int> gunLike1Items = new List<int>();
     public List<int> sponserItems = new List<int>();
@@ -146,6 +148,20 @@ public class PlayerItem : MonoBehaviour
         }
         itemData = sortedItemData;
     }
+    List<SaveFileReadWrite.UnlockInformation> GetAndSortUnlockData()
+    {
+        List<SaveFileReadWrite.UnlockInformation> unlockData = gdm.instance.data.UnlockInfo;
+
+        List<int> comparisonList = new List<int>();
+        List<SaveFileReadWrite.UnlockInformation> sortedUnlockData = new List<SaveFileReadWrite.UnlockInformation>();
+        for (int i = 0; i < unlockData.Count; i++) { comparisonList.Add(i); sortedUnlockData.Add(null); }
+        for (int i = 0; i < unlockData.Count; i++)
+        {
+            sortedUnlockData[comparisonList.IndexOf(unlockData[i].id)] = unlockData[i];
+        }
+        unlockData = sortedUnlockData;
+        return unlockData;
+    }
     void LoadCategories()
     {
         commonItems = new List<int>();
@@ -157,6 +173,7 @@ public class PlayerItem : MonoBehaviour
         irradiatedItems = new List<int>();
         nuclearItems = new List<int>();
         rarityList = new List<List<int>>();
+        lockedItems = new List<ItemObject>();
 
         gunLike1Items = new List<int>();
         sponserItems = new List<int>();
@@ -165,11 +182,11 @@ public class PlayerItem : MonoBehaviour
         horrorItems = new List<int>();
         cooldownItems = new List<int>();
 
-        List<SaveFileReadWrite.UnlockInformation> unlockInfo = gdm.instance.data.UnlockInfo;
+        List<SaveFileReadWrite.UnlockInformation> unlockInfo = GetAndSortUnlockData();
         foreach (ItemObject item in itemData)
         {
             leftItems.Add(0); rightItems.Add(0);
-            if (unlockInfo[item.id].unlockProgress >= 1) 
+            if (unlockInfo[item.id].unlockProgress >= 1)
             {
                 switch (item.rarity)
                 {
@@ -192,9 +209,27 @@ public class PlayerItem : MonoBehaviour
                     case ItemObject.itemType.horror: horrorItems.Add(item.id); break;
                 }
             }
+            else { lockedItems.Add(item); }
             if (item.cooldownItem) { cooldownItems.Add(item.id); }
         }
         rarityList.InsertRange(0, new List<int>[] { commonItems, uncommonItems, rareItems, legendaryItems, mutatedItems, hauntedItems, irradiatedItems, nuclearItems, uniqueItems });
+    }
+    public void TriggerUnlock(int id)
+    {
+        ItemObject item = itemData[id];
+        Debug.Log("UNLOCKED: " + item.itemName);
+        switch (item.rarity)
+        {
+            case ItemObject.rarityType.Common: if (!commonItems.Contains(item.id)) { commonItems.Add(item.id); } break;
+            case ItemObject.rarityType.Uncommon: if (!uncommonItems.Contains(item.id)) { uncommonItems.Add(item.id); } break;
+            case ItemObject.rarityType.Rare: if (!rareItems.Contains(item.id)) { rareItems.Add(item.id); } break;
+            case ItemObject.rarityType.Legendary: if (!legendaryItems.Contains(item.id)) { legendaryItems.Add(item.id); } break;
+            case ItemObject.rarityType.Mutated: if (!mutatedItems.Contains(item.id)) { mutatedItems.Add(item.id); } break;
+            case ItemObject.rarityType.Haunted: if (!hauntedItems.Contains(item.id)) { hauntedItems.Add(item.id); } break;
+            case ItemObject.rarityType.Irradiated: if (!irradiatedItems.Contains(item.id)) { irradiatedItems.Add(item.id); } break;
+            case ItemObject.rarityType.Nuclear: if (!nuclearItems.Contains(item.id)) { nuclearItems.Add(item.id); } break;
+            case ItemObject.rarityType.Unique: if (!uniqueItems.Contains(item.id)) { uniqueItems.Add(item.id); } break;
+        }
     }
     public void ItemsFromMutatedModifcataion(List<int> rules)
     {

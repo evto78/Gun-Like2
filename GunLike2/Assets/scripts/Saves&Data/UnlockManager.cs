@@ -21,8 +21,8 @@ public class UnlockManager : MonoBehaviour
         phm = pi.healthManager;
         mvt = pi.playerMvt;
     }
-    public void UnlockItem(int id) { unlockInfo[id].unlockProgress = 1; }
-    public void AddUnlockProgress(int id, float progress) { unlockInfo[id].unlockProgress += progress; if (unlockInfo[id].unlockProgress >= 1) { UnlockItem(id); } }
+    public void UnlockItem(int id) { if (unlockInfo[id].unlockProgress >= 1) { return; } unlockInfo[id].unlockProgress = 1; pi.TriggerUnlock(id); }
+    public void AddUnlockProgress(int id, float progress) { if (unlockInfo[id].unlockProgress >= 1) { return; } unlockInfo[id].unlockProgress += progress; if (unlockInfo[id].unlockProgress >= 1) { UnlockItem(id); } }
     void Update()
     {
         CheckEveryFrame();

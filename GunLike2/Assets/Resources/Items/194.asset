@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0801b46671f2b334489da9d54120c52e, type: 3}
+  m_Name: 194
+  m_EditorClassIdentifier: 
+  id: 194
+  itemName: Kill Counter Capacitor
+  rarity: 3
+  itemSprite: {fileID: 21300000, guid: f2cc9481a7c4a0043ba359af7489dd96, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
+  cooldownItem: 0
+  baseCooldown: 0
+  globalItem: 1
+  subType: 0
+  effect: when getting a kill, get a stack of killstreak. these stacks last for 3
+    seconds and can stack endlessly with the buff duration being reset every new
+    stack. when you lose a stack of killstreak, you lose all of them at once, generating
+    a fire pulse centered from you that does big damage, and burns enemies in a large
+    radias. The fire pulse is enhanced with every stack of killstreak consumed. Each
+    stack of this item buffs the explosion further
+  buff: Speed + 40%(+40%), Attack Speed + 40%(+40%)
+  debuff: '-'
+  effectSum: Kills in quick succesion give killstreak, when your killsteak ends,
+    make a explosion that gets larger with the higher killstreak.
+  buffSum: Speed++ Attack Speed++
+  debuffSum: '-'
+  flavor: '"You''re on fire!"'
+  ideaCredit: 
+  flavorCredit: 

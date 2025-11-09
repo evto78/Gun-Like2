@@ -11301,6 +11301,24 @@ MonoBehaviour:
   unstableItems: 
   cooldownItems: 
   horrorItems: 
+  leftCommonItemCount: 0
+  leftUncommonItemCount: 0
+  leftRareItemCount: 0
+  leftLegendaryItemCount: 0
+  leftMutatedItemCount: 0
+  leftHauntedItemCount: 0
+  leftIrradiatedItemCount: 0
+  leftNuclearItemCount: 0
+  leftUniqueItemCount: 0
+  rightCommonItemCount: 0
+  rightUncommonItemCount: 0
+  rightRareItemCount: 0
+  rightLegendaryItemCount: 0
+  rightMutatedItemCount: 0
+  rightHauntedItemCount: 0
+  rightIrradiatedItemCount: 0
+  rightNuclearItemCount: 0
+  rightUniqueItemCount: 0
   playerMvt: {fileID: 4410490756112149481}
   healthManager: {fileID: 3056162612049833695}
   gunManager: {fileID: 645800364383380793}
@@ -11402,6 +11420,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
   - {x: 0, y: 0, z: 0, w: 0}
+  - {x: 0, y: 0, z: 0, w: 0}
   baseMaxHP: 100
   baseArmor: 5
   baseHealthRegen: 1
@@ -11446,6 +11465,7 @@ MonoBehaviour:
   wishes: 0
   gdm: {fileID: 0}
   freeRelaxedRevive: 0
+  statusEffectsActive: 0
 --- !u!114 &7461507813950395447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24213,9 +24233,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2459662de5bf544482b90a66edf38d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  img: {fileID: 0}
-  flashTransform: {fileID: 0}
-  flashSprites: []
+  img: {fileID: 5076491194229549598}
+  flashTransform: {fileID: 4037187671874262076}
+  flashSprites:
+  - {fileID: 21300000, guid: 39a93d004e891d9439252e0814d3461e, type: 3}
+  - {fileID: 21300000, guid: d34307b4b251c234c944f04fa420b5c1, type: 3}
+  - {fileID: 21300000, guid: cce95b1a5e3cce74d9da68fa74b0dd93, type: 3}
 --- !u!1 &3835850462154678978
 GameObject:
   m_ObjectHideFlags: 0

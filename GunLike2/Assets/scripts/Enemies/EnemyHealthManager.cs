@@ -670,6 +670,11 @@ public class EnemyHealthManager : MonoBehaviour
             }
             SpawnItem(rarityID);
         }
+        //Killstreak counter
+        if (playerItem.leftItems[194] + playerItem.rightItems[194] > 0)
+        {
+            playerHM.GiveEffect(PlayerEffectType.effectName.killstreak, 1);
+        }
     }
 
     private void SpawnItem(int iD)

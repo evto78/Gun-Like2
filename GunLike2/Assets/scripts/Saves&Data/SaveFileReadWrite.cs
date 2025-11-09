@@ -10,6 +10,7 @@ public class SaveFileReadWrite : MonoBehaviour
     [System.Serializable]
     public class SaveDataFile
     {
+        public string version;
         public string usrID = "NULL";
         public int usrSessions;
         public List<GunInformation> gunInfo;
@@ -169,18 +170,7 @@ public class SaveFileReadWrite : MonoBehaviour
             }
             if (menuManager != null) { menuManager.instance = this; }
         }
-
-        //if (emailQueContent.Count > 0)
-        //{
-            //StartCoroutine(EmailUpkeep());
-        //}
     }
-    //IEnumerator EmailUpkeep()
-    //{
-        //Debug.Log("SendingEmail");
-        //SendSingleEmail();
-        //yield return null;
-    //}
     public bool RequestDataUpdate()
     {
         if (data == null) { return false; }
@@ -194,6 +184,7 @@ public class SaveFileReadWrite : MonoBehaviour
     {
         SaveDataFile newData;
         newData = new SaveDataFile();
+        newData.version = Application.version;
         newData.usrID = "NEW";
         if (PlayerPrefs.HasKey("USRID"))
         {
@@ -362,8 +353,6 @@ public class SaveFileReadWrite : MonoBehaviour
         tdata.eventData = eventT;
 
         bulkTelem.data.Add(tdata);
-        //emailQueEvent.Add("JSON");
-        //emailQueContent.Add(JsonUtility.ToJson(tdata));
     }
     public void AddFeedbackEmailToQue(string content)
     {
@@ -375,13 +364,6 @@ public class SaveFileReadWrite : MonoBehaviour
         emailQueEvent.Add("FEEDBACK");
         emailQueContent.Add(emailContent);
     }
-    //public void SendSingleEmail()
-    //{
-        //if(emailQueContent.Count <= 0) {return; }
-        //SendDataToEmail(emailQueEvent[0], emailQueContent[0]);
-        //emailQueEvent.RemoveAt(0);
-        //emailQueContent.RemoveAt(0);
-    //}
     void SendAllEmails()
     {
         //feedbackEmails
