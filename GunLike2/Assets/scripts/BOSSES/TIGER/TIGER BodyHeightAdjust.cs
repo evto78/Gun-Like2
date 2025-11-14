@@ -32,6 +32,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     float backDisplace = 0.5f; float frontDisplace = 0.5f;
     static Vector2 backHeightMinMax = new Vector2(0.19f, 1.22f); // manualy calculated and inputed
     static Vector2 frontHeightMinMax = new Vector2(0.58f, 1.36f); // manualy calculated and inputed
+    public Transform pevlisRotationPoint; public Transform pelvisSholderPointer;
 
     private void Awake() { foreach (TIGERIKFootSolver solver in legs) { solver.manager = this; solver.managerHandlesPairs = handlePairs; } }
 
@@ -63,6 +64,8 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         foreach(TIGERIKFootSolver solver in legs) { solver.stepSpeed = baseStepSpeed * Mathf.Lerp(walkStepSpeedMod, runStepSpeedMod, progressToRun); }
         if (handlePairs) { ForceStepProgressBetweenPairs(); }
         HeightAdjustment();
+
+        pevlisRotationPoint.transform.LookAt(pelvisSholderPointer);
     }
     public void HeightAdjustment()
     {
@@ -107,8 +110,15 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         float backYAmt = Mathf.Lerp(backLegsVerticalDisplacementMinMax.x, backLegsVerticalDisplacementMinMax.y, backDisplace) * progressToRun;
         float frontYAmt = Mathf.Lerp(frontLegsVerticalDisplacementMinMax.x, frontLegsVerticalDisplacementMinMax.y, frontDisplace) * progressToRun;
 
-        backLegsHolder.transform.localPosition = new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z);
-        frontLegsHolder.transform.localPosition = new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z);
+        //backLegsHolder.transform.localPosition = new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z);
+        //frontLegsHolder.transform.localPosition = new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z);
+
+        float adjustSpeed = 6f;
+
+        backLegsHolder.transform.localPosition = Vector3.Lerp(backLegsHolder.transform.localPosition, 
+            new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z), Time.deltaTime * adjustSpeed);
+        frontLegsHolder.transform.localPosition = Vector3.Lerp(frontLegsHolder.transform.localPosition,
+            new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z), Time.deltaTime * adjustSpeed);
     }
     public void ChangeState(state newState)
     {
