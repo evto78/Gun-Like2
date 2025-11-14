@@ -11,7 +11,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     public Transform backJoint; float initialBackY; Vector3 initialBackPos;
     public Transform frontJoint; float initialFrontY; Vector3 initialFrontPos;
 
-    [Header("Management")]
+    [Header("Walking/Running Management")]
     public List<TIGERIKFootSolver> legs; // (0,1) is back legs, (2,3) is front legs
     public enum state { walk, run }
     public state curState;
@@ -26,6 +26,12 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     public AnimationCurve runProgressCurve;
     public float currentSpeed; float posSampleTimer; Vector3 sampledPos;
     public Vector2 walkRunSpeedThreshold; public float progressToRun;
+    public Transform backLegsHolder; public Transform frontLegsHolder; float initialBackLegsHolderY; float initialFrontLegsHolderY;
+    static Vector2 backLegsVerticalDisplacementMinMax = new Vector2(-0.03f, 0.015f); // manualy inputed
+    static Vector2 frontLegsVerticalDisplacementMinMax = new Vector2(-0.01f, 0.015f); // manualy inputed
+    float backDisplace = 0.5f; float frontDisplace = 0.5f;
+    static Vector2 backHeightMinMax = new Vector2(0.19f, 1.22f); // manualy calculated and inputed
+    static Vector2 frontHeightMinMax = new Vector2(0.58f, 1.36f); // manualy calculated and inputed
 
     private void Awake() { foreach (TIGERIKFootSolver solver in legs) { solver.manager = this; solver.managerHandlesPairs = handlePairs; } }
 
@@ -36,6 +42,8 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         initalY = legs[0].transform.localPosition.y;
         initialBackY = backJoint.localPosition.y; initialBackPos = backJoint.localPosition;
         initialFrontY = frontJoint.localPosition.y; initialFrontPos = frontJoint.localPosition;
+        initialBackLegsHolderY = backLegsHolder.localPosition.y;
+        initialFrontLegsHolderY = frontLegsHolder.localPosition.y;
         sampledPos = transform.position;
         posSampleTimer = 0f;
         baseStepSpeed = legs[0].stepSpeed;
@@ -83,9 +91,24 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         avgY /= 2f; avgY /= initalY;
         frontHeight = avgY;
 
+        ManageHipSholderHeightDisplacement(backHeight, frontHeight);
+
         backJoint.localPosition = initialBackPos + (Vector3.up * (((backHeight * 1.5f) - 1) / 75f));
         frontJoint.localPosition = initialFrontPos + (Vector3.up * (((frontHeight * 1.5f) - 1) / 75f));
         if (frontJoint.localPosition.y < initialFrontY - 0.01f) { frontJoint.localPosition = initialFrontPos - Vector3.up * 0.01f; }
+    }
+    void ManageHipSholderHeightDisplacement(float backAvgY, float frontAvgY)
+    {
+        backDisplace = 0.5f; frontDisplace = 0.5f;
+
+        backDisplace = (backAvgY - backHeightMinMax.x) / (backHeightMinMax.y - backHeightMinMax.x);
+        frontDisplace = (frontAvgY - frontHeightMinMax.x) / (frontHeightMinMax.y - frontHeightMinMax.x);
+
+        float backYAmt = Mathf.Lerp(backLegsVerticalDisplacementMinMax.x, backLegsVerticalDisplacementMinMax.y, backDisplace) * progressToRun;
+        float frontYAmt = Mathf.Lerp(frontLegsVerticalDisplacementMinMax.x, frontLegsVerticalDisplacementMinMax.y, frontDisplace) * progressToRun;
+
+        backLegsHolder.transform.localPosition = new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z);
+        frontLegsHolder.transform.localPosition = new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z);
     }
     public void ChangeState(state newState)
     {
