@@ -27,6 +27,7 @@ public class DeadlineScript : MonoBehaviour
     void Update()
     {
         timerTxt.color = new Color(1f, 1f, 1f, 1f);
+        if (gdm.difficultyIDSelected == 0) { timerActive = false; }
         if (timerActive) 
         { 
             timerTxt.text = SecondsToMinSec(timeLeft);

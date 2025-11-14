@@ -554,6 +554,6 @@ public class NEWPlayerMovement : MonoBehaviour
             if(inputDir == Vector3.zero && !sliding) { flatVel = flatVel / (friction * 4 * (1 + Time.deltaTime)); rb.useGravity = false; } else { rb.useGravity = true; }
             flatVel = flatVel / (friction * (1 + Time.deltaTime));
             rb.velocity = new Vector3(flatVel.x, rb.velocity.y / (1+Time.deltaTime), flatVel.z); 
-        } else { rb.useGravity = true; }
+        } else if (!noGravity) { rb.useGravity = true; }
     }
 }

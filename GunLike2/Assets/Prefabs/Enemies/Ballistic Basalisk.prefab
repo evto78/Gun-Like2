@@ -937,7 +937,7 @@ Transform:
   m_GameObject: {fileID: 1221379947861454696}
   serializedVersion: 2
   m_LocalRotation: {x: 0.26902524, y: 0.06989961, z: 0.2415658, w: 0.9297234}
-  m_LocalPosition: {x: -0.79, y: 0, z: -2.45}
+  m_LocalPosition: {x: -0.79, y: -1.52, z: -2.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6261,13 +6261,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -11214,13 +11216,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -11956,6 +11960,7 @@ MonoBehaviour:
   stepping: 0
   stepSpeed: 6
   nextPos: {x: 0, y: 0, z: 0}
+  nextPosOffset: 0
 --- !u!1 &2397302449259036661
 GameObject:
   m_ObjectHideFlags: 0
@@ -12206,7 +12211,7 @@ Transform:
   m_GameObject: {fileID: 2568543540584474134}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12286,6 +12291,7 @@ MonoBehaviour:
   stepping: 0
   stepSpeed: 6
   nextPos: {x: 0, y: 0, z: 0}
+  nextPosOffset: 0
 --- !u!1 &2657950185074467399
 GameObject:
   m_ObjectHideFlags: 0
@@ -13208,7 +13214,7 @@ Transform:
   m_GameObject: {fileID: 3269827060871356499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18098,13 +18104,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -23215,13 +23223,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -23758,7 +23768,7 @@ Transform:
   m_GameObject: {fileID: 3982706799460934882}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16012816, y: -0.32042262, z: -0.41736433, w: 0.8351618}
-  m_LocalPosition: {x: 1.05, y: 0, z: 1.38}
+  m_LocalPosition: {x: 1.05, y: -1.52, z: 1.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23792,7 +23802,7 @@ Transform:
   m_GameObject: {fileID: 4056808835044182789}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.81, z: 0}
+  m_LocalPosition: {x: 0, y: 3.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23932,7 +23942,7 @@ Transform:
   m_GameObject: {fileID: 4092929927144326498}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -28924,13 +28934,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -30264,7 +30276,7 @@ Transform:
   m_GameObject: {fileID: 5816140925891295081}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -30299,7 +30311,7 @@ Transform:
   m_GameObject: {fileID: 5832277248236340875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.44702783, w: 0.89452004}
-  m_LocalPosition: {x: 0.79, y: 0, z: -2.4499953}
+  m_LocalPosition: {x: 0.79, y: -1.52, z: -2.4499953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31248,6 +31260,7 @@ MonoBehaviour:
   stepping: 0
   stepSpeed: 6
   nextPos: {x: 0, y: 0, z: 0}
+  nextPosOffset: 0
 --- !u!1 &6797825486798889211
 GameObject:
   m_ObjectHideFlags: 0
@@ -31273,7 +31286,7 @@ Transform:
   m_GameObject: {fileID: 6797825486798889211}
   serializedVersion: 2
   m_LocalRotation: {x: 0.33404905, y: 0.37511536, z: 0.13834733, w: 0.85355717}
-  m_LocalPosition: {x: -1.77, y: 0, z: 1.55}
+  m_LocalPosition: {x: -1.77, y: -1.52, z: 1.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31515,6 +31528,7 @@ MonoBehaviour:
   stepping: 0
   stepSpeed: 6
   nextPos: {x: 0, y: 0, z: 0}
+  nextPosOffset: 0
 --- !u!1 &7580264630462591169
 GameObject:
   m_ObjectHideFlags: 0
@@ -31540,7 +31554,7 @@ Transform:
   m_GameObject: {fileID: 7580264630462591169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31692,7 +31706,7 @@ Transform:
   m_GameObject: {fileID: 8301381196703642185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.86, z: 0}
+  m_LocalPosition: {x: 0, y: 5.34, z: 0}
   m_LocalScale: {x: 0.70000005, y: 0.7, z: 0.70000005}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32107,7 +32121,7 @@ Transform:
   m_GameObject: {fileID: 8646997458577646768}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.820808, y: 1.095, z: 116.485146}
+  m_LocalPosition: {x: -12.820808, y: 2.4, z: 116.485146}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32341,6 +32355,7 @@ MonoBehaviour:
   desDistance: 20
   updateFreq: 1
   navState: 0
+  neverIdle: 0
 --- !u!195 &5797576245422128082
 NavMeshAgent:
   m_ObjectHideFlags: 0
