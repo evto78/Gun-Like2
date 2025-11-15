@@ -42,7 +42,7 @@ public class TIGERTailManager : MonoBehaviour
             Transform curSegment = tailSegments[i];
             float xSway = (((idlePoseXSway.Evaluate((float)i/(float)segments)-0.5f)*2f)) * maxRotationPerJoint;
             xSway -= curVariation;
-            curSegment.localEulerAngles = new Vector3(-xSway, curSegment.localEulerAngles.y, curSegment.localEulerAngles.z);
+            curSegment.localRotation = new Quaternion(-xSway, curSegment.localRotation.y, curSegment.localRotation.z, curSegment.localRotation.w);
         }
     }
 }
