@@ -158,7 +158,7 @@ public class KnifeBrain : MonoBehaviour
         if (collision.gameObject.tag == "Player" && curState == state.strike)
         {
             hm.PlaySound(1, true, true);
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, hm, hm.data.enemyName);
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, hm, hm.data.enemyName, transform);
 
             gameObject.GetComponent<Rigidbody>().freezeRotation = false;
             gameObject.GetComponent<Rigidbody>().AddForce((transform.position - player.transform.position) * 5f, ForceMode.Impulse);

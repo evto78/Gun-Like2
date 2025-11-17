@@ -57,7 +57,7 @@ public class CrateCrabGlob : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            ehm.playerHM.TakeDamage(damage, false, ehm, ehm.data.enemyName);
+            ehm.playerHM.TakeDamage(damage, false, ehm, ehm.data.enemyName, ehm.transform);
             hitEffect.SetActive(true);
             hitEffect.transform.SetParent(null);
             Destroy(hitEffect, 3f);

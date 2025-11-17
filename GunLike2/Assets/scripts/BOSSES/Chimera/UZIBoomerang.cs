@@ -40,7 +40,7 @@ public class UZIBoomerang : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage, false, null, "Chimera");
+            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage, false, null, "Chimera", transform);
         }
     }
 }

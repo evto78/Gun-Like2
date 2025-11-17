@@ -19,7 +19,7 @@ public class RCBrain : MonoBehaviour
     {
         if(timeSinceCollision > 1 && collision.gameObject.TryGetComponent<HealthManager>(out HealthManager hm))
         {
-            hm.TakeDamage(ehm.baseDamage * ehm.difficultyScale * ehm.difficultyStatScaling, false, ehm, ehm.data.enemyName);
+            hm.TakeDamage(ehm.baseDamage * ehm.difficultyScale * ehm.difficultyStatScaling, false, ehm, ehm.data.enemyName, transform);
             timeSinceCollision = 0;
         }
     }

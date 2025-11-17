@@ -26,7 +26,7 @@ public class BloodBall : MonoBehaviour
 
         if(Vector3.Distance(player.transform.position, transform.position) < 3f)
         {
-            player.GetComponent<HealthManager>().TakeDamage(-healing, false, null, "Hungry Shot");
+            player.GetComponent<HealthManager>().TakeDamage(-healing, false, null, "Hungry Shot", null);
             Destroy(gameObject);
         }
     }

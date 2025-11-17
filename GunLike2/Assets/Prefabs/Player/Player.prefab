@@ -10966,11 +10966,11 @@ GameObject:
   - component: {fileID: 645800364383380793}
   - component: {fileID: 1652207953152809334}
   - component: {fileID: 1491785402882082601}
-  - component: {fileID: 8349940813719318989}
   - component: {fileID: 3056162612049833695}
   - component: {fileID: 7461507813950395447}
   - component: {fileID: 2952588700287408222}
   - component: {fileID: 1478225087064856635}
+  - component: {fileID: 8349940813719318989}
   - component: {fileID: 8714330687066646829}
   m_Layer: 7
   m_Name: Player
@@ -11295,6 +11295,7 @@ MonoBehaviour:
   irradiatedItems: 
   nuclearItems: 
   uniqueItems: 
+  lockedItems: []
   gunLike1Items: 
   sponserItems: 
   fishItems: 
@@ -11355,29 +11356,6 @@ MonoBehaviour:
   item: {fileID: 6608729508006346496, guid: b68d450b6aedbbe4aa252780546ddf52, type: 3}
   itemPotential: {fileID: 2157979777283688088, guid: 5cc2937a662841a4e89357de5d7ac507, type: 3}
   consoleText: {fileID: 3147531420828460736}
---- !u!136 &8349940813719318989
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2518637335849271105}
-  m_Material: {fileID: 13400000, guid: d9d5d7bc3bd42a5419405bcc94d4912e, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2.5
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3056162612049833695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11624,6 +11602,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 2
+--- !u!136 &8349940813719318989
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2518637335849271105}
+  m_Material: {fileID: 13400000, guid: d9d5d7bc3bd42a5419405bcc94d4912e, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8714330687066646829
 MonoBehaviour:
   m_ObjectHideFlags: 0

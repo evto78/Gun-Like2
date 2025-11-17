@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-	List<List<int>> rarityList = new List<List<int>>();
-
 	public List<Vector4> activeEffects = new List<Vector4>();
 	// x == stacks of effect
 	// y == Time until 1 stack of effect goes away
@@ -104,7 +102,6 @@ public class HealthManager : MonoBehaviour
 	}
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
-		rarityList = givenRarityList;
 		//Base Stats
 		float healthRegenMult = 1f; float healthRegenDiv = 1f;
 		float armorMult = 1f; float armorDiv = 1f;
@@ -447,13 +444,13 @@ public class HealthManager : MonoBehaviour
 
 				if(Random.Range(1,100) > (53 - experimentalImp * 3))
                 {
-					TakeDamage(-1f * healthRegen, false, null, "Experimental Implant");
+					TakeDamage(-1f * healthRegen, false, null, "Experimental Implant", null);
                 }
                 else
                 {
 					if(curHp > 0.5f * healthRegen)
                     {
-						TakeDamage(0.5f * healthRegen, false, null, "Experimental Implant");
+						TakeDamage(0.5f * healthRegen, false, null, "Experimental Implant", null);
 					}
                 }
             }
@@ -557,7 +554,7 @@ public class HealthManager : MonoBehaviour
             {
                 switch (wishPopUp.readWish())
                 {
-					case 1: TakeDamage(-maxHp, false, null, "Wish"); GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f); wishPopUp.ready = false; break; //Heal
+					case 1: TakeDamage(-maxHp, false, null, "Wish", null); GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f); wishPopUp.ready = false; break; //Heal
 					case 2: money += 5000; wishPopUp.ready = false; break; //Money
 					case 3: for (int i = 0; i < 10; i++) { playerItem.SpawnItem(0, false, 0, false); } wishPopUp.ready = false; break; //Item
 					case 4: WishSmite(); wishPopUp.ready = false; break; //Smite
@@ -610,7 +607,7 @@ public class HealthManager : MonoBehaviour
 	{
 
 	}
-	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName)
+	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager sourceEHM, string sourceName, Transform sourcePos)
 	{
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
@@ -635,20 +632,20 @@ public class HealthManager : MonoBehaviour
 			if (Random.Range(1, 100) < evadeChance) { return; }
 			if (activeEffects[27].x>0){ damageTaken /= 2f; }
 			//Damage
-			if (source != null) { lastHitMe = source; }
+			if (sourceEHM != null) { lastHitMe = sourceEHM; }
 			if (sourceName != null) { lastHitMeName = sourceName; }
 			if (damageTaken <= tempArmor)
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
-				OnDmgTaken(1, wasFromExpGrowth, source, sourceName);
+				OnDmgTaken(1, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
                 if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, 1); }
             }
 			else
 			{
 				//return new hp with dmg reduced by armor
 				curHp -= (damageTaken - tempArmor);
-				OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, source, sourceName);
+				OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
 				if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
             }
 			regenTimer = 2f;
@@ -687,20 +684,20 @@ public class HealthManager : MonoBehaviour
                 }
             }
 
-			if(source != null && (leftSpongeStone || rightSpongeStone))
+			if(sourceEHM != null && (leftSpongeStone || rightSpongeStone))
             {
-				source.QueStandardDamage(armor / 4f);
+				sourceEHM.QueStandardDamage(armor / 4f);
             }
 
 			if(pufferfish > 0)
             {
-				source.QueStandardDamage(armor * (1 + pufferfish));
+				sourceEHM.QueStandardDamage(armor * (1 + pufferfish));
             }
 		}
 
 		if (curHp != maxHp && wasAtMax && radioDome > 0)
 		{
-			TakeDamage(maxHp * (15f / 100f), false, null, "Radioactive Dome");
+			TakeDamage(maxHp * (15f / 100f), false, null, "Radioactive Dome", null);
 			GameObject spawnedRadioDome = Instantiate(radioactiveDomesExplosion);
 			spawnedRadioDome.transform.position = transform.position;
 			spawnedRadioDome.GetComponent<RadioactiveDomes>().damage = maxHp * (15f / 100f);
@@ -723,13 +720,11 @@ public class HealthManager : MonoBehaviour
 			}
 		}
 	}
-	void OnDmgTaken(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName)
+	void OnDmgTaken(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName, Transform sourcePos)
 	{
-        if(source != null)
-		{
-			uiMan.AddDangerSource(source.transform, source.transform.position, false);
-		}
-		uiMan.flash.Flash(1f - (curHp/maxHp));
+		if (sourcePos != null) { uiMan.AddDangerSource(sourcePos, sourcePos.position, false); }
+		else if (source != null) { uiMan.AddDangerSource(source.transform, source.transform.position, false); }
+		uiMan.flash.Flash(1f - (curHp / maxHp));
 		uiMan.healthGear.Flash(damageTaken/maxHp);
     }
 	public void GiveEffect(PlayerEffectType.effectName effectGiven, float stacksToAdd)
@@ -809,9 +804,9 @@ public class HealthManager : MonoBehaviour
 					//run effects that happen when timer ends
 					switch (i)
 					{
-						case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed"); break;
-						case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn"); break;
-						case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation"); break;
+						case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed", null); break;
+						case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn", null); break;
+						case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation", null); break;
 						case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
                     }
 				}

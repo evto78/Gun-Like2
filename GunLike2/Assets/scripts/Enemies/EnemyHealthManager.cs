@@ -289,7 +289,7 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1,100)<chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage,false,this, "Irradiated Battle Plans");
+                playerHM.TakeDamage(-latestDamage,false,this, "Irradiated Battle Plans", null);
                 latestDamage = 0;
             }
         }
@@ -304,7 +304,7 @@ public class EnemyHealthManager : MonoBehaviour
             if (Random.Range(1, 100) < chance)
             {
                 curHp += latestDamage;
-                playerHM.TakeDamage(-latestDamage, false,this, "Irradiated Battle Plans");
+                playerHM.TakeDamage(-latestDamage, false,this, "Irradiated Battle Plans", null);
                 latestDamage = 0;
             }
         }
@@ -649,7 +649,7 @@ public class EnemyHealthManager : MonoBehaviour
                 if(Random.Range(1,100) < 100 - (featherton * 25)) { playerTargeted = true; }
             }
             if(lowestHP != float.PositiveInfinity && !playerTargeted) { possibleTargets[lowestHPIndex].TakeDamage(latestDamage, true, HitType.ht.normal, possibleTargets[lowestHPIndex].transform.position, "self"); Debug.DrawLine(transform.position, possibleTargets[lowestHPIndex].transform.position, Color.red, 1f); }
-            else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false, this, "Ton Of Feathers"); }
+            else if (lowestHP != float.PositiveInfinity && playerTargeted) { playerHM.TakeDamage(latestDamage, false, this, "Ton Of Feathers", null); }
             feathersEffect.SetActive(true);
             feathersEffect.transform.SetParent(null);
             Destroy(feathersEffect, 2f);

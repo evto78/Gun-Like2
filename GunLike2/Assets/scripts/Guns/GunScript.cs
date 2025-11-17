@@ -661,8 +661,8 @@ public class GunScript : MonoBehaviour
         if(manager.leftWarcry > 0 && whatHandThisIsIn == "left") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
         if(manager.rightWarcry > 0 && whatHandThisIsIn == "right") { manager.healthMan.GiveEffect(PlayerEffectType.effectName.warcry, 1f); }
 
-        if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber"); }
-        if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber"); }
+        if(manager.playerItem.leftItems[180] > 0 && whatHandThisIsIn == "left") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber", null); }
+        if(manager.playerItem.rightItems[180] > 0 && whatHandThisIsIn == "right") { manager.healthMan.TakeDamage(manager.healthMan.curHp/2f, false, null, "One In The Chamber", null); }
 
         LateReload();
     }
@@ -821,9 +821,9 @@ public class GunScript : MonoBehaviour
         if (requireAmmo && currentBullets < 1 && manager.autoReload && carvedBone < 1) { AttemptReload(); }
         if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
         {
-            manager.healthMan.TakeDamage(1, false, null, "Carved Bone");
+            manager.healthMan.TakeDamage(1, false, null, "Carved Bone", null);
             currentBullets++;
-            if (triggerHappy > 0) { currentBullets++; manager.healthMan.TakeDamage(1, false, null, "Carved Bone"); }
+            if (triggerHappy > 0) { currentBullets++; manager.healthMan.TakeDamage(1, false, null, "Carved Bone", null); }
         }
         if (currentBullets > 0 || !requireAmmo)
         {
