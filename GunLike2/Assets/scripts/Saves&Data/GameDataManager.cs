@@ -13,6 +13,7 @@ public class GameDataManager : MonoBehaviour
     public List<EnemySpawner> activeSpawners = new List<EnemySpawner>();
     public HealthManager phm;
     public PlayerItem pi;
+    public List<EffectObject> effectData;
     //Checking Change
     bool changedLastFrame;
     List<int> leftSnapshot;
@@ -96,6 +97,21 @@ public class GameDataManager : MonoBehaviour
             }
         }
         if (roofScript != null) { roofScript.playIntro = roomNumber < 1; }
+
+        effectData = new List<EffectObject>();
+        effectData.AddRange(Resources.LoadAll<EffectObject>("Effects"));
+        SortEffectData();
+    }
+    void SortEffectData()
+    {
+        List<int> comparisonList = new List<int>();
+        List<EffectObject> sortedEffectData = new List<EffectObject>();
+        for (int i = 0; i < effectData.Count; i++) { comparisonList.Add(i); sortedEffectData.Add(null); }
+        for (int i = 0; i < effectData.Count; i++)
+        {
+            sortedEffectData[comparisonList.IndexOf(effectData[i].id)] = effectData[i];
+        }
+        effectData = sortedEffectData;
     }
     private void Start()
     {

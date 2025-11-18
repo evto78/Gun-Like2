@@ -58,6 +58,8 @@ public class EnemyHealthManager : MonoBehaviour
     public bool didOnDeath;
 
     protected int numOfActiveEffects;
+
+    public List<EffectObject> allEffects = new List<EffectObject>();
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -98,6 +100,7 @@ public class EnemyHealthManager : MonoBehaviour
         foreach(SoundEffect sfx in soundEffects) { foreach(AudioSource source in sfx.source) { source.volume = volume; } }
 
         //Effect Setup
+        allEffects.AddRange(gdm.effectData);
         activeEffects = new List<Vector4>();
         icons = new List<GameObject>();
         int effectsToAdd = 17;
@@ -395,7 +398,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }//Gas Gernade attachment
         if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }//Broken Lightbulb
         if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }//Canine Tooth
-        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 1f, 1f, 1f); }//Table Leg slow effect
+        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 1f, 1f, -1f); }//Table Leg slow effect
         if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }//Enzymes
         if (effectID == 14 || effectGiven == "chemical A") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
         if (effectID == 15 || effectGiven == "chemical B") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents

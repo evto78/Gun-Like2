@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
+	public List<EffectObject> allEffects = new List<EffectObject>();
 	public List<Vector4> activeEffects = new List<Vector4>();
 	// x == stacks of effect
 	// y == Time until 1 stack of effect goes away
@@ -95,6 +96,7 @@ public class HealthManager : MonoBehaviour
     void Start()
 	{
 		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+		allEffects.AddRange(gdm.effectData);
 		if (gdm.instance.loadingARun == -1) { money = 0; }
 		dead = false;
 		maxHp = baseMaxHP;
@@ -727,14 +729,16 @@ public class HealthManager : MonoBehaviour
 		uiMan.flash.Flash(1f - (curHp / maxHp));
 		uiMan.healthGear.Flash(damageTaken/maxHp);
     }
-	public void GiveEffect(PlayerEffectType.effectName effectGiven, float stacksToAdd)
+	public void GiveEffect(int effectID, float stacksToAdd)
 	{
-        switch (effectGiven)
+		
+        switch (effectID)
         {
-			//damage over time
-			case PlayerEffectType.effectName.bleed: activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 3f, 3f, -1f); break;
-			case PlayerEffectType.effectName.burn: activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); break;
-			case PlayerEffectType.effectName.radiation: activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); break;
+			
+            //damage over time
+            case 0: activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, allEffects[0].decayTime, allEffects[0].decayTime, allEffects[0].type); break;
+			case 1: activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); break;
+			case 2: activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); break;
 			//item effects
 			case PlayerEffectType.effectName.orgBannana: activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, 20f, 20f, 1f); break; // reload speed buff
 			case PlayerEffectType.effectName.orgApple: activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, 20f, 20f, 1f); break; // crit chance buff
@@ -763,7 +767,9 @@ public class HealthManager : MonoBehaviour
 			case PlayerEffectType.effectName.sunny: activeEffects[27] = new Vector4(stacksToAdd, 1f, 1f, 1f); break; //Sunflower
 			case PlayerEffectType.effectName.smokeBlind: activeEffects[28] = new Vector4(stacksToAdd, 0.1f, 0.1f, -1f); break; //AK47 smoke gernade
 			case PlayerEffectType.effectName.killstreak: activeEffects[29] = new Vector4(activeEffects[29].x + stacksToAdd, 3f, 3f, 1f); break; //Killstreak counter
-		}
+
+            default: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;
+        }
 		//Effect max stack management
 		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
