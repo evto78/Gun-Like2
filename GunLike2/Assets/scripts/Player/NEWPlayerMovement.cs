@@ -103,6 +103,8 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
+        effectList = healthMan.activeEffects;
+
         //base stats
         noGravity = false;
         float rightmoveSpeedMult = 1f; float rightmoveSpeedDiv = 1f; float leftmoveSpeedMult = 1f; float leftmoveSpeedDiv = 1f;

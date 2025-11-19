@@ -506,15 +506,15 @@ public class UIManager : MonoBehaviour
 
         foreach (DynamicDangerInfo di in dynamicDangers)
         {
-            di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1,1,1,Mathf.Lerp(0,0.75f,di.timer)); PointIndicator(di.dangerPos.position, di.linkedPointer);
-            if(di.timer <= 0f || di.dangerPos == null) { toBeRemovedDynamic.Add(di); }
+            if (di.timer <= 0f || di.dangerPos == null || di.linkedPointer == null) { toBeRemovedDynamic.Add(di); } 
+            else { di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1, 1, 1, Mathf.Lerp(0, 0.75f, di.timer)); PointIndicator(di.dangerPos.position, di.linkedPointer); }
         }
         foreach(DynamicDangerInfo di in toBeRemovedDynamic) { Destroy(di.linkedPointer.gameObject); dynamicDangers.Remove(di); }
 
         foreach (StaticDangerInfo di in staticDangers)
         {
-            di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1, 1, 1, Mathf.Lerp(0, 0.75f, di.timer)); PointIndicator(di.dangerPos, di.linkedPointer);
             if (di.timer <= 0f) { toBeRemovedStatic.Add(di); }
+            else { di.timer -= Time.deltaTime; di.pointerImg.color = new Color(1, 1, 1, Mathf.Lerp(0, 0.75f, di.timer)); PointIndicator(di.dangerPos, di.linkedPointer); }
         }
         foreach (StaticDangerInfo di in toBeRemovedStatic) { Destroy(di.linkedPointer.gameObject); staticDangers.Remove(di); }
     }

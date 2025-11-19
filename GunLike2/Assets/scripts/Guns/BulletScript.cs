@@ -141,7 +141,7 @@ public class BulletScript : MonoBehaviour
         isCoolSpon = Random.Range(1, 100) < chanceForCool; coolSponEffect.SetActive(isCoolSpon);
         isFastFireSpon = Random.Range(1, 100) < chanceForFastFire; fastSponEffect.SetActive(isFastFireSpon);
         isLargeSpon = Random.Range(1, 100) < chanceForLarge; largeSponEffect.SetActive(isLargeSpon);
-        isGunky = Random.Range(1,100)<isGunk*20f;
+        isGunky = Random.Range(1,100) < isGunk*20f;
 
         whatHandThisComesFrom = whatHand;
         gunFiredFrom = firedFrom;
@@ -388,7 +388,7 @@ public class BulletScript : MonoBehaviour
             Destroy(mesh);
             collided = true;
             gameObject.GetComponent<Collider>().enabled = false;
-            if (fireSponEffect.transform.parent != null) { fireSponEffect.transform.parent.SetParent(givenGameObject.transform); Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f, 3f)); }
+            if (fireSponEffect != null && fireSponEffect.transform.parent != null) { fireSponEffect.transform.parent.SetParent(givenGameObject.transform); Destroy(fireSponEffect.transform.parent.gameObject, Random.Range(0.5f, 3f)); }
             if (gunFiredFrom.nerfedBul)
             {
                 GameObject dropped = Instantiate(droppedNerfedBullet);

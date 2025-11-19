@@ -256,8 +256,8 @@ public class PlayerItem : MonoBehaviour
         masterCard = leftItems[174] + rightItems[174];
         leftLowFreqRes = leftItems[154];rightLowFreqRes = rightItems[154];
         LowFreqRes();
-        playerMvt.StatUpdate(leftItems, rightItems, rarityList);
         healthManager.StatUpdate(leftItems, rightItems, rarityList);
+        playerMvt.StatUpdate(leftItems, rightItems, rarityList);
         gunManager.StatUpdate(leftItems, rightItems, rarityList);
         LowFreqResCleanup();
         //After Stat Update

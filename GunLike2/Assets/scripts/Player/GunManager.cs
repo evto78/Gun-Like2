@@ -372,6 +372,8 @@ public class GunManager : MonoBehaviour
     }
     public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
     {
+        effectList = healthMan.activeEffects;
+
         leftList.Clear();
         leftList.AddRange(givenLeftItems);
         rightList.Clear();
@@ -1331,24 +1333,17 @@ public class GunManager : MonoBehaviour
 
         if (leftSpinach + rightSpinach > 0)
         {
-            if(leftMRs.Count == 0 || rightMRs.Count == 0) { GrabMeshRenders(); }
-            try
+            if(leftMRs.Count == 0 || rightMRs.Count == 0 || leftColors.Count == 0 || rightColors.Count == 0 || leftColors.Count < leftMRs.Count || rightColors.Count < rightMRs.Count) { GrabMeshRenders(); }
+            
+            if (leftSpinach > 0)
             {
-                if (leftSpinach > 0)
-                {
-                    for (int i = 0; i < leftMRs.Count; i++)
-                    { leftMRs[i].material.color = new Color(leftColors[i].r - (leftSpinach / 50f), leftColors[i].g + (leftSpinach / 50f), leftColors[i].b - (leftSpinach / 50f), leftColors[i].a); }
-                }
-                if (rightSpinach > 0)
-                {
-                    for (int i = 0; i < rightMRs.Count; i++)
-                    { rightMRs[i].material.color = new Color(rightColors[i].r - (rightSpinach / 50f), rightColors[i].g + (rightSpinach / 50f), rightColors[i].b - (rightSpinach / 50f), rightColors[i].a); }
-                }
+                for (int i = 0; i < leftMRs.Count; i++)
+                { leftMRs[i].material.color = new Color(leftColors[i].r - (leftSpinach / 50f), leftColors[i].g + (leftSpinach / 50f), leftColors[i].b - (leftSpinach / 50f), leftColors[i].a); }
             }
-            catch (System.Exception)
+            if (rightSpinach > 0)
             {
-                GrabMeshRenders();
-                throw;
+                for (int i = 0; i < rightMRs.Count; i++)
+                { rightMRs[i].material.color = new Color(rightColors[i].r - (rightSpinach / 50f), rightColors[i].g + (rightSpinach / 50f), rightColors[i].b - (rightSpinach / 50f), rightColors[i].a); }
             }
         }
     }
