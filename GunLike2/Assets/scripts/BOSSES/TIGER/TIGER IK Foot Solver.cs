@@ -17,12 +17,13 @@ public class TIGERIKFootSolver : MonoBehaviour
     public float stepSpeed;
     Vector3 stayPos;
     public Vector3 nextPos;
+    public Vector3 activeNextPos;
+    public Vector3 staticNextPos;
     public float nextPosOffset;
 
     public enum state { walk, run}
     public state curState;
     public bool managerHandlesPairs;
-
 
     void Start()
     {
@@ -40,7 +41,7 @@ public class TIGERIKFootSolver : MonoBehaviour
         {
             if (stay) { transform.position = stayPos; } else { SnapToGround(); }
             Ray ray = new Ray(hip.position + hip.up * (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength), Vector3.down);
-            if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 2f, terrainLayer.value)) { nextPos = info.point; Debug.DrawRay(info.point, Vector3.up); }
+            if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 4f, terrainLayer.value)) { nextPos = info.point; Debug.DrawRay(info.point, Vector3.up); }
             if (Vector3.Distance(transform.position, nextPos) > (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength) * 1.5f)
             {
                 if (!pairedLeg.stepping) { stay = false; stepping = true; stepProgress = 0; }
@@ -57,7 +58,7 @@ public class TIGERIKFootSolver : MonoBehaviour
     void SnapToGround()
     {
         Ray ray = new Ray(transform.position + Vector3.up * maxStepHeight, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 2f, terrainLayer.value))
+        if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 4f, terrainLayer.value))
         {
             transform.position = new Vector3(transform.position.x, info.point.y, transform.position.z);
             stayPos = transform.position;

@@ -19,12 +19,11 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     public float walkStepHeightMod; public float runStepHeightMod;
     public float walkStepLengthMod; public float runStepLengthMod;
     public float walkStepSpeedMod; public float runStepSpeedMod; float baseStepSpeed;
-    float internalTimer = 0f;
-    public AnimationCurve walkCurve; float walkResult;
-    public AnimationCurve runCurve; float frontRunResult; float backRunResult;
+    public AnimationCurve walkCurve;
+    public AnimationCurve runCurve;
     public AnimationCurve walkProgressCurve;
     public AnimationCurve runProgressCurve;
-    public float currentSpeed; float posSampleTimer; Vector3 sampledPos;
+    public float currentSpeed; float posSampleTimer; Vector3 sampledPos; Vector3 sampledForward;
     public Vector2 walkRunSpeedThreshold; public float progressToRun;
     public Transform backLegsHolder; public Transform frontLegsHolder; float initialBackLegsHolderY; float initialFrontLegsHolderY;
     static Vector2 backLegsVerticalDisplacementMinMax = new Vector2(-0.03f, 0.015f); // manualy inputed
@@ -33,6 +32,9 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     static Vector2 backHeightMinMax = new Vector2(0.19f, 1.22f); // manualy calculated and inputed
     static Vector2 frontHeightMinMax = new Vector2(0.58f, 1.36f); // manualy calculated and inputed
     public Transform pevlisRotationPoint; public Transform pelvisSholderPointer;
+
+    [Header("External Variables")]
+    public Vector3 turnDirVel;
 
     private void Awake() { foreach (TIGERIKFootSolver solver in legs) { solver.manager = this; solver.managerHandlesPairs = handlePairs; } }
 
@@ -45,16 +47,14 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         initialFrontY = frontJoint.localPosition.y; initialFrontPos = frontJoint.localPosition;
         initialBackLegsHolderY = backLegsHolder.localPosition.y;
         initialFrontLegsHolderY = frontLegsHolder.localPosition.y;
-        sampledPos = transform.position;
+        sampledPos = transform.position; sampledForward = transform.forward;
         posSampleTimer = 0f;
         baseStepSpeed = legs[0].stepSpeed;
     }
     void Update()
     {
-        internalTimer += Time.deltaTime; if (internalTimer > 1) { internalTimer -= Mathf.Floor(internalTimer); }
-        walkResult = walkCurve.Evaluate(internalTimer); frontRunResult = runCurve.Evaluate(internalTimer); backRunResult = runCurve.Evaluate(1f - internalTimer);
-
-        posSampleTimer -= Time.deltaTime; if (posSampleTimer < 0f) { currentSpeed = Vector3.Distance(transform.position, sampledPos); posSampleTimer = 0.1f; sampledPos = transform.position; }
+        posSampleTimer -= Time.deltaTime; if (posSampleTimer < 0f) 
+        { currentSpeed = Vector3.Distance(transform.position, sampledPos); posSampleTimer = 0.1f; sampledPos = transform.position; GetTurnDirVel(); sampledForward = transform.forward; }
         progressToRun = Mathf.Clamp((currentSpeed - walkRunSpeedThreshold.x) / walkRunSpeedThreshold.y, 0f, 1f);
 
         //auto state change
@@ -184,5 +184,11 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
             //if (b.stepProgress >= 0.5f) { b.stepProgress += Time.deltaTime * (currentSpeed * b.stepSpeed); }
             //else { b.stepProgress -= Time.deltaTime * (currentSpeed * b.stepSpeed); }
         }
+    }
+    void GetTurnDirVel()
+    {
+        Vector3 forwardDir = transform.forward;
+        Vector3 movementDir = sampledForward;
+        turnDirVel = forwardDir - movementDir;
     }
 }
