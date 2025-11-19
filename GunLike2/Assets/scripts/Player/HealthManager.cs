@@ -5,6 +5,9 @@ using UnityEngine;
 public class HealthManager : MonoBehaviour
 {
 	public List<EffectObject> allEffects = new List<EffectObject>();
+	public List<int> activeEffectIDS = new List<int>();
+	public List<int> activePosEffectIDS = new List<int>();
+	public List<int> activeNegEffectIDS = new List<int>();
 	public List<Vector4> activeEffects = new List<Vector4>();
 	// x == stacks of effect
 	// y == Time until 1 stack of effect goes away
@@ -101,6 +104,8 @@ public class HealthManager : MonoBehaviour
 		dead = false;
 		maxHp = baseMaxHP;
 		curHp = maxHp;
+		activeEffects = new List<Vector4>();
+		foreach(EffectObject effect in allEffects) { activeEffects.Add(new Vector4(0, effect.decayTime, effect.decayTime, effect.type)); }
 	}
 	public void StatUpdate(List<int> givenLeftItems, List<int> givenRightItems, List<List<int>> givenRarityList)
 	{
@@ -290,7 +295,7 @@ public class HealthManager : MonoBehaviour
 		
 		if (curHp > maxHp) { curHp = maxHp; }
 
-		itemChecks();
+		ItemChecks();
 		
 		statusEffectsActive = 0;
         ManageEffects();
@@ -300,33 +305,33 @@ public class HealthManager : MonoBehaviour
 		{ 
 			if(playerItem.leftItems[155] > 0)//Divine Intervention
             {
-				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 1f);
+				GiveEffect(21, 1f);
 				curHp = maxHp;
 				divineTimer = 60f + (60f/divineInter);
 				if(lastHitMe != null) { lastHitMe.TakeDamage(maxHp, false, HitType.ht.normal, lastHitMe.transform.position, "player"); }
             }
 			else if (playerItem.rightItems[155] > 0)
             {
-				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 1f);
+				GiveEffect(21, 1f);
 				curHp = maxHp;
 				divineTimer = 60f + (60f/divineInter);
 				if (lastHitMe != null) { lastHitMe.TakeDamage(maxHp, false, HitType.ht.normal, lastHitMe.transform.position, "player"); }
 			}
 			else if (playerItem.leftItems[116] > 0)//Another Shot
 			{
-				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 1f);
+				GiveEffect(21, 1f);
 				curHp = maxHp;
 				playerItem.leftItems[116]--;
 			}
 			else if (playerItem.rightItems[116] > 0)
 			{
-				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 1f);
+				GiveEffect(21, 1f);
 				curHp = maxHp;
 				playerItem.rightItems[116]--;
 			}
 			else if (freeRelaxedRevive)
             {
-				GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f);
+				GiveEffect(21, 3f);
 				curHp = maxHp;
 				freeRelaxedRevive = false;
 			}
@@ -343,15 +348,15 @@ public class HealthManager : MonoBehaviour
 
 		if(activeReactor > 0)
         {
-			GiveEffect(PlayerEffectType.effectName.activeReactor, 1);
+			GiveEffect(18, 1);
         }
 		if(gdm.difficultyIDSelected == 0){moneyDropped *= 2;} 
 
 		money += moneyDropped; money += 10 * (playerItem.leftItems[177] + playerItem.rightItems[177]);
 
-		if(enemyThatDied.activeEffects[8].x > 0)
+		if(enemyThatDied.activeEffects[35].x > 0)
         {
-			for(int i = 0; i < enemyThatDied.activeEffects[8].x; i++)
+			for(int i = 0; i < enemyThatDied.activeEffects[35].x; i++)
             {
 				if(playerItem.leftItems[95] > 0)
                 {
@@ -365,7 +370,7 @@ public class HealthManager : MonoBehaviour
         }
     }
 
-	void itemChecks()
+	void ItemChecks()
 	{
 		if (orgGum > 0)
 		{
@@ -373,30 +378,18 @@ public class HealthManager : MonoBehaviour
 			if (orgGumTimer <= 0f)
 			{
 				orgGumTimer = playerItem.FindObjByID(17).baseCooldown;
-
-				if (Random.Range(1, 100) > (20 - (2f * orgGum)))
+				int rand;
+                if (Random.Range(1, 100) > (20 - (2f * orgGum)))
 				{
-					int rand = Random.Range(3, 11);
-					if (rand == 3) { GiveEffect(PlayerEffectType.effectName.orgBannana, 1f); }
-					if (rand == 4) { GiveEffect(PlayerEffectType.effectName.orgApple, 1f); }
-					if (rand == 5) { GiveEffect(PlayerEffectType.effectName.orgBerry, 1f); }
-					if (rand == 6) { GiveEffect(PlayerEffectType.effectName.orgChoco, 1f); }
-					if (rand == 7) { GiveEffect(PlayerEffectType.effectName.orgLemon, 1f); }
-					if (rand == 8) { GiveEffect(PlayerEffectType.effectName.orgLime, 1f); }
-					if (rand == 9) { GiveEffect(PlayerEffectType.effectName.orgGrape, 1f); }
-					if (rand == 10) { GiveEffect(PlayerEffectType.effectName.orgMint, 1f); }
-					if (rand == 11) { GiveEffect(PlayerEffectType.effectName.orgSpicy, 1f); }
+					rand = Random.Range(3, 11);
 				}
 				else
 				{
-					int rand = Random.Range(12, 15);
-					if (rand == 12) { GiveEffect(PlayerEffectType.effectName.orgRedMeat, 1f); }
-					if (rand == 13) { GiveEffect(PlayerEffectType.effectName.orgWhiteMeat, 1f); }
-					if (rand == 14) { GiveEffect(PlayerEffectType.effectName.orgPinkMeat, 1f); }
-					if (rand == 15) { GiveEffect(PlayerEffectType.effectName.orgGrayMeat, 1f); }
+					rand = Random.Range(12, 15);
 				}
-			}
-		}
+				GiveEffect(rand, 1f);
+            }
+        }
 
 		if(activeReactor > 0)
         {
@@ -463,7 +456,7 @@ public class HealthManager : MonoBehaviour
 			stichedEnemies.Clear();
 			foreach (EnemyHealthManager ehm in gdm.activeEhms)
 			{
-				if (ehm.activeEffects[5].x > 0f)
+				if (ehm.activeEffects[32].x > 0f)
 				{
 					stichedEnemies.Add(ehm);
 				}
@@ -509,9 +502,9 @@ public class HealthManager : MonoBehaviour
 			if (markedEnemy == null && canineToothTimer <= 0f && gdm.activeEhms.Count > 0)
             {
 				markedEnemy = gdm.activeEhms[Random.Range(0, gdm.activeEhms.Count)];
-				markedEnemy.GiveEffect("marked", 1f);
+				markedEnemy.GiveEffect(38, 1f);
             }
-			if (markedEnemy != null && markedEnemy.activeEffects[11].x < 1 && canineToothTimer <= 0)
+			if (markedEnemy != null && markedEnemy.activeEffects[38].x < 1 && canineToothTimer <= 0)
             {
 				markedEnemy = null;
 				canineToothTimer = 25f;
@@ -536,7 +529,7 @@ public class HealthManager : MonoBehaviour
 
 		if(playerItem.leftItems[134] + playerItem.rightItems[134] > 0)
         {
-            if (!attackedThisRoom && activeEffects[22].x < 2) { GiveEffect(PlayerEffectType.effectName.invisibility, 1); }
+            if (!attackedThisRoom && activeEffects[22].x < 2) { GiveEffect(22, 1); }
 			if (attackedThisRoom) { activeEffects[22] = new Vector4(0, activeEffects[22].y, activeEffects[22].z, activeEffects[22].w); }
         }
 
@@ -556,7 +549,7 @@ public class HealthManager : MonoBehaviour
             {
                 switch (wishPopUp.readWish())
                 {
-					case 1: TakeDamage(-maxHp, false, null, "Wish", null); GiveEffect(PlayerEffectType.effectName.invaunerabiility, 3f); wishPopUp.ready = false; break; //Heal
+					case 1: TakeDamage(-maxHp, false, null, "Wish", null); GiveEffect(21, 3f); wishPopUp.ready = false; break; //Heal
 					case 2: money += 5000; wishPopUp.ready = false; break; //Money
 					case 3: for (int i = 0; i < 10; i++) { playerItem.SpawnItem(0, false, 0, false); } wishPopUp.ready = false; break; //Item
 					case 4: WishSmite(); wishPopUp.ready = false; break; //Smite
@@ -627,7 +620,7 @@ public class HealthManager : MonoBehaviour
 			//Heal
 			curHp -= damageTaken;
 
-			if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockDebuff, Mathf.RoundToInt((-damageTaken) / (2f / depleatedRock))); }
+			if (depleatedRock > 0) { GiveEffect(25, Mathf.RoundToInt((-damageTaken) / (2f / depleatedRock))); }
 		}
 		else
 		{
@@ -641,14 +634,14 @@ public class HealthManager : MonoBehaviour
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
 				OnDmgTaken(1, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
-                if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, 1); }
+                if (depleatedRock > 0) { GiveEffect(24, 1); }
             }
 			else
 			{
 				//return new hp with dmg reduced by armor
 				curHp -= (damageTaken - tempArmor);
 				OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
-				if (depleatedRock > 0) { GiveEffect(PlayerEffectType.effectName.depleatedRockBuff, Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
+				if (depleatedRock > 0) { GiveEffect(24, Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
             }
 			regenTimer = 2f;
 
@@ -731,55 +724,34 @@ public class HealthManager : MonoBehaviour
     }
 	public void GiveEffect(int effectID, float stacksToAdd)
 	{
-		
         switch (effectID)
         {
-			
-            //damage over time
-            case 0: activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, allEffects[0].decayTime, allEffects[0].decayTime, allEffects[0].type); break;
-			case 1: activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); break;
-			case 2: activeEffects[2] = new Vector4(activeEffects[2].x + stacksToAdd, 6f, 6f, -1f); break;
-			//item effects
-			case PlayerEffectType.effectName.orgBannana: activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, 20f, 20f, 1f); break; // reload speed buff
-			case PlayerEffectType.effectName.orgApple: activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, 20f, 20f, 1f); break; // crit chance buff
-			case PlayerEffectType.effectName.orgBerry: activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, 20f, 20f, 1f); break; // weak point damage buff
-			case PlayerEffectType.effectName.orgChoco: activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 20f, 20f, 1f); break;// armor buff
-			case PlayerEffectType.effectName.orgLemon: activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 20f, 20f, 1f); break; // atk spd buff
-			case PlayerEffectType.effectName.orgLime: activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, 20f, 20f, 1f); break;// regen buff
-			case PlayerEffectType.effectName.orgGrape: activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 20f, 20f, 1f); break;// jump height buff
-			case PlayerEffectType.effectName.orgMint: activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 20f, 20f, 1f); break; // move spd buff
-			case PlayerEffectType.effectName.orgSpicy: activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 20f, 20f, 1f); break;  // dmg buff
-			case PlayerEffectType.effectName.orgRedMeat: activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 20f, 20f, -1f); break;  // dmg debuff
-			case PlayerEffectType.effectName.orgWhiteMeat: activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 20f, 20f, -1f); break;  // atk spd debuff
-			case PlayerEffectType.effectName.orgPinkMeat: activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, 20f, 20f, -1f); break;  // regen debuff
-			case PlayerEffectType.effectName.orgGrayMeat: activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, 20f, 20f, -1f); break;  // sprint speed debuff
-			case PlayerEffectType.effectName.bunnyHop: activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, 1f, 1f, 1f); break;  // irradiated bunny slippers buff
-			case PlayerEffectType.effectName.pantsFalling: activeEffects[17] = new Vector4(stacksToAdd, 0.1f * beltFed, 0.1f * beltFed, 1f); break;  // belt fed magazine buff
-			case PlayerEffectType.effectName.activeReactor: activeEffects[18] = new Vector4(stacksToAdd, activeReactor * 5f, activeReactor * 5f, 1f); break;  // active reactor buff
-			case PlayerEffectType.effectName.fastFire: activeEffects[19] = new Vector4(stacksToAdd, 1f, 1f, 1f); break;  // Fast Fire partership buff
-			case PlayerEffectType.effectName.warcry: activeEffects[20] = new Vector4(stacksToAdd, 1f + warcry, 1f + warcry, 1f); break;  // warcrybuff
-			case PlayerEffectType.effectName.invaunerabiility: activeEffects[21] = new Vector4(stacksToAdd, 5f, 5f, 1f); break; //Invaunerability
-			case PlayerEffectType.effectName.invisibility: activeEffects[22] = new Vector4(stacksToAdd, 1f, 1f, 1f); break; //Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
-			case PlayerEffectType.effectName.smokingGun: activeEffects[23] = new Vector4(stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); break; //Reload speed buff
-			case PlayerEffectType.effectName.depleatedRockBuff: activeEffects[24] = new Vector4(activeEffects[24].x + stacksToAdd, 0.5f, 0.5f, 1f); break; //Depleated Rock BUFF
-			case PlayerEffectType.effectName.depleatedRockDebuff: activeEffects[25] = new Vector4(activeEffects[25].x + stacksToAdd, 0.5f, 0.5f, -1f); break; //Deplaated Rock DEBUFF
-			case PlayerEffectType.effectName.chaosEngine: activeEffects[26] = new Vector4(activeEffects[26].x + stacksToAdd, 3f, 3f, 1f); break; //Chaos Engine
-			case PlayerEffectType.effectName.sunny: activeEffects[27] = new Vector4(stacksToAdd, 1f, 1f, 1f); break; //Sunflower
-			case PlayerEffectType.effectName.smokeBlind: activeEffects[28] = new Vector4(stacksToAdd, 0.1f, 0.1f, -1f); break; //AK47 smoke gernade
-			case PlayerEffectType.effectName.killstreak: activeEffects[29] = new Vector4(activeEffects[29].x + stacksToAdd, 3f, 3f, 1f); break; //Killstreak counter
+			case 17: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime * beltFed, allEffects[effectID].decayTime * beltFed, allEffects[effectID].type); break;  // belt fed magazine buff
+			case 18: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime * activeReactor, allEffects[effectID].decayTime * activeReactor, allEffects[effectID].type); break;  // active reactor buff
+			case 19: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  // Fast Fire partership buff
+			case 20: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime + warcry, allEffects[effectID].decayTime + warcry, allEffects[effectID].type); break;  // warcry buff
+			case 21: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  //Invaunerability
+            case 22: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  //Invisibility (CIRCUS MASK SPESIFIC) (CHANGE THIS IF ADDING GENARIC) (enemies cannot see you)
+            case 23: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  //Reload speed buff
+            case 27: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  //Sunflower
+            case 28: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  //AK47 smoke gernade
 
             default: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;
         }
 		//Effect max stack management
-		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2f, 1f, 1f, 1f); }
-		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, activeReactor * 5f, activeReactor * 5f, 1f); }
-		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, 1f, 1f, 1f); }
-		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, 5f, 5f, 1f); }
-		if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, 0.1f, 0.1f, -1f); }
+		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2, allEffects[16].decayTime, allEffects[16].decayTime, allEffects[16].type); }
+		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, allEffects[18].decayTime * activeReactor, allEffects[18].decayTime * activeReactor, allEffects[18].type); }
+		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, allEffects[19].decayTime, allEffects[19].decayTime, allEffects[19].type); }
+		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, allEffects[23].decayTime, allEffects[23].decayTime, allEffects[23].type); }
+		if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, allEffects[28].decayTime, allEffects[28].decayTime, allEffects[28].type); }
 	}
 	public int statusEffectsActive;
 	void ManageEffects()
 	{
+		activeEffectIDS = new List<int>();
+		activePosEffectIDS = new List<int>();
+		activeNegEffectIDS = new List<int>();
+
 		Vector4 q = new Vector4(0, 0, 0, 0);
 
 		for (int i = 0; i < activeEffects.Count; i++)
@@ -792,30 +764,37 @@ public class HealthManager : MonoBehaviour
 			if (q.x > 0)
 			{
 				statusEffectsActive++;
+				activeEffectIDS.Add(i);
+				if (q.w > 0) { activePosEffectIDS.Add(i); }
+				else if (q.w < 0) { activeNegEffectIDS.Add(i); }
+
                 //run effects that happen every frame
                 if (i == 21) { curHp = maxHp; }
 
-				//progress timer and remove stacks as needed
-				if (q.z > 0f)
+				//progress timer and remove stacks as needed, unless effect lasts forever
+				if (allEffects[i].decayTime >= 0)
 				{
-					q.z -= Time.deltaTime;
+                    if (q.z > 0f)
+                    {
+                        q.z -= Time.deltaTime;
 
-					if (playerMvt.timeSinceGrounded > 0f && i == 16) { q.z += Time.deltaTime; }
-				}
-				else
-				{
-					q.x -= 1f;
-					if (q.x > 0f) { q.z = q.y; }
-
-					//run effects that happen when timer ends
-					switch (i)
-					{
-						case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed", null); break;
-						case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn", null); break;
-						case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation", null); break;
-						case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
+                        if (playerMvt.timeSinceGrounded > 0f && i == 16) { q.z += Time.deltaTime; }
                     }
-				}
+                    else
+                    {
+                        q.x -= 1f;
+                        if (q.x > 0f) { q.z = q.y; }
+
+                        //run effects that happen when timer ends
+                        switch (i)
+                        {
+                            case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed", null); break;
+                            case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn", null); break;
+                            case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation", null); break;
+                            case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
+                        }
+                    }
+                }
 			}
 
 			activeEffects[i] = q;
@@ -824,47 +803,13 @@ public class HealthManager : MonoBehaviour
 	}
 	void DisplayEffects()
 	{
-		string strToAdd = "";
 		uiMan.effectsText.text = "";
 
 		for (int i = 0; i < activeEffects.Count; i++)
 		{
 			if (activeEffects[i].x > 0)
 			{
-                switch (i)
-                {
-					case 0: strToAdd = "bleed";break;
-					case 1: strToAdd = "burn";break;
-					case 2: strToAdd = "radiation";break;
-					case 3: strToAdd = "organic bannana";break;
-					case 4: strToAdd = "organic apple";break;
-					case 5: strToAdd = "organic berry";break;
-					case 6: strToAdd = "organic choco"; break;
-					case 7: strToAdd = "organic lemon"; break;
-					case 8: strToAdd = "organic lime"; break;
-					case 9: strToAdd = "organic grape"; break;
-					case 10: strToAdd = "organic mint"; break;
-					case 11: strToAdd = "organic spicy"; break;
-					case 12: strToAdd = "organic red meat"; break;
-					case 13: strToAdd = "organic white meat"; break;
-					case 14: strToAdd = "organic pink meat"; break;
-					case 15: strToAdd = "organic gray meat"; break;
-					case 16: strToAdd = "bunny hop"; break;
-					case 17: strToAdd = "pants falling"; break;
-					case 18: strToAdd = "active reactor"; break;
-					case 19: strToAdd = "fast fire"; break;
-					case 20: strToAdd = "warcry"; break;
-					case 21: strToAdd = "invaunerability"; break;
-					case 22: strToAdd = "invisible"; break;
-					case 23: strToAdd = "smoking gun"; break;
-					case 24: strToAdd = "depleated rock buff"; break;
-					case 25: strToAdd = "depleated rock debuff"; break;
-					case 26: strToAdd = "chaos engine"; break;
-					case 27: strToAdd = "sunny"; break;
-					case 28: strToAdd = "Smoked"; break;
-					case 29: strToAdd = "Killstreak"; break;
-				}
-				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + strToAdd + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
+				uiMan.effectsText.text = uiMan.effectsText.text + " <br>" + allEffects[i].displayName + "(" + activeEffects[i].x + ") (" + Mathf.Round(activeEffects[i].z) + ")";
 			}
 		}
 	}

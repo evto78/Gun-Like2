@@ -35,7 +35,7 @@ public class AKSmokeGernade : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<HealthManager>().GiveEffect(PlayerEffectType.effectName.smokeBlind, 1);
+            other.gameObject.GetComponent<HealthManager>().GiveEffect(28, 1);
         }
     }
 

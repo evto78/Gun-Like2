@@ -39,7 +39,7 @@ public class CrateCrabBrain : MonoBehaviour
             nav.SetState(NavAI.state.chase);
         }
 
-        jammed = hm.activeEffects[3].x > 0;
+        jammed = hm.activeEffects[30].x > 0;
 
         switch (curState)
         {
@@ -55,11 +55,18 @@ public class CrateCrabBrain : MonoBehaviour
                 break;
         }
 
-        if (hm.activeEffects[12].x > 0) { agent.speed = 3f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        if (hm.activeEffects[39].x > 0) { agent.speed = 3f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { agent.speed = 3f; }
     }
     void Shoot()
     {
+        if (jammed)
+        {
+            jamEffect.Play();
+            hm.activeEffects[30] -= new Vector4(-1, 0, 0, 0);
+            return;
+        }
+
         GameObject spawnedGlob = Instantiate(projectile, firepoint.position, firepoint.rotation);
         spawnedGlob.GetComponent<CrateCrabGlob>().damage = dmg;
         spawnedGlob.GetComponent<CrateCrabGlob>().ehm = hm;

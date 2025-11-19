@@ -126,7 +126,7 @@ public class KnifeBrain : MonoBehaviour
                 {
                     strikeTimer -= Time.deltaTime * 3f;
                 }
-                if (hm.activeEffects[12].x > 0) { rb.AddForce(transform.forward * ((50f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])))) * Time.deltaTime), ForceMode.Impulse); }
+                if (hm.activeEffects[39].x > 0) { rb.AddForce(transform.forward * ((50f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])))) * Time.deltaTime), ForceMode.Impulse); }
                 else { rb.AddForce(transform.forward * (50f * Time.deltaTime), ForceMode.Impulse); }
 
 
@@ -139,7 +139,7 @@ public class KnifeBrain : MonoBehaviour
 
         cooldownTimer -= Time.deltaTime;
 
-        if (hm.activeEffects[12].x > 0) { speed = baseSpeed / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        if (hm.activeEffects[39].x > 0) { speed = baseSpeed / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { speed = baseSpeed; }
     }
     private void FixedUpdate()

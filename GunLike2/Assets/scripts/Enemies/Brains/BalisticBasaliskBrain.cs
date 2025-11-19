@@ -53,7 +53,7 @@ public class BalisticBasaliskBrain : MonoBehaviour
             nav.SetState(NavAI.state.chase);
         }
 
-        jammed = hm.activeEffects[3].x > 0;
+        jammed = hm.activeEffects[30].x > 0;
 
         switch (curState)
         {
@@ -73,7 +73,7 @@ public class BalisticBasaliskBrain : MonoBehaviour
                             {
                                 if (jammed)
                                 {
-                                    hm.activeEffects[3] = new Vector4(hm.activeEffects[3].x - 1, hm.activeEffects[3].y, hm.activeEffects[3].z, hm.activeEffects[3].w);
+                                    hm.activeEffects[30] -= new Vector4(-1,0,0,0);
                                 }
                                 cooldownTimer = shotCooldown;
                                 bulShot = 0;
@@ -86,7 +86,7 @@ public class BalisticBasaliskBrain : MonoBehaviour
                 break;
         }
 
-        if (hm.activeEffects[12].x > 0) { agent.speed = 7f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        if (hm.activeEffects[39].x > 0) { agent.speed = 7f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { agent.speed = 7f; }
     }
     bool CanShoot()

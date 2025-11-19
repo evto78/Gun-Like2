@@ -25,7 +25,7 @@ public class RCBrain : MonoBehaviour
     }
     void Update()
     {
-        if (ehm.activeEffects[12].x > 0) { speedModifier = 0.5f / (1.5f * (1.1f * (ehm.playerHM.playerItem.leftItems[136] + ehm.playerHM.playerItem.rightItems[136]))); } else { speedModifier = 1f; }
+        if (ehm.activeEffects[39].x > 0) { speedModifier = 0.5f / (1.5f * (1.1f * (ehm.playerHM.playerItem.leftItems[136] + ehm.playerHM.playerItem.rightItems[136]))); } else { speedModifier = 1f; }
         if (ehm.playerHM.activeEffects[22].x > 0) { return; }
         timeSinceCollision += Time.deltaTime;
         if (fixing) { return; }

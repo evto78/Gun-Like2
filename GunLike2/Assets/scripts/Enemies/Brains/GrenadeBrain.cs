@@ -79,7 +79,7 @@ public class GrenadeBrain : MonoBehaviour
         if (ticking) { Blow(); mr.material.color = Color.Lerp(explodingColor, normalColor, tickTimer); if (sub) { mr.material.color = Color.white; } }
         else { mr.material.color = normalColor; }
 
-        if (hm.activeEffects[12].x > 0) { speed = 5f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
+        if (hm.activeEffects[39].x > 0) { speed = 5f / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { speed = 5f; }
         if(subTimer<= -0.1f) { subTimer = 0.1f; }
     }

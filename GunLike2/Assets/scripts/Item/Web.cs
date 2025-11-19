@@ -17,14 +17,14 @@ public class Web : MonoBehaviour
             EnemyHealthManager ehm = other.transform.GetComponentInParent<EnemyHealthManager>();
             if (ehm != null)
             {
-                if (ehm.activeEffects[12].x <= 1) { ehm.GiveEffect("webbed", 1f); }
+                if (ehm.activeEffects[39].x <= 1) { ehm.GiveEffect(39, 1f); }
             }
         }
         else
         {
             if (other.transform.TryGetComponent<EnemyHealthManager>(out EnemyHealthManager ehm))
             {
-                if (ehm.activeEffects[12].x <= 1) { ehm.GiveEffect("webbed", 1f); }
+                if (ehm.activeEffects[39].x <= 1) { ehm.GiveEffect(39, 1f); }
             }
         }
 

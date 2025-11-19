@@ -31,7 +31,7 @@ public class SunflowerSun : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            if (hm.activeEffects[27].x < 30 + (30 * hm.sunflower)) { hm.GiveEffect(PlayerEffectType.effectName.sunny, 30f + (30f * hm.sunflower)); }
+            if (hm.activeEffects[27].x < 30 + (30 * hm.sunflower)) { hm.GiveEffect(27, 30f + (30f * hm.sunflower)); }
             Destroy(gameObject);
         }
     }

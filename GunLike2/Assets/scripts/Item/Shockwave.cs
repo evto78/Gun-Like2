@@ -63,11 +63,11 @@ public class Shockwave : MonoBehaviour
                 EnemyHealthManager ehm = collision.gameObject.GetComponentInParent<EnemyHealthManager>();
                 if(ehm == null) { return; }
                 ehm.TakeDamage(damage, false, HitType.ht.normal, collision.gameObject.transform.position, "self");
-                if (blinding) { ehm.GiveEffect("blind", playerItem.leftItems[125] + playerItem.rightItems[125]); }
-                if (coolSpon) { ehm.GiveEffect("frozen", 1f); }
-                if (fireSpon) { ehm.GiveEffect("burn", 3f); }
-                if (bleedSpon) { ehm.GiveEffect("bleed", 3f); }
-                if (helpingSpon) { ehm.GiveEffect("stiched", 1f); }
+                if (blinding) { ehm.GiveEffect(37, playerItem.leftItems[125] + playerItem.rightItems[125]); }
+                if (coolSpon) { ehm.GiveEffect(33, 1f); }
+                if (fireSpon) { ehm.GiveEffect(1, 3f); }
+                if (bleedSpon) { ehm.GiveEffect(0, 3f); }
+                if (helpingSpon) { ehm.GiveEffect(32, 1f); }
             }
         }
     }

@@ -49,7 +49,7 @@ public class EnemyHealthManager : MonoBehaviour
     public GameDataManager gdm;
 
     public GameObject effectIcon;
-    protected List<GameObject> icons;
+    protected List<EffectIconScript> icons;
     public Transform effectHolder;
 
     protected int featherton;
@@ -60,6 +60,10 @@ public class EnemyHealthManager : MonoBehaviour
     protected int numOfActiveEffects;
 
     public List<EffectObject> allEffects = new List<EffectObject>();
+    public List<int> allDebuffs = new List<int>();
+    public List<int> activeEffectIDS = new List<int>();
+    public List<int> activePosEffectIDS = new List<int>();
+    public List<int> activeNegEffectIDS = new List<int>();
     public List<Vector4> activeEffects = new List<Vector4>();
     // x == stacks of effect
     // y == Time until 1 stack of effect goes away
@@ -102,24 +106,21 @@ public class EnemyHealthManager : MonoBehaviour
         //Effect Setup
         allEffects.AddRange(gdm.effectData);
         activeEffects = new List<Vector4>();
-        icons = new List<GameObject>();
-        int effectsToAdd = 17;
-        for (int i = 0; i < effectsToAdd; i++)
+        icons = new List<EffectIconScript>();
+        allDebuffs = new List<int>();
+        foreach (EffectObject effect in allEffects)
         {
-            activeEffects.Add(Vector4.zero);
-        }
-        for (int i = 0; i < effectsToAdd; i++)
-        {
-            GiveEffect(i.ToString(), 0f);
+            activeEffects.Add(new Vector4(0, effect.decayTime, effect.decayTime, effect.type));
+            if (effect.type < 0) { allDebuffs.Add(effect.id); }
             GameObject spawnedIcon = Instantiate(effectIcon);
             spawnedIcon.transform.SetParent(effectHolder, false);
-            icons.Add(spawnedIcon);
+            icons.Add(spawnedIcon.GetComponent<EffectIconScript>());
         }
         ManageEffects();
         //Check if mutated
         if ((playerHM.massMutation > 0 && Random.Range(1, 100) < 2.5f + ((playerHM.massMutation - 1) * 5f)) || gdm.mutatedRules.Contains(3))
         {
-            GiveEffect("mutated", 1);
+            GiveEffect(43, 1);
             baseMaxHp *= 2f;
             baseArmor *= 2f;
             baseDamage *= 2f;
@@ -188,17 +189,17 @@ public class EnemyHealthManager : MonoBehaviour
             float rand = Random.Range(10f, 1000f);
             dmgTaken *= rand;
         }
-        if (activeEffects[0].x > 0) { tempArmor *= 0.25f; }
+        if (activeEffects[0].x > 0) { tempArmor *= 0.5f; }
         if (playerItem.leftItems[115] + playerItem.rightItems[115] > 0) { ignoreArmor = false; }
-        if (activeEffects[7].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
-        if (activeEffects[9].x > 0) { dmgTaken += dmgTaken * 0.2f; }
+        if (activeEffects[34].x > 0) { dmgTaken = dmgTaken * (1f + 0.1f * playerItem.leftItems[69] + playerItem.rightItems[69]); }
+        if (activeEffects[36].x > 0) { dmgTaken += dmgTaken * 0.2f; }
         if (playerHM.activeEffects[22].x > 0 && playerItem.leftItems[134]+playerItem.rightItems[134]>1) { dmgTaken *= 1.25f * (playerItem.leftItems[134] + playerItem.rightItems[134] - 1); }
         if (playerItem.leftItems[146]>0 && source == "left") { dmgTaken *= (1.05f+0.05f * playerItem.leftItems[146])*numOfActiveEffects; }
         if (playerItem.rightItems[146]>0 && source == "right") { dmgTaken *= (1.05f+0.05f * playerItem.rightItems[146])*numOfActiveEffects; }
 
         if (hit != HitType.ht.crit && hit != HitType.ht.critweak && hit != HitType.ht.special)
         {
-            if (activeEffects[11].x > 0 && Random.Range(0,2) == 0) { 
+            if (activeEffects[38].x > 0 && Random.Range(0,2) == 0) { 
                 if (hit == HitType.ht.normal) { hit = HitType.ht.crit; }
                 if (hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
                 if (source == "left") { dmgTaken *= playerItem.gunManager.leftGunScript.critDamage; }
@@ -206,7 +207,7 @@ public class EnemyHealthManager : MonoBehaviour
                 if (playerItem.leftItems[130] + playerItem.rightItems[130] > 1) { dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1)); }
             }
         }
-        else if (activeEffects[11].x > 0 && playerItem.leftItems[130] + playerItem.rightItems[130] > 1)
+        else if (activeEffects[38].x > 0 && playerItem.leftItems[130] + playerItem.rightItems[130] > 1)
         {
             dmgTaken *= (1.2f * (playerItem.leftItems[130] + playerItem.rightItems[130] - 1));
         }
@@ -238,7 +239,7 @@ public class EnemyHealthManager : MonoBehaviour
             }
         }
 
-        if (activeEffects[6].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
+        if (activeEffects[33].x > 0 && playerItem.leftItems[52] + playerItem.rightItems[52] > 0)
         {
             dmgTaken = dmgTaken * 2f;
         }
@@ -338,9 +339,9 @@ public class EnemyHealthManager : MonoBehaviour
     {
         if(jam > 0 && Random.Range(1, 100) <= 10 + (5 * jam))
         {
-            GiveEffect("jammed", 1);
+            GiveEffect(30, 1);
 
-            if(activeEffects[3].x > jam) { activeEffects[3] = new Vector4(jam, activeEffects[3].y, activeEffects[3].z, activeEffects[3].w); }
+            if(activeEffects[30].x > jam) { activeEffects[30] = new Vector4(jam, activeEffects[30].y, activeEffects[30].z, activeEffects[30].w); }
         }
         if(playerItem.leftItems[79] + playerItem.rightItems[79] > 0)
         {
@@ -352,7 +353,7 @@ public class EnemyHealthManager : MonoBehaviour
                 Destroy(spawnedOrb, 60f);
             }
         }
-        if(activeEffects[7].x > 0 && playerItem.leftItems[72] + playerItem.rightItems[72] > 0)
+        if(activeEffects[34].x > 0 && playerItem.leftItems[72] + playerItem.rightItems[72] > 0)
         {
             playerItem.gunManager.SpawnAxe((transform.position - player.transform.position).normalized);
         }
@@ -372,59 +373,38 @@ public class EnemyHealthManager : MonoBehaviour
     {
         if (gdm.activeEhms.Contains(this)) { gdm.activeEhms.Remove(this); gdm.activePoints -= data.pointCost; }
     }
-    public void GiveEffect(string effectGiven, float stacksToAdd)
+    public void GiveEffect(int effectID, float stacksToAdd)
     {
-        int effectID = -1;
-        if(int.TryParse(effectGiven, out int id)) { effectID = id; }
-        //Genaric DOT
-        if (effectID == 0 || effectGiven == "bleed") { activeEffects[0] = new Vector4(activeEffects[0].x + stacksToAdd, 4f, 4f, -1f);
-            float dotDmgModifer = 1; if (activeEffects[13].x > 0) { dotDmgModifer *= 2; }
-            if ((playerItem.leftItems[50] + playerItem.rightItems[50]) > 0) { dotDmgModifer *= 2; }
-            if (activeEffects[0].x % 5 == 0) { QueStandardDamage(activeEffects[0].x*20f*dotDmgModifer); }
-        }
-        if (effectID == 1 || effectGiven == "burn") { activeEffects[1] = new Vector4(activeEffects[1].x + stacksToAdd, 2f, 2f, -1f); }
-        if (effectID == 2 || effectGiven == "radiation") {  
-            if(activeEffects[2].x == 1) { activeEffects[2] = new Vector4(stacksToAdd * 2f, 6f, 6f, -1f); }
-            else { activeEffects[2] = new Vector4(activeEffects[2].x + (stacksToAdd * 2f), 6f, 6f, -1f); }
+        switch (effectID)
+        {
+            case 0: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type);
+                float dotDmgModifer = 1; if (activeEffects[40].x > 0) { dotDmgModifer *= 2; }
+                if ((playerItem.leftItems[50] + playerItem.rightItems[50]) > 0) { dotDmgModifer *= 2; }
+                if (activeEffects[effectID].x % 5 == 0) { QueStandardDamage(activeEffects[effectID].x * 20f * dotDmgModifer); } break;
+            case 2: if (activeEffects[effectID].x == 1) { activeEffects[effectID] = new Vector4(stacksToAdd * 2f, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); }
+                else { activeEffects[effectID] = new Vector4(activeEffects[effectID].x + (stacksToAdd * 2f), allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); } break;
+            default: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;
         }
 
-        //Item effects
-        if (effectID == 3 || effectGiven == "jammed") { activeEffects[3] = new Vector4(activeEffects[3].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Jam
-        if (effectID == 4 || effectGiven == "lucky") { activeEffects[4] = new Vector4(activeEffects[4].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }//Silver4Cash
-        if (effectID == 5 || effectGiven == "stiched") { activeEffects[5] = new Vector4(activeEffects[5].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//HelpingHandInHand
-        if (effectID == 6 || effectGiven == "frozen") { activeEffects[6] = new Vector4(activeEffects[6].x + stacksToAdd, 10f, 10f, -1f); }//CoolAsIce
-        if (effectID == 7 || effectGiven == "gunked") { activeEffects[7] = new Vector4(activeEffects[7].x + stacksToAdd, 3f, 3f, -1f); }//Gunky's blessing
-        if (effectID == 8 || effectGiven == "storage") { activeEffects[8] = new Vector4(activeEffects[8].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 0f); }//Improvised Storage
-        if (effectID == 9 || effectGiven == "gas") { activeEffects[9] = new Vector4(activeEffects[9].x + stacksToAdd, 1f, 1f, -1f); }//Gas Gernade attachment
-        if (effectID == 10 || effectGiven == "blind") { activeEffects[10] = new Vector4(activeEffects[10].x + stacksToAdd, 1f, 1f, -1f); }//Broken Lightbulb
-        if (effectID == 11 || effectGiven == "marked") { activeEffects[11] = new Vector4(activeEffects[11].x + stacksToAdd, 25f, 25f, -1f); }//Canine Tooth
-        if (effectID == 12 || effectGiven == "webbed") { activeEffects[12] = new Vector4(activeEffects[12].x + stacksToAdd, 1f, 1f, -1f); }//Table Leg slow effect
-        if (effectID == 13 || effectGiven == "enzymes") { activeEffects[13] = new Vector4(activeEffects[13].x + stacksToAdd, 5f, 5f, -1f); }//Enzymes
-        if (effectID == 14 || effectGiven == "chemical A") { activeEffects[14] = new Vector4(activeEffects[14].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
-        if (effectID == 15 || effectGiven == "chemical B") { activeEffects[15] = new Vector4(activeEffects[15].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, -1f); }//Chemical Agents
-        if (effectID == 16 || effectGiven == "mutated") { activeEffects[16] = new Vector4(activeEffects[16].x + stacksToAdd, float.PositiveInfinity, float.PositiveInfinity, 1f); }//Mass Mutation
-
-        if(activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, 6f, 6f, -1f); }
+        if(activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, allEffects[2].decayTime, allEffects[2].decayTime, allEffects[2].type); }
     }
     public void RandomDebuff()
     {
-        List<int> debuffs = new List<int>();
-        foreach(Vector4 effect in activeEffects)
-        {
-            if(effect.w == -1f) { debuffs.Add(activeEffects.IndexOf(effect)); }
-        }
-        int temp = debuffs[Random.Range(0, debuffs.Count)];
-        GiveEffect(temp.ToString(), 1f);
+        GiveEffect(allDebuffs[Random.Range(0, allDebuffs.Count)], 1f);
     }
     protected virtual void ManageEffects()
     {
+        activeEffectIDS = new List<int>();
+        activePosEffectIDS = new List<int>();
+        activeNegEffectIDS = new List<int>();
+
         Vector4 q = new Vector4(0, 0, 0, 0);
 
         for (int i = 0; i < activeEffects.Count; i++)
         {
             q = activeEffects[i];
 
-            if (i == 6 && q.x > 0)
+            if (i == 33 && q.x > 0)
             {
                 foreach (MonoBehaviour brain in brains)
                 {
@@ -432,7 +412,7 @@ public class EnemyHealthManager : MonoBehaviour
                 }
                 frozenEffect.SetActive(true);
             }
-            else if (i == 6 && q.x <= 0)
+            else if (i == 33 && q.x <= 0)
             {
                 foreach (MonoBehaviour brain in brains)
                 {
@@ -440,25 +420,25 @@ public class EnemyHealthManager : MonoBehaviour
                 }
                 frozenEffect.SetActive(false);
             }
-            if (i == 10 && q.x > 0)
+            if (i == 37 && q.x > 0)
             {
                 foreach (MonoBehaviour brain in brains)
                 {
                     brain.enabled = false;
                 }
             }
-            else if (i == 10 && q.x <= 0 && activeEffects[6].x<1f)
+            else if (i == 37 && q.x <= 0 && activeEffects[33].x<1f)
             {
                 foreach (MonoBehaviour brain in brains)
                 {
                     brain.enabled = true;
                 }
             }
-            if(i == 11 && q.x > 0)
+            if(i == 38 && q.x > 0)
             {
                 markedEffect.SetActive(true);
             }
-            else if(i == 11 && q.x < 1)
+            else if(i == 38 && q.x < 1)
             {
                 markedEffect.SetActive(false);
             }
@@ -466,8 +446,12 @@ public class EnemyHealthManager : MonoBehaviour
             //if there are any stacks of this effect
             if (q.x > 0)
             {
+                activeEffectIDS.Add(i);
+                if (q.w > 0) { activePosEffectIDS.Add(i); }
+                else if (q.w < 0) { activeNegEffectIDS.Add(i); }
+
                 numOfActiveEffects++;
-                float dotDmgModifer = 1; if (activeEffects[13].x > 0) { dotDmgModifer *= 2; }
+                float dotDmgModifer = 1; if (activeEffects[40].x > 0) { dotDmgModifer *= 2; }
                 //burn
                 if (i == 1 && burnTimer >= 0.2f)
                 {
@@ -476,37 +460,40 @@ public class EnemyHealthManager : MonoBehaviour
                     burnTimer = 0;
                 }
 
-                //progress timer and remove stacks as needed
-                if (q.z > 0f)
+                //progress timer and remove stacks as needed, if effect does not last forever
+                if (allEffects[i].decayTime >= 0)
                 {
-                    q.z -= Time.deltaTime;
-                }
-                else
-                {
-                    //run effects that happen when timer ends
-                    if (i == 2)
+                    if (q.z > 0f)
                     {
-                        QueStandardDamage(q.x * 50f * dotDmgModifer);
-                    }
-                    //If player has anti-antidode chance to not remove stacks when timer runs out
-                    int antiAnti = playerItem.leftItems[41] + playerItem.rightItems[41];
-                    if (antiAnti > 0)
-                    {
-                        if (Random.Range(0, 9+antiAnti) == 0)
-                        {
-                            q.x -= 1f;
-                            if (i == 2) { q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; } }
-                        }
+                        q.z -= Time.deltaTime;
                     }
                     else
                     {
-                        q.x -= 1f;
+                        //run effects that happen when timer ends
                         if (i == 2)
                         {
-                            q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; }
+                            QueStandardDamage(q.x * 50f * dotDmgModifer);
                         }
+                        //If player has anti-antidode chance to not remove stacks when timer runs out
+                        int antiAnti = playerItem.leftItems[41] + playerItem.rightItems[41];
+                        if (antiAnti > 0)
+                        {
+                            if (Random.Range(0, 9 + antiAnti) == 0)
+                            {
+                                q.x -= 1f;
+                                if (i == 2) { q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; } }
+                            }
+                        }
+                        else
+                        {
+                            q.x -= 1f;
+                            if (i == 2)
+                            {
+                                q.x += 1f; q.x /= 2f; if (q.x < 1f) { q.x = 0f; }
+                            }
+                        }
+                        if (q.x! > 0f) { q.z = q.y; }
                     }
-                    if (q.x! > 0f) { q.z = q.y; }
                 }
             }
 
@@ -515,15 +502,15 @@ public class EnemyHealthManager : MonoBehaviour
 
         for(int i = 0; i < activeEffects.Count; i++)
         {
-            Vector4 effect = activeEffects[i];
-            if (effect.x > 0f)
+            int stacks = Mathf.CeilToInt(activeEffects[i].x);
+            if (stacks > 0f)
             {
-                icons[i].SetActive(true);
-                icons[i].GetComponent<EffectIconScript>().UpdateEffectIcon(i, Mathf.RoundToInt(effect.x));
+                icons[i].gameObject.SetActive(true);
+                icons[i].UpdateEffectIcon(allEffects[i].icon, stacks);
             }
             else
             {
-                icons[i].SetActive(false);
+                icons[i].gameObject.SetActive(false);
             }
         }
     }
@@ -532,19 +519,15 @@ public class EnemyHealthManager : MonoBehaviour
     {
         GameObject spawnedText = Instantiate(damageText, player.GetComponentInChildren<Canvas>().gameObject.transform);
 
-        //spawnedText.transform.SetParent(player.GetComponentInChildren<Canvas>().gameObject.transform);
-
         spawnedText.gameObject.transform.position = hitLocation;
         spawnedText.GetComponent<DamageText>().SetText(dmgText, hit, hitLocation, source);
-
-        //Debug.DrawLine(hitLocation.position, hitLocation.position + Vector3.forward * 5, Color.cyan, 3f);
     }
     
     public void OnDeath()
     {
         if (didOnDeath) { return; } else { didOnDeath = true; }
 
-        if(activeEffects[4].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[4].x); }
+        if(activeEffects[31].x > 0f) { moneyDrop += Mathf.RoundToInt((moneyDrop / 10f) * activeEffects[31].x); }
         
         foreach(int rule in gdm.mutatedRules) { if(rule == 4) { moneyDrop *= 2; } }
 
@@ -658,7 +641,7 @@ public class EnemyHealthManager : MonoBehaviour
             Destroy(feathersEffect, 2f);
         }
         //mass mutation
-        if (activeEffects[16].x > 0)
+        if (activeEffects[43].x > 0)
         {
             int rand = Random.Range(1, 101);
             int rarityID = 0;
@@ -676,7 +659,7 @@ public class EnemyHealthManager : MonoBehaviour
         //Killstreak counter
         if (playerItem.leftItems[194] + playerItem.rightItems[194] > 0)
         {
-            playerHM.GiveEffect(PlayerEffectType.effectName.killstreak, 1);
+            playerHM.GiveEffect(29, 1);
         }
     }
 

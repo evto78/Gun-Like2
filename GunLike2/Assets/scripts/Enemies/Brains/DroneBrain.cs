@@ -42,7 +42,7 @@ public class DroneBrain : MonoBehaviour
     }
     void Update()
     {
-        jammed = hm.activeEffects[3].x > 0;
+        jammed = hm.activeEffects[30].x > 0;
         if (phm.activeEffects[22].x > 0 && !hm.gdm.pointsLocked)
         {
             curState = state.wander;
@@ -125,27 +125,28 @@ public class DroneBrain : MonoBehaviour
                 break;
         }
         DistanceToGround();
-        if(curHeight < hoverHeight)
+        float webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]));
+        if (curHeight < hoverHeight)
         {
-            rb.AddForce(Vector3.up * hoverSpeed * Time.deltaTime);
+            rb.AddForce(Vector3.up * hoverSpeed * webbedSpeedMod * Time.deltaTime);
             UpdatePropellerSpeed();
         }
         else
         {
-            rb.AddForce(Vector3.up * hoverSpeed * Time.deltaTime / 2f);
+            rb.AddForce(Vector3.up * hoverSpeed * webbedSpeedMod * Time.deltaTime / 2f);
             UpdatePropellerSpeed();
         }
         if (holding == holdType.nuke && curHeight > hoverHeight)
         {
-            rb.AddForce(Vector3.up * -nukeHoverSpeed * Time.deltaTime * 2f);
+            rb.AddForce(Vector3.up * -nukeHoverSpeed * webbedSpeedMod * Time.deltaTime * 2f);
             UpdatePropellerSpeed();
         }
         else if(holding == holdType.nuke && curHeight < hoverHeight)
         {
-            rb.AddForce(Vector3.up * nukeHoverSpeed * Time.deltaTime);
+            rb.AddForce(Vector3.up * nukeHoverSpeed * webbedSpeedMod * Time.deltaTime);
             UpdatePropellerSpeed();
         }
-        if (hm.activeEffects[6].x > 0) { foreach (PropellerSpin propeller in propellers) { propeller.speed = 0f; } }
+        if (hm.activeEffects[33].x > 0) { foreach (PropellerSpin propeller in propellers) { propeller.speed = 0f; } }
     }
     void UpdatePropellerSpeed()
     {
@@ -190,7 +191,7 @@ public class DroneBrain : MonoBehaviour
                         Shoot();
                         uBurstTimer = uziBurstCooldown;
                     } else { uBurstTimer -= Time.deltaTime; }
-                } else { uCooldownTimer = uziCooldown; bulShot = 0; }
+                } else { uCooldownTimer = uziCooldown; bulShot = 0; if (jammed) { hm.activeEffects[30] -= new Vector4(1, 0, 0, 0); } }
             } else { uCooldownTimer -= Time.deltaTime; }
         }
         else if(holding == holdType.grenade)
@@ -204,7 +205,7 @@ public class DroneBrain : MonoBehaviour
                         Shoot();
                         gBurstTimer = greBurstCooldown;
                     } else { gBurstTimer -= Time.deltaTime; }
-                } else { gCooldownTimer = greCooldown; greShot = 0; }
+                } else { gCooldownTimer = greCooldown; greShot = 0; if (jammed) { hm.activeEffects[30] -= new Vector4(1, 0, 0, 0); } }
             } else { gCooldownTimer -= Time.deltaTime; }
         }
         else if (holding == holdType.crab)
@@ -213,6 +214,7 @@ public class DroneBrain : MonoBehaviour
             {
                 Shoot();
                 cCooldownTimer = crabCooldown;
+                if (jammed) { hm.activeEffects[30] -= new Vector4(1, 0, 0, 0); }
             }
             else { cCooldownTimer -= Time.deltaTime; }
         }
@@ -269,19 +271,22 @@ public class DroneBrain : MonoBehaviour
     void MoveToTarget(Vector3 target, float desDistance)
     {
         if(holding == holdType.nuke) { speed *= nukeSpeed; }
+
+        float webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]));
+
         Debug.DrawRay(transform.position, (target - transform.position).normalized * 5f, Color.red);
 
         if (Vector3.Distance(target, transform.position) > desDistance)
         {
-            rb.AddForce((target - transform.position).normalized * speed * Time.deltaTime);
+            rb.AddForce((target - transform.position).normalized * speed * webbedSpeedMod * Time.deltaTime);
             if (Vector3.Distance(target, transform.position + rb.velocity) > Vector3.Distance(target, transform.position))
             {
-                rb.AddForce((target - transform.position).normalized * speed * Time.deltaTime);
+                rb.AddForce((target - transform.position).normalized * speed * webbedSpeedMod * Time.deltaTime);
             }
         }
         else
         {
-            rb.AddForce((target - transform.position).normalized * -speed * Time.deltaTime);
+            rb.AddForce((target - transform.position).normalized * -speed * webbedSpeedMod * Time.deltaTime);
         }
         
         if (rb.velocity.magnitude > 3f) { transform.LookAt(transform.position + rb.velocity); }

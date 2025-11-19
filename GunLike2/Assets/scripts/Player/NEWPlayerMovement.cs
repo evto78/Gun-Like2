@@ -308,9 +308,9 @@ public class NEWPlayerMovement : MonoBehaviour
     {
         if (Physics.BoxCast(new Vector3(transform.position.x, transform.position.y - 0f, transform.position.z), transform.localScale * 0.5f, -Vector3.up, out RaycastHit hit, transform.rotation, 1f))
         {
-            if (hit.transform.gameObject.tag == "Ground" || hit.transform.gameObject.tag == "Untagged")
+            if (hit.transform.gameObject.CompareTag("Ground") || hit.transform.gameObject.CompareTag("Untagged"))
             {
-                if (hasBunny && !onGround) { healthMan.GiveEffect(PlayerEffectType.effectName.bunnyHop, 1f); }
+                if (hasBunny && !onGround) { healthMan.GiveEffect(16, 1f); }
                 jumpsLeft = numberOfJumps;
                 timeSinceGrounded = 0f;
                 if(playerItem.leftItems[93] + playerItem.rightItems[93] > 0 && rb.velocity.y < -25)

@@ -219,18 +219,18 @@ public class BulletScript : MonoBehaviour
             ehm = hit.GetComponent<EnemyHealthManager>();
         }
         ehm.OnHitEffect(jam);
-        if (isFireSpon) { ehm.GiveEffect("burn", 1f); }
-        if (isSharperSpon) { ehm.GiveEffect("bleed", 1f); }
-        if (isSilverSpon) { ehm.GiveEffect("lucky", 1f); }
-        if (isHelpingSpon) { ehm.GiveEffect("stiched", 1f); }
-        if (isCoolSpon) { ehm.GiveEffect("frozen", 1f); }
-        if (isGunky) { ehm.GiveEffect("gunked", 1f); }
+        if (isFireSpon) { ehm.GiveEffect(1, 1f); }
+        if (isSharperSpon) { ehm.GiveEffect(0, 1f); }
+        if (isSilverSpon) { ehm.GiveEffect(31, 1f); }
+        if (isHelpingSpon) { ehm.GiveEffect(32, 1f); }
+        if (isCoolSpon) { ehm.GiveEffect(33, 1f); }
+        if (isGunky) { ehm.GiveEffect(34, 1f); }
 
-        if (pi.leftItems[54] + pi.rightItems[54] > 0){ hm.GiveEffect(PlayerEffectType.effectName.fastFire, 1f); }
+        if (pi.leftItems[54] + pi.rightItems[54] > 0){ hm.GiveEffect(19, 1f); }
         if (gunFiredFrom.stickTo && whatHandThisComesFrom == "left") { gm.rightStickToCounters++; }
         if (gunFiredFrom.stickTo && whatHandThisComesFrom == "right") { gm.leftStickToCounters++; }
 
-        if (storage > 0 && ehm.activeEffects[8].x < 20 + 10 * storage) { ehm.GiveEffect("storage", 1f); }
+        if (storage > 0 && ehm.activeEffects[35].x < 20 + 10 * storage) { ehm.GiveEffect(35, 1f); }
 
         if(hm.curHp / hm.maxHp <= 0.5f)
         {
@@ -260,7 +260,7 @@ public class BulletScript : MonoBehaviour
         }
         if(gunFiredFrom.enzymes > 0 && Random.Range(1, 100) < 10 * gunFiredFrom.enzymes)
         {
-            ehm.GiveEffect("enzymes", 1);
+            ehm.GiveEffect(40, 1);
         }
 
         if ((gunFiredFrom.darkBranch > 0 && (rayHit.collider != null || rayHit.point != new RaycastHit().point))&& Random.Range(1, 100) < 5 + 5 * gunFiredFrom.darkBranch)
@@ -291,19 +291,19 @@ public class BulletScript : MonoBehaviour
         if (gunFiredFrom.chemicalAgents > 0)
         {
             int maxA = gunFiredFrom.chemicalAgents; int maxB = gunFiredFrom.chemicalAgents;
-            if (ehm.activeEffects[14].x < maxA && (ehm.activeEffects[14].x <= ehm.activeEffects[15].x || ehm.activeEffects[14].x == 0))
+            if (ehm.activeEffects[41].x < maxA && (ehm.activeEffects[41].x <= ehm.activeEffects[42].x || ehm.activeEffects[41].x == 0))
             {
-                ehm.GiveEffect("chemical A", 1f);
+                ehm.GiveEffect(41, 1f);
             }
-            else if (ehm.activeEffects[15].x < maxB)
+            else if (ehm.activeEffects[42].x < maxB)
             {
-                ehm.GiveEffect("chemical B", 1f);
+                ehm.GiveEffect(42, 1f);
             }
             else
             {
-                ehm.TakeDamage(damage * 1.5f * ehm.activeEffects[15].x, false, HitType.ht.special, ehm.transform.position, whatHandThisComesFrom);
-                ehm.activeEffects[14] = new Vector4(0, ehm.activeEffects[14].y, ehm.activeEffects[14].z, ehm.activeEffects[14].w);
-                ehm.activeEffects[15] = new Vector4(0, ehm.activeEffects[15].y, ehm.activeEffects[15].z, ehm.activeEffects[15].w);
+                ehm.TakeDamage(damage * 1.5f * ehm.activeEffects[42].x, false, HitType.ht.special, ehm.transform.position, whatHandThisComesFrom);
+                ehm.activeEffects[41] = new Vector4(0, ehm.activeEffects[41].y, ehm.activeEffects[41].z, ehm.activeEffects[41].w);
+                ehm.activeEffects[42] = new Vector4(0, ehm.activeEffects[42].y, ehm.activeEffects[42].z, ehm.activeEffects[42].w);
                 ehm.ChemicalEffect.Play();
             }
         }
@@ -314,7 +314,7 @@ public class BulletScript : MonoBehaviour
         }
         if(gunFiredFrom.manager.healthMan.activeEffects[22].x > 0)
         {
-            gunFiredFrom.manager.healthMan.GiveEffect(PlayerEffectType.effectName.invisibility, 0f);
+            gunFiredFrom.manager.healthMan.GiveEffect(22, 0f);
             gunFiredFrom.manager.healthMan.attackedThisRoom = true;
         }
     }
@@ -546,7 +546,7 @@ public class BulletScript : MonoBehaviour
         {ehm.Die(false, whatHandThisComesFrom);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
-        {ehm.GiveEffect("radiation", 1);}
+        {ehm.GiveEffect(2, 1);}
 
         if(hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 
         { ChimeraSpesificPointThatWasHurtInformationHandler(hit.collider.transform.parent.parent.parent.name, ehm); }
@@ -570,7 +570,7 @@ public class BulletScript : MonoBehaviour
         {ehm.Die(false, whatHandThisComesFrom);}
 
         if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
-        {ehm.GiveEffect("radiation", 1);}
+        {ehm.GiveEffect(2, 1);}
 
         if (hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 
         { ChimeraSpesificPointThatWasHurtInformationHandler(hit.collider.transform.parent.parent.parent.name, ehm); }

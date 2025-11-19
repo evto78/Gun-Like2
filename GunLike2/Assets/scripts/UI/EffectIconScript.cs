@@ -6,12 +6,10 @@ using TMPro;
 
 public class EffectIconScript : MonoBehaviour
 {
-    public List<Sprite> effectSprites;
     public TextMeshProUGUI stacksTxt;
-
-    public void UpdateEffectIcon(int id, int stacks)
+    public void UpdateEffectIcon(Sprite spriteToUse, int stacks)
     {
         stacksTxt.text = stacks.ToString();
-        gameObject.GetComponent<Image>().sprite = effectSprites[id];
+        gameObject.GetComponent<Image>().sprite = spriteToUse;
     }
 }

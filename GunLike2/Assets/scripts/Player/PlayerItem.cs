@@ -300,7 +300,7 @@ public class PlayerItem : MonoBehaviour
                 if (hand == "left") { for (int i = 0; i < 50 * amount; i++) { gunManager.leftGunScript.addBullet(); } }
                 if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightGunScript.addBullet(); } }
                 break;
-            case 186: healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); break;
+            case 186: healthManager.GiveEffect(27, 120); break;
             case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[177]) + (50f * rightItems[177])); break;
         }
         uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
@@ -546,14 +546,14 @@ public class PlayerItem : MonoBehaviour
             rightItems[id] += 1;
             if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
             if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
-            if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+            if (id == 186) { healthManager.GiveEffect(27, 120); }
         }
         else
         {
             leftItems[id] += 1;
             if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
             if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
-            if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+            if (id == 186) { healthManager.GiveEffect(27, 120); }
         }
     }
     void LookForItem()
@@ -580,7 +580,7 @@ public class PlayerItem : MonoBehaviour
                     if (rightMonkeysPaw > 0) { MonkeysPaw(id, "right", rightMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
-                    if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+                    if (id == 186) { healthManager.GiveEffect(27, 120); }
                 }
                 if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract) || (Input.GetKey(healthManager.gdm.instance.controlsBinds.leftInteract) && Input.GetKey(healthManager.gdm.instance.controlsBinds.sprint)))
                 {
@@ -589,7 +589,7 @@ public class PlayerItem : MonoBehaviour
                     if (leftMonkeysPaw > 0) { MonkeysPaw(id, "left", leftMonkeysPaw); }
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (rightItems[86] > 0) { rightItems[id] += 1; rightItems[86]--; }
-                    if (id == 186) { healthManager.GiveEffect(PlayerEffectType.effectName.sunny, 120); }
+                    if (id == 186) { healthManager.GiveEffect(27, 120); }
                 }
             }
             else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))
@@ -618,7 +618,7 @@ public class PlayerItem : MonoBehaviour
                 if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.righInteract) || Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract))
                 {
                     hit.transform.gameObject.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
-                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(PlayerEffectType.effectName.chaosEngine, 1f); }
+                    if (leftItems[185] + rightItems[185] > 0) { healthManager.GiveEffect(26, 1f); }
                 }
             }
         }
