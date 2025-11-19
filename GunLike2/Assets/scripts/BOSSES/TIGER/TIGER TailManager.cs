@@ -12,9 +12,11 @@ public class TIGERTailManager : MonoBehaviour
     public float swaySpeed;
     int segments;
     public AnimationCurve idlePoseXSway;
-    public AnimationCurve idlePoseYSway;
+    public AnimationCurve idlePoseYSway1;
+    public AnimationCurve idlePoseYSway2; float yAltState = 0f; float yAltStateTimerSpeed = 0.5f; int yAltDir = 1;
+    public AnimationCurve sineCurve; //smoothInSmoothOut
     public AnimationCurve alternatingTimerCurve;
-    public float variation; public float alternatingTimer = 0f; bool altUp = true; float altSpeed = 1f;
+    public float variation; public float alternatingTimer = 0f; bool altUp = true; float altSpeed = 0.5f;
     void Start()
     {
         bha = GetComponent<TIGERBodyHeightAdjust>();
@@ -33,16 +35,24 @@ public class TIGERTailManager : MonoBehaviour
     }
     void Update()
     {
-        if (altUp) { alternatingTimer += Time.deltaTime * altSpeed; if (alternatingTimer > 1) { altUp = false; alternatingTimer = 1; } } 
+        yAltState += yAltStateTimerSpeed * Time.deltaTime * yAltDir;
+        if (yAltState < 0 && yAltDir == -1) { yAltDir = 1; yAltState = 0; }
+        else if (yAltState > 1 && yAltDir == 1) { yAltDir = -1; yAltState = 1; }
+
+        if (altUp) { alternatingTimer += Time.deltaTime * altSpeed; if (alternatingTimer > 1) { altUp = false; alternatingTimer = 1; } }
         else { alternatingTimer -= Time.deltaTime * altSpeed; if (alternatingTimer < 0) { altUp = true; alternatingTimer = 0; } } 
 
         float curVariation = variation * alternatingTimerCurve.Evaluate(alternatingTimer);
         for(int i = 0; i < segments; i++)
         {
             Transform curSegment = tailSegments[i];
-            float xSway = (((idlePoseXSway.Evaluate((float)i/(float)segments)-0.5f)*2f)) * maxRotationPerJoint;
+            float xSway = (((idlePoseXSway.Evaluate((float)i / (float)segments) - 0.5f) * 2f)) * maxRotationPerJoint;
             xSway -= curVariation;
-            curSegment.localRotation = new Quaternion(-xSway, curSegment.localRotation.y, curSegment.localRotation.z, curSegment.localRotation.w);
+            float ySway1 = (((idlePoseYSway1.Evaluate((float)i / (float)segments) - 0.5f) * 2f)) * maxRotationPerJoint;
+            float ySway2 = (((idlePoseYSway2.Evaluate((float)i / (float)segments) - 0.5f) * 2f)) * maxRotationPerJoint;
+            float ySway = Mathf.Lerp(ySway1, ySway2, sineCurve.Evaluate(yAltState));
+            ySway -= curVariation;
+            curSegment.localRotation = new Quaternion(-xSway, ySway, curSegment.localRotation.z, curSegment.localRotation.w);
         }
     }
 }

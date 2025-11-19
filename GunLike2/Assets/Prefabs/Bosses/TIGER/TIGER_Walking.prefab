@@ -16431,7 +16431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tailStart: {fileID: 8324864432750036682}
   tailEnd: {fileID: 995356117414541596}
-  maxRotationPerJoint: 25
+  maxRotationPerJoint: 0.1
   swaySpeed: 0
   idlePoseXSway:
     serializedVersion: 2
@@ -16466,9 +16466,75 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  idlePoseYSway:
+  idlePoseYSway1:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.8
+      inSlope: 0.0000007463538
+      outSlope: 0.0000007463538
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9583333
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  idlePoseYSway2:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.2
+      inSlope: 0.0000007463538
+      outSlope: 0.0000007463538
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9583333
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sineCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.0023584906
+      outSlope: 0.0023584906
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.0025953758
+      outSlope: 0.0025953758
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.90873015
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -16505,7 +16571,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  variation: 0.2
+  variation: 0.002
   alternatingTimer: 0
 --- !u!33 &140907456221770068
 MeshFilter:
