@@ -788,11 +788,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387322118}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &411491161 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8417800049598543042, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
-  m_PrefabInstance: {fileID: 1398238405}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &418244022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3905,9 +3900,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1280011323512538481, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
-      propertyPath: curState
-      value: 0
+    - target: {fileID: 5129814078669604150, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
+      propertyPath: toeLength
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7168171966137246515, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
       propertyPath: m_Name
@@ -3953,14 +3948,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 482199931222830374, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
-    - {fileID: 4049225656422537772, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
+    - target: {fileID: 9023249619948619327, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
+      propertyPath: toeLength
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8417800049598543042, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2035195877}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c2bd7c1884ee3c47810df0090d1962f, type: 3}
 --- !u!1001 &1432692112
@@ -5648,89 +5642,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008782199}
   m_Mesh: {fileID: 8733429697405204941, guid: 51b2dee88252d2146aed552c68aaa47c, type: 3}
---- !u!1 &2035195876
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2035195877}
-  - component: {fileID: 2035195878}
-  m_Layer: 0
-  m_Name: DebugFollowCam
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2035195877
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035195876}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.16600162, y: 0.3328112, z: -0.059617948, w: 0.92635083}
-  m_LocalPosition: {x: -19.047583, y: 17.130552, z: -24.559278}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 411491161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &2035195878
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035195876}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 50
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &2051822405 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1074921731352622473, guid: 5bc11e77b68fa1643b4e420d14167335, type: 3}
