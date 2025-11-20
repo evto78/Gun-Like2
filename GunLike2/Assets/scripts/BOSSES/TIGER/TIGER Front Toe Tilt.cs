@@ -10,7 +10,10 @@ public class TIGERFrontToeTilt : MonoBehaviour
     public bool canOverbend;
     void Update()
     {
-        transform.LookAt(linkedFootSolver.nextPos + linkedFootSolver.hip.up * toeLength);
-        if (!canOverbend) { transform.localEulerAngles = Vector3.right * (transform.localEulerAngles.x + Mathf.Abs(transform.localEulerAngles.y)); }
+        if (linkedFootSolver.stepping)
+        {
+            transform.LookAt(linkedFootSolver.staticNextPos + linkedFootSolver.hip.up * toeLength);
+            if (!canOverbend) { transform.localEulerAngles = Vector3.right * (transform.localEulerAngles.x + Mathf.Abs(transform.localEulerAngles.y)); }
+        }
     }
 }

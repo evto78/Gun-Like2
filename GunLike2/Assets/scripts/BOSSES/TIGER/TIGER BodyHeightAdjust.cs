@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class TIGERBodyHeightAdjust : MonoBehaviour
 {
+    public TIGERBrain brain;
     public float runOffset; public float crouchOffset; float actingOffset;
     NavMeshAgent agent;
     float initalY;
@@ -23,7 +24,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     public AnimationCurve runCurve;
     public AnimationCurve walkProgressCurve;
     public AnimationCurve runProgressCurve;
-    public float currentSpeed; float posSampleTimer; Vector3 sampledPos; Vector3 sampledForward;
+    public float currentSpeed; float posSampleTimer; Vector3 sampledPos; Vector3 sampledForward; public float unscaledCurrentSpeed;
     public Vector2 walkRunSpeedThreshold; public float progressToRun;
     public Transform backLegsHolder; public Transform frontLegsHolder; float initialBackLegsHolderY; float initialFrontLegsHolderY;
     static Vector2 backLegsVerticalDisplacementMinMax = new Vector2(-0.03f, 0.015f); // manualy inputed
@@ -36,7 +37,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     [Header("External Variables")]
     public Vector3 turnDirVel;
 
-    private void Awake() { foreach (TIGERIKFootSolver solver in legs) { solver.manager = this; solver.managerHandlesPairs = handlePairs; } }
+    private void Awake() { brain = GetComponent<TIGERBrain>(); foreach (TIGERIKFootSolver solver in legs) { solver.manager = this; } }
 
     private void Start()
     {
@@ -123,14 +124,6 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     public void ChangeState(state newState)
     {
         curState = newState;
-        foreach (TIGERIKFootSolver solver in legs)
-        {
-            switch (curState)
-            {
-                case state.walk: solver.curState = TIGERIKFootSolver.state.walk; break;
-                case state.run: solver.curState = TIGERIKFootSolver.state.run; break;
-            }
-        }
     }
     void ForceStepProgressBetweenPairs()
     {

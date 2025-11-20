@@ -1637,6 +1637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa5d1431135fe043823e1b0383356fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFoot: {fileID: 1570473958177326255}
   manager: {fileID: 0}
   pairedLeg: {fileID: 8103196268547662336}
   hip: {fileID: 5290738155578555936}
@@ -1650,12 +1651,10 @@ MonoBehaviour:
   stepping: 0
   stepProgress: 0
   stepSpeed: 1.8
-  nextPos: {x: 0, y: 0, z: 0}
   activeNextPos: {x: 0, y: 0, z: 0}
   staticNextPos: {x: 0, y: 0, z: 0}
   nextPosOffset: 0
-  curState: 0
-  managerHandlesPairs: 0
+  maxXOffset: {x: -0.02, y: 0.035}
 --- !u!1 &475865717137053570
 GameObject:
   m_ObjectHideFlags: 0
@@ -2914,6 +2913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa5d1431135fe043823e1b0383356fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFoot: {fileID: 6419770501756353965}
   manager: {fileID: 0}
   pairedLeg: {fileID: 5275433020969121413}
   hip: {fileID: 3704215654012231122}
@@ -2927,12 +2927,10 @@ MonoBehaviour:
   stepping: 0
   stepProgress: 0
   stepSpeed: 1.8
-  nextPos: {x: 0, y: 0, z: 0}
   activeNextPos: {x: 0, y: 0, z: 0}
   staticNextPos: {x: 0, y: 0, z: 0}
   nextPosOffset: 0
-  curState: 0
-  managerHandlesPairs: 0
+  maxXOffset: {x: -0.04, y: 0.04}
 --- !u!1 &852541793110174535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3692,7 +3690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328045116941109963}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.15176807, z: -0.16058318}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13995,6 +13993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa5d1431135fe043823e1b0383356fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFoot: {fileID: 4242283983701017482}
   manager: {fileID: 0}
   pairedLeg: {fileID: 4121666381443846328}
   hip: {fileID: 8847899030704130619}
@@ -14008,12 +14007,10 @@ MonoBehaviour:
   stepping: 0
   stepProgress: 0
   stepSpeed: 1.8
-  nextPos: {x: 0, y: 0, z: 0}
   activeNextPos: {x: 0, y: 0, z: 0}
   staticNextPos: {x: 0, y: 0, z: 0}
   nextPosOffset: 0
-  curState: 0
-  managerHandlesPairs: 0
+  maxXOffset: {x: -0.04, y: 0.04}
 --- !u!1 &4527815113281257893
 GameObject:
   m_ObjectHideFlags: 0
@@ -14524,6 +14521,89 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4671978314707762248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4956502894998921996}
+  - component: {fileID: 2387014018528203082}
+  m_Layer: 0
+  m_Name: DebugFollowCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4956502894998921996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4671978314707762248}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.16600162, y: 0.3328112, z: -0.059617948, w: 0.92635083}
+  m_LocalPosition: {x: -19.047583, y: 17.130552, z: -24.559278}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8417800049598543042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &2387014018528203082
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4671978314707762248}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 50
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &4695647044401669677
 GameObject:
   m_ObjectHideFlags: 0
@@ -21351,9 +21431,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8417800049598543042}
+  - component: {fileID: 1280011323512538481}
   - component: {fileID: 3070585014825511713}
   - component: {fileID: 8169312650863000681}
-  - component: {fileID: 5488041214469045726}
+  - component: {fileID: 2894154096736592735}
   m_Layer: 0
   m_Name: TIGER_Walking
   m_TagString: Untagged
@@ -21375,8 +21456,50 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7314144700526630796}
+  - {fileID: 4956502894998921996}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1280011323512538481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7168171966137246515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f322a3de31d4e944b8580d85931e7286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseWalkSpeedAccel: {x: 20, y: 4}
+  baseChaseSpeedAccel: {x: 80, y: 10}
+  baseSprintSpeedAccel: {x: 120, y: 20}
+  curState: 0
+  curMoveState: 1
+  sineCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.008309135
+      outSlope: -0.008309135
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.88709676
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.0000000959867
+      outSlope: 0.0000000959867
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.62096775
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &3070585014825511713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21389,6 +21512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643a5f9c56f7f8c4991feee32bb6bd1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brain: {fileID: 1280011323512538481}
   runOffset: -5
   crouchOffset: -6
   backJoint: {fileID: 2857495936995309765}
@@ -21405,7 +21529,7 @@ MonoBehaviour:
   walkStepLengthMod: 1
   runStepLengthMod: 2
   walkStepSpeedMod: 1.1
-  runStepSpeedMod: 0.6
+  runStepSpeedMod: 0.5
   walkCurve:
     serializedVersion: 2
     m_Curve:
@@ -21521,6 +21645,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   currentSpeed: 0
+  unscaledCurrentSpeed: 0
   walkRunSpeedThreshold: {x: 1.5, y: 4}
   progressToRun: 0
   backLegsHolder: {fileID: 938837532954648162}
@@ -21550,22 +21675,21 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5488041214469045726
+--- !u!114 &2894154096736592735
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7168171966137246515}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb8a3bb3beb39a2459272f2d5890274a, type: 3}
+  m_Script: {fileID: 11500000, guid: d32762383039d4a4b8cf2e1806b58182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   desDistance: 15
   updateFreq: 0.5
   navState: 0
-  neverIdle: 1
 --- !u!1 &7180493961405920556
 GameObject:
   m_ObjectHideFlags: 0
@@ -26888,7 +27012,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7419298449322111471}
-  - component: {fileID: 482199931222830374}
   m_Layer: 0
   m_Name: Toes
   m_TagString: Untagged
@@ -26915,21 +27038,6 @@ Transform:
   - {fileID: 2984227762979050671}
   m_Father: {fileID: 1785506961296864902}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &482199931222830374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8746953982789636031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2393f728fdfe6674e9f4c3ef7f16b0db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toeLength: 1.5
-  linkedFootSolver: {fileID: 4121666381443846328}
-  canOverbend: 1
 --- !u!1 &8748823721046447523
 GameObject:
   m_ObjectHideFlags: 0
@@ -28264,6 +28372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa5d1431135fe043823e1b0383356fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFoot: {fileID: 5168851247117902219}
   manager: {fileID: 0}
   pairedLeg: {fileID: 3709119759419024964}
   hip: {fileID: 4303481964329619216}
@@ -28277,12 +28386,10 @@ MonoBehaviour:
   stepping: 0
   stepProgress: 0
   stepSpeed: 1.8
-  nextPos: {x: 0, y: 0, z: 0}
   activeNextPos: {x: 0, y: 0, z: 0}
   staticNextPos: {x: 0, y: 0, z: 0}
   nextPosOffset: 0
-  curState: 0
-  managerHandlesPairs: 0
+  maxXOffset: {x: -0.035, y: 0.02}
 --- !u!1 &9143012385584771599
 GameObject:
   m_ObjectHideFlags: 0
@@ -28517,7 +28624,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7037638216866545744}
-  - component: {fileID: 4049225656422537772}
   m_Layer: 0
   m_Name: Toes
   m_TagString: Untagged
@@ -28544,21 +28650,6 @@ Transform:
   - {fileID: 5590075973759462446}
   m_Father: {fileID: 4488836069891164421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4049225656422537772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9190186224099135863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2393f728fdfe6674e9f4c3ef7f16b0db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toeLength: 1.5
-  linkedFootSolver: {fileID: 5275433020969121413}
-  canOverbend: 1
 --- !u!1 &9203249463390844631
 GameObject:
   m_ObjectHideFlags: 0
