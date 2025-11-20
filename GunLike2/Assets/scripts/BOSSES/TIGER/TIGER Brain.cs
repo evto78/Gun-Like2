@@ -25,6 +25,8 @@ public class TIGERBrain : MonoBehaviour
     public State curState;
     public enum MoveState { walk, chase, sprint }
     public MoveState curMoveState;
+    public enum AttackState { idle, prepareToFire }
+    public AttackState curAttackState;
     [Header("Internal")]
     float backAccel = 2; float curBackSpeed = 0; float backstepTimer = 0;
     float followRotSpeed = 2f;
@@ -49,7 +51,7 @@ public class TIGERBrain : MonoBehaviour
     }
     void Start()
     {
-        ChangeState(curState, curMoveState);
+        ChangeState(curState, curMoveState, curAttackState);
     }
     void InitializeHeadJointVals()
     {
@@ -61,9 +63,9 @@ public class TIGERBrain : MonoBehaviour
         midYVals = new List<float>() { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
         rightYVals = new List<float>() { 20f, 0f, 5f, 5f, 5f, 5f, 10f, 10f, 5f, 5f, -30f, 0f, 0f };
     }
-    void ChangeState(State newState, MoveState newMoveState) 
+    void ChangeState(State newState, MoveState newMoveState, AttackState newAttackState) 
     { 
-        curState = newState; curMoveState = newMoveState;
+        curState = newState; curMoveState = newMoveState; curAttackState = newAttackState;
         switch (curState) {
             case State.idle: nav.SetState(TIGERNavAI.state.idle); break;
             case State.chase: nav.SetState(TIGERNavAI.state.chase); break;
@@ -73,17 +75,20 @@ public class TIGERBrain : MonoBehaviour
             case MoveState.walk: agent.speed = baseWalkSpeedAccel.x; agent.acceleration = baseWalkSpeedAccel.y; break;
             case MoveState.chase: agent.speed = baseChaseSpeedAccel.x; agent.acceleration = baseChaseSpeedAccel.y; break;
             case MoveState.sprint: agent.speed = baseSprintSpeedAccel.x; agent.acceleration = baseSprintSpeedAccel.y; break; }
+        switch (curAttackState) {
+            case AttackState.idle: break;
+            case AttackState.prepareToFire: break; }
     }
     void ManualInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { ChangeState(State.idle, curMoveState); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { ChangeState(State.followTurn, curMoveState); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { ChangeState(State.chase, curMoveState); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { ChangeState(State.backStep, curMoveState); }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { ChangeState(State.idle, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { ChangeState(State.followTurn, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { ChangeState(State.chase, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) { ChangeState(State.backStep, curMoveState, curAttackState); }
 
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, MoveState.walk); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, MoveState.chase); }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) { ChangeState(curState, MoveState.sprint); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, MoveState.walk, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, MoveState.chase, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) { ChangeState(curState, MoveState.sprint, curAttackState); }
 
         manualCamInputDir = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) { manualCamInputDir += Vector2.up; }
@@ -100,6 +105,14 @@ public class TIGERBrain : MonoBehaviour
         if (curBackSpeed > 0) { curBackSpeed -= backAccel * Time.deltaTime; }
         if (backstepTimer > 0) { backstepTimer -= Time.deltaTime; }
 
+        HeadMovement();
+
+        switch (curAttackState) {
+            case AttackState.idle: break;
+            case AttackState.prepareToFire:
+                if (prevX < -0.6f) { ChangeState(State.backStep, curMoveState, curAttackState); }
+                else { ChangeState(State.followTurn, curMoveState, curAttackState); }
+                    break; }
         switch (curState) {
             case State.idle:
                 break;
@@ -114,44 +127,37 @@ public class TIGERBrain : MonoBehaviour
                 transform.rotation = Quaternion.Lerp(curRot, tarRot, Time.deltaTime * followRotSpeed);
                 break; }
         transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward;
-
-        HeadMovement();
     }
-    void CheckStoppedBackstep() { if (bha.currentSpeed < 0.2f && backstepTimer <= 0) { ChangeState(State.idle, curMoveState); } }
+    void CheckStoppedBackstep() { if (bha.currentSpeed < 0.2f && backstepTimer <= 0) { ChangeState(State.idle, curMoveState, curAttackState); } }
     void HeadMovement()
     {
         float xAxis;
         float yAxis;
 
-        headPointer.LookAt(player); //float outy = headPointer.localEulerAngles.y; float outx = -headPointer.localEulerAngles.x;
-        //if (outy > -60 && outy < 60 && outx > -60 && outx < 60)
-        //{
-        //    yAxis = outy / 20f;
-        //    if (outx > 0) { xAxis = outx / 12f; }
-        //    else { xAxis = outx / 40f; }
-        //}
-        //else
-        //{
-        //    xAxis = 0f; yAxis = 0f;
-        //}
+        headPointer.LookAt(cannonFirepoint);
+        Debug.DrawRay(headPointer.position, headPointer.forward * 20, Color.red);
+        Quaternion curRot = headPointer.localRotation;
+        headPointer.LookAt(player);
+        Debug.DrawRay(headPointer.position, headPointer.forward * 25, Color.yellow);
+        Quaternion tarRot = headPointer.localRotation;
+        if (tarRot.x > 80f || tarRot.x < -80f) { tarRot.x = 0; }
+        if (tarRot.y > 80f || tarRot.y < -80f) { tarRot.y = 0; }
+        if (curRot.x > tarRot.x) { prevX += Time.deltaTime * 1f; } else { prevX -= Time.deltaTime * 1f; }
+        if (curRot.y > tarRot.y) { prevY -= Time.deltaTime * 1f; } else { prevY += Time.deltaTime * 1f; }
 
-        //Debug.Log("Current: " + outx + " | " + outy);
-        //Debug.Log("Target: " + xAxis + " | " + yAxis);
+        prevX = Mathf.Clamp(prevX, -1, 1);
+        prevY = Mathf.Clamp(prevY, -1, 1);
 
-        //headPointer.LookAt(cannonFirepoint);
-        //xAxis = 0.7f;
-        //yAxis = -0.2f;
-
-        xAxis = Mathf.Lerp(prevX, xAxis, Time.deltaTime*4f);
-        yAxis = Mathf.Lerp(prevY, yAxis, Time.deltaTime*4f);
-
-        prevX = xAxis; prevY = yAxis;
+        xAxis = prevX; yAxis = prevY;
+        //Debug.Log("PREV: "+prevX + " | " + prevY);
+        //Debug.Log("ROTX: "+(int)curRot.x + " | " + (int)tarRot.x);
+        //Debug.Log("ROTY: "+(int)curRot.y + " | " + (int)tarRot.y);
 
         //xAxis = manualCamDir.y;
         //yAxis = manualCamDir.x;
 
-        Debug.DrawRay(cannonFirepoint.position, cannonFirepoint.forward * 20, Color.red);
-        Debug.DrawRay(headPointer.position, headPointer.forward * 20, Color.yellow);
+        //Debug.DrawRay(cannonFirepoint.position, cannonFirepoint.forward * 20, Color.red);
+        //Debug.DrawRay(headPointer.position, headPointer.forward * 20, Color.yellow);
         switch (xAxis)
         {
             case > 0:
