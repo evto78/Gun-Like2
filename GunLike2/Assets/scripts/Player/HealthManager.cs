@@ -88,7 +88,7 @@ public class HealthManager : MonoBehaviour
 	public WishUI wishPopUp;
 	public int wishes;
 
-	public GameDataManager gdm;
+	public GameDataManager gdm; UnlockManager unlockMan;
 	public bool freeRelaxedRevive;
     // Start is called before the first frame update
     private void Awake()
@@ -98,7 +98,7 @@ public class HealthManager : MonoBehaviour
 	}
     void Start()
 	{
-		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+		gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>(); unlockMan = gdm.gameObject.GetComponent<UnlockManager>();
 		allEffects.AddRange(gdm.effectData);
 		if (gdm.instance.loadingARun == -1) { money = 0; }
 		dead = false;
@@ -606,6 +606,7 @@ public class HealthManager : MonoBehaviour
 	{
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
+		float actualDamageTaken = damageTaken;
 		if(ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * ionParticle)
         {
 			float rand = Random.Range(10f, 1000f);
@@ -633,16 +634,22 @@ public class HealthManager : MonoBehaviour
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
-				OnDmgTaken(1, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
+				actualDamageTaken = 1f;
+                OnDmgTaken(1, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
                 if (depleatedRock > 0) { GiveEffect(24, 1); }
             }
 			else
 			{
 				//return new hp with dmg reduced by armor
 				curHp -= (damageTaken - tempArmor);
-				OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
+				actualDamageTaken = damageTaken - tempArmor;
+                OnDmgTaken(damageTaken - tempArmor, wasFromExpGrowth, sourceEHM, sourceName, sourcePos);
 				if (depleatedRock > 0) { GiveEffect(24, Mathf.RoundToInt((damageTaken - tempArmor) / (2f / depleatedRock))); }
             }
+
+			//UnlockCheck
+			gdm.damageTakenThisRoom += actualDamageTaken;
+
 			regenTimer = 2f;
 
 			if (expGrowth > 0 && (!wasFromExpGrowth || Random.Range(0, 100) < 15))

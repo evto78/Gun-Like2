@@ -6,6 +6,7 @@ using TMPro;
 
 public class DevItemSpawner : MonoBehaviour
 {
+	GameDataManager gdm; UnlockManager unlockMan;
 	public GameObject item;
 	public GameObject itemPotential;
 	List<ItemObject> itemData;
@@ -17,8 +18,12 @@ public class DevItemSpawner : MonoBehaviour
 	bool typing;
 	string numberTyped;
 	int modifier;
-
-	private void Start()
+    private void Awake()
+    {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+		unlockMan = gdm.gameObject.GetComponent<UnlockManager>();
+    }
+    private void Start()
 	{
 		modifier = 0;
 		itemData = new List<ItemObject>();
@@ -63,6 +68,8 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
 				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
 				else if (numberTyped == "all") { SpawnALL(); }
+				else if (numberTyped == "unlockall") { unlockMan.UnlockAll(); }
+				else if (numberTyped == "lockall") { unlockMan.LockAll(); }
 				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
 				else
                 {

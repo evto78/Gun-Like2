@@ -14,6 +14,7 @@ public class GameDataManager : MonoBehaviour
     public HealthManager phm;
     public PlayerItem pi;
     public List<EffectObject> effectData;
+    public UnlockManager unlockMan;
     //Checking Change
     bool changedLastFrame;
     List<int> leftSnapshot;
@@ -48,6 +49,11 @@ public class GameDataManager : MonoBehaviour
     public SaveFileReadWrite instance;
     bool requesting = false;
 
+    [Header("Unlock Tracking")]
+    public float damageTakenThisRoom = 0f;
+    public float timeInAirThisRoom = 0f;
+    public float timeOnGroundThisRoom = 0f;
+
     [Header("Bosses")]
     public GameObject chimera; float timeTakenToDefeatChimera; public int roomsUntilBoss;
     public GateBlockade endGateBlockade; public TextMeshProUGUI endDoorCounter; public List<TextMeshProUGUI> unitNums; public ExitGateConsole exitConsole;
@@ -58,6 +64,7 @@ public class GameDataManager : MonoBehaviour
 
     private void Awake()
     {
+        unlockMan = GetComponent<UnlockManager>();
         deadlinespeedmod = 1f;
         bossKilled = false;
         endGateBlockade = GameObject.Find("EndGateBlockade").GetComponent<GateBlockade>(); endGateBlockade.Toggle(false);
@@ -291,6 +298,11 @@ public class GameDataManager : MonoBehaviour
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
+        // On Room Clear Unlocks
+        unlockMan.SetUnlockProgressNOLOSS(18, damageTakenThisRoom / (phm.maxHp*3f)); // Explosive Growth (18)
+        unlockMan.SetUnlockProgressNOLOSS(20, timeInAirThisRoom / timeOnGroundThisRoom); // Irradiated Bunny Slippers (20)
+        damageTakenThisRoom = 0; timeInAirThisRoom = 0; timeOnGroundThisRoom = 0;
+
         if (bossKilled)
         {
             PlayerPrefs.SetInt("Victory", 1);

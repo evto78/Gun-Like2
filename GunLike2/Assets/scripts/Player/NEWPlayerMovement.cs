@@ -65,14 +65,17 @@ public class NEWPlayerMovement : MonoBehaviour
 
     HealthManager healthMan;
     GunManager gunMan;
+    GameDataManager gdm;
     public PlayerItem playerItem;
     public GameObject shockwave;
 
     bool hscSpawned;
 
     List<Vector4> effectList;
-
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
+    }
     void Start()
     {
         fov = Mathf.RoundToInt(cam.GetComponent<Camera>().fieldOfView);
@@ -275,7 +278,7 @@ public class NEWPlayerMovement : MonoBehaviour
         if (healthMan.dead) { rb.freezeRotation = false; rb.AddRelativeTorque(Vector3.one * 3f); return; }
 
         onGround = GroundCheck();
-        if (onGround) { slamming = false; }
+        if (onGround) { slamming = false; gdm.timeOnGroundThisRoom += Time.deltaTime; } else { gdm.timeInAirThisRoom += Time.deltaTime; }
         if (Cursor.lockState == CursorLockMode.Locked) { CameraMove(); }
         GetInputs();
 
