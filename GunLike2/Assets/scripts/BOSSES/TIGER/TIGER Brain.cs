@@ -36,7 +36,7 @@ public class TIGERBrain : MonoBehaviour
     public List<Transform> headJoints;
     List<float> downXVals; List<float> upXVals; List<float> midXVals;
     List<float> leftYVals; List<float> rightYVals; List<float> midYVals;
-    float prevX = 0f; float prevY = 0f;
+    float prevX = 0f; float prevY = 0f; bool manualMoving = false;
 
     private void Awake()
     {
@@ -89,6 +89,11 @@ public class TIGERBrain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, MoveState.walk, curAttackState); }
         if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, MoveState.chase, curAttackState); }
         if (Input.GetKeyDown(KeyCode.Alpha7)) { ChangeState(curState, MoveState.sprint, curAttackState); }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8)) { ChangeState(curState, curMoveState, AttackState.idle); }
+        if (Input.GetKeyDown(KeyCode.Alpha9)) { ChangeState(curState, curMoveState, AttackState.prepareToFire); }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) { manualMoving = !manualMoving; }
 
         manualCamInputDir = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) { manualCamInputDir += Vector2.up; }
@@ -149,15 +154,12 @@ public class TIGERBrain : MonoBehaviour
         prevY = Mathf.Clamp(prevY, -1, 1);
 
         xAxis = prevX; yAxis = prevY;
-        //Debug.Log("PREV: "+prevX + " | " + prevY);
-        //Debug.Log("ROTX: "+(int)curRot.x + " | " + (int)tarRot.x);
-        //Debug.Log("ROTY: "+(int)curRot.y + " | " + (int)tarRot.y);
 
-        //xAxis = manualCamDir.y;
-        //yAxis = manualCamDir.x;
-
-        //Debug.DrawRay(cannonFirepoint.position, cannonFirepoint.forward * 20, Color.red);
-        //Debug.DrawRay(headPointer.position, headPointer.forward * 20, Color.yellow);
+        if (manualMoving)
+        {
+            xAxis = manualCamDir.y;
+            yAxis = manualCamDir.x;
+        }
         switch (xAxis)
         {
             case > 0:
