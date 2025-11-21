@@ -13,7 +13,6 @@ public class TIGERBrain : MonoBehaviour
     NavMeshAgent agent;
     Transform player;
     GameDataManager gdm;
-    public Animator headAnim;
     public Transform headPointer;
     public Transform cannonFirepoint;
 
@@ -55,7 +54,6 @@ public class TIGERBrain : MonoBehaviour
     }
     void InitializeHeadJointVals()
     {
-        headAnim.enabled = false;
         downXVals = new List<float>() { 10f, 12f, 3f, 3f, 3f, 3f, 3f, 3f, 3f, 3f, -12f, 0f, 0f };
         midXVals = new List<float>() { 10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
         upXVals = new List<float>() { 10f, -40f, -5f, -5f, -15f, -15f, -5f, 0f, 10f, 10f, -40f, 0f, 0f };
