@@ -134,6 +134,7 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[16].x > 0f) { moveSpeed = moveSpeed * ((givenLeftItems[20] + givenRightItems[20]) / 2.5f + 1f); }
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
         if (effectList[26].x > 0f) { moveSpeed = moveSpeed * 2f; }
+        if (effectList[33].x > 0f) { moveSpeed /= 2f; sprintMoveSpeed /= 2f; }
         //Move Speed
         leftmoveSpeedMult += MultAdder(20f, givenLeftItems[59]);
         rightmoveSpeedMult += MultAdder(20f, givenRightItems[59]);

@@ -20,8 +20,8 @@ public class UnlockManager : MonoBehaviour
         unlockInfo = saveFRW.data.UnlockInfo;
 
         pi = gdm.pi;
-        phm = pi.healthManager;
-        mvt = pi.playerMvt;
+        phm = gdm.phm;
+        mvt = gdm.phm.playerMvt;
 
         StartCoroutine(CheckForUnlocksEfficent());
     }

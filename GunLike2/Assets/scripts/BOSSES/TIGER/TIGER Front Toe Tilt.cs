@@ -14,6 +14,7 @@ public class TIGERFrontToeTilt : MonoBehaviour
     private void Awake() { initRot = transform.rotation; }
     void Update()
     {
+        //Limit Angle
         if (linkedFootSolver.stepping)
         {
             Quaternion curRot = transform.rotation;

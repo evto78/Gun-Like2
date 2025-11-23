@@ -387,6 +387,11 @@ public class EnemyHealthManager : MonoBehaviour
         }
 
         if(activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, allEffects[2].decayTime, allEffects[2].decayTime, allEffects[2].type); }
+        if (activeEffects[16].x > 3) { activeEffects[16] = new Vector4(3, allEffects[16].decayTime, allEffects[16].decayTime, allEffects[16].type); }
+        if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, allEffects[18].decayTime, allEffects[18].decayTime, allEffects[18].type); }
+        if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, allEffects[19].decayTime, allEffects[19].decayTime, allEffects[19].type); }
+        if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, allEffects[23].decayTime, allEffects[23].decayTime, allEffects[23].type); }
+        if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, allEffects[28].decayTime, allEffects[28].decayTime, allEffects[28].type); }
     }
     public void RandomDebuff()
     {
@@ -404,43 +409,18 @@ public class EnemyHealthManager : MonoBehaviour
         {
             q = activeEffects[i];
 
-            if (i == 33 && q.x > 0)
+            switch (i)
             {
-                foreach (MonoBehaviour brain in brains)
-                {
-                    brain.enabled = false;
-                }
-                frozenEffect.SetActive(true);
-            }
-            else if (i == 33 && q.x <= 0)
-            {
-                foreach (MonoBehaviour brain in brains)
-                {
-                    brain.enabled = true;
-                }
-                frozenEffect.SetActive(false);
-            }
-            if (i == 37 && q.x > 0)
-            {
-                foreach (MonoBehaviour brain in brains)
-                {
-                    brain.enabled = false;
-                }
-            }
-            else if (i == 37 && q.x <= 0 && activeEffects[33].x<1f)
-            {
-                foreach (MonoBehaviour brain in brains)
-                {
-                    brain.enabled = true;
-                }
-            }
-            if(i == 38 && q.x > 0)
-            {
-                markedEffect.SetActive(true);
-            }
-            else if(i == 38 && q.x < 1)
-            {
-                markedEffect.SetActive(false);
+                case 33:
+                    foreach (MonoBehaviour brain in brains) { brain.enabled = q.x <= 0; }
+                    frozenEffect.SetActive(q.x > 0);
+                    break;
+                case 37:
+                    bool result = true;
+                    if (q.x > 0) { result = true; } else if (q.x <= 0 && activeEffects[33].x <= 0) { result = false; }
+                    foreach (MonoBehaviour brain in brains) { brain.enabled = result; }
+                    break;
+                case 38: markedEffect.SetActive(q.x > 0); break;
             }
 
             //if there are any stacks of this effect
@@ -458,6 +438,11 @@ public class EnemyHealthManager : MonoBehaviour
                     if ((playerItem.leftItems[48] + playerItem.rightItems[48]) > 0) { dotDmgModifer *= 2; }
                     QueStandardDamage(1f * dotDmgModifer);
                     burnTimer = 0;
+                }
+
+                switch (i)
+                {
+                    case 21: curHp = maxHp; break;
                 }
 
                 //progress timer and remove stacks as needed, if effect does not last forever

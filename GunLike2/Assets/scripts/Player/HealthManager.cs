@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class HealthManager : MonoBehaviour
 {
@@ -66,8 +67,9 @@ public class HealthManager : MonoBehaviour
 	public int appleBuff;
 	public float fortifyBuff;
 	public float sunflowerDebuff;
+	float burnTimer;
 
-	public float timeSinceEnemyDied;
+    public float timeSinceEnemyDied;
 
 	public UIManager uiMan;
 	public NEWPlayerMovement playerMvt;
@@ -273,6 +275,8 @@ public class HealthManager : MonoBehaviour
 		timeSinceEnemyDied += Time.deltaTime;
 
         if (dead) { return; }
+
+		if (burnTimer > 0) { burnTimer -= Time.deltaTime; }
 
 		if(experimentalImp <= 0)
         {
@@ -630,7 +634,11 @@ public class HealthManager : MonoBehaviour
 			//Damage
 			if (sourceEHM != null) { lastHitMe = sourceEHM; }
 			if (sourceName != null) { lastHitMeName = sourceName; }
-			if (damageTaken <= tempArmor)
+            if (activeEffects[38].x>0 && Random.Range(0,5)==0)
+            {
+				damageTaken *= 2f; activeEffects[38] -= new Vector4(1, 0, 0, 0);
+            }
+            if (damageTaken <= tempArmor)
 			{
 				//armor has absorbed all damage but min dmg is 1
 				curHp -= 1f;
@@ -733,7 +741,17 @@ public class HealthManager : MonoBehaviour
 	{
         switch (effectID)
         {
-			case 17: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime * beltFed, allEffects[effectID].decayTime * beltFed, allEffects[effectID].type); break;  // belt fed magazine buff
+            case 0:
+                activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type);
+                float dotDmgModifer = 1; if (activeEffects[40].x > 0) { dotDmgModifer *= 2; }
+                if (activeEffects[effectID].x % 5 == 0) { TakeDamage(activeEffects[effectID].x * 20f * dotDmgModifer, false, null, "Bleed", null); }
+                break;
+            case 2:
+                if (activeEffects[effectID].x == 1) { activeEffects[effectID] = new Vector4(stacksToAdd * 2f, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); }
+                else { activeEffects[effectID] = new Vector4(activeEffects[effectID].x + (stacksToAdd * 2f), allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); }
+                break;
+
+            case 17: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime * beltFed, allEffects[effectID].decayTime * beltFed, allEffects[effectID].type); break;  // belt fed magazine buff
 			case 18: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime * activeReactor, allEffects[effectID].decayTime * activeReactor, allEffects[effectID].type); break;  // active reactor buff
 			case 19: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;  // Fast Fire partership buff
 			case 20: activeEffects[effectID] = new Vector4(stacksToAdd, allEffects[effectID].decayTime + warcry, allEffects[effectID].decayTime + warcry, allEffects[effectID].type); break;  // warcry buff
@@ -745,8 +763,9 @@ public class HealthManager : MonoBehaviour
 
             default: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;
         }
-		//Effect max stack management
-		if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2, allEffects[16].decayTime, allEffects[16].decayTime, allEffects[16].type); }
+        //Effect max stack management
+        if (activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, allEffects[2].decayTime, allEffects[2].decayTime, allEffects[2].type); }
+        if (activeEffects[16].x > (numOfBunnies + 2)) { activeEffects[16] = new Vector4(numOfBunnies+2, allEffects[16].decayTime, allEffects[16].decayTime, allEffects[16].type); }
 		if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, allEffects[18].decayTime * activeReactor, allEffects[18].decayTime * activeReactor, allEffects[18].type); }
 		if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, allEffects[19].decayTime, allEffects[19].decayTime, allEffects[19].type); }
 		if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, allEffects[23].decayTime, allEffects[23].decayTime, allEffects[23].type); }
@@ -767,19 +786,23 @@ public class HealthManager : MonoBehaviour
 
 			if (i == 28) { uiMan.smokeBlindEffect.SetActive(q.x > 0); }
 
-			//if there are any stacks of this effect
-			if (q.x > 0)
+            //if there are any stacks of this effect
+            if (q.x > 0)
 			{
 				statusEffectsActive++;
 				activeEffectIDS.Add(i);
 				if (q.w > 0) { activePosEffectIDS.Add(i); }
 				else if (q.w < 0) { activeNegEffectIDS.Add(i); }
 
-                //run effects that happen every frame
-                if (i == 21) { curHp = maxHp; }
+				//run effects that happen every frame
+				switch (i)
+				{
+					case 21: curHp = maxHp; break;
+					case 1: if (burnTimer > 0.2f) { burnTimer = 0; TakeDamage(1f, false, null, "Burn", null); } break;
+				}
 
-				//progress timer and remove stacks as needed, unless effect lasts forever
-				if (allEffects[i].decayTime >= 0)
+                //progress timer and remove stacks as needed, unless effect lasts forever
+                if (allEffects[i].decayTime >= 0)
 				{
                     if (q.z > 0f)
                     {
@@ -795,9 +818,7 @@ public class HealthManager : MonoBehaviour
                         //run effects that happen when timer ends
                         switch (i)
                         {
-                            case 0: TakeDamage((q.x + 1f) * 3f, false, null, "Bleed", null); break;
-                            case 1: TakeDamage((q.x + 1f) * 5f, false, null, "Burn", null); break;
-                            case 2: TakeDamage((q.x + 1f) * 8f, false, null, "Radiation", null); break;
+                            case 2: TakeDamage((q.x + 1f) * 50f, false, null, "Radiation", null); break;
                             case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
                         }
                     }
