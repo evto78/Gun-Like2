@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps;
 
 public class TIGERBodyHeightAdjust : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
 
     [Header("Walking/Running Management")]
     public List<TIGERIKFootSolver> legs; // (0,1) is back legs, (2,3) is front legs
+    public List<MonoBehaviour> tilts;
     public enum state { walk, run }
     public state curState;
     public bool handlePairs;
@@ -34,6 +36,10 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
     static Vector2 frontHeightMinMax = new Vector2(0.58f, 1.36f); // manualy calculated and inputed
     public Transform pevlisRotationPoint; public Transform pelvisSholderPointer;
 
+    [Header("Effects")]
+    [Tooltip("Chance for each step to be a miss-step. Accepts a value from 0-100")]
+    public float mStepChance; //2 legs cannot miss-step at the same time, the same leg cannot miss-step 2 times in a row.
+
     [Header("External Variables")]
     public Vector3 turnDirVel;
 
@@ -51,6 +57,11 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         sampledPos = transform.position; sampledForward = transform.forward;
         posSampleTimer = 0f;
         baseStepSpeed = legs[0].stepSpeed;
+
+        tilts = new List<MonoBehaviour>();
+        tilts.AddRange(GetComponentsInChildren<TIGERBackPawTilt>());
+        tilts.AddRange(GetComponentsInChildren<TIGERFrontToeTilt>());
+        foreach(MonoBehaviour tilt in tilts) { tilt.enabled = false; }
     }
     void Update()
     {
@@ -65,6 +76,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         foreach(TIGERIKFootSolver solver in legs) { solver.stepSpeed = baseStepSpeed * Mathf.Lerp(walkStepSpeedMod, runStepSpeedMod, progressToRun); }
         if (handlePairs) { ForceStepProgressBetweenPairs(); }
         HeightAdjustment();
+        ManageStepping();
 
         pevlisRotationPoint.transform.LookAt(pelvisSholderPointer);
     }
@@ -108,8 +120,13 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         backDisplace = (backAvgY - backHeightMinMax.x) / (backHeightMinMax.y - backHeightMinMax.x);
         frontDisplace = (frontAvgY - frontHeightMinMax.x) / (frontHeightMinMax.y - frontHeightMinMax.x);
 
-        float backYAmt = Mathf.Lerp(backLegsVerticalDisplacementMinMax.x, backLegsVerticalDisplacementMinMax.y, backDisplace) * progressToRun;
-        float frontYAmt = Mathf.Lerp(frontLegsVerticalDisplacementMinMax.x, frontLegsVerticalDisplacementMinMax.y, frontDisplace) * progressToRun;
+        float intensity = Mathf.Clamp(progressToRun, 0.5f, 1f);
+
+        if (legs[0].goingToMStep || legs[1].goingToMStep) { backDisplace /= 2f; intensity = 1.2f; }
+        if (legs[2].goingToMStep || legs[3].goingToMStep) { frontDisplace /= 2f; intensity = 1.2f; }
+
+        float backYAmt = Mathf.Lerp(backLegsVerticalDisplacementMinMax.x, backLegsVerticalDisplacementMinMax.y, backDisplace) * intensity;
+        float frontYAmt = Mathf.Lerp(frontLegsVerticalDisplacementMinMax.x, frontLegsVerticalDisplacementMinMax.y, frontDisplace) * intensity;
 
         //backLegsHolder.transform.localPosition = new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z);
         //frontLegsHolder.transform.localPosition = new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z);
@@ -120,6 +137,33 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
             new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z), Time.deltaTime * adjustSpeed);
         frontLegsHolder.transform.localPosition = Vector3.Lerp(frontLegsHolder.transform.localPosition,
             new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z), Time.deltaTime * adjustSpeed);
+    }
+    void ManageStepping()
+    {
+        int index = 0;
+        foreach(TIGERIKFootSolver leg in legs)
+        {
+            bool enableTilt = leg.goingToMStep;
+            enableTilt = false;
+            switch (index)
+            {
+                case 0: tilts[1].enabled = enableTilt; tilts[5].enabled = enableTilt; break;
+                case 1: tilts[0].enabled = enableTilt; tilts[4].enabled = enableTilt; break;
+                case 2: tilts[3].enabled = enableTilt; break;
+                case 3: tilts[2].enabled = enableTilt; break;
+            }
+            index++;
+        }
+    }
+    public bool CheckBeforeStep(TIGERIKFootSolver sender)
+    {
+        bool mStep = false;
+
+        if (sender.goingToMStep) { return true; }
+        if (sender.pairedLeg.goingToMStep) { return false; }
+        mStep = Random.Range(1, 100) < mStepChance;
+
+        return mStep;
     }
     public void ChangeState(state newState)
     {

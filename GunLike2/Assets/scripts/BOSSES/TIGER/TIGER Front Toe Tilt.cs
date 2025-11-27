@@ -10,8 +10,9 @@ public class TIGERFrontToeTilt : MonoBehaviour
     public float toeLength;
     public TIGERIKFootSolver linkedFootSolver;
     public bool canOverbend;
-    quaternion initRot;
+    Quaternion initRot;
     private void Awake() { initRot = transform.rotation; }
+    private void OnDisable() { if (initRot == null) { return; } transform.rotation = initRot; }
     void Update()
     {
         //Limit Angle

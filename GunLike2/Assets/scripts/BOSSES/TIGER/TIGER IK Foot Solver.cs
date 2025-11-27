@@ -25,6 +25,8 @@ public class TIGERIKFootSolver : MonoBehaviour
 
     float initialXOffset;
     public Vector2 maxXOffset;
+
+    public bool goingToMStep = false; Vector3 mStepOffset;
     
     void Start()
     {
@@ -49,7 +51,7 @@ public class TIGERIKFootSolver : MonoBehaviour
         {
             case TIGERBrain.State.idle: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; break;
             case TIGERBrain.State.followTurn: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.3f; break;
-            case TIGERBrain.State.chase: break;
+            case TIGERBrain.State.chase: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
             case TIGERBrain.State.backStep: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; break;
         }
 
@@ -57,9 +59,10 @@ public class TIGERIKFootSolver : MonoBehaviour
         //notDoneStepping = false;
 
         float relativeStepSpeed = (Mathf.Clamp(manager.currentSpeed, 1.5f, 10) * stepSpeed);
-
-        Ray activeRay = new Ray(hip.position + hipPlacementOffset, Vector3.down);
-        if (Physics.Raycast(activeRay, out RaycastHit activeInfo, maxStepHeight * 4f, terrainLayer.value)) { activeNextPos = activeInfo.point; }
+        float stepSpeedMod = 1f;
+        activeNextPos = staticNextPos; ;
+        if (goingToMStep) { stepSpeedMod *= 1.5f; activeNextPos += mStepOffset; }
+        if (stepSooner) { stepSpeedMod *= 2f; }
 
         if (!stepping)
         {
@@ -68,18 +71,20 @@ public class TIGERIKFootSolver : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 4f, terrainLayer.value)) { staticNextPos = info.point; }
             if (stepSooner) {
                 if (!pairedLeg.stepping && Vector3.Distance(transform.position, staticNextPos) > (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength) * 0.5f * (maxDistMod/2f))
-                { stay = false; stepping = true; stepProgress = 0; } }
+                { stay = false; stepping = true; stepProgress = 0; goingToMStep = manager.CheckBeforeStep(this); mStepOffset = new Vector3(Random.Range(-3,3), Random.Range(-1f, 0f), Random.Range(-3, 3)); } }
             else {
                 if (!pairedLeg.stepping && Vector3.Distance(transform.position, staticNextPos) > (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength) * 1.5f * maxDistMod)
-                { stay = false; stepping = true; stepProgress = 0; } }
-            if (notDoneStepping) { stay = false; stepping = true; stepProgress = 0; }
+                { stay = false; stepping = true; stepProgress = 0; goingToMStep = manager.CheckBeforeStep(this); mStepOffset = new Vector3(Random.Range(-3, 3), Random.Range(-1f, 0f), Random.Range(-3, 3)); } }
+            if (notDoneStepping) { stay = false; stepping = true; stepProgress = 0; goingToMStep = manager.CheckBeforeStep(this); mStepOffset = new Vector3(Random.Range(-3, 3), Random.Range(-1f, 0f), Random.Range(-3, 3)); }
+            activeNextPos = staticNextPos;
+            if (goingToMStep) { activeNextPos += mStepOffset; }
         }
         else
         {
-            stepProgress += Time.deltaTime * relativeStepSpeed; if (stepSooner) { stepProgress += Time.deltaTime * relativeStepSpeed; }
-            transform.position = Vector3.LerpUnclamped(stayPos, staticNextPos, Mathf.Lerp(manager.walkProgressCurve.Evaluate(stepProgress), manager.runProgressCurve.Evaluate(stepProgress), manager.progressToRun));
+            stepProgress += Time.deltaTime * relativeStepSpeed * stepSpeedMod;
+            transform.position = Vector3.LerpUnclamped(stayPos, activeNextPos, Mathf.Lerp(manager.walkProgressCurve.Evaluate(stepProgress), manager.runProgressCurve.Evaluate(stepProgress), manager.progressToRun));
             transform.position += Vector3.up * (Mathf.Lerp(manager.walkCurve.Evaluate(stepProgress), manager.runCurve.Evaluate(stepProgress), manager.progressToRun) * stepHeight * Mathf.Lerp(manager.walkStepHeightMod, manager.runStepHeightMod, manager.progressToRun));
-            if (stepProgress >= 1) { SnapToGround(); stay = true; stepping = false; }
+            if (stepProgress >= 1) { SnapToGround(); stay = true; stepping = false; goingToMStep = false; }
         }
     }
     bool GetHorizontalDist()
@@ -112,28 +117,17 @@ public class TIGERIKFootSolver : MonoBehaviour
     {
         Debug.DrawRay(activeNextPos, Vector3.up, Color.red);
         Debug.DrawRay(staticNextPos, Vector3.up/1.5f, Color.white);
-        if (GetHorizontalDist()) {
-            Debug.DrawRay(transform.position + transform.forward + transform.right, Vector3.up, Color.red);
-            Debug.DrawRay(transform.position + transform.forward - transform.right, Vector3.up, Color.red);
-            Debug.DrawRay(transform.position - transform.forward + transform.right, Vector3.up, Color.red);
-            Debug.DrawRay(transform.position - transform.forward - transform.right, Vector3.up, Color.red);
-            Debug.DrawRay(transform.position + transform.right, Vector3.up, Color.red);
-            Debug.DrawRay(transform.position - transform.right, Vector3.up, Color.red);
-        } else if (stepping) {
-            Debug.DrawRay(transform.position + transform.forward + transform.right, Vector3.up, Color.yellow);
-            Debug.DrawRay(transform.position + transform.forward - transform.right, Vector3.up, Color.yellow);
-            Debug.DrawRay(transform.position - transform.forward + transform.right, Vector3.up, Color.yellow);
-            Debug.DrawRay(transform.position - transform.forward - transform.right, Vector3.up, Color.yellow);
-            Debug.DrawRay(transform.position + transform.right, Vector3.up, Color.yellow);
-            Debug.DrawRay(transform.position - transform.right, Vector3.up, Color.yellow);
-        } else {
-            Debug.DrawRay(transform.position + transform.forward + transform.right, Vector3.up, Color.cyan);
-            Debug.DrawRay(transform.position + transform.forward - transform.right, Vector3.up, Color.cyan);
-            Debug.DrawRay(transform.position - transform.forward + transform.right, Vector3.up, Color.cyan);
-            Debug.DrawRay(transform.position - transform.forward - transform.right, Vector3.up, Color.cyan);
-            Debug.DrawRay(transform.position + transform.right, Vector3.up, Color.cyan);
-            Debug.DrawRay(transform.position - transform.right, Vector3.up, Color.cyan);
-        }
+        Color drawColor;
+        if (goingToMStep) { drawColor = Color.black; }
+        else if (GetHorizontalDist()) { drawColor = Color.red; } 
+        else if (stepping) { drawColor = Color.yellow; }
+        else { drawColor = Color.cyan; }
+        Debug.DrawRay(transform.position + transform.forward + transform.right, Vector3.up, drawColor);
+        Debug.DrawRay(transform.position + transform.forward - transform.right, Vector3.up, drawColor);
+        Debug.DrawRay(transform.position - transform.forward + transform.right, Vector3.up, drawColor);
+        Debug.DrawRay(transform.position - transform.forward - transform.right, Vector3.up, drawColor);
+        Debug.DrawRay(transform.position + transform.right, Vector3.up, drawColor);
+        Debug.DrawRay(transform.position - transform.right, Vector3.up, drawColor);
         if (Vector3.Distance(transform.position, meshFoot.position) < 1)
         { Debug.DrawRay(transform.position, meshFoot.position - transform.position, Color.white); } 
         else 

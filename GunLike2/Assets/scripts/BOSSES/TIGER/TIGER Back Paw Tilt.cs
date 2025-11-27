@@ -5,8 +5,9 @@ using UnityEngine;
 public class TIGERBackPawTilt : MonoBehaviour
 {
     public Transform target;
-    //Quaternion initRot;
-    //private void Awake() { initRot = transform.rotation; }
+    Quaternion initRot;
+    private void Awake() { initRot = transform.rotation; }
+    private void OnDisable() { if (initRot == null) { return; } transform.rotation = initRot; }
     void Update()
     {
         //Quaternion curRot = transform.rotation; 

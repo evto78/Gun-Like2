@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class TIGERBrain : MonoBehaviour
 {
     [Header("References")]
+    BossHealthManager ehm;
     TIGERBodyHeightAdjust bha;
     TIGERTailManager tm;
     TIGERNavAI nav;
@@ -27,6 +28,8 @@ public class TIGERBrain : MonoBehaviour
     public enum AttackState { idle, prepareToFire }
     public AttackState curAttackState;
     [Header("Internal")]
+    float masterDmg;
+    float timerSpeedModifier;
     float backAccel = 2; float curBackSpeed = 0; float backstepTimer = 0;
     float followRotSpeed = 2f;
     public AnimationCurve sineCurve;
@@ -39,6 +42,7 @@ public class TIGERBrain : MonoBehaviour
 
     private void Awake()
     {
+        ehm = GetComponent<BossHealthManager>();
         bha = GetComponent<TIGERBodyHeightAdjust>();
         nav = GetComponent<TIGERNavAI>();
         agent = GetComponent<NavMeshAgent>();
@@ -46,11 +50,18 @@ public class TIGERBrain : MonoBehaviour
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         player = gdm.phm.transform;
 
+        masterDmg = ehm.baseDamage * ehm.difficultyScale * gdm.difficulty;
+
         InitializeHeadJointVals();
     }
     void Start()
     {
         ChangeState(curState, curMoveState, curAttackState);
+        ehm.playerHM.uiMan.bossHealthBars[0].SetActive(true);
+        ehm.playerHM.uiMan.bossHealthBars[0].GetComponent<BossHealthBar>().ehm = ehm;
+
+        timerSpeedModifier = 1f;
+        if (ehm.gdm.difficultyIDSelected == 0) { timerSpeedModifier = 0.8f; }
     }
     void InitializeHeadJointVals()
     {

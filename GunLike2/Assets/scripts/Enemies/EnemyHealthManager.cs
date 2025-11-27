@@ -141,7 +141,7 @@ public class EnemyHealthManager : MonoBehaviour
         numOfActiveEffects = 0;
         ManageEffects();
         featherton = 0 + playerItem.leftItems[87] + playerItem.rightItems[87];
-        if (curHp <= 0 && !died) { Die(true, ""); died = true; }
+        if (curHp <= 0 && !died) { Die(true, "", false); died = true; }
 
         if (dmgQued.Count > 0)
         {
@@ -199,7 +199,8 @@ public class EnemyHealthManager : MonoBehaviour
 
         if (hit != HitType.ht.crit && hit != HitType.ht.critweak && hit != HitType.ht.special)
         {
-            if (activeEffects[38].x > 0 && Random.Range(0,2) == 0) { 
+            if (activeEffects[38].x > 0 && Random.Range(0,2) == 0) 
+            { 
                 if (hit == HitType.ht.normal) { hit = HitType.ht.crit; }
                 if (hit == HitType.ht.weak) { hit = HitType.ht.critweak; }
                 if (source == "left") { dmgTaken *= playerItem.gunManager.leftGunScript.critDamage; }
@@ -221,7 +222,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die(true, source);
+                    Die(true, source, true);
                 }
             }
         }
@@ -234,7 +235,7 @@ public class EnemyHealthManager : MonoBehaviour
                     curHp = -100f;
                     if (source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
                     if (source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-                    Die(true, source);
+                    Die(true, source, true);
                 }
             }
         }
@@ -321,7 +322,7 @@ public class EnemyHealthManager : MonoBehaviour
         if (curHp <= 0 && !died) { died = true; 
             if(source == "left" && playerItem.leftItems[133] > 0) { playerItem.gunManager.leftGunScript.echoDmg = dmgTaken / 1.5f; }
             if(source == "right" && playerItem.rightItems[133] > 0) { playerItem.gunManager.rightGunScript.echoDmg = dmgTaken / 1.5f; }
-            Die(true, source);
+            Die(true, source, false);
         }
     }
 
@@ -329,7 +330,7 @@ public class EnemyHealthManager : MonoBehaviour
     {
         TakeDamage(curHp * pDmgTaken, true, HitType.ht.normal, transform.position, "self");
 
-        if (curHp <= 0) { Die(true, source); }
+        if (curHp <= 0) { Die(true, source, false); }
     }
     public void QueStandardDamage(float damage)
     {
@@ -359,7 +360,7 @@ public class EnemyHealthManager : MonoBehaviour
         }
     }
 
-    public virtual void Die(bool sendByHm, string source)
+    public virtual void Die(bool sendByHm, string source, bool instantKill)
     {
         //on death effects
         OnDeath();
