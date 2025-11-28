@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public List<TextMeshProUGUI> exitConsoleSideViewLines;
     public GameObject exitConsoleSideView; bool displaySideConsole;
     public DeadlineScript deadline;
+    public bool deadlineDisabled;
 
     public GunManager gunManager;
     public HealthManager healthManager;
@@ -100,10 +101,11 @@ public class UIManager : MonoBehaviour
         recycleBinUI.gameObject.SetActive(false);
         exitConsoleSideView.SetActive(false); displaySideConsole = false;
         ammoListsBuilt = false;
+        Transform bossHealthHolder = bossHealthBars[0].transform.parent;
         bossHealthBars.Clear();
-        for(int i = 0; i < playUI.transform.GetChild(0).childCount; i++)
+        for(int i = 0; i < bossHealthHolder.childCount; i++)
         {
-            bossHealthBars.Add(playUI.transform.GetChild(0).GetChild(i).gameObject);
+            bossHealthBars.Add(bossHealthHolder.GetChild(i).gameObject);
         }
 
         initalGunkyPngPos = gunkyPng.GetComponent<RectTransform>().position.y;
@@ -226,6 +228,9 @@ public class UIManager : MonoBehaviour
     }
     void UpdatePlayUI()
     {
+        bool bossactive = false;
+        foreach(GameObject obj in bossHealthBars) { bossactive = bossactive || obj.activeSelf; }
+
         if (mvtScript.isSprinting || mvtScript.slamming || mvtScript.sliding) { crosshair.text = "^"; }
         else { crosshair.text = "+"; }
 
@@ -245,6 +250,20 @@ public class UIManager : MonoBehaviour
         enemiesLeftText.text = healthManager.gdm.activeEhms.Count.ToString();
 
         bowchargeUI.SetActive(gunManager.leftBowAct + gunManager.rightBowAct > 0);
+
+        if (bossactive)
+        {
+            deadline.gameObject.SetActive(false);
+        }
+        else if (deadlineDisabled)
+        {
+            deadline.gameObject.SetActive(false);
+        }
+        else
+        {
+            deadline.gameObject.SetActive(true);
+        }
+
 
         DifficultyVisualsUpdate();
     }

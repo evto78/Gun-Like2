@@ -57,8 +57,8 @@ public class TIGERBrain : MonoBehaviour
     void Start()
     {
         ChangeState(curState, curMoveState, curAttackState);
-        ehm.playerHM.uiMan.bossHealthBars[0].SetActive(true);
-        ehm.playerHM.uiMan.bossHealthBars[0].GetComponent<BossHealthBar>().ehm = ehm;
+        gdm.phm.uiMan.bossHealthBars[1].SetActive(true);
+        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
 
         timerSpeedModifier = 1f;
         if (ehm.gdm.difficultyIDSelected == 0) { timerSpeedModifier = 0.8f; }
@@ -219,6 +219,20 @@ public class TIGERBrain : MonoBehaviour
                 newDir += Vector3.up * Mathf.Lerp(yMin[i], yMax[i], yAxis);
                 headJoints[i].localEulerAngles = newDir;
             }
+        }
+    }
+    private void OnDestroy()
+    {
+        if (ehm.playerHM.uiMan.bossHealthBars[1] != null)
+        {
+            ehm.playerHM.uiMan.bossHealthBars[1].gameObject.SetActive(false);
+        }
+    }
+    private void OnDisable()
+    {
+        if (ehm.playerHM.uiMan.bossHealthBars[1] != null)
+        {
+            ehm.playerHM.uiMan.bossHealthBars[1].gameObject.SetActive(false);
         }
     }
 }

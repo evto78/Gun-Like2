@@ -72,7 +72,7 @@ public class LevelBuilder : MonoBehaviour
 
             BuildBoss(terrain);
 
-            gdm.phm.uiMan.deadline.gameObject.SetActive(false);
+            gdm.phm.uiMan.deadlineDisabled = true;
             gdm.SpawnBoss("Chimera");
         }
         else
@@ -81,7 +81,7 @@ public class LevelBuilder : MonoBehaviour
 
             Build(terrain);
 
-            gdm.phm.uiMan.deadline.gameObject.SetActive(true);
+            gdm.phm.uiMan.deadlineDisabled = false;
             gdm.BeginSpawning();
 
             if(gdm.roomNumber < 1 && gdm.roofScript != null && gdm.roofScript.playIntro) { gdm.roofScript.OpenRoof(); }
