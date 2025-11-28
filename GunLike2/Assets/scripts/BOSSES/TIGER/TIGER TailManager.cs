@@ -33,17 +33,17 @@ public class TIGERTailManager : MonoBehaviour
             FindNextTailSegment(parent.GetChild(0));
         }
     }
-    void Update()
+    public void BrainUpdate()
     {
         yAltState += yAltStateTimerSpeed * Time.deltaTime * yAltDir;
         if (yAltState < 0 && yAltDir == -1) { yAltDir = 1; yAltState = 0; }
         else if (yAltState > 1 && yAltDir == 1) { yAltDir = -1; yAltState = 1; }
 
         if (altUp) { alternatingTimer += Time.deltaTime * altSpeed; if (alternatingTimer > 1) { altUp = false; alternatingTimer = 1; } }
-        else { alternatingTimer -= Time.deltaTime * altSpeed; if (alternatingTimer < 0) { altUp = true; alternatingTimer = 0; } } 
+        else { alternatingTimer -= Time.deltaTime * altSpeed; if (alternatingTimer < 0) { altUp = true; alternatingTimer = 0; } }
 
         float curVariation = variation * alternatingTimerCurve.Evaluate(alternatingTimer);
-        for(int i = 0; i < segments; i++)
+        for (int i = 0; i < segments; i++)
         {
             Transform curSegment = tailSegments[i];
             float xSway = (((idlePoseXSway.Evaluate((float)i / (float)segments) - 0.5f) * 2f)) * maxRotationPerJoint;
@@ -54,5 +54,9 @@ public class TIGERTailManager : MonoBehaviour
             ySway -= curVariation;
             curSegment.localRotation = new Quaternion(-xSway, ySway, curSegment.localRotation.z, curSegment.localRotation.w);
         }
+    }
+    void Update()
+    {
+        
     }
 }

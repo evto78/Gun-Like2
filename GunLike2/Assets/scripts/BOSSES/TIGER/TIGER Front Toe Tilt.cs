@@ -23,6 +23,7 @@ public class TIGERFrontToeTilt : MonoBehaviour
             if (!canOverbend) { transform.localEulerAngles = Vector3.right * (transform.localEulerAngles.x + Mathf.Abs(transform.localEulerAngles.y)); }
             Quaternion tarRot = transform.rotation;
             transform.rotation = Quaternion.Lerp(curRot, tarRot, Time.deltaTime * 2f);
-        } else { transform.rotation = Quaternion.Lerp(transform.rotation, initRot, Time.deltaTime * 2f); }
+        }
+        else { transform.rotation = Quaternion.Lerp(transform.rotation, initRot, Time.deltaTime * 2f); }
     }
 }

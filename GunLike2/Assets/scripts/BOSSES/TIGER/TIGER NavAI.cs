@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class TIGERNavAI : MonoBehaviour
 {
+    TIGERBrain brain;
     NavMeshAgent agent;
     GameObject target;
 
@@ -12,13 +13,14 @@ public class TIGERNavAI : MonoBehaviour
 
     float targetUpdateTimer;
     public float updateFreq;
-    public enum state { idle, wander, chase }
+    public enum state { idle, wander, chase, chasePoint }
     public state navState;
     float wanderTimer = 0;
     Vector3 lastSecondPos; float lspTimer;
 
     void Start()
     {
+        brain = GetComponent<TIGERBrain>();
         target = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
     }
@@ -29,7 +31,7 @@ public class TIGERNavAI : MonoBehaviour
         lspTimer -= Time.deltaTime;
         if (lspTimer <= 0) { lspTimer = 1f; lastSecondPos = transform.position; }
     }
-    void Update()
+    public void BrainUpdate()
     {
         switch (navState)
         {
@@ -56,6 +58,28 @@ public class TIGERNavAI : MonoBehaviour
                     agent.isStopped = false;
                 }
                 break;
+            case state.chasePoint:
+                agent.isStopped = false;
+                targetUpdateTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
+                if (targetUpdateTimer < 0)
+                {
+                    targetUpdateTimer = updateFreq;
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(brain.manualNavPoint, out hit, 10f, NavMesh.AllAreas))
+                    {
+                        agent.gameObject.GetComponent<NavMeshAgent>().destination = hit.position;
+                    }
+
+                }
+                if (Vector3.Distance(agent.transform.position, brain.manualNavPoint) < desDistance)
+                {
+                    agent.isStopped = true;
+                }
+                else
+                {
+                    agent.isStopped = false;
+                }
+                break;
             case state.wander:
                 agent.isStopped = false;
                 targetUpdateTimer -= Time.deltaTime * Random.Range(0.9f, 1.1f);
@@ -69,6 +93,10 @@ public class TIGERNavAI : MonoBehaviour
                 break;
         }
     }
+    void Update()
+    {
+        
+    }
     public void SetState(state newState)
     {
         if (newState == navState) { return; }
@@ -76,6 +104,7 @@ public class TIGERNavAI : MonoBehaviour
         {
             case state.idle: agent.destination = transform.position; break;
             case state.chase: break;
+            case state.chasePoint: break;
             case state.wander: wanderTimer = 0; GetRandomAvaliablePoint(); break;
         }
         navState = newState;

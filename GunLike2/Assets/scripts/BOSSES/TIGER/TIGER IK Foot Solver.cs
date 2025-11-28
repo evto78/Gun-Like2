@@ -35,10 +35,14 @@ public class TIGERIKFootSolver : MonoBehaviour
         stepping = false;
         initialXOffset = transform.localPosition.x;
     }
-    void Update()
+    public void BrainUpdate()
     {
         StateFluidSteps();
         DrawDebugInfo();
+    }
+    void Update()
+    {
+        
     }
     void StateFluidSteps()
     {

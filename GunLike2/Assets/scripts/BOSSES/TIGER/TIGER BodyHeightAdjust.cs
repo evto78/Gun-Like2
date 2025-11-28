@@ -63,9 +63,9 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         tilts.AddRange(GetComponentsInChildren<TIGERFrontToeTilt>());
         foreach(MonoBehaviour tilt in tilts) { tilt.enabled = false; }
     }
-    void Update()
+    public void BrainUpdate()
     {
-        posSampleTimer -= Time.deltaTime; if (posSampleTimer < 0f) 
+        posSampleTimer -= Time.deltaTime; if (posSampleTimer < 0f)
         { currentSpeed = Vector3.Distance(transform.position, sampledPos); posSampleTimer = 0.1f; sampledPos = transform.position; GetTurnDirVel(); sampledForward = transform.forward; }
         progressToRun = Mathf.Clamp((currentSpeed - walkRunSpeedThreshold.x) / walkRunSpeedThreshold.y, 0f, 1f);
 
@@ -73,12 +73,16 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         if (progressToRun == 1) { ChangeState(state.run); } else { ChangeState(state.walk); }
         actingOffset = Mathf.Lerp(crouchOffset, runOffset, progressToRun);
 
-        foreach(TIGERIKFootSolver solver in legs) { solver.stepSpeed = baseStepSpeed * Mathf.Lerp(walkStepSpeedMod, runStepSpeedMod, progressToRun); }
+        foreach (TIGERIKFootSolver solver in legs) { solver.stepSpeed = baseStepSpeed * Mathf.Lerp(walkStepSpeedMod, runStepSpeedMod, progressToRun); }
         if (handlePairs) { ForceStepProgressBetweenPairs(); }
         HeightAdjustment();
         ManageStepping();
 
         pevlisRotationPoint.transform.LookAt(pelvisSholderPointer);
+    }
+    void Update()
+    {
+        
     }
     public void HeightAdjustment()
     {
