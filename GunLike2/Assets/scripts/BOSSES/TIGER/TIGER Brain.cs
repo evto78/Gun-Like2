@@ -51,7 +51,7 @@ public class TIGERBrain : MonoBehaviour
     public GameObject nuke;
     public float nukeDmg;
     public LineRenderer aimingLR;
-    public ParticleSystem muzzleFlash;
+    public List<ParticleSystem> muzzleFlash;
 
     private void Awake()
     {
@@ -124,7 +124,7 @@ public class TIGERBrain : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) { manualMoving = !manualMoving; }
 
-        if (Input.GetKeyDown(KeyCode.P)) { StartCoroutine(PrepareToShootAndFire()); }
+        if (Input.GetKeyDown(KeyCode.P)) { StopAllCoroutines(); StartCoroutine(PrepareToShootAndFire()); }
 
         manualCamInputDir = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) { manualCamInputDir += Vector2.up; }
@@ -138,6 +138,7 @@ public class TIGERBrain : MonoBehaviour
     {
         if (pauseUpdate) { return; }
 
+        bha.mStepChance = Mathf.Lerp(10f,70f, 1f-(ehm.curHp / ehm.maxHp));
         ManualInput();
 
         if (curBackSpeed > 0) { curBackSpeed -= backAccel * Time.deltaTime; }
@@ -185,7 +186,7 @@ public class TIGERBrain : MonoBehaviour
         Quaternion curRot = headPointer.localRotation;
         switch (curState)
         {
-            case State.idle: headPointer.localEulerAngles = Vector3.zero; break;
+            case State.idle: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
             case State.chasePoint: headPointer.LookAt(manualNavPoint); break;
             default: headPointer.LookAt(player); break;
         }
@@ -312,9 +313,12 @@ public class TIGERBrain : MonoBehaviour
         }
         ChangeState(State.backStep, MoveState.chase, AttackState.prepareToFire);
         waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        NuclearExplosion spawnedNuke = Instantiate(nuke).GetComponent<NuclearExplosion>();
-        spawnedNuke.transform.position = player.position;
-        spawnedNuke.damage = nukeDmg * masterDmg;
+        EnemyBullet spawnedBul = Instantiate(nuke).GetComponent<EnemyBullet>();
+        spawnedBul.transform.position = cannonFirepoint.position;
+        spawnedBul.transform.rotation = cannonFirepoint.rotation;
+        spawnedBul.SetStats(nukeDmg, ehm);
+        spawnedBul.GetComponent<Rigidbody>().AddForce(cannonFirepoint.forward * 10, ForceMode.Impulse);
+        foreach (ParticleSystem ps in muzzleFlash) { ps.Play(); }
         ChangeState(State.idle, MoveState.chase, AttackState.idle);
         waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
         yield return null;

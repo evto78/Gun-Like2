@@ -12,6 +12,8 @@ public class NuclearExplosion : MonoBehaviour
     bool done;
     Light brightthingy;
     public AnimationCurve lightCurve;
+    public bool dontLeaveDebris;
+    public GameObject debris;
 
     SphereCollider myCollider;
     void Start()
@@ -21,6 +23,8 @@ public class NuclearExplosion : MonoBehaviour
 
         LevelBuilder lb = GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>();
         if (lb != null) { lb.placed.Add(gameObject); }
+
+        if (dontLeaveDebris) { Destroy(debris); }
     }
 
     // Update is called once per frame

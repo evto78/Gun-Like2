@@ -38,7 +38,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
 
     [Header("Effects")]
     [Tooltip("Chance for each step to be a miss-step. Accepts a value from 0-100")]
-    public float mStepChance; //2 legs cannot miss-step at the same time, the same leg cannot miss-step 2 times in a row.
+    public float mStepChance; //2 legs cannot miss-step at the same time
 
     [Header("External Variables")]
     public Vector3 turnDirVel;
