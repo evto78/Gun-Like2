@@ -125,6 +125,7 @@ public class TIGERBrain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0)) { manualMoving = !manualMoving; }
 
         if (Input.GetKeyDown(KeyCode.P)) { StopAllCoroutines(); StartCoroutine(PrepareToShootAndFire()); }
+        if (Input.GetKeyDown(KeyCode.O)) { CannonShoot(); }
 
         manualCamInputDir = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) { manualCamInputDir += Vector2.up; }
@@ -160,12 +161,14 @@ public class TIGERBrain : MonoBehaviour
             case State.chasePoint:
                 break;
             case State.backStep:
+                Quaternion curRot = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRot = transform.rotation;
+                transform.rotation = Quaternion.Lerp(curRot, tarRot, Time.deltaTime * followRotSpeed);
                 curBackSpeed += backAccel * 2 * Time.deltaTime; if (curBackSpeed > 1) { curBackSpeed = 1; }
                 CheckStoppedBackstep();
                 break;
             case State.followTurn:
-                Quaternion curRot = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRot = transform.rotation;
-                transform.rotation = Quaternion.Lerp(curRot, tarRot, Time.deltaTime * followRotSpeed);
+                Quaternion curRota = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRota = transform.rotation;
+                transform.rotation = Quaternion.Lerp(curRota, tarRota, Time.deltaTime * followRotSpeed);
                 break; }
         transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward;
 
@@ -313,15 +316,19 @@ public class TIGERBrain : MonoBehaviour
         }
         ChangeState(State.backStep, MoveState.chase, AttackState.prepareToFire);
         waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        CannonShoot();
+        ChangeState(State.idle, MoveState.chase, AttackState.idle);
+        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        yield return null;
+    }
+    void CannonShoot()
+    {
         EnemyBullet spawnedBul = Instantiate(nuke).GetComponent<EnemyBullet>();
         spawnedBul.transform.position = cannonFirepoint.position;
         spawnedBul.transform.rotation = cannonFirepoint.rotation;
         spawnedBul.SetStats(nukeDmg, ehm);
         spawnedBul.GetComponent<Rigidbody>().AddForce(cannonFirepoint.forward * 10, ForceMode.Impulse);
         foreach (ParticleSystem ps in muzzleFlash) { ps.Play(); }
-        ChangeState(State.idle, MoveState.chase, AttackState.idle);
-        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        yield return null;
     }
     IEnumerator IntroAnim()
     {
