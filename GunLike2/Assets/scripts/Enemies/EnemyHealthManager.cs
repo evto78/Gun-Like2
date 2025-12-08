@@ -417,8 +417,8 @@ public class EnemyHealthManager : MonoBehaviour
                     frozenEffect.SetActive(q.x > 0);
                     break;
                 case 37:
-                    bool result = true;
-                    if (q.x > 0) { result = true; } else if (q.x <= 0 && activeEffects[33].x <= 0) { result = false; }
+                    bool result = false;
+                    if (q.x > 0) { result = false; } else if (q.x <= 0 && activeEffects[33].x <= 0) { result = true; }
                     foreach (MonoBehaviour brain in brains) { brain.enabled = result; }
                     break;
                 case 38: markedEffect.SetActive(q.x > 0); break;
