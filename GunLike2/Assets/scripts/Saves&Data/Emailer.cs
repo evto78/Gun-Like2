@@ -11,6 +11,7 @@ public class Emailer : MonoBehaviour
     const string kReceiverEmailAddress = "gunlike2data@gmail.com";
     public static void SendAnEmail(string message, string header)
     {
+        return;
         var fromEmail = kReceiverEmailAddress;
 
         var mail = new MailMessage();

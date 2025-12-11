@@ -5,6 +5,7 @@ using UnityEngine;
 public class NEWPlayerMovement : MonoBehaviour
 {
     public Rigidbody rb; bool noGravity;
+    UIManager uiMan;
 
     // Particle Effects
     public GameObject slamEffect;
@@ -74,6 +75,7 @@ public class NEWPlayerMovement : MonoBehaviour
     List<Vector4> effectList;
     private void Awake()
     {
+        uiMan = GetComponent<UIManager>();
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
     }
     void Start()
@@ -340,7 +342,7 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void CameraMove()
     {
-        if (Cursor.lockState == CursorLockMode.Locked)
+        if (Cursor.lockState == CursorLockMode.Locked && !uiMan.showTigerUI)
         {
             //get mouse input
             yaw += sensitivity * Input.GetAxis("Mouse X");
@@ -356,6 +358,7 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void GetInputs()
     {
+        if (uiMan.showTigerUI) { sliding = false; isSprinting = false; inputDir = Vector3.zero; return; }
         if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.sprint)) 
         {
             if (isSprinting) { isSprinting = false; } else { isSprinting = true; }

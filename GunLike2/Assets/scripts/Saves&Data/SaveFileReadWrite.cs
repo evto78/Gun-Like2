@@ -279,8 +279,8 @@ public class SaveFileReadWrite : MonoBehaviour
     private void OnApplicationQuit()
     {
         Serialize(); SerializeControls();
-        AddEmailToQue("GameClose");
-        SendAllEmails();
+        //AddEmailToQue("GameClose");
+        //SendAllEmails();
     }
     void CheckEmpty()
     {
@@ -347,6 +347,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     public void AddEmailToQue(string eventT)
     {
+        return;
         if (PlayerPrefs.GetInt("SENDDATA") != 1) { return; }
 
         TelemData tdata = PrepareData();
@@ -356,6 +357,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     public void AddFeedbackEmailToQue(string content)
     {
+        return;
         string emailContent = "";
         TelemData tdata = PrepareData();
         emailContent += content;
@@ -366,6 +368,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     void SendAllEmails()
     {
+        return;
         //feedbackEmails
         for(int i = 0; i < emailQueContent.Count; i++)
         {
@@ -377,6 +380,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     public void SendDataToEmail(string eventT, string content)
     {
+        return;
         Emailer.SendAnEmail(content, eventT);
     }
     public string FormatALLInvToString(List<int> inv)

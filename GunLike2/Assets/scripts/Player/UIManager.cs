@@ -5,6 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 public class UIManager : MonoBehaviour
 {
+    [Header("TIGER DEMO")]
+    public bool showTigerUI;
+    public GameObject tigerCanvas;
+    public RoofOpen roofScript;
+    public GameObject tigerFollowCam;
+
+    [Header("EVERYTHING ELSE")]
     public TextMeshProUGUI lGunAmmoText;
     public TextMeshProUGUI rGunAmmoText;
     public TextMeshProUGUI healthText;
@@ -150,6 +157,9 @@ public class UIManager : MonoBehaviour
     }
     void Update()
     {
+        //TIGER DEMO
+        DetectInput();
+
         timeSinceRecycleBinUpdate+=Time.deltaTime;
         if(timeSinceRecycleBinUpdate > 1) { recycleBinUI.gameObject.SetActive(false); }
         timer.text = FormatTimeToTimer((int)healthManager.gdm.timeSpent);
@@ -172,6 +182,18 @@ public class UIManager : MonoBehaviour
         killedByText.text = healthManager.lastHitMeName;
 
         if (state == "inventory" && pi.itemHeld != -1) { heldItem.gameObject.SetActive(true); heldItem.SetItem(pi.FindObjByID(pi.itemHeld)); } else {  heldItem.gameObject.SetActive(false);}
+    }
+    void DetectInput()
+    {
+        if (Input.GetKeyDown(KeyCode.X)) { roofScript.ToggleRoof(); }
+        if (Input.GetKeyDown(KeyCode.Q)) { tigerCanvas.SetActive(!tigerCanvas.activeSelf); }
+
+        if (Input.GetKeyDown(KeyCode.Z)) { SwitchUI(); }
+    }
+    void SwitchUI()
+    {
+        showTigerUI = !showTigerUI;
+        tigerFollowCam.SetActive(showTigerUI);
     }
     string FormatTimeToTimer(int time)
     {
@@ -269,6 +291,7 @@ public class UIManager : MonoBehaviour
     }
     void DifficultyVisualsUpdate()
     {
+        return;
         int diffID = healthManager.gdm.difficultyIDSelected;
         diffImages[diffID].SetActive(true);
         string newTxt = ((int)(healthManager.gdm.unroundedDiff * 100f)).ToString(); newTxt.Insert(newTxt.Length - 2, ".");

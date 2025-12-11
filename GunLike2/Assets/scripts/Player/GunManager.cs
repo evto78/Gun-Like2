@@ -12,6 +12,7 @@ public class GunManager : MonoBehaviour
 
     public HealthManager healthMan;
     public PlayerItem playerItem;
+    UIManager uiMan;
     List<Vector4> effectList;
 
     public GameObject leftHand;
@@ -262,6 +263,7 @@ public class GunManager : MonoBehaviour
 
     private void Start()
     {
+        uiMan = GetComponent<UIManager>();
         gunObjectData = new List<GunObjectData>(); gunObjectData.AddRange(Resources.LoadAll<GunObjectData>("Guns"));
         SortGunObjData();
 
@@ -1080,12 +1082,12 @@ public class GunManager : MonoBehaviour
         if (healthMan.dead) { return; }
 
         if (Cursor.lockState == CursorLockMode.Locked) { leftGunUpdate(); RightGunUpdate(); }
-        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked)
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.leftReload) && Cursor.lockState == CursorLockMode.Locked && !uiMan.showTigerUI)
         {
             leftGunScript.AttemptReload();
             
         }
-        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked)
+        if (Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.rightReload) && Cursor.lockState == CursorLockMode.Locked && !uiMan.showTigerUI)
         {
             rightGunScript.AttemptReload();
         }
@@ -1095,11 +1097,11 @@ public class GunManager : MonoBehaviour
 
     void leftGunUpdate()
     {
-        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.leftShoot))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.leftShoot) && !uiMan.showTigerUI)
         {
             leftGunScript.AttemptShoot();
         }
-        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.leftShoot))
+        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.leftShoot) && !uiMan.showTigerUI)
         {
             leftGunScript.AttemptShootUp(false);
         }
@@ -1107,11 +1109,11 @@ public class GunManager : MonoBehaviour
 
     void RightGunUpdate()
     {
-        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.rightShoot))
+        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.rightShoot) && !uiMan.showTigerUI)
         {
             rightGunScript.AttemptShoot();
         }
-        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.rightShoot))
+        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.rightShoot) && !uiMan.showTigerUI)
         {
             rightGunScript.AttemptShootUp(false);
         }

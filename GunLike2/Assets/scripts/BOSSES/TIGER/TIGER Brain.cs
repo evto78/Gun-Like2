@@ -30,7 +30,7 @@ public class TIGERBrain : MonoBehaviour
     [Header("Internal")]
     float masterDmg;
     float timerSpeedModifier;
-    float backAccel = 2; float curBackSpeed = 0; float backstepTimer = 0;
+    float backAccel = 2; public float curBackSpeed = 0; float backstepTimer = 0;
     float followRotSpeed = 2f;
     public AnimationCurve sineCurve;
     //HeadMovement
@@ -125,7 +125,7 @@ public class TIGERBrain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0)) { manualMoving = !manualMoving; }
 
         if (Input.GetKeyDown(KeyCode.P)) { StopAllCoroutines(); StartCoroutine(PrepareToShootAndFire()); }
-        if (Input.GetKeyDown(KeyCode.O)) { CannonShoot(); }
+        if (Input.GetKeyDown(KeyCode.L)) { CannonShoot(); }
 
         manualCamInputDir = Vector2.zero;
         if (Input.GetKey(KeyCode.UpArrow)) { manualCamInputDir += Vector2.up; }
@@ -171,9 +171,12 @@ public class TIGERBrain : MonoBehaviour
                 transform.rotation = Quaternion.Lerp(curRota, tarRota, Time.deltaTime * followRotSpeed);
                 break; }
         transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward;
+        if (curBackSpeed > 1) { transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward; curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime*2); }
+        else if (curBackSpeed > 0.1 && curState != State.backStep) { curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime); }
+        else if (curState != State.backStep) { curBackSpeed = 0; }
 
-        //Other updates
-        bha.BrainUpdate();
+            //Other updates
+            bha.BrainUpdate();
         tm.BrainUpdate();
         foreach(TIGERIKFootSolver leg in bha.legs) { leg.BrainUpdate(); }
         nav.BrainUpdate();
@@ -323,6 +326,7 @@ public class TIGERBrain : MonoBehaviour
     }
     void CannonShoot()
     {
+        curBackSpeed = 4;
         EnemyBullet spawnedBul = Instantiate(nuke).GetComponent<EnemyBullet>();
         spawnedBul.transform.position = cannonFirepoint.position;
         spawnedBul.transform.rotation = cannonFirepoint.rotation;

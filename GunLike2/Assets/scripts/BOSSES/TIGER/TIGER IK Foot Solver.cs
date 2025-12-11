@@ -46,7 +46,7 @@ public class TIGERIKFootSolver : MonoBehaviour
     }
     void StateFluidSteps()
     {
-        moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.State.backStep) { moveDir *= -0.5f; }
+        moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.State.backStep || manager.brain.curBackSpeed > 0) { moveDir *= -0.5f; }
         Vector3 hipPlacementOffset = hip.up * (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength);
         hipPlacementOffset *= moveDir;
 
@@ -58,6 +58,7 @@ public class TIGERIKFootSolver : MonoBehaviour
             case TIGERBrain.State.chase: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
             case TIGERBrain.State.backStep: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; break;
         }
+        if(manager.brain.curBackSpeed > 0) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; }
 
         //stepSooner = false;
         //notDoneStepping = false;

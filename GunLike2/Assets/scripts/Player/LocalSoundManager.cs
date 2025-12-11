@@ -78,6 +78,8 @@ public class LocalSoundManager : MonoBehaviour
         uiVol = PlayerPrefs.GetFloat("UIVOL");
         enemyVol = PlayerPrefs.GetFloat("ENEMYVOL");
         gunVol = PlayerPrefs.GetFloat("GUNVOL");
+
+        masterVol = 0;
     }
     public void PlayNonOverlapSound(AudioClip incomingClip, string givinType)
     {

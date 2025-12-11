@@ -272,6 +272,8 @@ public class HealthManager : MonoBehaviour
 	}
 	void Update()
 	{
+		curHp = maxHp;
+
 		timeSinceEnemyDied += Time.deltaTime;
 
         if (dead) { return; }
