@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class LevelBuilder : MonoBehaviour
 {
-    public Terrain terrain;
+    public Terrain currentTerrain;
+    public List<Terrain> terrainList;
+    public Transform terrainOptions;
+    List<int> unusedTerrains;
     PlayerItem pi; GameDataManager gdm;
     public List<PlaceableObjectChances> chancesObjectsBASE;
     public List<PlaceableObjectChances> chancesFeaturesBASE;
@@ -16,6 +19,11 @@ public class LevelBuilder : MonoBehaviour
     public List<GameObject> placed = new List<GameObject>();
     private void Start()
     {
+        terrainList = new List<Terrain>();
+        unusedTerrains = new List<int>();
+
+        foreach(Terrain terrain in terrainOptions.GetComponentsInChildren<Terrain>()) { terrainList.Add(terrain); unusedTerrains.Add(terrainList.IndexOf(terrain)); }
+
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         pi = gdm.phm.playerItem;
 
@@ -68,24 +76,40 @@ public class LevelBuilder : MonoBehaviour
         if (gdm.roomsUntilBoss <= 0)
         {
             gdm.roomsUntilBoss = 0;
-            terrain = Terrain.activeTerrains[0];
+            currentTerrain = ChangeTerrain(0);
 
-            BuildBoss(terrain);
+            BuildBoss(currentTerrain);
 
             gdm.phm.uiMan.deadlineDisabled = true;
             gdm.SpawnBoss("Chimera");
         }
         else
         {
-            terrain = Terrain.activeTerrains[0];
+            currentTerrain = ChangeTerrain(-1);
 
-            Build(terrain);
+            Build(currentTerrain);
 
             gdm.phm.uiMan.deadlineDisabled = false;
             gdm.BeginSpawning();
 
             if(gdm.roomNumber < 1 && gdm.roofScript != null && gdm.roofScript.playIntro) { gdm.roofScript.OpenRoof(); }
         }
+    }
+    Terrain ChangeTerrain(int idOverride)
+    {
+        Terrain output;
+        if(idOverride != -1) { output = terrainList[idOverride]; }
+        else if(unusedTerrains.Count > 0)
+        {
+            int newID = unusedTerrains[Random.Range(0,unusedTerrains.Count)];
+            unusedTerrains.Remove(newID);
+            output = terrainList[newID];
+        }
+        else { output = terrainList[Random.Range(0,terrainList.Count)]; }
+
+        foreach(Terrain terrain in terrainList) { terrain.gameObject.SetActive(false); }
+        output.gameObject.SetActive(true);
+        return output;
     }
     void BuildBoss(Terrain lvlTerrain)
     {

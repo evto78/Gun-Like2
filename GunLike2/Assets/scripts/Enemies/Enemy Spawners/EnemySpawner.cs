@@ -16,8 +16,10 @@ public class EnemySpawner : MonoBehaviour
     public bool canSpawnWalker;
     public float myDelay;
     bool spawningWave; bool pauseTimer; public GameObject myLock;
+    bool inPlay = false;
     private void Start()
     {
+        inPlay = true;
         myLock.SetActive(false);
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         pi = gdm.phm.playerItem;
@@ -39,6 +41,10 @@ public class EnemySpawner : MonoBehaviour
         if(gdm.mutatedEnemySelected != null) { spawnableEnemies = new List<Spawnable>(); spawnableEnemies.Add(gdm.mutatedEnemySelected); 
             if(gdm.mutatedEnemySelected.type == Spawnable.Type.walker && !canSpawnWalker) { spawnableEnemies = new List<Spawnable>(); }
         }
+    }
+    private void OnEnable()
+    {
+        if (!gdm.activeSpawners.Contains(this) && inPlay) { gdm.activeSpawners.Add(this); }
     }
     private void OnDestroy()
     {
