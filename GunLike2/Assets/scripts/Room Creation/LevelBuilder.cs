@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LevelBuilder : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class LevelBuilder : MonoBehaviour
     public List<Terrain> terrainList;
     public Transform terrainOptions;
     List<int> unusedTerrains;
+    List<NavMeshDataInstance> addedNavData = new List<NavMeshDataInstance>();
     PlayerItem pi; GameDataManager gdm;
     public List<PlaceableObjectChances> chancesObjectsBASE;
     public List<PlaceableObjectChances> chancesFeaturesBASE;
@@ -22,12 +25,30 @@ public class LevelBuilder : MonoBehaviour
         terrainList = new List<Terrain>();
         unusedTerrains = new List<int>();
 
-        foreach(Terrain terrain in terrainOptions.GetComponentsInChildren<Terrain>()) { terrainList.Add(terrain); unusedTerrains.Add(terrainList.IndexOf(terrain)); }
+        for(int i = 0; i < terrainOptions.childCount; i++)
+        {
+            Terrain terrain = terrainOptions.GetChild(i).gameObject.GetComponent<Terrain>();
+            terrainList.Add(terrain); unusedTerrains.Add(terrainList.IndexOf(terrain));
+            terrain.gameObject.SetActive(false);
+        }
+        currentTerrain = terrainList[0];
+        currentTerrain.gameObject.SetActive(true);
+        foreach (NavMeshSurface surface in currentTerrain.transform.GetComponentsInChildren<NavMeshSurface>()) { addedNavData.Add(NavMesh.AddNavMeshData(surface.navMeshData)); }
 
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
         pi = gdm.phm.playerItem;
 
         OddsUpdate();
+    }
+    private void OnApplicationQuit()
+    {
+        foreach (NavMeshDataInstance navData in addedNavData) { NavMesh.RemoveNavMeshData(navData); }
+        addedNavData.Clear();
+    }
+    private void OnDestroy()
+    {
+        foreach (NavMeshDataInstance navData in addedNavData) { NavMesh.RemoveNavMeshData(navData); }
+        addedNavData.Clear();
     }
     private void Update()
     {
@@ -99,16 +120,25 @@ public class LevelBuilder : MonoBehaviour
     {
         Terrain output;
         if(idOverride != -1) { output = terrainList[idOverride]; }
-        else if(unusedTerrains.Count > 0)
+        else if(unusedTerrains.Count > 1)
         {
-            int newID = unusedTerrains[Random.Range(0,unusedTerrains.Count)];
+            int newID = unusedTerrains[Random.Range(1,unusedTerrains.Count)];
             unusedTerrains.Remove(newID);
             output = terrainList[newID];
         }
-        else { output = terrainList[Random.Range(0,terrainList.Count)]; }
+        else 
+        { 
+            unusedTerrains.Clear(); foreach(Terrain terrain in terrainList) { unusedTerrains.Add(terrainList.IndexOf(terrain)); }
+            int newID = unusedTerrains[Random.Range(1, unusedTerrains.Count)];
+            unusedTerrains.Remove(newID);
+            output = terrainList[newID];
+        }
 
         foreach(Terrain terrain in terrainList) { terrain.gameObject.SetActive(false); }
         output.gameObject.SetActive(true);
+        foreach (NavMeshDataInstance navData in addedNavData) { NavMesh.RemoveNavMeshData(navData); } addedNavData.Clear();
+        foreach (NavMeshSurface surface in output.transform.GetComponentsInChildren<NavMeshSurface>()) { addedNavData.Add(NavMesh.AddNavMeshData(surface.navMeshData)); }
+
         return output;
     }
     void BuildBoss(Terrain lvlTerrain)
@@ -290,91 +320,5 @@ public class LevelBuilder : MonoBehaviour
         GameObject pillar = Instantiate(supportPillar); placed.Add(pillar);
         pillar.transform.position = placedObj.transform.position;
         pillar.transform.localScale = new Vector3(footprint, maxLocalHeight, footprint);
-    }
-
-
-    void SetHeight(TerPlaceData tpd, float newHeight, float footprint, int resolution)
-    {
-        TerrainData tData = tpd.myTerrain.terrainData;
-
-        Vector3 tempCoord = transform.position - tpd.myTerrain.gameObject.transform.position;
-        Vector3 coord;
-
-        coord.x = tempCoord.x / tData.size.x;
-        coord.y = tempCoord.y / tData.size.y;
-        coord.z = tempCoord.z / tData.size.z;
-
-        int hmScale = tData.heightmapResolution;
-
-        float posXInTerrain = coord.x * hmScale * 1.2f;
-        float posYInTerrain = coord.z * hmScale * 1.2f;
-
-        float[,] heights = tData.GetHeights(Mathf.RoundToInt(posXInTerrain), Mathf.RoundToInt(posYInTerrain), Mathf.RoundToInt(footprint*2), Mathf.RoundToInt(footprint*2));
-        
-        for(int x = 0; x < heights.GetLength(0); x++)
-        {
-            for(int z = 0; z < heights.GetLength(1); z++)
-            {
-                heights[x, z] = newHeight / tData.size.y;
-            }
-        }
-        tData.SetHeights(Mathf.RoundToInt(tpd.localPos.x), Mathf.RoundToInt(tpd.localPos.z), heights);
-    }
-
-
-    //Helperscript from online forum \/
-    public static float[] GetTextureMix(Vector3 worldPos, Terrain tarTerrain)
-    {
-
-        // returns an array containing the relative mix of textures
-        // on the main terrain at this world position.
-
-        // The number of values in the array will equal the number
-        // of textures added to the terrain.
-
-        Terrain terrain = tarTerrain;
-        TerrainData terrainData = terrain.terrainData;
-        Vector3 terrainPos = terrain.transform.position;
-
-        // calculate which splat map cell the worldPos falls within (ignoring y)
-        int mapX = (int)(((worldPos.x - terrainPos.x) / terrainData.size.x) * terrainData.alphamapWidth);
-        int mapZ = (int)(((worldPos.z - terrainPos.z) / terrainData.size.z) * terrainData.alphamapHeight);
-
-        // get the splat data for this cell as a 1x1xN 3d array (where N = number of textures)
-        float[,,] splatmapData = terrainData.GetAlphamaps(mapX, mapZ, 1, 1);
-
-        // extract the 3D array data to a 1D array:
-        float[] cellMix = new float[splatmapData.GetUpperBound(2) + 1];
-        for (int n = 0; n < cellMix.Length; ++n)
-        {
-            cellMix[n] = splatmapData[0, 0, n];
-        }
-
-        return cellMix;
-
-    }
-    public static int GetMainTexture(Vector3 worldPos, Terrain tarTerrain)
-    {
-
-        // returns the zero-based index of the most dominant texture
-        // on the main terrain at this world position.
-
-        float[] mix = GetTextureMix(worldPos, tarTerrain);
-
-        float maxMix = 0;
-        int maxIndex = 0;
-
-        // loop through each mix value and find the maximum
-        for (int n = 0; n < mix.Length; ++n)
-        {
-            if (mix[n] > maxMix)
-            {
-                maxIndex = n;
-                maxMix = mix[n];
-            }
-        }
-
-        return maxIndex;
-
     }
 }

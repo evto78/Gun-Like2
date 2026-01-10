@@ -44,11 +44,11 @@ public class EnemySpawner : MonoBehaviour
     }
     private void OnEnable()
     {
-        if (!gdm.activeSpawners.Contains(this) && inPlay) { gdm.activeSpawners.Add(this); }
+        if (gdm != null && !gdm.activeSpawners.Contains(this) && inPlay) { gdm.activeSpawners.Add(this); }
     }
     private void OnDestroy()
     {
-        if (gdm.activeSpawners.Contains(this)) { gdm.activeSpawners.Remove(this); }
+        if (gdm != null && gdm.activeSpawners.Contains(this)) { gdm.activeSpawners.Remove(this); }
     }
     IEnumerator PrepareSpawnables()
     {

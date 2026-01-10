@@ -63,7 +63,7 @@ public class BulletScript : MonoBehaviour
     public int critUnfunny;
     int turbine;
 
-    public Collider myCollider;
+    public BoxCollider myCollider;
 
     public Vector3 myPos;
 
@@ -87,6 +87,7 @@ public class BulletScript : MonoBehaviour
     [SerializeField] TrailRenderer tr;
 
     float lifetime; Vector3 intialMeshScale;
+    Vector3 initialColliderScale;
     private void Start()
     {
         tr.emitting = true;
@@ -101,6 +102,8 @@ public class BulletScript : MonoBehaviour
     public void MiniSetUp()
     {
         tr.emitting = false;
+        myCollider = GetComponent<BoxCollider>();
+        initialColliderScale = myCollider.size;
         intialMeshScale = mesh.transform.localScale;
         mesh.transform.localScale = intialMeshScale * lifetime;
         hm = gunFiredFrom.manager.healthMan;
@@ -119,7 +122,13 @@ public class BulletScript : MonoBehaviour
         if (gm.totalLiveBullets > gm.maximumLiveBullets) { Destroy(gameObject, 0.6f); }
         if (collided) { return; }
 
-        lifetime += Time.deltaTime;
+        if (mesh != null && myCollider != null) 
+        {
+            lifetime += Time.deltaTime * 10f;
+            mesh.transform.localScale = Vector3.Lerp(intialMeshScale * 0.01f, intialMeshScale * (myCollider.size.z / initialColliderScale.z), lifetime);
+        }
+        
+
         transform.rotation = Quaternion.LookRotation(rb.velocity+(Vector3.forward/100));
 
         if (turbine > 1 && rb.velocity.magnitude > 0.5f) { rb.velocity /= 1f + (1f * Time.deltaTime); turbineCharge += (rb.velocity.magnitude * Time.deltaTime) / 4f; }
@@ -173,10 +182,12 @@ public class BulletScript : MonoBehaviour
         bool isOil = gunFiredFrom.oilGun>0;
         myIsHeavy = isHeavy;
         rb.useGravity = isHeavy != 0f || isLargeSpon || isOil || isFlea || isCannonBall;
-        float bulSize = givenBulSize;
+        float bulSize = givenBulSize; if (givenBulSize != 1f) { bulSize *= 2f; }
         if (isFlea) { pierce += 10; ricochet = true; bulSize /= 2f; damage = 1; bulSpd = Mathf.Clamp(bulSpd, 5, 25); }
         
-        transform.localScale = new Vector3(transform.localScale.x * bulSize, transform.localScale.y * bulSize, transform.localScale.z * bulSize);
+        mesh.transform.localScale = intialMeshScale * bulSize;
+        myCollider.size = initialColliderScale * bulSize;
+        hitParticle.transform.localScale *= bulSize/2f;
 
         Vector3 forceDir = transform.forward * bulSpd;
 
@@ -592,11 +603,19 @@ public class BulletScript : MonoBehaviour
     public virtual void DetectCollision(Vector3 force)
     {
         myPos = transform.position;
-        if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
+        //Bul size based box cast for enemy detection
+        if (Physics.BoxCast(myPos, Vector3.one * (myCollider.size.x / 2f), force, out RaycastHit boxHit, transform.rotation, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
         {
-            transform.position = hit.point - transform.forward / 10f; string hittag = hit.collider.gameObject.tag;
-            if (hittag == "Enemy" || hittag == "EnemyWeakPoint" || hittag == "Ground" || hittag == "Untagged" || hit.collider.gameObject.layer == 0) 
-            { RunOnCollide(hit.collider.gameObject, hit); }
+            string hittag = boxHit.collider.gameObject.tag;
+            if (hittag == "Enemy" || hittag == "EnemyWeakPoint")
+            { transform.position = boxHit.point - transform.forward / 10f; RunOnCollide(boxHit.collider.gameObject, boxHit); }
+        }
+        //Independent raycast for anything else pretty much
+        else if (Physics.Raycast(myPos, force, out RaycastHit hit, Vector3.Distance(myPos, (myPos + force * Time.fixedDeltaTime))))
+        {
+            string hittag = hit.collider.gameObject.tag;
+            if (hittag == "Ground" || hittag == "Untagged" || hit.collider.gameObject.layer == 0)
+            { transform.position = hit.point - transform.forward / 10f; RunOnCollide(hit.collider.gameObject, hit); }
         }
     }
 

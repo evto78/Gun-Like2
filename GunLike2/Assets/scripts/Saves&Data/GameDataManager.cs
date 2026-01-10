@@ -142,6 +142,8 @@ public class GameDataManager : MonoBehaviour
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
 
+        activeSpawners.Clear();
+
         endGateBlockade.Toggle(true); exitConsole.SetUp(false, null);
 
         if (instance.loadingARun == -1)
@@ -367,6 +369,17 @@ public class GameDataManager : MonoBehaviour
         pointsLocked = false;
         if (roomNumber == 0) { instance.AddEmailToQue("RunStart"); }
         gameTimerActive = true;
+
+        //cleanup
+        List<EnemySpawner> spawnsToRemove = new List<EnemySpawner>();
+        foreach(EnemySpawner spawn in activeSpawners) 
+        { 
+            if (!spawn.transform.parent.gameObject.activeSelf) { spawnsToRemove.Add(spawn); }
+        }
+        foreach(EnemySpawner spawn in spawnsToRemove)
+        {
+            activeSpawners.Remove(spawn);
+        }
 
         List<EnemySpawner> newOrder = new List<EnemySpawner>();
         int initialCount = activeSpawners.Count;

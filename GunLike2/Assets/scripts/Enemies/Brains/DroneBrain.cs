@@ -125,7 +125,9 @@ public class DroneBrain : MonoBehaviour
                 break;
         }
         DistanceToGround();
-        float webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]));
+        float webbedSpeedMod = 1f;
+        if (hm.activeEffects[39].x > 0) { webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])); }
+
         if (curHeight < hoverHeight)
         {
             rb.AddForce(Vector3.up * hoverSpeed * webbedSpeedMod * Time.deltaTime);
@@ -272,7 +274,8 @@ public class DroneBrain : MonoBehaviour
     {
         if(holding == holdType.nuke) { speed *= nukeSpeed; }
 
-        float webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]));
+        float webbedSpeedMod = 1f;
+        if (hm.activeEffects[39].x > 0) { webbedSpeedMod = 1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136])); }
 
         Debug.DrawRay(transform.position, (target - transform.position).normalized * 5f, Color.red);
 
