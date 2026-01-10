@@ -40,10 +40,6 @@ public class TIGERIKFootSolver : MonoBehaviour
         StateFluidSteps();
         DrawDebugInfo();
     }
-    void Update()
-    {
-        
-    }
     void StateFluidSteps()
     {
         moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.State.backStep || manager.brain.curBackSpeed > 0) { moveDir *= -0.5f; }
@@ -59,9 +55,6 @@ public class TIGERIKFootSolver : MonoBehaviour
             case TIGERBrain.State.backStep: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; break;
         }
         if(manager.brain.curBackSpeed > 0) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; }
-
-        //stepSooner = false;
-        //notDoneStepping = false;
 
         float relativeStepSpeed = (Mathf.Clamp(manager.currentSpeed, 1.5f, 10) * stepSpeed);
         float stepSpeedMod = 1f;
@@ -117,6 +110,18 @@ public class TIGERIKFootSolver : MonoBehaviour
             transform.position = new Vector3(transform.position.x, info.point.y, transform.position.z);
             stayPos = transform.position;
         }
+    }
+    public float GetDistToGroundSnap()
+    {
+        Vector3 groundSnapPos = meshFoot.position;
+        Ray ray = new Ray(transform.position + Vector3.up * maxStepHeight, Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 4f, terrainLayer.value))
+        {
+            groundSnapPos = new Vector3(transform.position.x, info.point.y, transform.position.z);
+        }
+        float result = Vector3.Distance(meshFoot.position, groundSnapPos);
+        if (meshFoot.position.y < groundSnapPos.y) { result *= -1f; }
+        return result;
     }
     void DrawDebugInfo()
     {

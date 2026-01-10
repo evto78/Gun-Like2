@@ -175,8 +175,8 @@ public class TIGERBrain : MonoBehaviour
         else if (curBackSpeed > 0.1 && curState != State.backStep) { curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime); }
         else if (curState != State.backStep) { curBackSpeed = 0; }
 
-            //Other updates
-            bha.BrainUpdate();
+        //Other updates
+        bha.BrainUpdate();
         tm.BrainUpdate();
         foreach(TIGERIKFootSolver leg in bha.legs) { leg.BrainUpdate(); }
         nav.BrainUpdate();
