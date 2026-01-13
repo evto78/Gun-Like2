@@ -337,11 +337,16 @@ public class GameDataManager : MonoBehaviour
     }
     IEnumerator HealToFull()
     {
-        for(int i = 0; i < 50; i++)
+        float tempTimer = 0; int maxLoops = 5000;
+        while(tempTimer < 1.2f)
         {
-            phm.curHp += phm.maxHp / 50f; if(phm.curHp > phm.maxHp) { phm.curHp = phm.maxHp; }
+            phm.curHp += (phm.maxHp - phm.curHp) * tempTimer; if (phm.curHp > phm.maxHp) { phm.curHp = phm.maxHp; }
+            tempTimer += Time.deltaTime;
+            maxLoops--;
+            if(maxLoops < 0) { break; }
             yield return new WaitForEndOfFrame();
         }
+        if (phm.curHp < phm.maxHp) { phm.curHp = phm.maxHp; }
         yield return null;
     }
     public void DeadLine()
@@ -358,9 +363,8 @@ public class GameDataManager : MonoBehaviour
             nukeDropTimerSpeed += 0.1f;
 
             GameObject droppedNuke = Instantiate(nukeDrop);
-            droppedNuke.transform.position = new Vector3(Random.Range(-220f,220f), 500f, Random.Range(0f,420f));
-
-            yield return new WaitForSeconds(nukeDropTimer / nukeDropTimerSpeed);
+            if (Random.Range(0, 20) == 0) { droppedNuke.transform.position = new Vector3(phm.transform.position.x+Random.Range(-10f, 10f), 500f, phm.transform.position.z+Random.Range(-10f, 10f)); } else { droppedNuke.transform.position = new Vector3(Random.Range(-220f, 220f), 500f, Random.Range(0f, 420f)); }
+            yield return new WaitForSeconds(0.05f + (nukeDropTimer / nukeDropTimerSpeed));
         }
         yield return null;
     }
@@ -405,8 +409,10 @@ public class GameDataManager : MonoBehaviour
     }
     public void PointsRestore()
     {
-        pointsLeft = Random.Range(basePoints.x, basePoints.y); pointsLeft += flatPointsPerDifficulty * difficulty;
-        pointsLeft *= difficulty / 2f; pointsLeft = pointsLeft * (1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185])));
+        pointsLeft = Random.Range(basePoints.x, basePoints.y); 
+        pointsLeft += flatPointsPerDifficulty * difficulty;
+        pointsLeft *= difficulty / 2f; 
+        pointsLeft *= 1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185]));
     }
     public void SpawnBoss(string boss)
     {
