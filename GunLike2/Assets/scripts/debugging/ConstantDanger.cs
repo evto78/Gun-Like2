@@ -14,6 +14,6 @@ public class ConstantDanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        uiman.AddDangerSource(transform, transform.position, false);
+        uiman.AddDangerSource(transform, transform.position, false, 1);
     }
 }

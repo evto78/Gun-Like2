@@ -89,7 +89,6 @@ public class UIManager : MonoBehaviour
     [System.Serializable] public class StaticDangerInfo { public Vector3 dangerPos; public float timer; public Transform linkedPointer; public Image pointerImg; }
     public List<DynamicDangerInfo> dynamicDangers = new List<DynamicDangerInfo>();
     public List<StaticDangerInfo> staticDangers = new List<StaticDangerInfo>();
-    public float dangerTimer;
     public Transform indicatorWheelParent;
     public GameObject hurtPointer;
     public GameObject warnPointer;
@@ -473,13 +472,13 @@ public class UIManager : MonoBehaviour
             mutationIDText.text = mutatedRules[0] + "|" + mutatedRules[1] + "|" + mutatedRules[2] + "|" + mutatedRules[3] + "|" + mutatedRules[4] + "|" + mutatedRules[5];
         } else { mutationIDText.transform.parent.gameObject.SetActive(false); }
     }
-    public void AddDangerSource(Transform dangerSource, Vector3 dangerPos, bool isStatic)
+    public void AddDangerSource(Transform dangerSource, Vector3 dangerPos, bool isStatic, float dangerDuration)
     {
         if (isStatic)
         {
-            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = dangerTimer; return; } }
+            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = dangerDuration; return; } }
             StaticDangerInfo newDI = new StaticDangerInfo();
-            newDI.dangerPos = dangerPos; newDI.timer = dangerTimer;
+            newDI.dangerPos = dangerPos; newDI.timer = dangerDuration;
             GameObject spawnedPointer = Instantiate(hurtPointer, indicatorWheelParent);
             newDI.linkedPointer = spawnedPointer.transform;
             newDI.pointerImg = spawnedPointer.GetComponent<Image>();
@@ -487,22 +486,22 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = dangerTimer; return; } }
+            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = dangerDuration; return; } }
             DynamicDangerInfo newDI = new DynamicDangerInfo();
-            newDI.dangerPos = dangerSource; newDI.timer = dangerTimer;
+            newDI.dangerPos = dangerSource; newDI.timer = dangerDuration;
             GameObject spawnedPointer = Instantiate(hurtPointer, indicatorWheelParent);
             newDI.linkedPointer = spawnedPointer.transform;
             newDI.pointerImg = spawnedPointer.GetComponent<Image>();
             dynamicDangers.Add(newDI);
         }
     }
-    public void AddDangerWarnSource(Transform dangerSource, Vector3 dangerPos, bool isStatic)
+    public void AddDangerWarnSource(Transform dangerSource, Vector3 dangerPos, bool isStatic, float warnDuration)
     {
         if (isStatic)
         {
-            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = dangerTimer; return; } }
+            foreach (StaticDangerInfo di in staticDangers) { if (di.dangerPos == dangerPos) { di.timer = warnDuration; return; } }
             StaticDangerInfo newDI = new StaticDangerInfo();
-            newDI.dangerPos = dangerPos; newDI.timer = dangerTimer;
+            newDI.dangerPos = dangerPos; newDI.timer = warnDuration;
             GameObject spawnedPointer = Instantiate(warnPointer, indicatorWheelParent);
             newDI.linkedPointer = spawnedPointer.transform;
             newDI.pointerImg = spawnedPointer.GetComponent<Image>();
@@ -510,9 +509,9 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = dangerTimer; return; } }
+            foreach (DynamicDangerInfo di in dynamicDangers) { if (di.dangerPos == dangerSource) { di.timer = warnDuration; return; } }
             DynamicDangerInfo newDI = new DynamicDangerInfo();
-            newDI.dangerPos = dangerSource; newDI.timer = dangerTimer;
+            newDI.dangerPos = dangerSource; newDI.timer = warnDuration;
             GameObject spawnedPointer = Instantiate(warnPointer, indicatorWheelParent);
             newDI.linkedPointer = spawnedPointer.transform;
             newDI.pointerImg = spawnedPointer.GetComponent<Image>();

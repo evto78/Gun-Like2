@@ -29,6 +29,10 @@ public class KnifeBrain : MonoBehaviour
     float cooldownTimer;
     public GameObject knifePrefab;
 
+    CapsuleCollider myCollider;
+    public Vector2 minColliderRH; public Vector2 maxColliderRH;
+    public Vector2 minMaxSizeChangeDist;
+
     EnemyHealthManager hm;
 
     public enum state { idle, wander, chase, prepare, strike} public state curState;
@@ -49,6 +53,7 @@ public class KnifeBrain : MonoBehaviour
         dmg = hm.baseDamage * hm.gdm.difficulty * hm.difficultyScale;
         player = GameObject.Find("Player");
         mr = transform.GetChild(1).gameObject.GetComponent<MeshRenderer>();
+        myCollider = GetComponent<CapsuleCollider>();
 
         moveCurve = Vector3.one * Random.Range(-1f, 1f);
         moveCurve = moveCurve / 2f;
@@ -71,10 +76,7 @@ public class KnifeBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(target == null)
-        {
-            target = player;
-        }
+        if(target == null){target = player;}
 
         if((hm.playerHM.activeEffects[22].x > 0 || (Vector3.Distance(player.transform.position, transform.position) > 100 && hm.curHp == hm.maxHp)) && !hm.gdm.pointsLocked)
         {//Player is invisible. (via circus mask)
@@ -141,13 +143,15 @@ public class KnifeBrain : MonoBehaviour
 
         if (hm.activeEffects[39].x > 0) { speed = baseSpeed / (1.5f * (1.1f * (hm.playerHM.playerItem.leftItems[136] + hm.playerHM.playerItem.rightItems[136]))); }
         else { speed = baseSpeed; }
+
+        float distToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        float relativeDist = (Mathf.Clamp(distToPlayer, minMaxSizeChangeDist.x, minMaxSizeChangeDist.y) - minMaxSizeChangeDist.x) / (minMaxSizeChangeDist.y - minMaxSizeChangeDist.x);
+        myCollider.radius = Mathf.Lerp(minColliderRH.x, maxColliderRH.x, relativeDist);
+        myCollider.height = Mathf.Lerp(minColliderRH.y, maxColliderRH.y, relativeDist);
     }
     private void FixedUpdate()
     {
-        if (target == null)
-        {
-            target = player;
-        }
+        if (target == null) { target = player; }
         if (!pauseNagivation)
         {
             Movement();

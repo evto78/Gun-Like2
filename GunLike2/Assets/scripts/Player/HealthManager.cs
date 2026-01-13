@@ -732,8 +732,8 @@ public class HealthManager : MonoBehaviour
 	}
 	void OnDmgTaken(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager source, string sourceName, Transform sourcePos)
 	{
-		if (sourcePos != null) { uiMan.AddDangerSource(sourcePos, sourcePos.position, false); }
-		else if (source != null) { uiMan.AddDangerSource(source.transform, source.transform.position, false); }
+		if (sourcePos != null) { uiMan.AddDangerSource(sourcePos, sourcePos.position, false, 1); }
+		else if (source != null) { uiMan.AddDangerSource(source.transform, source.transform.position, false, 1); }
 		uiMan.flash.Flash(1f - (curHp / maxHp));
 		uiMan.healthGear.Flash(damageTaken/maxHp);
     }

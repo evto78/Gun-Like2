@@ -10,6 +10,8 @@ public class UZIWalkerBrain : MonoBehaviour
     public GameObject firepoint;
     Animator turretAnim;
     EnemyHealthManager hm;
+    HealthManager phm;
+    UIManager uiMan;
     NavMeshAgent agent;
     NavAI nav;
 
@@ -23,6 +25,7 @@ public class UZIWalkerBrain : MonoBehaviour
     public float dmg;
     public float bulSpeed;
     public float accuracy;
+    public float warnTime; bool sentWarningThisBurst;
 
     bool jammed;
     public ParticleSystem jamEffect;
@@ -32,6 +35,8 @@ public class UZIWalkerBrain : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
+        phm = player.GetComponent<HealthManager>();
+        uiMan = phm.uiMan;
         hm = GetComponent<EnemyHealthManager>();
         dmg = hm.baseDamage * hm.difficultyScale * hm.gdm.difficulty;
         turretAnim = turrethead.GetComponentInChildren<Animator>();
@@ -62,36 +67,32 @@ public class UZIWalkerBrain : MonoBehaviour
             case state.chasing:
                 turrethead.transform.LookAt(player.transform.position);
 
-                if (Physics.Raycast(turrethead.transform.position, turrethead.transform.forward, out RaycastHit hit, 100f))
+                if (CanShoot())
                 {
-                    //Debug.Log(hit.transform.gameObject.tag);
-                    if (hit.transform.gameObject.tag == "Player" || true)
+                    if (fireTimer + cooldownTimer <= 0)
                     {
-                        if (fireTimer <= 0 && cooldownTimer <= 0 && CanShoot())
+                        if (!sentWarningThisBurst) { cooldownTimer = warnTime; break; }
+                        Shoot();
+                        turretAnim.SetBool("Recharge", false);
+                        turretAnim.SetTrigger("Fire");
+                        turretAnim.speed = 1f / fireRate;
+                        bulShot++;
+                        fireTimer = fireRate;
+                        if (bulShot >= bulPerBurst)
                         {
-                            Shoot();
-                            turretAnim.SetBool("Recharge", false);
-                            turretAnim.SetTrigger("Fire");
-                            turretAnim.speed = 1f / fireRate;
-                            bulShot++;
-                            fireTimer = fireRate;
-                            if (bulShot >= bulPerBurst)
-                            {
-                                if (jammed)
-                                {
-                                    hm.activeEffects[30] -= new Vector4(1,0,0,0);
-                                }
-                                cooldownTimer = shotCooldown;
-                                turretAnim.speed = 1f / cooldownTimer;
-                                turretAnim.SetBool("Recharge", true);
-                                bulShot = 0;
-                            }
+                            if (jammed) { hm.activeEffects[30] -= new Vector4(1,0,0,0); }
+                            cooldownTimer = shotCooldown;
+                            turretAnim.speed = 1f / cooldownTimer;
+                            turretAnim.SetBool("Recharge", true);
+                            bulShot = 0;
+                            sentWarningThisBurst = false;
                         }
                     }
                     else if (cooldownTimer <= 0f)
                     {
                         turretAnim.SetBool("Recharge", false);
                     }
+                    if (cooldownTimer <= warnTime && !sentWarningThisBurst) { uiMan.AddDangerWarnSource(transform, transform.position, false, warnTime); }
                 }
                 else if (cooldownTimer <= 0f)
                 {
@@ -108,15 +109,7 @@ public class UZIWalkerBrain : MonoBehaviour
     bool CanShoot()
     {
         Ray ray = new Ray(firepoint.transform.position, player.transform.position - firepoint.transform.position);
-        if(Physics.Raycast(ray,out RaycastHit hit, 75))
-        {
-            if(hit.transform.gameObject.layer == 7)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Physics.Raycast(ray, out RaycastHit hit, 75) && hit.transform.gameObject.layer == 7;
     }
     void Shoot()
     {
