@@ -21,12 +21,12 @@ public class TIGERBrain : MonoBehaviour
     public Vector2 baseWalkSpeedAccel;
     public Vector2 baseChaseSpeedAccel;
     public Vector2 baseSprintSpeedAccel;
-    public enum State { idle, chase, backStep, followTurn, chasePoint, wander, patrol }
-    public State curState;
-    public enum MoveState { walk, chase, sprint }
-    public MoveState curMoveState;
-    public enum AttackState { idle, prepareToFire }
-    public AttackState curAttackState;
+    public enum MoveState { idle, chase, backStep, followTurn, chasePoint, wander, patrol }
+    public MoveState curState;
+    public enum SpeedState { walk, chase, sprint }
+    public SpeedState curMoveState;
+    public enum BehaviorState { idle, prepareToFire, growlStance }
+    public BehaviorState curAttackState;
     [Header("Internal")]
     float masterDmg;
     float timerSpeedModifier;
@@ -70,17 +70,27 @@ public class TIGERBrain : MonoBehaviour
     }
     void Start()
     {
-        if (playIntroOnStart) { pauseUpdate = true; StartCoroutine(IntroAnim()); }
-        else { manualAnim.enabled = false; StartCombat(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; } agent.enabled = true; }
-    }
-    void StartCombat()
-    {
-        ChangeState(curState, curMoveState, curAttackState);
-        gdm.phm.uiMan.bossHealthBars[1].SetActive(true);
-        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
-
         timerSpeedModifier = 1f;
         if (ehm.gdm.difficultyIDSelected == 0) { timerSpeedModifier = 0.8f; }
+
+        //if (playIntroOnStart) { pauseUpdate = true; StartCoroutine(IntroAnim()); }
+        //else { manualAnim.enabled = false; StartPatroling(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; } agent.enabled = true; }
+
+        manualAnim.enabled = false; StartPatroling(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; }
+        agent.enabled = true;
+    }
+    void StartPatroling()
+    {
+        ChangeState(MoveState.patrol, SpeedState.walk, BehaviorState.idle);
+        gdm.phm.uiMan.bossHealthBars[1].SetActive(false);
+    }
+    bool combatStarted = false;
+    public void StartCombat()
+    {
+        if (combatStarted) { return; }
+        ChangeState(MoveState.followTurn, SpeedState.chase, BehaviorState.idle);
+        gdm.phm.uiMan.bossHealthBars[1].SetActive(true);
+        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
     }
     void InitializeHeadJointVals()
     {
@@ -91,40 +101,40 @@ public class TIGERBrain : MonoBehaviour
         midYVals = new List<float>() { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
         rightYVals = new List<float>() { 20f, 0f, 5f, 5f, 5f, 5f, 10f, 10f, 5f, 5f, -30f, 0f, 0f };
     }
-    void ChangeState(State newState, MoveState newMoveState, AttackState newAttackState) 
+    void ChangeState(MoveState newState, SpeedState newMoveState, BehaviorState newAttackState) 
     { 
         curState = newState; curMoveState = newMoveState; curAttackState = newAttackState;
         switch (curState) {
-            case State.idle: nav.SetState(TIGERNavAI.state.idle); break;
-            case State.chase: nav.SetState(TIGERNavAI.state.chase); break;
-            case State.backStep: nav.SetState(TIGERNavAI.state.idle); backstepTimer = 1f; break;
-            case State.followTurn: nav.SetState(TIGERNavAI.state.idle); break; 
-            case State.chasePoint: nav.SetState(TIGERNavAI.state.chasePoint); break; 
-            case State.wander: nav.SetState(TIGERNavAI.state.wander); break; 
-            case State.patrol: nav.SetState(TIGERNavAI.state.patrol); break; }
+            case MoveState.idle: nav.SetState(TIGERNavAI.state.idle); break;
+            case MoveState.chase: nav.SetState(TIGERNavAI.state.chase); break;
+            case MoveState.backStep: nav.SetState(TIGERNavAI.state.idle); backstepTimer = 1f; break;
+            case MoveState.followTurn: nav.SetState(TIGERNavAI.state.idle); break; 
+            case MoveState.chasePoint: nav.SetState(TIGERNavAI.state.chasePoint); break; 
+            case MoveState.wander: nav.SetState(TIGERNavAI.state.wander); break; 
+            case MoveState.patrol: nav.SetState(TIGERNavAI.state.patrol); break; }
         switch (curMoveState) {
-            case MoveState.walk: agent.speed = baseWalkSpeedAccel.x; agent.acceleration = baseWalkSpeedAccel.y; break;
-            case MoveState.chase: agent.speed = baseChaseSpeedAccel.x; agent.acceleration = baseChaseSpeedAccel.y; break;
-            case MoveState.sprint: agent.speed = baseSprintSpeedAccel.x; agent.acceleration = baseSprintSpeedAccel.y; break; }
+            case SpeedState.walk: agent.speed = baseWalkSpeedAccel.x; agent.acceleration = baseWalkSpeedAccel.y; break;
+            case SpeedState.chase: agent.speed = baseChaseSpeedAccel.x; agent.acceleration = baseChaseSpeedAccel.y; break;
+            case SpeedState.sprint: agent.speed = baseSprintSpeedAccel.x; agent.acceleration = baseSprintSpeedAccel.y; break; }
         switch (curAttackState) {
-            case AttackState.idle: break;
-            case AttackState.prepareToFire: break; }
+            case BehaviorState.idle: break;
+            case BehaviorState.prepareToFire: break; }
     }
     void ManualInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { ChangeState(State.idle, curMoveState, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { ChangeState(State.followTurn, curMoveState, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { ChangeState(State.chase, curMoveState, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { ChangeState(State.backStep, curMoveState, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Minus)) { ChangeState(State.wander, curMoveState, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Equals)) { ChangeState(State.patrol, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { ChangeState(MoveState.idle, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { ChangeState(MoveState.followTurn, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { ChangeState(MoveState.chase, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) { ChangeState(MoveState.backStep, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Minus)) { ChangeState(MoveState.wander, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Equals)) { ChangeState(MoveState.patrol, curMoveState, curAttackState); }
 
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, MoveState.walk, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, MoveState.chase, curAttackState); }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) { ChangeState(curState, MoveState.sprint, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, SpeedState.walk, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, SpeedState.chase, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) { ChangeState(curState, SpeedState.sprint, curAttackState); }
 
-        if (Input.GetKeyDown(KeyCode.Alpha8)) { ChangeState(curState, curMoveState, AttackState.idle); }
-        if (Input.GetKeyDown(KeyCode.Alpha9)) { ChangeState(curState, curMoveState, AttackState.prepareToFire); }
+        if (Input.GetKeyDown(KeyCode.Alpha8)) { ChangeState(curState, curMoveState, BehaviorState.idle); }
+        if (Input.GetKeyDown(KeyCode.Alpha9)) { ChangeState(curState, curMoveState, BehaviorState.prepareToFire); }
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) { manualMoving = !manualMoving; }
 
@@ -152,36 +162,42 @@ public class TIGERBrain : MonoBehaviour
         HeadMovement();
 
         switch (curAttackState) {
-            case AttackState.idle: break;
-            case AttackState.prepareToFire:
-                if (prevX < -0.6f) { ChangeState(State.backStep, curMoveState, curAttackState); }
-                else { ChangeState(State.followTurn, curMoveState, curAttackState); }
+            case BehaviorState.idle: break;
+            case BehaviorState.prepareToFire:
+                if (prevX < -0.6f) { ChangeState(MoveState.backStep, curMoveState, curAttackState); }
+                else { ChangeState(MoveState.followTurn, curMoveState, curAttackState); }
                     break; }
         switch (curState) {
-            case State.idle:
+            case MoveState.idle:
                 break;
-            case State.chase:
+            case MoveState.chase:
                 break;
-            case State.chasePoint:
+            case MoveState.chasePoint:
                 break;
-            case State.backStep:
+            case MoveState.backStep:
                 Quaternion curRot = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRot = transform.rotation;
                 transform.rotation = Quaternion.Lerp(curRot, tarRot, Time.deltaTime * followRotSpeed);
                 curBackSpeed += backAccel * 2 * Time.deltaTime; if (curBackSpeed > 1) { curBackSpeed = 1; }
                 CheckStoppedBackstep();
                 break;
-            case State.followTurn:
+            case MoveState.followTurn:
                 Quaternion curRota = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRota = transform.rotation;
                 transform.rotation = Quaternion.Lerp(curRota, tarRota, Time.deltaTime * followRotSpeed);
                 break;
-            case State.wander:
+            case MoveState.wander:
                 break;
-            case State.patrol:
+            case MoveState.patrol:
                 break; }
         transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward;
         if (curBackSpeed > 1) { transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward; curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime*2); }
-        else if (curBackSpeed > 0.1 && curState != State.backStep) { curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime); }
-        else if (curState != State.backStep) { curBackSpeed = 0; }
+        else if (curBackSpeed > 0.1 && curState != MoveState.backStep) { curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime); }
+        else if (curState != MoveState.backStep) { curBackSpeed = 0; }
+
+        //Check if damaged, to start combat if combat hasn't already started
+        if (!combatStarted && ehm.curHp != ehm.maxHp) 
+        {
+            StartCombat();
+        }
 
         //Other updates
         bha.BrainUpdate();
@@ -189,7 +205,7 @@ public class TIGERBrain : MonoBehaviour
         foreach(TIGERIKFootSolver leg in bha.legs) { leg.BrainUpdate(); }
         nav.BrainUpdate();
     }
-    void CheckStoppedBackstep() { if (bha.currentSpeed < 0.2f && backstepTimer <= 0) { ChangeState(State.idle, curMoveState, curAttackState); } }
+    void CheckStoppedBackstep() { if (bha.currentSpeed < 0.2f && backstepTimer <= 0) { ChangeState(MoveState.idle, curMoveState, curAttackState); } }
     void HeadMovement()
     {
         float xAxis;
@@ -200,10 +216,10 @@ public class TIGERBrain : MonoBehaviour
         Quaternion curRot = headPointer.localRotation;
         switch (curState)
         {
-            case State.idle: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
-            case State.chasePoint: headPointer.LookAt(manualNavPoint); break;
-            case State.wander: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
-            case State.patrol: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
+            case MoveState.idle: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
+            case MoveState.chasePoint: headPointer.LookAt(manualNavPoint); break;
+            case MoveState.wander: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
+            case MoveState.patrol: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
             default: headPointer.LookAt(player); break;
         }
         Debug.DrawRay(headPointer.position, headPointer.forward * 25, Color.yellow);
@@ -313,27 +329,6 @@ public class TIGERBrain : MonoBehaviour
 
         return output;
     }
-    IEnumerator PrepareToShootAndFire()
-    {
-        manualNavPoint = GetClosestRandPointAtGivenDistanceFromPlayer(100);
-        Debug.Log(manualNavPoint);
-        float waitTimer = 0;
-        if (manualNavPoint != Vector3.zero)
-        {
-            ChangeState(State.chasePoint, MoveState.sprint, AttackState.idle);
-            while (waitTimer < 8 && Vector3.Distance(transform.position, manualNavPoint) > 10)
-            {
-                waitTimer += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
-        }
-        ChangeState(State.backStep, MoveState.chase, AttackState.prepareToFire);
-        waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        CannonShoot();
-        ChangeState(State.idle, MoveState.chase, AttackState.idle);
-        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        yield return null;
-    }
     void CannonShoot()
     {
         curBackSpeed = 4;
@@ -344,19 +339,46 @@ public class TIGERBrain : MonoBehaviour
         spawnedBul.GetComponent<Rigidbody>().AddForce(cannonFirepoint.forward * 10, ForceMode.Impulse);
         foreach (ParticleSystem ps in muzzleFlash) { ps.Play(); }
     }
-    IEnumerator IntroAnim()
+    IEnumerator PrepareToShootAndFire()
     {
-        //Setup for anim
-        foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = false; }
-        foreach (Animator a in proceduralAnims) { a.enabled = false; }
-        manualAnim.enabled = true;
-        pauseUpdate = true;
-
-        //Setup for combat
-        foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = true; }
-        foreach (Animator a in proceduralAnims) { a.enabled = true; }
-        manualAnim.enabled = false;
-        pauseUpdate = false;
+        manualNavPoint = GetClosestRandPointAtGivenDistanceFromPlayer(100);
+        float waitTimer = 0;
+        if (manualNavPoint != Vector3.zero)
+        {
+            ChangeState(MoveState.chasePoint, SpeedState.sprint, BehaviorState.idle);
+            while (waitTimer < 8 && Vector3.Distance(transform.position, manualNavPoint) > 10)
+            {
+                waitTimer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        ChangeState(MoveState.backStep, SpeedState.chase, BehaviorState.prepareToFire);
+        waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        CannonShoot();
+        ChangeState(MoveState.idle, SpeedState.chase, BehaviorState.idle);
+        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
         yield return null;
     }
+    IEnumerator BeginCombat()
+    {
+
+
+        yield return null;
+    }
+
+    //IEnumerator IntroAnim()
+    //{
+    //    //Setup for anim
+    //    foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = false; }
+    //    foreach (Animator a in proceduralAnims) { a.enabled = false; }
+    //    manualAnim.enabled = true;
+    //    pauseUpdate = true;
+    //
+    //    //Setup for combat
+    //    foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = true; }
+    //    foreach (Animator a in proceduralAnims) { a.enabled = true; }
+    //    manualAnim.enabled = false;
+    //    pauseUpdate = false;
+    //    yield return null;
+    //}
 }

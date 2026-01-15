@@ -42,20 +42,20 @@ public class TIGERIKFootSolver : MonoBehaviour
     }
     void StateFluidSteps()
     {
-        moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.State.backStep || manager.brain.curBackSpeed > 0) { moveDir *= -0.5f; }
+        moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.MoveState.backStep || manager.brain.curBackSpeed > 0) { moveDir *= -0.5f; }
         Vector3 hipPlacementOffset = hip.up * (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength);
         hipPlacementOffset *= moveDir;
 
         bool stepSooner = false; bool notDoneStepping = false; float maxDistMod = 1f;
         switch (manager.brain.curState)
         {
-            case TIGERBrain.State.idle: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; break;
-            case TIGERBrain.State.followTurn: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.3f; break;
-            case TIGERBrain.State.chase: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
-            case TIGERBrain.State.chasePoint: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
-            case TIGERBrain.State.wander: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
-            case TIGERBrain.State.patrol: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
-            case TIGERBrain.State.backStep: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; break;
+            case TIGERBrain.MoveState.idle: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; break;
+            case TIGERBrain.MoveState.followTurn: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.3f; break;
+            case TIGERBrain.MoveState.chase: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
+            case TIGERBrain.MoveState.chasePoint: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
+            case TIGERBrain.MoveState.wander: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
+            case TIGERBrain.MoveState.patrol: if(manager.currentSpeed <= manager.walkRunSpeedThreshold.x) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; }; break;
+            case TIGERBrain.MoveState.backStep: stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; break;
         }
         if(manager.brain.curBackSpeed > 0) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; }
 

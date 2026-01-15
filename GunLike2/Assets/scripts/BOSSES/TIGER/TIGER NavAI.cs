@@ -101,6 +101,14 @@ public class TIGERNavAI : MonoBehaviour
                     followPoint = hit.position; NavMeshPath path = new NavMeshPath();
                     if (!agent.CalculatePath(followPoint, path)) { agent.destination = transform.position; }
                     else { agent.destination = followPoint; }
+                    if (Vector3.Distance(transform.position, followPoint) > 40f)
+                    {
+                        demoPatrol.speed = agent.speed / 10f;
+                    }
+                    else
+                    {
+                        demoPatrol.speed = agent.speed / 2f;
+                    }
                 }
                 else { agent.destination = transform.position; }
                 break;
@@ -119,7 +127,7 @@ public class TIGERNavAI : MonoBehaviour
             case state.chase: break;
             case state.chasePoint: break;
             case state.wander: wanderTimer = 0; GetRandomAvaliablePoint(); break;
-            case state.patrol: break;
+            case state.patrol: demoPatrol.BeginPatrol(); break;
         }
         navState = newState;
     }

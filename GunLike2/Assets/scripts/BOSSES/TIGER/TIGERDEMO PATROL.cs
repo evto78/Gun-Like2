@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TIGERDEMOPATROL : MonoBehaviour
 {
+    public bool hidePoints;
+    public Transform tiger;
     public Transform followpoint;
     public Transform patrolPoints;
     List<Transform> points = new List<Transform>();
@@ -14,11 +16,14 @@ public class TIGERDEMOPATROL : MonoBehaviour
         for(int i = 0; i < patrolPoints.childCount; i++)
         {
             points.Add(patrolPoints.GetChild(i).transform);
+            points[i].GetComponent<MeshRenderer>().enabled = !hidePoints;
         }
+        followpoint.GetComponent<MeshRenderer>().enabled = !hidePoints;
         followpoint.position = points[0].position;
         followpoint.rotation = points[0].rotation;
         nextPoint = 1;
         followpoint.LookAt(points[nextPoint]);
+        BeginPatrol();
     }
     void Update()
     {
@@ -28,5 +33,20 @@ public class TIGERDEMOPATROL : MonoBehaviour
             nextPoint++; if(nextPoint >= points.Count) { nextPoint = 0; }
             followpoint.LookAt(points[nextPoint]);
         }
+    }
+    public void BeginPatrol()
+    {
+        float minDist = float.PositiveInfinity; int minDistIndex = 0;
+
+        foreach(Transform t in points)
+        {
+            float dist = Vector3.Distance(t.position, tiger.position);
+            if (dist < minDist) { minDist = dist; minDistIndex = points.IndexOf(t); }
+        }
+
+        followpoint.position = points[minDistIndex].position;
+        nextPoint = minDistIndex + 1;
+        if (nextPoint >= points.Count) {nextPoint = 0; }
+        followpoint.LookAt(points[nextPoint]);
     }
 }
