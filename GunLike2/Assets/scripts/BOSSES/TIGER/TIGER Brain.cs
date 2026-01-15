@@ -21,7 +21,7 @@ public class TIGERBrain : MonoBehaviour
     public Vector2 baseWalkSpeedAccel;
     public Vector2 baseChaseSpeedAccel;
     public Vector2 baseSprintSpeedAccel;
-    public enum State { idle, chase, backStep, followTurn, chasePoint }
+    public enum State { idle, chase, backStep, followTurn, chasePoint, wander, patrol }
     public State curState;
     public enum MoveState { walk, chase, sprint }
     public MoveState curMoveState;
@@ -99,7 +99,9 @@ public class TIGERBrain : MonoBehaviour
             case State.chase: nav.SetState(TIGERNavAI.state.chase); break;
             case State.backStep: nav.SetState(TIGERNavAI.state.idle); backstepTimer = 1f; break;
             case State.followTurn: nav.SetState(TIGERNavAI.state.idle); break; 
-            case State.chasePoint: nav.SetState(TIGERNavAI.state.chasePoint); break; }
+            case State.chasePoint: nav.SetState(TIGERNavAI.state.chasePoint); break; 
+            case State.wander: nav.SetState(TIGERNavAI.state.wander); break; 
+            case State.patrol: nav.SetState(TIGERNavAI.state.patrol); break; }
         switch (curMoveState) {
             case MoveState.walk: agent.speed = baseWalkSpeedAccel.x; agent.acceleration = baseWalkSpeedAccel.y; break;
             case MoveState.chase: agent.speed = baseChaseSpeedAccel.x; agent.acceleration = baseChaseSpeedAccel.y; break;
@@ -114,6 +116,8 @@ public class TIGERBrain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2)) { ChangeState(State.followTurn, curMoveState, curAttackState); }
         if (Input.GetKeyDown(KeyCode.Alpha3)) { ChangeState(State.chase, curMoveState, curAttackState); }
         if (Input.GetKeyDown(KeyCode.Alpha4)) { ChangeState(State.backStep, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Minus)) { ChangeState(State.wander, curMoveState, curAttackState); }
+        if (Input.GetKeyDown(KeyCode.Equals)) { ChangeState(State.patrol, curMoveState, curAttackState); }
 
         if (Input.GetKeyDown(KeyCode.Alpha5)) { ChangeState(curState, MoveState.walk, curAttackState); }
         if (Input.GetKeyDown(KeyCode.Alpha6)) { ChangeState(curState, MoveState.chase, curAttackState); }
@@ -169,6 +173,10 @@ public class TIGERBrain : MonoBehaviour
             case State.followTurn:
                 Quaternion curRota = transform.rotation; transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z)); Quaternion tarRota = transform.rotation;
                 transform.rotation = Quaternion.Lerp(curRota, tarRota, Time.deltaTime * followRotSpeed);
+                break;
+            case State.wander:
+                break;
+            case State.patrol:
                 break; }
         transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward;
         if (curBackSpeed > 1) { transform.position -= Time.deltaTime * sineCurve.Evaluate(curBackSpeed) * baseWalkSpeedAccel.x * 0.2f * transform.forward; curBackSpeed = Mathf.Lerp(curBackSpeed, 0, Time.deltaTime*2); }
@@ -194,6 +202,8 @@ public class TIGERBrain : MonoBehaviour
         {
             case State.idle: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
             case State.chasePoint: headPointer.LookAt(manualNavPoint); break;
+            case State.wander: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
+            case State.patrol: headPointer.LookAt(headPointer.position + transform.forward * 10f); break;
             default: headPointer.LookAt(player); break;
         }
         Debug.DrawRay(headPointer.position, headPointer.forward * 25, Color.yellow);

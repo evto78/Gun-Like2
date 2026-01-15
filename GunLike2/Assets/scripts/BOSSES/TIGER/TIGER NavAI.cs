@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,11 +10,13 @@ public class TIGERNavAI : MonoBehaviour
     NavMeshAgent agent;
     GameObject target;
 
+    public TIGERDEMOPATROL demoPatrol;
+
     public float desDistance;
 
     float targetUpdateTimer;
     public float updateFreq;
-    public enum state { idle, wander, chase, chasePoint }
+    public enum state { idle, wander, chase, chasePoint, patrol }
     public state navState;
     float wanderTimer = 0;
     Vector3 lastSecondPos; float lspTimer;
@@ -42,10 +45,9 @@ public class TIGERNavAI : MonoBehaviour
                 if (targetUpdateTimer < 0)
                 {
                     targetUpdateTimer = updateFreq;
-                    NavMeshHit hit;
-                    if (NavMesh.SamplePosition(target.transform.position, out hit, 10f, NavMesh.AllAreas))
+                    if (NavMesh.SamplePosition(target.transform.position, out NavMeshHit hitChase, 10f, NavMesh.AllAreas))
                     {
-                        agent.gameObject.GetComponent<NavMeshAgent>().destination = hit.position;
+                        agent.gameObject.GetComponent<NavMeshAgent>().destination = hitChase.position;
                     }
 
                 }
@@ -64,10 +66,9 @@ public class TIGERNavAI : MonoBehaviour
                 if (targetUpdateTimer < 0)
                 {
                     targetUpdateTimer = updateFreq;
-                    NavMeshHit hit;
-                    if (NavMesh.SamplePosition(brain.manualNavPoint, out hit, 10f, NavMesh.AllAreas))
+                    if (NavMesh.SamplePosition(brain.manualNavPoint, out NavMeshHit hitPoint, 10f, NavMesh.AllAreas))
                     {
-                        agent.gameObject.GetComponent<NavMeshAgent>().destination = hit.position;
+                        agent.gameObject.GetComponent<NavMeshAgent>().destination = hitPoint.position;
                     }
 
                 }
@@ -91,6 +92,18 @@ public class TIGERNavAI : MonoBehaviour
                     GetRandomAvaliablePoint(); wanderTimer = 0f;
                 }
                 break;
+            case state.patrol:
+                agent.isStopped = false;
+                Vector3 followPoint;
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(demoPatrol.followpoint.position, out hit, 10f, 1))
+                {
+                    followPoint = hit.position; NavMeshPath path = new NavMeshPath();
+                    if (!agent.CalculatePath(followPoint, path)) { agent.destination = transform.position; }
+                    else { agent.destination = followPoint; }
+                }
+                else { agent.destination = transform.position; }
+                break;
         }
     }
     void Update()
@@ -106,6 +119,7 @@ public class TIGERNavAI : MonoBehaviour
             case state.chase: break;
             case state.chasePoint: break;
             case state.wander: wanderTimer = 0; GetRandomAvaliablePoint(); break;
+            case state.patrol: break;
         }
         navState = newState;
     }
