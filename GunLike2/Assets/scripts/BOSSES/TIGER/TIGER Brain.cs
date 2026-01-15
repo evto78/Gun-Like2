@@ -39,6 +39,15 @@ public class TIGERBrain : MonoBehaviour
     List<float> downXVals; List<float> upXVals; List<float> midXVals;
     List<float> leftYVals; List<float> rightYVals; List<float> midYVals;
     float prevX = 0f; float prevY = 0f; bool manualMoving = false;
+    public Transform skull; Vector3 skullStartPos; Vector3 skullStartRot; Vector3 skullOpenPos; Vector3 skullOpenRot; Vector3 skullClosedPos; Vector3 skullClosedRot;
+    public Transform lowerJaw; Vector3 lowerJawStartPos; Vector3 lowerJawStartRot; Vector3 lowerJawOpenPos; Vector3 lowerJawOpenRot; Vector3 lowerJawClosedPos; Vector3 lowerJawClosedRot;
+    public float skullMaxZTwist;
+    float skullTwistProgress;
+    float skullTwistDir = 1f;
+    public float skullTwistSpeed;
+    public float skullOpenCloseSpeed;
+    float jawOpenCloseProgress;
+    public float jawOpenCloseTarProgress = 0f;
 
     [Header("ManualAnim")]
     public bool playIntroOnStart;
@@ -94,12 +103,22 @@ public class TIGERBrain : MonoBehaviour
     }
     void InitializeHeadJointVals()
     {
+        //Head movement
         downXVals = new List<float>() { 10f, 12f, 3f, 3f, 3f, 3f, 3f, 3f, 3f, 3f, -12f, 0f, 0f };
         midXVals = new List<float>() { 10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
         upXVals = new List<float>() { 10f, -40f, -5f, -5f, -15f, -15f, -5f, 0f, 10f, 10f, -40f, 0f, 0f };
         leftYVals = new List<float>() { -20f, 0f, -5f, -5f, -5f, -5f, -10f, -10f, -5f, -5f, 30f, 0f, 0f };
         midYVals = new List<float>() { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
         rightYVals = new List<float>() { 20f, 0f, 5f, 5f, 5f, 5f, 10f, 10f, 5f, 5f, -30f, 0f, 0f };
+
+        //Skull open closing
+        skullStartPos = new Vector3(0, -0.004f, 0.016f); skullOpenPos = new Vector3(0, 0.01f, 0.016f); skullClosedPos = new Vector3(0, -0.004f, 0.016f);
+        skullStartRot = new Vector3(0, 0, 0); skullOpenRot = new Vector3(-30f, 0, 0); skullClosedRot = new Vector3(12.5f, 0, 0);
+        lowerJawStartPos = new Vector3(0, 0, 0); lowerJawOpenPos = new Vector3(0, -0.006f, -0.011f); lowerJawClosedPos = new Vector3(0, 0, 0);
+        lowerJawStartRot = new Vector3(0, 0, 0); lowerJawOpenRot = new Vector3(50f, 0, 0); lowerJawClosedRot = new Vector3(-25f, 0, 0);
+
+        skull.localPosition = skullStartPos; skull.localEulerAngles = skullStartRot;
+        lowerJaw.localPosition = lowerJawStartPos; lowerJaw.localEulerAngles = lowerJawStartRot;
     }
     void ChangeState(MoveState newState, SpeedState newMoveState, BehaviorState newAttackState) 
     { 
@@ -118,6 +137,7 @@ public class TIGERBrain : MonoBehaviour
             case SpeedState.sprint: agent.speed = baseSprintSpeedAccel.x; agent.acceleration = baseSprintSpeedAccel.y; break; }
         switch (curAttackState) {
             case BehaviorState.idle: break;
+            case BehaviorState.growlStance: break;
             case BehaviorState.prepareToFire: break; }
     }
     void ManualInput()
@@ -163,6 +183,7 @@ public class TIGERBrain : MonoBehaviour
 
         switch (curAttackState) {
             case BehaviorState.idle: break;
+            case BehaviorState.growlStance: break;
             case BehaviorState.prepareToFire:
                 if (prevX < -0.6f) { ChangeState(MoveState.backStep, curMoveState, curAttackState); }
                 else { ChangeState(MoveState.followTurn, curMoveState, curAttackState); }
@@ -264,6 +285,28 @@ public class TIGERBrain : MonoBehaviour
                     case 0: HeadJointAdjust(1 + xAxis, yAxis, downXVals, midXVals, midYVals, midYVals); break;
                     case < 0: HeadJointAdjust(1 + xAxis, 1 + yAxis, downXVals, midXVals, leftYVals, midYVals); break;
                 }
+                break;
+        }
+
+        //Jaw movement
+        skullTwistProgress += Time.deltaTime * skullTwistDir * skullTwistSpeed;
+        if (skullTwistProgress > 1 || skullTwistProgress < -1) { skullTwistProgress = Mathf.Clamp(skullTwistProgress, -1f, 1f); skullTwistDir *= -1; }
+        switch (jawOpenCloseProgress)
+        {
+            case >= 0:
+                jawOpenCloseProgress = Mathf.Lerp(jawOpenCloseProgress, jawOpenCloseTarProgress, Time.deltaTime * skullOpenCloseSpeed);
+                skull.localPosition = Vector3.Lerp(skullStartPos, skullOpenPos, jawOpenCloseProgress);
+                skull.localEulerAngles = Vector3.Lerp(skullStartRot, skullOpenRot, jawOpenCloseProgress);
+                lowerJaw.localPosition = Vector3.Lerp(lowerJawStartPos, lowerJawOpenPos, jawOpenCloseProgress);
+                lowerJaw.localEulerAngles = Vector3.Lerp(lowerJawStartRot, lowerJawOpenRot, jawOpenCloseProgress);
+                skull.localEulerAngles += jawOpenCloseProgress * skullMaxZTwist * skullTwistProgress * Vector3.forward;
+                break;
+            case < 0:
+                jawOpenCloseProgress = Mathf.Lerp(jawOpenCloseProgress, jawOpenCloseTarProgress, Time.deltaTime * skullOpenCloseSpeed * 2f);
+                skull.localPosition = Vector3.Lerp(skullStartPos, skullClosedPos, -jawOpenCloseProgress);
+                skull.localEulerAngles = Vector3.Lerp(skullStartRot, skullClosedRot, -jawOpenCloseProgress);
+                lowerJaw.localPosition = Vector3.Lerp(lowerJawStartPos, lowerJawClosedPos, -jawOpenCloseProgress);
+                lowerJaw.localEulerAngles = Vector3.Lerp(lowerJawStartRot, lowerJawClosedRot, -jawOpenCloseProgress);
                 break;
         }
     }

@@ -15743,7 +15743,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 50
@@ -25669,7 +25669,7 @@ Transform:
   m_GameObject: {fileID: 6288371606520115407}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.004833493, z: 0.01665143}
+  m_LocalPosition: {x: 0, y: -0.004, z: 0.016}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -28275,9 +28275,10 @@ MonoBehaviour:
   baseWalkSpeedAccel: {x: 20, y: 4}
   baseChaseSpeedAccel: {x: 80, y: 10}
   baseSprintSpeedAccel: {x: 120, y: 20}
-  curState: 0
+  curState: 3
   curMoveState: 1
   curAttackState: 0
+  curBackSpeed: 0
   sineCurve:
     serializedVersion: 2
     m_Curve:
@@ -28314,8 +28315,6 @@ MonoBehaviour:
   - {fileID: 4583448703616903877}
   - {fileID: 2627024571787082912}
   - {fileID: 2408400590374597866}
-  - {fileID: 3396195744401001601}
-  - {fileID: 9108042533784906697}
   playIntroOnStart: 0
   manualAnim: {fileID: 8445666154169837751}
   proceduralAnims:
@@ -28354,11 +28353,11 @@ MonoBehaviour:
   curState: 0
   handlePairs: 1
   walkStepHeightMod: 0.25
-  runStepHeightMod: 2
+  runStepHeightMod: 1.8
   walkStepLengthMod: 1
-  runStepLengthMod: 2
+  runStepLengthMod: 1.8
   walkStepSpeedMod: 1.1
-  runStepSpeedMod: 0.5
+  runStepSpeedMod: 0.4
   walkCurve:
     serializedVersion: 2
     m_Curve:
@@ -28495,7 +28494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88c875c5e689974c90a258283720515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMaxHp: 10000
+  baseMaxHp: 1000
   baseArmor: 10
   baseDamage: 1
   difficultyStatScaling: 0.5
@@ -28514,8 +28513,8 @@ MonoBehaviour:
   moneyDrop: 5000
   dropVariance: 0
   dropChance: 100
-  curHp: 10000
-  maxHp: 10000
+  curHp: 1000
+  maxHp: 1000
   armor: 10
   damageText: {fileID: 5471558382887693187, guid: 82cd74ae1539dd84a8ead7f9d43cd72e, type: 3}
   latestDamage: 0
@@ -28578,6 +28577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32762383039d4a4b8cf2e1806b58182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  demoPatrol: {fileID: 0}
   desDistance: 15
   updateFreq: 0.5
   navState: 0
@@ -50049,7 +50049,7 @@ Transform:
   m_GameObject: {fileID: 8920856731593813116}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000007122159, y: 0.0007529889, z: -0.0002943975}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
