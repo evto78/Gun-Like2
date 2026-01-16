@@ -11,9 +11,9 @@ public class TIGERDEMOPATROL : MonoBehaviour
     List<Transform> points = new List<Transform>();
     public float speed;
     int nextPoint;
-    void Start()
+    private void Awake()
     {
-        for(int i = 0; i < patrolPoints.childCount; i++)
+        for (int i = 0; i < patrolPoints.childCount; i++)
         {
             points.Add(patrolPoints.GetChild(i).transform);
             points[i].GetComponent<MeshRenderer>().enabled = !hidePoints;
@@ -22,6 +22,9 @@ public class TIGERDEMOPATROL : MonoBehaviour
         followpoint.position = points[0].position;
         followpoint.rotation = points[0].rotation;
         nextPoint = 1;
+    }
+    void Start()
+    {
         followpoint.LookAt(points[nextPoint]);
         BeginPatrol();
     }

@@ -45,7 +45,7 @@ public class TIGERIKFootSolver : MonoBehaviour
         moveDir = Mathf.Clamp(manager.currentSpeed, -1f, 1f); if (manager.brain.curState == TIGERBrain.MoveState.backStep || manager.brain.curBackSpeed > 0) { moveDir *= -0.5f; }
         Vector3 hipPlacementOffset = hip.up * (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength);
         hipPlacementOffset *= moveDir;
-
+        
         bool stepSooner = false; bool notDoneStepping = false; float maxDistMod = 1f;
         switch (manager.brain.curState)
         {
@@ -59,16 +59,17 @@ public class TIGERIKFootSolver : MonoBehaviour
         }
         if(manager.brain.curBackSpeed > 0) { stepSooner = GetHorizontalDist(); notDoneStepping = Vector3.Distance(transform.position, meshFoot.position) > 1; maxDistMod = 0.5f; }
 
+        float xOffset = 0f; if (manager.brain.curAttackState == TIGERBrain.BehaviorState.growlStance) { stepSooner = true; xOffset = -1f; if (manager.legs.IndexOf(this) == 0 || manager.legs.IndexOf(this) == 2) { xOffset = 1f; } }
         float relativeStepSpeed = (Mathf.Clamp(manager.currentSpeed, 1.5f, 10) * stepSpeed);
         float stepSpeedMod = 1f;
-        activeNextPos = staticNextPos; ;
+        activeNextPos = staticNextPos;
         if (goingToMStep) { stepSpeedMod *= 1.5f; activeNextPos += mStepOffset; }
         if (stepSooner) { stepSpeedMod *= 2f; }
 
         if (!stepping)
         {
             if (stay) { transform.position = stayPos; } else { SnapToGround(); }
-            Ray ray = new Ray(hip.position + hipPlacementOffset, Vector3.down);
+            Ray ray = new Ray(hip.position + hipPlacementOffset + (hip.right * xOffset), Vector3.down);
             if (Physics.Raycast(ray, out RaycastHit info, maxStepHeight * 4f, terrainLayer.value)) { staticNextPos = info.point; }
             if (stepSooner) {
                 if (!pairedLeg.stepping && Vector3.Distance(transform.position, staticNextPos) > (Mathf.Lerp(manager.walkStepLengthMod, manager.runStepLengthMod, manager.progressToRun) * stepLength) * 0.5f * (maxDistMod/2f))

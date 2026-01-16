@@ -48,6 +48,7 @@ public class TIGERBrain : MonoBehaviour
     public float skullOpenCloseSpeed;
     float jawOpenCloseProgress;
     public float jawOpenCloseTarProgress = 0f;
+    bool combatStarted = false;
 
     [Header("ManualAnim")]
     public bool playIntroOnStart;
@@ -85,21 +86,21 @@ public class TIGERBrain : MonoBehaviour
         //if (playIntroOnStart) { pauseUpdate = true; StartCoroutine(IntroAnim()); }
         //else { manualAnim.enabled = false; StartPatroling(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; } agent.enabled = true; }
 
+        gdm.phm.uiMan.bossHealthBars[1].SetActive(false);
+        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
+
         manualAnim.enabled = false; StartPatroling(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; }
         agent.enabled = true;
     }
     void StartPatroling()
     {
         ChangeState(MoveState.patrol, SpeedState.walk, BehaviorState.idle);
-        gdm.phm.uiMan.bossHealthBars[1].SetActive(false);
     }
-    bool combatStarted = false;
     public void StartCombat()
     {
         if (combatStarted) { return; }
-        ChangeState(MoveState.followTurn, SpeedState.chase, BehaviorState.idle);
-        gdm.phm.uiMan.bossHealthBars[1].SetActive(true);
-        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
+        combatStarted = true;
+        StartCoroutine(BeginCombat());
     }
     void InitializeHeadJointVals()
     {
@@ -402,9 +403,40 @@ public class TIGERBrain : MonoBehaviour
         waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
         yield return null;
     }
+    IEnumerator QuickPrepareToShootAndFire()
+    {
+        float waitTimer = 0;
+        ChangeState(MoveState.backStep, SpeedState.chase, BehaviorState.prepareToFire);
+        waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        CannonShoot();
+        ChangeState(MoveState.idle, SpeedState.chase, BehaviorState.idle);
+        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        yield return null;
+    }
     IEnumerator BeginCombat()
     {
-
+        ChangeState(MoveState.followTurn, SpeedState.chase, BehaviorState.idle);
+        float waitTimer = 0; while(waitTimer < 0.5f) {  waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        ChangeState(MoveState.followTurn, SpeedState.chase, BehaviorState.growlStance);
+        jawOpenCloseTarProgress = -1f;
+        waitTimer = 0; while (waitTimer < 0.5f) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        jawOpenCloseTarProgress = 1f;
+        gdm.phm.uiMan.bossHealthBars[1].SetActive(true);
+        gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
+        waitTimer = 0; while (waitTimer < 1.5f) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        jawOpenCloseTarProgress = 0f;
+        manualNavPoint = GetClosestRandPointAtGivenDistanceFromPlayer(150);
+        waitTimer = 0;
+        if (manualNavPoint != Vector3.zero)
+        {
+            ChangeState(MoveState.chasePoint, SpeedState.chase, BehaviorState.idle);
+            while (waitTimer < 8 && Vector3.Distance(transform.position, manualNavPoint) > 10)
+            {
+                waitTimer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        StartCoroutine(QuickPrepareToShootAndFire());
 
         yield return null;
     }
