@@ -16,6 +16,7 @@ public class TIGERBrain : MonoBehaviour
     GameDataManager gdm;
     public Transform headPointer;
     public Transform cannonFirepoint;
+    public ParticleSystem chargeEffect;
 
     [Header("States and Stats")]
     public Vector2 baseWalkSpeedAccel;
@@ -58,6 +59,9 @@ public class TIGERBrain : MonoBehaviour
     public Vector3 manualNavPoint;
 
     [Header("Attacks")]
+    bool attacking;
+    bool canAttack;
+    float attackTimer;
     public GameObject nuke;
     public float nukeDmg;
     public LineRenderer aimingLR;
@@ -65,6 +69,7 @@ public class TIGERBrain : MonoBehaviour
 
     private void Awake()
     {
+        attacking = false; canAttack = false;
         playIntroOnStart = false; // <-- DISABLED FOR TESTING
         ehm = GetComponent<BossHealthManager>();
         bha = GetComponent<TIGERBodyHeightAdjust>();
@@ -221,11 +226,32 @@ public class TIGERBrain : MonoBehaviour
             StartCombat();
         }
 
+        //Attacks
+        SelectAttack();
+
         //Other updates
         bha.BrainUpdate();
         tm.BrainUpdate();
         foreach(TIGERIKFootSolver leg in bha.legs) { leg.BrainUpdate(); }
         nav.BrainUpdate();
+    }
+    void SelectAttack()
+    {
+        if (attacking && curState == MoveState.chase && Vector3.Distance(transform.position, player.position)<20f && attackTimer > 0)
+        {
+            attacking = false; attackTimer = 0f;
+        }
+
+        if (attacking || !canAttack) { return; }
+        attackTimer -= Time.deltaTime * timerSpeedModifier;
+        if (attackTimer < 0)
+        {
+            switch (Random.Range(0,4))
+            {
+                case <3: attacking = true; StartCoroutine(PrepareToShootAndFire()); break;
+                case 3: attacking = true; attackTimer = 8f; ChangeState(MoveState.chase, SpeedState.chase, BehaviorState.idle); break;
+            }
+        }
     }
     void CheckStoppedBackstep() { if (bha.currentSpeed < 0.2f && backstepTimer <= 0) { ChangeState(MoveState.idle, curMoveState, curAttackState); } }
     void HeadMovement()
@@ -246,10 +272,13 @@ public class TIGERBrain : MonoBehaviour
         }
         Debug.DrawRay(headPointer.position, headPointer.forward * 25, Color.yellow);
         Quaternion tarRot = headPointer.localRotation;
+        float xTurnSpeedMult = 1f; float yTurnSpeedMult = 1f;
+        if (Mathf.Abs(curRot.x - tarRot.x) < 1f) { xTurnSpeedMult = 0.25f; }
+        if (Mathf.Abs(curRot.y - tarRot.y) < 1f) { yTurnSpeedMult = 0.25f; }
         if (tarRot.x > 80f || tarRot.x < -80f) { tarRot.x = 0; }
         if (tarRot.y > 80f || tarRot.y < -80f) { tarRot.y = 0; }
-        if (curRot.x > tarRot.x) { prevX += Time.deltaTime * 1f; } else { prevX -= Time.deltaTime * 1f; }
-        if (curRot.y > tarRot.y) { prevY -= Time.deltaTime * 1f; } else { prevY += Time.deltaTime * 1f; }
+        if (curRot.x > tarRot.x) { prevX += Time.deltaTime * xTurnSpeedMult; } else { prevX -= Time.deltaTime * xTurnSpeedMult; }
+        if (curRot.y > tarRot.y) { prevY -= Time.deltaTime * yTurnSpeedMult; } else { prevY += Time.deltaTime * yTurnSpeedMult; }
 
         prevX = Mathf.Clamp(prevX, -1, 1);
         prevY = Mathf.Clamp(prevY, -1, 1);
@@ -354,20 +383,26 @@ public class TIGERBrain : MonoBehaviour
         Vector3 output = Vector3.zero;
 
         List<Vector3> options = new List<Vector3>();
-        for(int i = 0; i < 50; i++)
+        for(int i = 0; i < 8; i++)
         {
-            switch (Random.Range(0, 4))
+            switch (i)
             {
-                case 0: options.Add(player.position + new Vector3(Random.Range(dist / 1.1f, dist * 1.1f), 0, Random.Range(dist / 1.1f, dist * 1.1f))); break;
-                case 1: options.Add(player.position + new Vector3(-Random.Range(dist / 1.1f, dist * 1.1f), 0, Random.Range(dist / 1.1f, dist * 1.1f))); break;
-                case 2: options.Add(player.position + new Vector3(Random.Range(dist / 1.1f, dist * 1.1f), 0, -Random.Range(dist / 1.1f, dist * 1.1f))); break;
-                case 3: options.Add(player.position + new Vector3(-Random.Range(dist / 1.1f, dist * 1.1f), 0, -Random.Range(dist / 1.1f, dist * 1.1f))); break;
+                case 0: options.Add(player.position + Vector3.right * dist); break;
+                case 1: options.Add(player.position - Vector3.right * dist); break;
+                case 2: options.Add(player.position + Vector3.forward * dist); break;
+                case 3: options.Add(player.position - Vector3.forward * dist); break;
+                case 4: options.Add(player.position + (Vector3.right+Vector3.forward).normalized * dist); break;
+                case 5: options.Add(player.position - (Vector3.right+Vector3.forward).normalized * dist); break;
+                case 6: options.Add(player.position + (Vector3.right-Vector3.forward).normalized * dist); break;
+                case 7: options.Add(player.position - (Vector3.right-Vector3.forward).normalized * dist); break;
             }
             Vector3 option = options[i];
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(option, out hit, 10f, NavMesh.AllAreas) && (Vector3.Distance(hit.position, transform.position) < Vector3.Distance(output, transform.position)))
+            if (NavMesh.SamplePosition(option, out hit, 5f, NavMesh.AllAreas))
             {
-                output = option;
+                Debug.DrawRay(hit.position, Vector3.up*10f, Color.magenta, 5f);
+                if ((Vector3.Distance(hit.position, transform.position) < Vector3.Distance(output, transform.position)))
+                { output = option; }
             }
         }
 
@@ -396,21 +431,22 @@ public class TIGERBrain : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
-        ChangeState(MoveState.backStep, SpeedState.chase, BehaviorState.prepareToFire);
-        waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        CannonShoot();
-        ChangeState(MoveState.idle, SpeedState.chase, BehaviorState.idle);
-        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        StartCoroutine(QuickPrepareToShootAndFire());
         yield return null;
     }
     IEnumerator QuickPrepareToShootAndFire()
     {
         float waitTimer = 0;
         ChangeState(MoveState.backStep, SpeedState.chase, BehaviorState.prepareToFire);
-        waitTimer = 0; while (waitTimer < 5) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
-        CannonShoot();
+        jawOpenCloseTarProgress = 0;
+        waitTimer = 0; while (waitTimer < 0.8f) { waitTimer += Time.deltaTime; jawOpenCloseTarProgress = waitTimer / 3f; yield return new WaitForEndOfFrame(); }
+        chargeEffect.Play();
+        while (waitTimer < 3) { waitTimer += Time.deltaTime; jawOpenCloseTarProgress = waitTimer / 3f; yield return new WaitForEndOfFrame(); }
+        CannonShoot(); jawOpenCloseTarProgress = -1f;
         ChangeState(MoveState.idle, SpeedState.chase, BehaviorState.idle);
-        waitTimer = 0; while (waitTimer < 3) { waitTimer += Time.deltaTime; yield return new WaitForEndOfFrame(); }
+        waitTimer = 0; while (waitTimer < 2) { waitTimer += Time.deltaTime; jawOpenCloseTarProgress = -1f + (waitTimer / 2f); yield return new WaitForEndOfFrame(); }
+        jawOpenCloseTarProgress = 0;
+        attacking = false; attackTimer = 1f;
         yield return null;
     }
     IEnumerator BeginCombat()
@@ -436,6 +472,7 @@ public class TIGERBrain : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+        attacking = true; canAttack = true;
         StartCoroutine(QuickPrepareToShootAndFire());
 
         yield return null;

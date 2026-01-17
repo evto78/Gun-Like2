@@ -52,5 +52,9 @@ public class NuclearExplosion : MonoBehaviour
         {
             collision.GetComponent<HealthManager>().TakeDamage(damage, false, null, "Nuclear Explosion", transform);
         }
+        if (collision.gameObject.tag == "TIGERPROP" && collision.gameObject.TryGetComponent<TIGERPROPFALL>(out TIGERPROPFALL tpf))
+        {
+            tpf.CollideNow(transform.position);
+        }
     }
 }
