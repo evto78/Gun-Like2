@@ -28,7 +28,6 @@ public class TIGERNavAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
     }
     public void ChangeTarget(GameObject newTarget) { target = newTarget; }
-    // Update is called once per frame
     private void LateUpdate()
     {
         lspTimer -= Time.deltaTime;
@@ -113,10 +112,6 @@ public class TIGERNavAI : MonoBehaviour
                 else { agent.destination = transform.position; }
                 break;
         }
-    }
-    void Update()
-    {
-        
     }
     public void SetState(state newState)
     {

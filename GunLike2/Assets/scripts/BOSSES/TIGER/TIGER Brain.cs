@@ -88,9 +88,6 @@ public class TIGERBrain : MonoBehaviour
         timerSpeedModifier = 1f;
         if (ehm.gdm.difficultyIDSelected == 0) { timerSpeedModifier = 0.8f; }
 
-        //if (playIntroOnStart) { pauseUpdate = true; StartCoroutine(IntroAnim()); }
-        //else { manualAnim.enabled = false; StartPatroling(); pauseUpdate = false; foreach (Animator a in proceduralAnims) { a.enabled = true; } agent.enabled = true; }
-
         gdm.phm.uiMan.bossHealthBars[1].SetActive(false);
         gdm.phm.uiMan.bossHealthBars[1].GetComponent<BossHealthBar>().ehm = ehm;
 
@@ -477,20 +474,4 @@ public class TIGERBrain : MonoBehaviour
 
         yield return null;
     }
-
-    //IEnumerator IntroAnim()
-    //{
-    //    //Setup for anim
-    //    foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = false; }
-    //    foreach (Animator a in proceduralAnims) { a.enabled = false; }
-    //    manualAnim.enabled = true;
-    //    pauseUpdate = true;
-    //
-    //    //Setup for combat
-    //    foreach (MonoBehaviour tilt in bha.tilts) { tilt.enabled = true; }
-    //    foreach (Animator a in proceduralAnims) { a.enabled = true; }
-    //    manualAnim.enabled = false;
-    //    pauseUpdate = false;
-    //    yield return null;
-    //}
 }

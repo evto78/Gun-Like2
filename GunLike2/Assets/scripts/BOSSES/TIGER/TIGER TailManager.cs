@@ -55,8 +55,4 @@ public class TIGERTailManager : MonoBehaviour
             curSegment.localRotation = new Quaternion(-xSway, ySway, curSegment.localRotation.z, curSegment.localRotation.w);
         }
     }
-    void Update()
-    {
-        
-    }
 }
