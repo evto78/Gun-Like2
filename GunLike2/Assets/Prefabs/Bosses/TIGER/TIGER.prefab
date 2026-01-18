@@ -28230,8 +28230,8 @@ GameObject:
   - component: {fileID: 3070585014825511713}
   - component: {fileID: 5436926639943036291}
   - component: {fileID: 188353553983175750}
-  - component: {fileID: 8169312650863000681}
   - component: {fileID: 2894154096736592735}
+  - component: {fileID: 8169312650863000681}
   - component: {fileID: 2835011370844345541}
   m_Layer: 9
   m_Name: TIGER
@@ -28272,6 +28272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headPointer: {fileID: 7887746499815667578}
   cannonFirepoint: {fileID: 90137944875360398}
+  chargeEffect: {fileID: 0}
   baseWalkSpeedAccel: {x: 20, y: 4}
   baseChaseSpeedAccel: {x: 80, y: 10}
   baseSprintSpeedAccel: {x: 120, y: 20}
@@ -28315,6 +28316,12 @@ MonoBehaviour:
   - {fileID: 4583448703616903877}
   - {fileID: 2627024571787082912}
   - {fileID: 2408400590374597866}
+  skull: {fileID: 0}
+  lowerJaw: {fileID: 0}
+  skullMaxZTwist: 0
+  skullTwistSpeed: 0
+  skullOpenCloseSpeed: 0
+  jawOpenCloseTarProgress: 0
   playIntroOnStart: 0
   manualAnim: {fileID: 8445666154169837751}
   proceduralAnims:
@@ -28543,6 +28550,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c00cfab5477db644b99d176480db568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2894154096736592735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7168171966137246515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32762383039d4a4b8cf2e1806b58182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  demoPatrol: {fileID: 0}
+  desDistance: 15
+  updateFreq: 0.5
+  navState: 0
 --- !u!195 &8169312650863000681
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -28565,22 +28588,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2894154096736592735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7168171966137246515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32762383039d4a4b8cf2e1806b58182, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  demoPatrol: {fileID: 0}
-  desDistance: 15
-  updateFreq: 0.5
-  navState: 0
 --- !u!54 &2835011370844345541
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -268,17 +268,10 @@ public class GunManager : MonoBehaviour
         SortGunObjData();
 
         totalLiveBullets = 0;
+        PlayerPrefs.SetInt("leftHandGunSelect", 0);
+        PlayerPrefs.SetInt("rightHandGunSelect", 1);
         leftHandVal = 0;
         rightHandVal = 1;
-
-        if (PlayerPrefs.HasKey("leftHandGunSelect"))
-        {
-            leftHandVal = PlayerPrefs.GetInt("leftHandGunSelect");
-        }
-        if (PlayerPrefs.HasKey("rightHandGunSelect"))
-        {
-            rightHandVal = PlayerPrefs.GetInt("rightHandGunSelect");
-        }
         SetGuns(leftHandVal, rightHandVal);
 
         healthMan = GetComponent<HealthManager>();
