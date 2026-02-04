@@ -112,6 +112,8 @@ public class PlayerItem : MonoBehaviour
     public int rightLowFreqRes; List<int> rightLFRAffected = new List<int>();
     public int masterCard;
     public float masterCardChance;
+    public int copperCoinLeft;
+    public int copperCoinRight;
 
     public int lastItemPressed;
     public string lastItemPressedHand;
@@ -272,6 +274,8 @@ public class PlayerItem : MonoBehaviour
         leftLowFreqRes = leftItems[154]; rightLowFreqRes = rightItems[154];
         LowFreqRes();
         masterCard = leftItems[174] + rightItems[174];
+        copperCoinLeft = leftItems[195];
+        copperCoinRight = rightItems[195];
     }
     void ItemUpdateCleanup()
     {
@@ -859,6 +863,19 @@ public class PlayerItem : MonoBehaviour
         leftLFRAffected.Clear();
         rightLFRAffected.Clear();
     }
+    public bool FlipCopperCoin(int inventory)
+    {
+        int coinCount;
+        switch (inventory)
+        {
+            case 0: coinCount = copperCoinLeft; break;
+            case 1: coinCount = copperCoinRight; break;
+            default: coinCount = copperCoinLeft + copperCoinRight; break;
+        }
+
+        for (int i = coinCount; i > 0; i--) { if (Random.Range(0, 2) == 0) { return true; } }
+        return false;
+    }
     public void SpawnItem(int id, bool overrideID, int rarity, bool overrideRarity)
     {
         int spawnedRarity = 0;
@@ -895,6 +912,7 @@ public class PlayerItem : MonoBehaviour
     public bool MasterCardCheck()
     {
         if(masterCard < 1) { return false; }
+        if (copperCoinLeft + copperCoinRight > 0) { return FlipCopperCoin(-1); }
         if (Random.Range(1, 100) < masterCardChance) { return true; }
         else { masterCardChance += 4f + masterCard; return false; }
     }
