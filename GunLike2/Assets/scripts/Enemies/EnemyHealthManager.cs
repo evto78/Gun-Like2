@@ -21,7 +21,8 @@ public class EnemyHealthManager : MonoBehaviour
     public GameObject frozenEffect;
     public GameObject markedEffect;
     public GameObject feathersEffect;
-    public ParticleSystem ChemicalEffect;
+    public ParticleSystem chemicalEffect;
+    public ParticleSystem fireWaveEffect;
     public GameObject item;
     public GameObject itemPossibility;
 

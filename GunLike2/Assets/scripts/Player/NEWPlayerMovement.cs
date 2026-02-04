@@ -146,6 +146,8 @@ public class NEWPlayerMovement : MonoBehaviour
         rightmoveSpeedMult += MultAdder(40f, givenRightItems[165]);
         leftmoveSpeedMult += MultAdder(40f, givenLeftItems[185]);
         rightmoveSpeedMult += MultAdder(40f, givenRightItems[185]);
+        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[194]);
+        rightmoveSpeedMult += MultAdder(40f, givenRightItems[194]);
 
         leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[20]);
         rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[20]);

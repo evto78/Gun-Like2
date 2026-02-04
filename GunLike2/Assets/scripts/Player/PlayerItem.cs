@@ -253,13 +253,12 @@ public class PlayerItem : MonoBehaviour
     private void Update()
     {
         //Stat Update
-        masterCard = leftItems[174] + rightItems[174];
-        leftLowFreqRes = leftItems[154];rightLowFreqRes = rightItems[154];
-        LowFreqRes();
+        ItemUpdate();
         healthManager.StatUpdate(leftItems, rightItems, rarityList);
         playerMvt.StatUpdate(leftItems, rightItems, rarityList);
         gunManager.StatUpdate(leftItems, rightItems, rarityList);
-        LowFreqResCleanup();
+        ItemUpdateCleanup();
+
         //After Stat Update
         LookForItem();
 
@@ -267,6 +266,16 @@ public class PlayerItem : MonoBehaviour
 
         CheckForMerge();
         UpdateRarityCount();
+    }
+    void ItemUpdate()
+    {
+        leftLowFreqRes = leftItems[154]; rightLowFreqRes = rightItems[154];
+        LowFreqRes();
+        masterCard = leftItems[174] + rightItems[174];
+    }
+    void ItemUpdateCleanup()
+    {
+        LowFreqResCleanup();
     }
     private void LateUpdate()
     {
@@ -765,35 +774,69 @@ public class PlayerItem : MonoBehaviour
     }
     public void LowFreqRes()
     {
-        if(leftLowFreqRes + rightLowFreqRes < 1) { return; }
-        leftLFRAffected.Clear();
-        rightLFRAffected.Clear();
-        foreach(ItemObject itemObj in itemData)
+        if (leftLowFreqRes + rightLowFreqRes < 1) { return; }
+        leftLFRAffected.Clear(); rightLFRAffected.Clear();
+        List<ItemObject.rarityType> affectedRaritiesLeft = new List<ItemObject.rarityType>();
+        List<ItemObject.rarityType> affectedRaritiesRight = new List<ItemObject.rarityType>();
+        switch (leftLowFreqRes)
+        {
+            case 1: affectedRaritiesLeft.Add(ItemObject.rarityType.Common); 
+                break;
+            case 2: affectedRaritiesLeft.Add(ItemObject.rarityType.Common);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Uncommon);
+                break;
+            case 3: affectedRaritiesLeft.Add(ItemObject.rarityType.Common);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Uncommon);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Rare);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Mutated);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Haunted);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Irradiated);
+                break;
+            case >3: affectedRaritiesLeft.Add(ItemObject.rarityType.Common);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Uncommon);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Rare);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Mutated);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Haunted);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Irradiated);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Legendary);
+                affectedRaritiesLeft.Add(ItemObject.rarityType.Nuclear);
+                break;
+        }
+        switch (rightLowFreqRes)
+        {
+            case 1:
+                affectedRaritiesRight.Add(ItemObject.rarityType.Common);
+                break;
+            case 2:
+                affectedRaritiesRight.Add(ItemObject.rarityType.Common);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Uncommon);
+                break;
+            case 3:
+                affectedRaritiesRight.Add(ItemObject.rarityType.Common);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Uncommon);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Rare);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Mutated);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Haunted);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Irradiated);
+                break;
+            case > 3:
+                affectedRaritiesRight.Add(ItemObject.rarityType.Common);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Uncommon);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Rare);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Mutated);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Haunted);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Irradiated);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Legendary);
+                affectedRaritiesRight.Add(ItemObject.rarityType.Nuclear);
+                break;
+        }
+
+        foreach (ItemObject itemObj in itemData)
         {
             ItemObject.rarityType rarity = itemObj.rarity;
-            if (leftItems[itemObj.id] > 0)
-            {
-                
-                if (leftLowFreqRes > 0)
-                {
-                    if (leftLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                    if (leftLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                    if (leftLowFreqRes > 2 && rarity == ItemObject.rarityType.Rare) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                    if (leftLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                    if (leftLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                }
-            }
-            if (rightItems[itemObj.id] > 0) 
-            {
-                if (rightLowFreqRes > 0)
-                {
-                    if (rightLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                    if (rightLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                    if (rightLowFreqRes > 2 && rarity == ItemObject.rarityType.Rare) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                    if (rightLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                    if (rightLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                }
-            }
+            int id = itemObj.id;
+            if(leftItems[id] > 0 && affectedRaritiesLeft.IndexOf(rarity) != -1) { leftLFRAffected.Add(id); leftItems[id] += 1+leftLowFreqRes; }
+            if(rightItems[id] > 0 && affectedRaritiesRight.IndexOf(rarity) != -1) { rightLFRAffected.Add(id); rightItems[id] += 1+rightLowFreqRes; }
         }
     }
     public void LowFreqResCleanup()
@@ -803,14 +846,14 @@ public class PlayerItem : MonoBehaviour
         {
             foreach(int affectedItem in leftLFRAffected)
             {
-                leftItems[affectedItem] -= leftLowFreqRes;
+                leftItems[affectedItem] -= 1+leftLowFreqRes;
             }
         }
         if (rightLFRAffected.Count > 0)
         {
             foreach (int affectedItem in rightLFRAffected)
             {
-                rightItems[affectedItem] -= rightLowFreqRes;
+                rightItems[affectedItem] -= 1+rightLowFreqRes;
             }
         }
         leftLFRAffected.Clear();

@@ -101,6 +101,13 @@ public class GrenadeBrain : MonoBehaviour
         modifier = Mathf.Clamp(Vector3.Distance(transform.position, secondaryTarget.position), 1f, 20f);
         rb.AddForce((secondaryTarget.position - transform.position).normalized * modifier * speed * 20f * Time.deltaTime);//move to secondary target
     }
+    public void LightFuse()
+    {
+        ticking = true;
+        subTimer = 0f;
+        hm.PlaySound(2, false, true);
+        hm.PlaySound(3, false, true);
+    }
     void Blow()
     {
         fuse.gameObject.SetActive(true);
@@ -132,10 +139,7 @@ public class GrenadeBrain : MonoBehaviour
         }
         if (Vector3.Distance(target.position, transform.position) < 5f && !ticking)
         {
-            ticking = true;
-            subTimer = 0f;
-            hm.PlaySound(2,false,true);
-            hm.PlaySound(3,false,true);
+            LightFuse();
         }
 
     }

@@ -315,7 +315,7 @@ public class BulletScript : MonoBehaviour
                 ehm.TakeDamage(damage * 1.5f * ehm.activeEffects[42].x, false, HitType.ht.special, ehm.transform.position, whatHandThisComesFrom);
                 ehm.activeEffects[41] = new Vector4(0, ehm.activeEffects[41].y, ehm.activeEffects[41].z, ehm.activeEffects[41].w);
                 ehm.activeEffects[42] = new Vector4(0, ehm.activeEffects[42].y, ehm.activeEffects[42].z, ehm.activeEffects[42].w);
-                ehm.ChemicalEffect.Play();
+                ehm.chemicalEffect.Play();
             }
         }
         //Fortify

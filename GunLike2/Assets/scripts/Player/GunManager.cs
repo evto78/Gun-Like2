@@ -503,6 +503,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[161]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[169]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[184]);
+        leftAtkSpdMult += MultAdder(40f, givenLeftItems[194]);
 
         leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
         leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
@@ -717,6 +718,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpdMult += MultAdder(20f, givenRightItems[161]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[169]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[184]);
+        rightAtkSpdMult += MultAdder(40f, givenRightItems[194]);
 
         rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
         rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);

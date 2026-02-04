@@ -63,6 +63,7 @@ public class HealthManager : MonoBehaviour
 	public float sunflowerTimer;
 	public GameObject sunflowerSun;
 	public int pufferfish;
+	public ParticleSystem killStreakExplosion;
 
 	public int appleBuff;
 	public float fortifyBuff;
@@ -604,7 +605,20 @@ public class HealthManager : MonoBehaviour
     }
 	void KillCounterExplosion(int killstreak)
 	{
-
+		int killCounter = playerItem.leftItems[194] + playerItem.rightItems[194];
+		killStreakExplosion.Play();
+		float fireWaveDmg = 1 + killstreak * ((gunManager.leftDmg + gunManager.rightDmg) / 2);
+		float fireWaveRadias = 40 + (10 * killCounter) + (10 * killstreak) * ((gunManager.leftBulSize + gunManager.rightBulSize) / 2);
+		foreach(EnemyHealthManager ehm in gdm.activeEhms)
+        {
+			if (Vector3.Distance(transform.position, ehm.transform.position) < fireWaveRadias)
+            {
+				ehm.TakeDamage(fireWaveDmg, false, HitType.ht.normal, ehm.transform.position, "self");
+				ehm.GiveEffect(1, 1 + Mathf.CeilToInt((killstreak + killCounter)/2));
+				ehm.fireWaveEffect.Play();
+				if(ehm.data.enemyName == "Grenade") { ehm.gameObject.GetComponent<GrenadeBrain>().LightFuse(); }
+            }
+        }
 	}
 	public void TakeDamage(float damageTaken, bool wasFromExpGrowth, EnemyHealthManager sourceEHM, string sourceName, Transform sourcePos)
 	{
@@ -819,7 +833,7 @@ public class HealthManager : MonoBehaviour
                         switch (i)
                         {
                             case 2: TakeDamage((q.x + 1f) * 50f, false, null, "Radiation", null); break;
-                            case 29: KillCounterExplosion((int)q.x); q.x = 0f; break;
+                            case 29: KillCounterExplosion((int)q.x+1); q.x = 0f; break;
                         }
                     }
                 }
