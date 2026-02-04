@@ -384,14 +384,14 @@ public class HealthManager : MonoBehaviour
 			{
 				orgGumTimer = playerItem.FindObjByID(17).baseCooldown;
 				int rand;
-                if (Random.Range(1, 100) > (20 - (2f * orgGum)))
-				{
+				if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) > (20 - (2f * orgGum))))
+                {
 					rand = Random.Range(3, 11);
-				}
-				else
-				{
+                }
+                else
+                {
 					rand = Random.Range(12, 15);
-				}
+                }
 				GiveEffect(rand, 1f);
             }
         }
@@ -441,18 +441,14 @@ public class HealthManager : MonoBehaviour
 			if(experTimer <= 0)
             {
 				experTimer = 0.5f;
-
-				if(Random.Range(1,100) > (53 - experimentalImp * 3))
-                {
+				if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) > (53 - experimentalImp * 3)))
+				{
 					TakeDamage(-1f * healthRegen, false, null, "Experimental Implant", null);
-                }
-                else
-                {
-					if(curHp > 0.5f * healthRegen)
-                    {
-						TakeDamage(0.5f * healthRegen, false, null, "Experimental Implant", null);
-					}
-                }
+				}
+				else
+				{
+					TakeDamage(0.5f * healthRegen, false, null, "Experimental Implant", null);
+				}
             }
         }
 
@@ -625,7 +621,7 @@ public class HealthManager : MonoBehaviour
 		bool wasAtMax = (curHp == maxHp);
 		float tempArmor = armor;
 		float actualDamageTaken = damageTaken;
-		if(ionParticle > 0 && Random.Range(0f, 100f) < 0.5f * ionParticle)
+		if(ionParticle > 0 && playerItem.RandomItemEffectRoll(Random.Range(0f, 100f) < 0.5f * ionParticle))
         {
 			float rand = Random.Range(10f, 1000f);
 			damageTaken *= rand;
@@ -643,7 +639,7 @@ public class HealthManager : MonoBehaviour
 		}
 		else
 		{
-			if (Random.Range(1, 100) < evadeChance) { return; }
+			if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) < evadeChance)) { return; }
 			if (activeEffects[27].x>0){ damageTaken /= 2f; }
 			//Damage
 			if (sourceEHM != null) { lastHitMe = sourceEHM; }
@@ -674,7 +670,7 @@ public class HealthManager : MonoBehaviour
 
 			regenTimer = 2f;
 
-			if (expGrowth > 0 && (!wasFromExpGrowth || Random.Range(0, 100) < 15))
+			if (expGrowth > 0 && (!wasFromExpGrowth || playerItem.RandomItemEffectRoll(Random.Range(0, 100) < 15)))
 			{
 				GameObject createdGrowthExplosion = Instantiate(expGrowthExplosion, transform.position, transform.rotation);
 				createdGrowthExplosion.GetComponent<ExplosiveGrowthScript>().Explode(expGrowth, damageTaken);

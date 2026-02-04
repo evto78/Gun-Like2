@@ -863,18 +863,23 @@ public class PlayerItem : MonoBehaviour
         leftLFRAffected.Clear();
         rightLFRAffected.Clear();
     }
-    public bool FlipCopperCoin(int inventory)
+    public bool FlipCopperCoin()
     {
-        int coinCount;
-        switch (inventory)
-        {
-            case 0: coinCount = copperCoinLeft; break;
-            case 1: coinCount = copperCoinRight; break;
-            default: coinCount = copperCoinLeft + copperCoinRight; break;
-        }
+        int coinCount = copperCoinLeft + copperCoinRight;
 
         for (int i = coinCount; i > 0; i--) { if (Random.Range(0, 2) == 0) { return true; } }
         return false;
+    }
+    public bool RandomItemEffectRoll(bool condition)
+    {
+        if (copperCoinLeft + copperCoinRight > 0)
+        {
+            return FlipCopperCoin();
+        }
+        else
+        {
+            return condition;
+        }
     }
     public void SpawnItem(int id, bool overrideID, int rarity, bool overrideRarity)
     {
@@ -912,8 +917,7 @@ public class PlayerItem : MonoBehaviour
     public bool MasterCardCheck()
     {
         if(masterCard < 1) { return false; }
-        if (copperCoinLeft + copperCoinRight > 0) { return FlipCopperCoin(-1); }
-        if (Random.Range(1, 100) < masterCardChance) { return true; }
+        if (RandomItemEffectRoll(Random.Range(1, 100) < masterCardChance)) { return true; }
         else { masterCardChance += 4f + masterCard; return false; }
     }
     public ItemObject FindObjByID(int id)

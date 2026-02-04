@@ -559,7 +559,7 @@ public class GunScript : MonoBehaviour
         {
             if (!reloading && !shooting && rushJobTimer <= 0)
             {
-                if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+                if (rushJob > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65)))
                 {
                     misfireEffect.GetComponent<ParticleSystem>().Play();
                     rushJobTimer = (1f / reSpd)/2f;
@@ -577,14 +577,16 @@ public class GunScript : MonoBehaviour
                     {
                         currentBullets++;
                         Shoot(1f);
-                        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
-                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
+                        if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]))
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]))) 
+                        { Shoot(1f); }
                     }
 
                     pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
                 }
-                if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
-                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(1f); }
+                if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]))
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111]))) 
+                { Shoot(1f); }
                 if (brokenPen > 0) { brokenPenCounter++; }
             }
         }
@@ -595,7 +597,7 @@ public class GunScript : MonoBehaviour
         if (!forcedInput) { smokingGunCounter = 0; if (smokingGun > 0) { manager.healthMan.activeEffects[23] = new Vector4(0, manager.healthMan.activeEffects[23].y, manager.healthMan.activeEffects[23].z, manager.healthMan.activeEffects[23].w); } }
         if (bowAct > 0 && !reloading && !shooting)
         {
-            if (rushJob > 0 && Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65))
+            if (rushJob > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < Mathf.Clamp(5 + (5 * rushJob), -1, 65)))
             {
                 misfireEffect.GetComponent<ParticleSystem>().Play();
                 rushJobTimer = (1f / reSpd) / 2f;
@@ -614,14 +616,16 @@ public class GunScript : MonoBehaviour
                     Shoot(bowCharge);
                     MuzzleFlash.gameObject.SetActive(currentBullets > 0);
                     if (MuzzleFlash != null) { MuzzleFlash.Play(); }
-                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
-                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
+                    if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]))
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])))
+                    { Shoot(bowCharge); }
                 }
 
                 pumpShotgunAttachTimer = manager.playerItem.FindObjByID(106).baseCooldown;
             }
-            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111])
-                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])) { Shoot(bowCharge); }
+            if ((whatHandThisIsIn == "left" && manager.playerItem.leftItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.leftItems[111]))
+                            || (whatHandThisIsIn == "right" && manager.playerItem.rightItems[111] > 0 && manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 40 + 10 * manager.playerItem.rightItems[111])))
+            { Shoot(bowCharge); }
             if (brokenPen > 0) { brokenPenCounter++; }
             bowCharge = 0f;
         }
@@ -793,7 +797,7 @@ public class GunScript : MonoBehaviour
         if (tacticalCompress > 0 && tacticalReload > 0) { dmg = dmg * (1 + (tacticalCompress / (10f / tacticalCompress))); tacticalCompress = 0; }
         if (brokenPen > 0 && brokenPenCounter >= 10) { dmg *= 2f + (1.5f * brokenPen - 1f); }
 
-        if (fleas>0&&Random.Range(1,100)<16){
+        if (fleas>0&&manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < 16)){
             for(int i = 0; i < fleas; i++)
             {
                 Transform spawnedFlea = PullBulletFromPreInstatiation(true); acc = acc / 1; spawnedFlea.SetPositionAndRotation(firePoint.position,firePoint.rotation);
@@ -816,7 +820,7 @@ public class GunScript : MonoBehaviour
         shooting = true;
         attackTimer = 1;
         bool requireAmmo = true;
-        if (bulletFactory > 0) { requireAmmo = false; if(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1) { requireAmmo = true; } }
+        if (bulletFactory > 0) { requireAmmo = false; if(manager.playerItem.RandomItemEffectRoll(Random.Range(1, Mathf.RoundToInt(1 + bulletFactory + (magSize - currentBullets))) == 1)) { requireAmmo = true; } }
         if (brokenInk > 0 && inkCounter >= Mathf.Clamp(10 - brokenInk, 1, 9)) { requireAmmo = false; }
         if (requireAmmo && currentBullets < 1 && manager.autoReload && carvedBone < 1) { AttemptReload(); }
         if(carvedBone > 0 && currentBullets < 1 && requireAmmo)
@@ -857,7 +861,7 @@ public class GunScript : MonoBehaviour
             
             if (forkedBarrel > 0)
             {
-                int bulletsSpawned = 1; if (Random.Range(1, 100) < (forkedBarrel - 1f) * 20f) { bulletsSpawned++; }
+                int bulletsSpawned = 1; if (manager.playerItem.RandomItemEffectRoll(Random.Range(1, 100) < (forkedBarrel - 1f) * 20f)) { bulletsSpawned++; }
                 for(int i = 0; i < bulletsSpawned; i++)
                 {
                     Transform spawnedForkedBullet = PullBulletFromPreInstatiation(false); spawnedForkedBullet.SetPositionAndRotation(firePoint.position, firePoint.rotation); BulletScript forkBS = spawnedForkedBullet.GetComponent<BulletScript>();
@@ -908,7 +912,7 @@ public class GunScript : MonoBehaviour
         int dmgGiven = Mathf.CeilToInt(incomingDamage);
         List<int> dmgChars = new List<int>();
         int temp;
-        Debug.Log(dmgGiven);
+        //Debug.Log(dmgGiven);
         foreach (char digit in dmgGiven.ToString()) // Build list
         {
             int.TryParse(digit.ToString(), out temp);
@@ -941,7 +945,7 @@ public class GunScript : MonoBehaviour
             constructing += digit.ToString();
         }
         int.TryParse(constructing, out dmgGiven);
-        Debug.Log(dmgGiven);
+        //Debug.Log(dmgGiven);
         return dmgGiven;
     }
     void GetPosessionTargetPos()

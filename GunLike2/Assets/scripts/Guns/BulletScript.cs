@@ -143,14 +143,14 @@ public class BulletScript : MonoBehaviour
         int givenJam, float chanceForFire, float chanceForSharper, float chanceForSilver, float chanceForHelping, float chanceForCool,
         float chanceForFastFire, float chanceForLarge, int givenAdvTrig, int givenMultistage, int isGunk, int givenGunkClaw)
     {
-        isFireSpon = Random.Range(1, 100) < chanceForFire; fireSponEffect.SetActive(isFireSpon);
-        isSharperSpon = Random.Range(1, 100) < chanceForSharper; sharperSponEffect.SetActive(isSharperSpon);
-        isSilverSpon = Random.Range(1, 100) < chanceForSilver; silverSponEffect.SetActive(isSilverSpon);
-        isHelpingSpon = Random.Range(1, 100) < chanceForHelping; helpingSponEffect.SetActive(isHelpingSpon);
-        isCoolSpon = Random.Range(1, 100) < chanceForCool; coolSponEffect.SetActive(isCoolSpon);
-        isFastFireSpon = Random.Range(1, 100) < chanceForFastFire; fastSponEffect.SetActive(isFastFireSpon);
-        isLargeSpon = Random.Range(1, 100) < chanceForLarge; largeSponEffect.SetActive(isLargeSpon);
-        isGunky = Random.Range(1,100) < isGunk*20f;
+        isFireSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForFire); fireSponEffect.SetActive(isFireSpon);
+        isSharperSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForSharper); sharperSponEffect.SetActive(isSharperSpon);
+        isSilverSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForSilver); silverSponEffect.SetActive(isSilverSpon);
+        isHelpingSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForHelping); helpingSponEffect.SetActive(isHelpingSpon);
+        isCoolSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForCool); coolSponEffect.SetActive(isCoolSpon);
+        isFastFireSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForFastFire); fastSponEffect.SetActive(isFastFireSpon);
+        isLargeSpon = pi.RandomItemEffectRoll(Random.Range(1, 100) < chanceForLarge); largeSponEffect.SetActive(isLargeSpon);
+        isGunky = pi.RandomItemEffectRoll(Random.Range(1,100) < isGunk*20f);
 
         whatHandThisComesFrom = whatHand;
         gunFiredFrom = firedFrom;
@@ -274,7 +274,7 @@ public class BulletScript : MonoBehaviour
             ehm.GiveEffect(40, 1);
         }
 
-        if ((gunFiredFrom.darkBranch > 0 && (rayHit.collider != null || rayHit.point != new RaycastHit().point))&& Random.Range(1, 100) < 5 + 5 * gunFiredFrom.darkBranch)
+        if ((gunFiredFrom.darkBranch > 0 && (rayHit.collider != null || rayHit.point != new RaycastHit().point))&& pi.RandomItemEffectRoll(Random.Range(1, 100) < 5 + 5 * gunFiredFrom.darkBranch))
         {
             GameObject spawnedDarkBranch = Instantiate(darkBranch);
             spawnedDarkBranch.transform.position = rayHit.point;
@@ -286,7 +286,7 @@ public class BulletScript : MonoBehaviour
 
         //H.E.A.T Rounds
         if (whatHandThisComesFrom == "left" && pi.leftItems[102] > 0 || whatHandThisComesFrom == "right" && pi.rightItems[102] > 0){if (rayHit.point != Vector3.zero){
-                for (int i = 0; i < Random.Range(1, 3); i++)
+                for (int i = 0; i < Random.Range(1, 4); i++)
                 {
                     GameObject spawnedLava = Instantiate(lavaBlob);
                     spawnedLava.transform.localScale = Vector3.one * Random.Range(0.5f, 1.1f);
@@ -556,7 +556,7 @@ public class BulletScript : MonoBehaviour
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
         {ehm.Die(false, whatHandThisComesFrom, true);}
 
-        if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
+        if (nuclearBullets > 0 && pi.RandomItemEffectRoll(Random.Range(1, 100) <= (25 + 5 * nuclearBullets)))
         {ehm.GiveEffect(2, 1);}
 
         if(hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 
@@ -580,7 +580,7 @@ public class BulletScript : MonoBehaviour
         if ((ehm.curHp / ehm.maxHp) * 100f <= (50f * (1f - Mathf.Pow(1.2f, -0.5f * heavySpirits))))
         {ehm.Die(false, whatHandThisComesFrom, true);}
 
-        if (nuclearBullets > 0 && Random.Range(1, 100) <= (25 + 5 * nuclearBullets))
+        if (nuclearBullets > 0 && pi.RandomItemEffectRoll(Random.Range(1, 100) <= (25 + 5 * nuclearBullets)))
         {ehm.GiveEffect(2, 1);}
 
         if (hit.collider.transform.parent != null && hit.collider.transform.parent.parent != null && hit.collider.transform.parent.parent.parent != null) 

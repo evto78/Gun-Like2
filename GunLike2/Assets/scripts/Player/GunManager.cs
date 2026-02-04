@@ -1243,7 +1243,7 @@ public class GunManager : MonoBehaviour
                 if (playerItem.leftItems[i] > 0) { itemsOwned.Add(i); }
             }
             playerItem.leftItems[itemsOwned[Random.Range(0, itemsOwned.Count)]]+= leftPrinter;
-            if (Random.Range(1, 100) < leftPrinter * 10) { playerItem.leftItems[88]--; }
+            if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) < leftPrinter * 10)) { playerItem.leftItems[88]--; }
         }
         if (rightPrinter > 0 && healthMan.timeSinceEnemyDied < 60 && rightPrinterTimer > playerItem.FindObjByID(88).baseCooldown)
         {
@@ -1254,11 +1254,11 @@ public class GunManager : MonoBehaviour
                 if (playerItem.rightItems[i] > 0) { itemsOwned.Add(i); }
             }
             playerItem.rightItems[itemsOwned[Random.Range(0, itemsOwned.Count)]]+= rightPrinter;
-            if (Random.Range(1, 100) < rightPrinter * 10) { playerItem.rightItems[88]--; }
+            if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) < rightPrinter * 10)) { playerItem.rightItems[88]--; }
         }
 
         if (leftStickToCounters > leftStickTo * 5) { leftStickToCounters = leftStickTo * 5; }
-        if(rightStickToCounters > rightStickTo * 5) { rightStickToCounters = rightStickTo * 5; }
+        if (rightStickToCounters > rightStickTo * 5) { rightStickToCounters = rightStickTo * 5; }
 
         if(leftGunScript.reloading && leftMicrowave > 0)
         {
@@ -1363,7 +1363,7 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        if (Random.Range(1, 100) < (100 * itemList[14] / 20f))
+        if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) < (100 * itemList[14] / 20f)))
         {
             itemsToReroll++;
         }
@@ -1386,7 +1386,7 @@ public class GunManager : MonoBehaviour
             }
         }
 
-        if (Random.Range(1, 100) < (100 * itemList[24] / 20f))
+        if (playerItem.RandomItemEffectRoll(Random.Range(1, 100) < (100 * itemList[24] / 20f)))
         {
             for (int i = 0; i < rarityList[1].Count; i++)
             {
