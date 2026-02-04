@@ -778,7 +778,7 @@ public class PlayerItem : MonoBehaviour
                 {
                     if (leftLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
                     if (leftLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
-                    if (leftLowFreqRes > 2 && (rarity == ItemObject.rarityType.Rare || rarity == ItemObject.rarityType.Unique)) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
+                    if (leftLowFreqRes > 2 && rarity == ItemObject.rarityType.Rare) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
                     if (leftLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
                     if (leftLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { leftLFRAffected.Add(itemObj.id); leftItems[itemObj.id] += leftLowFreqRes; }
                 }
@@ -789,7 +789,7 @@ public class PlayerItem : MonoBehaviour
                 {
                     if (rightLowFreqRes > 0 && rarity == ItemObject.rarityType.Common) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
                     if (rightLowFreqRes > 1 && rarity == ItemObject.rarityType.Uncommon) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
-                    if (rightLowFreqRes > 2 && (rarity == ItemObject.rarityType.Rare || rarity == ItemObject.rarityType.Unique)) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
+                    if (rightLowFreqRes > 2 && rarity == ItemObject.rarityType.Rare) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
                     if (rightLowFreqRes > 3 && (rarity == ItemObject.rarityType.Mutated || rarity == ItemObject.rarityType.Haunted || rarity == ItemObject.rarityType.Irradiated)) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
                     if (rightLowFreqRes > 4 && (rarity == ItemObject.rarityType.Legendary || rarity == ItemObject.rarityType.Nuclear) && itemObj.id != 154) { rightLFRAffected.Add(itemObj.id); rightItems[itemObj.id] += rightLowFreqRes; }
                 }
