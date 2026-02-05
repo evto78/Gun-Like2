@@ -80,10 +80,6 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
 
         pevlisRotationPoint.transform.LookAt(pelvisSholderPointer);
     }
-    void Update()
-    {
-        
-    }
     public void HeightAdjustment()
     {
         float backHeight; float frontHeight; float avgHeight;
@@ -116,6 +112,14 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
         backJoint.localPosition = initialBackPos + (Vector3.up * (((backHeight * 1.5f) - 1) / 75f));
         frontJoint.localPosition = initialFrontPos + (Vector3.up * (((frontHeight * 1.5f) - 1) / 75f));
         if (frontJoint.localPosition.y < initialFrontY - 0.01f) { frontJoint.localPosition = initialFrontPos - Vector3.up * 0.01f; }
+
+        //Foot Height over ground 
+        float brHeight = legs[0].GetDistToGroundSnap();
+        float blHeight = legs[1].GetDistToGroundSnap();
+        float frHeight = legs[2].GetDistToGroundSnap();
+        float flHeight = legs[3].GetDistToGroundSnap();
+        float heightSum = brHeight + blHeight + frHeight + flHeight;
+        agent.baseOffset -= heightSum/10f;
     }
     void ManageHipSholderHeightDisplacement(float backAvgY, float frontAvgY)
     {
@@ -131,9 +135,6 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
 
         float backYAmt = Mathf.Lerp(backLegsVerticalDisplacementMinMax.x, backLegsVerticalDisplacementMinMax.y, backDisplace) * intensity;
         float frontYAmt = Mathf.Lerp(frontLegsVerticalDisplacementMinMax.x, frontLegsVerticalDisplacementMinMax.y, frontDisplace) * intensity;
-
-        //backLegsHolder.transform.localPosition = new Vector3(backLegsHolder.transform.localPosition.x, initialBackLegsHolderY + backYAmt, backLegsHolder.transform.localPosition.z);
-        //frontLegsHolder.transform.localPosition = new Vector3(frontLegsHolder.transform.localPosition.x, initialFrontLegsHolderY + frontYAmt, frontLegsHolder.transform.localPosition.z);
 
         float adjustSpeed = 6f;
 
@@ -197,7 +198,7 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
             fl.pairedLeg = bl; bl.pairedLeg = fl;
         }
 
-            ApplyChangeToStepProgress(br, bl, tarPairDifference, 1f);
+        ApplyChangeToStepProgress(br, bl, tarPairDifference, 1f);
         ApplyChangeToStepProgress(fr, fl, tarPairDifference, 1f);
         ApplyChangeToStepProgress(bl, fr, tarOppositeDifference, 1.5f);
         ApplyChangeToStepProgress(br, fl, tarOppositeDifference, 1.5f);
@@ -211,9 +212,6 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
             diffToTar = diff - tarDiff;
             if (Mathf.Abs(diffToTar) < 0.1f) { return; }
             a.stepProgress -= Time.deltaTime * (currentSpeed * a.stepSpeed) * diffToTar * force;
-
-            //if (a.stepProgress >= 0.5f) { a.stepProgress += Time.deltaTime * (currentSpeed * a.stepSpeed); }
-            //else { a.stepProgress -= Time.deltaTime * (currentSpeed * a.stepSpeed); }
         }
         else
         {
@@ -221,9 +219,6 @@ public class TIGERBodyHeightAdjust : MonoBehaviour
             diffToTar = diff - tarDiff;
             if (Mathf.Abs(diffToTar) < 0.1f) { return; }
             b.stepProgress -= Time.deltaTime * (currentSpeed * b.stepSpeed) * diffToTar * force;
-
-            //if (b.stepProgress >= 0.5f) { b.stepProgress += Time.deltaTime * (currentSpeed * b.stepSpeed); }
-            //else { b.stepProgress -= Time.deltaTime * (currentSpeed * b.stepSpeed); }
         }
     }
     void GetTurnDirVel()
