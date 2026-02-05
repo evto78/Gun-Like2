@@ -246,6 +246,20 @@ public class SaveFileReadWrite : MonoBehaviour
         }
         return tmp;
     }
+    public List<UnlockInformation> UpdateUnlockInfo( List<UnlockInformation> oldInfo, List<ItemObject> itemData)
+    {
+        //Ensures the unlockdata has all the items in it, but retains the unlock progress from the old list
+        List<UnlockInformation> tmp = InitalizeUnlockInfo();
+        for(int i = 0; i < itemData.Count; i++)
+        {
+            if(oldInfo.Count > i)
+            {
+                tmp[i].unlockProgress = oldInfo[i].unlockProgress;
+            }
+        }
+
+        return tmp;
+    }
     List<ItemObject> SortItemData(List<ItemObject> itemData)
     {
         List<int> comparisonList = new List<int>();

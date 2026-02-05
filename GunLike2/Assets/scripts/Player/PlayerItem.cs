@@ -152,6 +152,13 @@ public class PlayerItem : MonoBehaviour
     }
     List<SaveFileReadWrite.UnlockInformation> GetAndSortUnlockData()
     {
+
+        if (gdm.instance.data.UnlockInfo.Count != itemData.Count)
+        {
+            //Unlock save data is old, remaking file
+            gdm.instance.data.UnlockInfo = gdm.instance.UpdateUnlockInfo(gdm.instance.data.UnlockInfo, itemData);
+        }
+
         List<SaveFileReadWrite.UnlockInformation> unlockData = gdm.instance.data.UnlockInfo;
 
         List<int> comparisonList = new List<int>();
