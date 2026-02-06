@@ -19,10 +19,6 @@ public class InventorySlot : MonoBehaviour
     public Image cooldownFill;
     public GameObject selected;
     public GameObject dimmingPannel;
-    public void Pressed()
-    {
-        //pi.ItemPressedInInv(id, hand);
-    }
     private void Start()
     {
         dimmingPannel.SetActive(false);
@@ -36,15 +32,6 @@ public class InventorySlot : MonoBehaviour
             pi.GetHoverOver(id,hand);
             if(pi.itemHeld == -1) { invScript.DisplaySetUp(id); }
         }
-        //if (pi.lastItemPressed == 74 && id == 74 && pi.lastItemPressedHand == hand)
-        //{
-            //selected.SetActive(true);
-            //selected.transform.Rotate(Vector3.forward * 60 * Time.deltaTime);
-        //}
-        //else
-        //{
-            //selected.SetActive(false);
-        //}
         if (draging)
         {
             pi.itemHeld = id;

@@ -171,6 +171,8 @@ public class SaveFileReadWrite : MonoBehaviour
             }
             if (menuManager != null) { menuManager.instance = this; }
         }
+
+        if (data.UnlockInfo[22] != null) { Debug.Log(data.UnlockInfo[22].unlockProgress); }
     }
     public bool RequestDataUpdate()
     {
@@ -324,6 +326,10 @@ public class SaveFileReadWrite : MonoBehaviour
             File.Delete(filePath);
             CreateSaveData();
         }
+
+        List<ItemObject> itemData = new List<ItemObject>();
+        itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
+        if (data.UnlockInfo.Count != itemData.Count) { data.UnlockInfo = UpdateUnlockInfo(data.UnlockInfo, itemData); }
 
         if (PlayerPrefs.HasKey("USRID"))
         {

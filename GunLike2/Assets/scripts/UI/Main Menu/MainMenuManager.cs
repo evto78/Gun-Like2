@@ -20,6 +20,7 @@ public class MainMenuManager : MonoBehaviour
     public UiSoundPlayer usp;
     public int selectedDifficulty;
     public EventSystem eventS;
+    public Toggle playIntroToggle;
     [System.Serializable]
     public class DiffDetail
     {
@@ -46,6 +47,8 @@ public class MainMenuManager : MonoBehaviour
     public Transform mutatedRulesHolder; public TextMeshProUGUI mutationIDText; public string mutationID;
     Animator camAnim;
     public GameObject attachedUI;
+
+    public List<GameObject> offAtStart;
     private void Awake()
     {
         gunObjectData = new List<GunObjectData>(); gunObjectData.AddRange(Resources.LoadAll<GunObjectData>("Guns"));
@@ -58,6 +61,11 @@ public class MainMenuManager : MonoBehaviour
 
         settings.tab.SetActive(true);
         settings.InitialApply();
+
+        if (PlayerPrefs.HasKey("PLAYINTROONSTART")) { playIntroToggle.isOn = PlayerPrefs.GetInt("PLAYINTROONSTART") == 1; }
+        else { PlayerPrefs.SetInt("PLAYINTROONSTART", 1); playIntroToggle.isOn = true; }
+
+        foreach(GameObject go in offAtStart) { go.SetActive(false); }
     }
     void SortGunObjData()
     {
@@ -202,6 +210,18 @@ public class MainMenuManager : MonoBehaviour
         difficultyInfo[input].detailsHolder.SetActive(true);
         difficultyInfo[input].detailsHolder.transform.parent.GetComponent<Image>().sprite = difficultyInfo[input].bg;
         if(input == 4) { GenerateMutatedRules(); }
+    }
+    public void TogglePlayIntro()
+    {
+        bool newVal = playIntroToggle.isOn;
+        if (newVal)
+        {
+            PlayerPrefs.SetInt("PLAYINTROONSTART", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("PLAYINTROONSTART", 0);
+        }
     }
     void GenerateMutatedRules()
     {

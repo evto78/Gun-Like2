@@ -9,7 +9,6 @@ public class UnlockManager : MonoBehaviour
     PlayerItem pi;
     HealthManager phm;
     NEWPlayerMovement mvt;
-    List<SaveFileReadWrite.UnlockInformation> unlockInfo = new List<SaveFileReadWrite.UnlockInformation>();
 
     bool startNewRoutine = true;
     
@@ -17,19 +16,17 @@ public class UnlockManager : MonoBehaviour
     {
         gdm = GetComponent<GameDataManager>();
         saveFRW = gdm.instance;
-        unlockInfo = saveFRW.data.UnlockInfo;
-
         pi = gdm.pi;
         phm = gdm.phm;
         mvt = gdm.phm.playerMvt;
 
         StartCoroutine(CheckForUnlocksEfficent());
     }
-    public void UnlockItem(int id) { if (unlockInfo[id].unlockProgress >= 1) { return; } unlockInfo[id].unlockProgress = 1; pi.TriggerUnlock(id); }
+    public void UnlockItem(int id) { if (saveFRW.data.UnlockInfo[id].unlockProgress >= 1) { return; } saveFRW.data.UnlockInfo[id].unlockProgress = 1; pi.TriggerUnlock(id); }
     public void AddUnlockProgress(int id, float progress) 
-    { if (unlockInfo[id].unlockProgress >= 1) { return; } unlockInfo[id].unlockProgress += progress; if (unlockInfo[id].unlockProgress >= 1) { UnlockItem(id); } }
+    { if (saveFRW.data.UnlockInfo[id].unlockProgress >= 1) { return; } saveFRW.data.UnlockInfo[id].unlockProgress += progress; if (saveFRW.data.UnlockInfo[id].unlockProgress >= 1) { saveFRW.data.UnlockInfo[id].unlockProgress = 1; pi.TriggerUnlock(id); } }
     public void SetUnlockProgressNOLOSS(int id, float progress) 
-    { if (unlockInfo[id].unlockProgress >= 1 || unlockInfo[id].unlockProgress > progress) { return; } else { unlockInfo[id].unlockProgress = progress; if (unlockInfo[id].unlockProgress >= 1) { UnlockItem(id); } } }
+    { if (saveFRW.data.UnlockInfo[id].unlockProgress >= 1 || saveFRW.data.UnlockInfo[id].unlockProgress > progress) { return; } else { saveFRW.data.UnlockInfo[id].unlockProgress = progress; if (saveFRW.data.UnlockInfo[id].unlockProgress >= 1) { saveFRW.data.UnlockInfo[id].unlockProgress = 1; pi.TriggerUnlock(id); } } }
     void Update()
     {
         if (startNewRoutine) { StartCoroutine(CheckForUnlocksEfficent()); }
@@ -96,6 +93,7 @@ public class UnlockManager : MonoBehaviour
                 if (phm.statusEffectsActive >= 5) { UnlockItem(17); } // OrganicGumballMachine (17)
                 break;
             case 1:
+                for (int i = 0; i < pi.modifierList.Count; i++) { SetUnlockProgressNOLOSS(22, 0.1f/pi.modifierList[i]); Debug.Log(saveFRW.data.UnlockInfo[22].unlockProgress); } // IrradiatedFrenchPastry (22)
                 break;
             case 2:
                 break;
@@ -109,9 +107,9 @@ public class UnlockManager : MonoBehaviour
         {
             case 0:
                 if (pi.leftItems[188] + pi.rightItems[188] > 0) { UnlockItem(5); } // AircraftGradeMetal (5)
-                if (pi.leftMutatedItemCount + pi.rightMutatedItemCount >= 5) { UnlockItem(14); } // MutatedCell (14)
                 break;
             case 1:
+                if (pi.leftMutatedItemCount + pi.rightMutatedItemCount >= 5) { UnlockItem(14); } // MutatedCell (14)
                 break;
             case 2:
                 break;
@@ -146,12 +144,12 @@ public class UnlockManager : MonoBehaviour
     //Cheats
     public void UnlockAll()
     {
-        foreach(SaveFileReadWrite.UnlockInformation unlock in unlockInfo)
+        foreach(SaveFileReadWrite.UnlockInformation unlock in saveFRW.data.UnlockInfo)
         { UnlockItem(unlock.id); }
     }
     public void LockAll()
     {
-        foreach (SaveFileReadWrite.UnlockInformation unlock in unlockInfo)
+        foreach (SaveFileReadWrite.UnlockInformation unlock in saveFRW.data.UnlockInfo)
         { if(unlock.unlockCondition != null) { unlock.unlockProgress = 0; } }
     }
 }

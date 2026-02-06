@@ -50,10 +50,13 @@ public class Credits : MonoBehaviour
     {
         for (int i = 0; i < itemData.Count; i++)
         {
-            TextMeshProUGUI tmp = Instantiate(creditTextPrefab, creditTextHolder).GetComponent<TextMeshProUGUI>();
-            string credit = "" + itemData[i].ideaCredit; if (credit == "" || credit == "Gun-Like Classic") { credit = "Evan,V"; }
-            string creditFlavor = "" + itemData[i].flavorCredit; if (creditFlavor == "" || creditFlavor == "Gun-Like Classic") { creditFlavor = "Evan,V"; }
-            tmp.text = itemData[i].itemName + " (ID:" + itemData[i].id + ") | " + credit + " | Flavor Text by " + creditFlavor;
+            if ((itemData[i].ideaCredit != "" && itemData[i].ideaCredit != "Gun-Like Classic") || (itemData[i].flavorCredit != "" && itemData[i].flavorCredit != "Gun-Like Classic"))
+            {
+                TextMeshProUGUI tmp = Instantiate(creditTextPrefab, creditTextHolder).GetComponent<TextMeshProUGUI>();
+                string credit = "" + itemData[i].ideaCredit; if (credit == "" || credit == "Gun-Like Classic") { credit = "Evan,V"; }
+                string creditFlavor = "" + itemData[i].flavorCredit; if (creditFlavor == "" || creditFlavor == "Gun-Like Classic") { creditFlavor = "Evan,V"; }
+                tmp.text = itemData[i].itemName + " (ID:" + itemData[i].id + ") | " + credit + " | Flavor Text by " + creditFlavor;
+            }
 
             if(25%(i+1) == 0) { yield return new WaitForEndOfFrame(); }
         }
