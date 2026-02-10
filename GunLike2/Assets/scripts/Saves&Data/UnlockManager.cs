@@ -93,7 +93,7 @@ public class UnlockManager : MonoBehaviour
                 if (phm.statusEffectsActive >= 5) { UnlockItem(17); } // OrganicGumballMachine (17)
                 break;
             case 1:
-                for (int i = 0; i < pi.modifierList.Count; i++) { SetUnlockProgressNOLOSS(22, 0.1f/pi.modifierList[i]); Debug.Log(saveFRW.data.UnlockInfo[22].unlockProgress); } // IrradiatedFrenchPastry (22)
+                for (int i = 0; i < pi.modifierList.Count; i++) { SetUnlockProgressNOLOSS(22, 0.1f/pi.modifierList[i]); } // IrradiatedFrenchPastry (22)
                 break;
             case 2:
                 break;
