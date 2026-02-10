@@ -150,6 +150,6 @@ public class UnlockManager : MonoBehaviour
     public void LockAll()
     {
         foreach (SaveFileReadWrite.UnlockInformation unlock in saveFRW.data.UnlockInfo)
-        { if(unlock.unlockCondition != null) { unlock.unlockProgress = 0; } }
+        { if(unlock.unlockCondition != "") { unlock.unlockProgress = 0; } }
     }
 }
