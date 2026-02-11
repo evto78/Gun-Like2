@@ -50,7 +50,9 @@ public class NuclearExplosion : MonoBehaviour
         }
         if (collision.gameObject.tag == "Player")
         {
-            collision.GetComponent<HealthManager>().TakeDamage(damage, false, null, "Nuclear Explosion", transform);
+            HealthManager hm = collision.gameObject.GetComponent<HealthManager>();
+            hm.TakeDamage(damage, false, null, "Nuclear Explosion", transform);
+            if (hm.curHp <= 0) { hm.gdm.unlockMan.UnlockItem(30); } //Active Reactor[30] (Die to a nuclear explosion)
         }
     }
 }

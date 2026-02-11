@@ -83,7 +83,7 @@ public class UnlockManager : MonoBehaviour
     }
     void CheckQuickUnlocks() //Checked every 2 frames, over 1 frame
     {
-        if (mvt.rb.velocity.magnitude >= 60f && mvt.sliding) { UnlockItem(3); } // Butt-er (3)
+        if (mvt.rb.velocity.magnitude >= 70f && mvt.sliding) { UnlockItem(3); } // Butt-er (3)
     }
     void CheckMedUnlocks(int frame) //Checked every 4 frames, over 4 frames
     {
@@ -106,14 +106,17 @@ public class UnlockManager : MonoBehaviour
         switch(frame)
         {
             case 0:
-                if (pi.leftItems[188] + pi.rightItems[188] > 0) { UnlockItem(5); } // AircraftGradeMetal (5)
                 break;
             case 1:
                 if (pi.leftMutatedItemCount + pi.rightMutatedItemCount >= 5) { UnlockItem(14); } // MutatedCell (14)
                 break;
             case 2:
+                SetUnlockProgressNOLOSS(37, pi.modifierList[26] / 2f); // Radioactive metal domes (37)
                 break;
             case 3:
+                float temp = 0;
+                for (int i = 0; i < pi.gunLike1Items.Count; i++) { if(pi.leftItems[pi.gunLike1Items[i]]+pi.rightItems[pi.gunLike1Items[i]]>0) { temp++; } }
+                SetUnlockProgressNOLOSS(38, temp/3f); // Gunlike classic on usb (38)
                 break;
             case 4:
                 break;

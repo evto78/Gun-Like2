@@ -83,6 +83,7 @@ public class ItemContainer : MonoBehaviour
         if (player.GetComponent<HealthManager>().money < Mathf.RoundToInt(cost * priceModifier)) { return; }
         Destroy(internalItemPos);
         player.GetComponent<HealthManager>().money -= Mathf.RoundToInt(cost * priceModifier);
+        pi.spentMoneyThisRoom = true;
 
         gameObject.GetComponent<Rigidbody>().useGravity = false;
         gameObject.GetComponent<Rigidbody>().isKinematic = true;

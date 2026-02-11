@@ -70,6 +70,7 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "all") { SpawnALL(); }
 				else if (numberTyped == "unlockall") { unlockMan.UnlockAll(); }
 				else if (numberTyped == "lockall") { unlockMan.LockAll(); }
+				else if (numberTyped == "kill") { foreach (EnemyHealthManager ehm in gdm.activeEhms) { ehm.TakeDamage(float.PositiveInfinity, true, HitType.ht.special, ehm.transform.position, "god"); } }
 				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
 				else
                 {

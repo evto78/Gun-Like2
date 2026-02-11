@@ -47,6 +47,7 @@ public class SlotMachineInteractable : MonoBehaviour
         if (interacted) { return; }
         if (pi.healthManager.money < cost) { return; }
         pi.healthManager.money -= cost;
+        pi.spentMoneyThisRoom = true;
         netMoneyMade -= cost;
         interacted = true; spinsMade++;
         anim.SetTrigger("Spin");

@@ -297,14 +297,22 @@ public class GameDataManager : MonoBehaviour
         rightSnapshot = new List<int>();
         rightSnapshot.AddRange(pi.rightItems);
     }
+    public void RoomEnter()
+    {
+        damageTakenThisRoom = 0; timeInAirThisRoom = 0; timeOnGroundThisRoom = 0;
+        pi.spentMoneyThisRoom = false;
+    }
+    public void RoomExit()
+    {
+        // On Room Clear Unlocks
+        unlockMan.SetUnlockProgressNOLOSS(18, damageTakenThisRoom / (phm.maxHp * 3f)); // Explosive Growth (18)
+        unlockMan.SetUnlockProgressNOLOSS(20, timeInAirThisRoom / timeOnGroundThisRoom); // Irradiated Bunny Slippers (20)
+        if (!pi.spentMoneyThisRoom) { unlockMan.UnlockItem(36); } // Silver4Cash Sponsership (36)
+    }
     //NEEDS to be called when the player goes into the next room.
     public void AdvanceToNextRoom()
     {
-        // On Room Clear Unlocks
-        unlockMan.SetUnlockProgressNOLOSS(18, damageTakenThisRoom / (phm.maxHp*3f)); // Explosive Growth (18)
-        unlockMan.SetUnlockProgressNOLOSS(20, timeInAirThisRoom / timeOnGroundThisRoom); // Irradiated Bunny Slippers (20)
-        damageTakenThisRoom = 0; timeInAirThisRoom = 0; timeOnGroundThisRoom = 0;
-
+        RoomExit();
         if (bossKilled)
         {
             PlayerPrefs.SetInt("Victory", 1);

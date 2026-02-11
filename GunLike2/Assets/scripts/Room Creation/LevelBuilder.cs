@@ -93,6 +93,7 @@ public class LevelBuilder : MonoBehaviour
     }
     public void Activate()
     {
+        gdm.RoomEnter();
         gdm.roomsUntilBoss--;
         if (gdm.roomsUntilBoss <= 0)
         {

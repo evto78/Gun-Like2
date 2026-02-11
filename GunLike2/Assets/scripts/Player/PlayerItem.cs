@@ -104,9 +104,6 @@ public class PlayerItem : MonoBehaviour
     public int rightIFPStatToBuff;
     public int rightIFPStatToDeBuff;
 
-    List<int> leftSnapshot;
-    List<int> rightSnapshot;
-
     public int gotchaTickets;
     public int leftLowFreqRes; List<int> leftLFRAffected = new List<int>();
     public int rightLowFreqRes; List<int> rightLFRAffected = new List<int>();
@@ -122,8 +119,7 @@ public class PlayerItem : MonoBehaviour
     public GameObject itemPos;
 
     GameDataManager gdm;
-
-    bool changedLastFrame;
+    public bool spentMoneyThisRoom = false;
     private void Awake()
     {
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
@@ -312,6 +308,7 @@ public class PlayerItem : MonoBehaviour
         popupUI.CreateNotif(amount, FindObjByID(id));
         switch (id)
         {
+            case 38: gdm.unlockMan.UnlockItem(39); break; // Experimental Implant (39)
             case 69: uiManager.VisionOfGunky(); break;
             case 70: uiManager.VisionOfGunky(); break;
             case 71: uiManager.VisionOfGunky(); break;
@@ -321,22 +318,37 @@ public class PlayerItem : MonoBehaviour
                 if (hand == "right") { for (int i = 0; i < 50 * amount; i++) { gunManager.rightGunScript.addBullet(); } }
                 break;
             case 186: healthManager.GiveEffect(27, 120); break;
+            case 188: gdm.unlockMan.UnlockItem(5); break; // Aircraft Grade Metal (5)
             case 191: healthManager.money += Mathf.RoundToInt(50f + (50f * leftItems[177]) + (50f * rightItems[177])); break;
         }
-        uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
-        if((leftItems[97]+ leftItems[98]+ leftItems[99] + leftItems[100])+(rightItems[97] + rightItems[98] + rightItems[99] + rightItems[100]) > 0)
+
+        if (sponserItems.Contains(id)) { gdm.unlockMan.UnlockItem(42); } // Sponsership Deal (42)
+
+        switch (itemData[id].rarity)
         {
-            for (int i = 0; i < amount; i++)
-            {
-                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[97]--; }
-                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[98]--; }
-                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[99]--; }
-                if (Random.Range(1, 100) < 8 && hand == "left") { leftItems[100]--; }
-                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[97]--; }
-                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[98]--; }
-                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[99]--; }
-                if (Random.Range(1, 100) < 8 && hand == "right") { rightItems[100]--; }
-            }
+            case ItemObject.rarityType.Common: break;
+            case ItemObject.rarityType.Uncommon: break;
+            case ItemObject.rarityType.Rare: break;
+            case ItemObject.rarityType.Legendary: break;
+            case ItemObject.rarityType.Mutated: break;
+            case ItemObject.rarityType.Haunted: gdm.unlockMan.UnlockItem(40); break; // Possession (40)
+            case ItemObject.rarityType.Irradiated: break;
+            case ItemObject.rarityType.Nuclear: break;
+            case ItemObject.rarityType.Unique: break;
+        }
+
+        uiManager.inventoryUI.GetComponent<InventoryScript>().UpdateInventory();
+        
+        for (int i = 0; i < amount; i++)
+        {
+            if (Random.Range(1, 100) < 8 && hand == "left" && leftItems[97] > 0) { leftItems[97]--; }
+            if (Random.Range(1, 100) < 8 && hand == "left" && leftItems[98] > 0) { leftItems[98]--; }
+            if (Random.Range(1, 100) < 8 && hand == "left" && leftItems[99] > 0) { leftItems[99]--; }
+            if (Random.Range(1, 100) < 8 && hand == "left" && leftItems[100] > 0) { leftItems[100]--; }
+            if (Random.Range(1, 100) < 8 && hand == "right" && rightItems[97] > 0) { rightItems[97]--; }
+            if (Random.Range(1, 100) < 8 && hand == "right" && rightItems[98] > 0) { rightItems[98]--; }
+            if (Random.Range(1, 100) < 8 && hand == "right" && rightItems[99] > 0) { rightItems[99]--; }
+            if (Random.Range(1, 100) < 8 && hand == "right" && rightItems[100] > 0) { rightItems[100]--; }
         }
         switch (hand)
         {

@@ -171,8 +171,6 @@ public class SaveFileReadWrite : MonoBehaviour
             }
             if (menuManager != null) { menuManager.instance = this; }
         }
-
-        //if (data.UnlockInfo[22] != null) { Debug.Log(data.UnlockInfo[22].unlockProgress); }
     }
     public bool RequestDataUpdate()
     {
@@ -250,6 +248,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     public List<UnlockInformation> UpdateUnlockInfo( List<UnlockInformation> oldInfo, List<ItemObject> itemData)
     {
+        Debug.Log("Updating unlock info...");
         //Ensures the unlockdata has all the items in it, but retains the unlock progress from the old list
         List<UnlockInformation> tmp = InitalizeUnlockInfo();
         for(int i = 0; i < itemData.Count; i++)
@@ -257,6 +256,15 @@ public class SaveFileReadWrite : MonoBehaviour
             if(oldInfo.Count > i)
             {
                 tmp[i].unlockProgress = oldInfo[i].unlockProgress;
+                //If the unlock condiditon changed, reset unlock progress
+                if (tmp[i].unlockCondition != oldInfo[i].unlockCondition && itemData[i].needsToBeUnlocked)
+                {
+                    tmp[i].unlockProgress = 0f;
+                }
+                if (!itemData[i].needsToBeUnlocked)
+                {
+                    tmp[i].unlockProgress = 1f;
+                }
             }
         }
 
@@ -329,8 +337,13 @@ public class SaveFileReadWrite : MonoBehaviour
 
         List<ItemObject> itemData = new List<ItemObject>();
         itemData.AddRange(Resources.LoadAll<ItemObject>("Items"));
+        itemData = SortItemData(itemData);
         if (data.UnlockInfo.Count != itemData.Count) { data.UnlockInfo = UpdateUnlockInfo(data.UnlockInfo, itemData); }
-
+        else { foreach (ItemObject item in itemData)
+        {
+                if (((data.UnlockInfo[item.id].unlockCondition!=null && item.unlockCondition!=null) && (data.UnlockInfo[item.id].unlockCondition != item.unlockCondition)) || (data.UnlockInfo[item.id].unlockProgress != 1 && !item.needsToBeUnlocked)) 
+                { data.UnlockInfo = UpdateUnlockInfo(data.UnlockInfo, itemData); break; }
+        } }
         if (PlayerPrefs.HasKey("USRID"))
         {
             data.usrID = PlayerPrefs.GetString("USRID");

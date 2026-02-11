@@ -387,13 +387,15 @@ public class EnemyHealthManager : MonoBehaviour
                 else { activeEffects[effectID] = new Vector4(activeEffects[effectID].x + (stacksToAdd * 2f), allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); } break;
             default: activeEffects[effectID] = new Vector4(activeEffects[effectID].x + stacksToAdd, allEffects[effectID].decayTime, allEffects[effectID].decayTime, allEffects[effectID].type); break;
         }
-
-        if(activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, allEffects[2].decayTime, allEffects[2].decayTime, allEffects[2].type); }
+        
+        if (activeEffects[2].x < 1) { activeEffects[2] = new Vector4(0, allEffects[2].decayTime, allEffects[2].decayTime, allEffects[2].type); }
         if (activeEffects[16].x > 3) { activeEffects[16] = new Vector4(3, allEffects[16].decayTime, allEffects[16].decayTime, allEffects[16].type); }
         if (activeEffects[18].x > 1) { activeEffects[18] = new Vector4(1, allEffects[18].decayTime, allEffects[18].decayTime, allEffects[18].type); }
         if (activeEffects[19].x > 1) { activeEffects[19] = new Vector4(1, allEffects[19].decayTime, allEffects[19].decayTime, allEffects[19].type); }
         if (activeEffects[23].x > 1) { activeEffects[23] = new Vector4(1, allEffects[23].decayTime, allEffects[23].decayTime, allEffects[23].type); }
         if (activeEffects[28].x > 1) { activeEffects[28] = new Vector4(1, allEffects[28].decayTime, allEffects[28].decayTime, allEffects[28].type); }
+
+        if (activeEffects[effectID].w < 0 && activeEffects[effectID].x > 4) { gdm.unlockMan.UnlockItem(41); } //AntiAntidote (41)
     }
     public void RandomDebuff()
     {

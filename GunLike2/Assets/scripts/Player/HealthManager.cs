@@ -349,6 +349,7 @@ public class HealthManager : MonoBehaviour
 
 	public void EnemyDied(EnemyHealthManager enemyThatDied, int moneyDropped)
     {
+		Debug.Log("Enemy died");
 		timeSinceEnemyDied = 0;
 
 		if(activeReactor > 0)
@@ -373,6 +374,8 @@ public class HealthManager : MonoBehaviour
 				}
 			}
         }
+
+		if(enemyThatDied == lastHitMe && dead) { gdm.unlockMan.UnlockItem(43); } // Helping Hand in Hand (43)
     }
 
 	void ItemChecks()

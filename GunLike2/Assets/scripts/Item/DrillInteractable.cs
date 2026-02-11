@@ -34,6 +34,8 @@ public class DrillInteractable : MonoBehaviour
         if (interacted) { return; }
         if (pi.healthManager.money < cost) { return; }
         pi.healthManager.money -= cost;
+        pi.spentMoneyThisRoom = true;
+
         interacted = true;
         anim.SetTrigger("Start");
         StartCoroutine(Drill());

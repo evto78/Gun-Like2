@@ -94,6 +94,7 @@ public class ShopCrate : MonoBehaviour
         if (player.GetComponent<HealthManager>().money < (cost * priceModifier) || timer > 0f) { return; }
 
         player.GetComponent<HealthManager>().money -= Mathf.RoundToInt(cost * priceModifier);
+        pi.spentMoneyThisRoom = true;
 
         anim.SetTrigger("Open");
 
