@@ -25,7 +25,6 @@ public class UZIWalkerBrain : MonoBehaviour
     public float dmg;
     public float bulSpeed;
     public float accuracy;
-    public float warnTime; bool sentWarningThisBurst;
 
     bool jammed;
     public ParticleSystem jamEffect;
@@ -71,7 +70,6 @@ public class UZIWalkerBrain : MonoBehaviour
                 {
                     if (fireTimer + cooldownTimer <= 0)
                     {
-                        if (!sentWarningThisBurst) { cooldownTimer = warnTime; break; }
                         Shoot();
                         turretAnim.SetBool("Recharge", false);
                         turretAnim.SetTrigger("Fire");
@@ -85,14 +83,13 @@ public class UZIWalkerBrain : MonoBehaviour
                             turretAnim.speed = 1f / cooldownTimer;
                             turretAnim.SetBool("Recharge", true);
                             bulShot = 0;
-                            sentWarningThisBurst = false;
                         }
                     }
                     else if (cooldownTimer <= 0f)
                     {
                         turretAnim.SetBool("Recharge", false);
                     }
-                    if (cooldownTimer <= warnTime && !sentWarningThisBurst) { uiMan.AddDangerWarnSource(transform, transform.position, false, warnTime); }
+                    //if (cooldownTimer <= warnTime && !sentWarningThisBurst) { sentWarningThisBurst = true; uiMan.AddDangerWarnSource(transform, transform.position, false, warnTime); }
                 }
                 else if (cooldownTimer <= 0f)
                 {

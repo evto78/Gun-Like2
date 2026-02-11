@@ -172,7 +172,7 @@ public class SaveFileReadWrite : MonoBehaviour
             if (menuManager != null) { menuManager.instance = this; }
         }
 
-        if (data.UnlockInfo[22] != null) { Debug.Log(data.UnlockInfo[22].unlockProgress); }
+        //if (data.UnlockInfo[22] != null) { Debug.Log(data.UnlockInfo[22].unlockProgress); }
     }
     public bool RequestDataUpdate()
     {

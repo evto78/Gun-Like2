@@ -16,7 +16,9 @@ public class EnemyBullet : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(dmg, false, ehm, ehm.data.enemyName, ehm.transform);
+            HealthManager hm = collision.gameObject.GetComponent<HealthManager>();
+            hm.TakeDamage(dmg, false, ehm, ehm.data.enemyName, ehm.transform);
+            if (hm.curHp <= 0) { hm.gdm.unlockMan.UnlockItem(28); } //Jam dipped bullets[28] (Die to projectile)
         }
         Destroy(gameObject);
     }
