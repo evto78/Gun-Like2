@@ -383,6 +383,7 @@ public class SaveFileReadWrite : MonoBehaviour
         if (PlayerPrefs.GetInt("SENDDATA") != 1) { return; }
 
         TelemData tdata = PrepareData();
+        if (tdata == null) { return; }
         tdata.eventData = eventT;
 
         bulkTelem.data.Add(tdata);
@@ -391,6 +392,7 @@ public class SaveFileReadWrite : MonoBehaviour
     {
         string emailContent = "";
         TelemData tdata = PrepareData();
+        if (tdata == null) { return; }
         emailContent += content;
         emailContent += " [SENT BY: " + tdata.usr + " ]";
 
@@ -442,6 +444,8 @@ public class SaveFileReadWrite : MonoBehaviour
         TelemData tdata = new TelemData();
         tdata.usr = data.usrID;
         tdata.sessionNum = data.usrSessions.ToString();
+
+        if(gdm == null) { return (null); }
 
         tdata.difficulty = gdm.difficulty;
         tdata.selectedDifficulty = gdm.difficultyIDSelected;
