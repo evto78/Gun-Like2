@@ -83,12 +83,14 @@ public class SaveFileReadWrite : MonoBehaviour
         bulkTelem.data = new List<TelemData>();
         emailQueContent = new List<string>();
         emailQueEvent = new List<string>();
-        //Try to find GDM
+        //Try to find GDM and Unlock Manager
         foreach (GameObject gm in SceneManager.GetActiveScene().GetRootGameObjects())
         {
             if(gm.name == "CoreProcesses")
             {
                 gdm = gm.GetComponentInChildren<GameDataManager>();
+                UnlockManager unlockman = gm.GetComponentInChildren<UnlockManager>();
+                unlockman.saveFRW = this;
             }
             if(gm.tag == "gdm")
             {
@@ -103,7 +105,7 @@ public class SaveFileReadWrite : MonoBehaviour
                 menuManager = gm.GetComponent<MainMenuManager>();
             }
         }
-        if(gdm != null) { gdm.instance = this; }
+        if (gdm != null) { gdm.instance = this; }
         if(menuManager != null) { menuManager.instance = this; }
 
         SaveDataCheckup();
@@ -230,6 +232,7 @@ public class SaveFileReadWrite : MonoBehaviour
     }
     List<UnlockInformation> InitalizeUnlockInfo()
     {
+        Debug.Log("Initializing Unlock Info");
         List<UnlockInformation> tmp = new List<UnlockInformation>();
 
         List<ItemObject> itemData = new List<ItemObject>();

@@ -349,7 +349,7 @@ public class HealthManager : MonoBehaviour
 
 	public void EnemyDied(EnemyHealthManager enemyThatDied, int moneyDropped)
     {
-		Debug.Log("Enemy died");
+		//Debug.Log("Enemy died");
 		timeSinceEnemyDied = 0;
 
 		if(activeReactor > 0)

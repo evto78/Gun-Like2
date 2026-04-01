@@ -220,6 +220,7 @@ public class PlayerItem : MonoBehaviour
     }
     public void TriggerUnlock(int id)
     {
+        uiManager.popupNotif.Popup(itemData[id]);
         ItemObject item = itemData[id];
         Debug.Log("UNLOCKED: " + item.itemName);
         switch (item.rarity)

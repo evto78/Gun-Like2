@@ -8,7 +8,7 @@ public class DamageFlash : MonoBehaviour
     public Image img;
     public Transform flashTransform;
     public List<Sprite> flashSprites;
-    float flashTimer = 0f; float flashDuration = 0.5f;
+    public float flashTimer = 0f; float flashDuration = 0.5f;
     void Update()
     {
         flashTimer -= Time.deltaTime/flashDuration;

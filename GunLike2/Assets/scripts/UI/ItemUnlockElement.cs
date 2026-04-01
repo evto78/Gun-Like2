@@ -21,8 +21,17 @@ public class ItemUnlockElement : MonoBehaviour
     public GameObject unlockDataWindow;
     public List<GameObject> gameObjects;
 
+    public ItemUnlockDisplayScript display;
+    ItemObject myItemInfo;
+    SaveFileReadWrite.UnlockInformation myUnlockInfo;
+
     public void SetUp(ItemObject myItem, SaveFileReadWrite.UnlockInformation unlockInfo)
     {
+        unlockDataWindow.SetActive(false);
+
+        myItemInfo = myItem;
+        myUnlockInfo = unlockInfo;
+
         itemSprite.sprite = myItem.itemSprite;
         switch (myItem.rarity)
         {
@@ -50,6 +59,11 @@ public class ItemUnlockElement : MonoBehaviour
 
     private void Update()
     {
-        unlockDataWindow.SetActive(Vector3.Distance(Input.mousePosition, transform.position) < 50);
+        //unlockDataWindow.SetActive(Vector3.Distance(Input.mousePosition, transform.position) < 50);
+        if(Vector3.Distance(Input.mousePosition, transform.position) < 50)
+        {
+            display.gameObject.SetActive(true);
+            display.SetUpDisplay(myItemInfo, myUnlockInfo);
+        }
     }
 }

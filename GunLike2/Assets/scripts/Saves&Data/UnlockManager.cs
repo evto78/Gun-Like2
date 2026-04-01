@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnlockManager : MonoBehaviour
 {
-    SaveFileReadWrite saveFRW;
+    public SaveFileReadWrite saveFRW;
     GameDataManager gdm;
     PlayerItem pi;
     HealthManager phm;
@@ -15,7 +15,7 @@ public class UnlockManager : MonoBehaviour
     void Start()
     {
         gdm = GetComponent<GameDataManager>();
-        saveFRW = gdm.instance;
+        //saveFRW = gdm.instance;
         pi = gdm.pi;
         phm = gdm.phm;
         mvt = gdm.phm.playerMvt;

@@ -12,6 +12,8 @@ public class PlayerDataManager : MonoBehaviour
     SaveFileReadWrite saveDataReader;
     public List<ItemObject> itemData;
 
+    public ItemUnlockDisplayScript display;
+
     private void Awake()
     {
         saveDataReader = GameObject.Find("SaveDataReader").GetComponent<SaveFileReadWrite>();
@@ -75,6 +77,7 @@ public class PlayerDataManager : MonoBehaviour
         foreach(ItemObject item in itemData)
         {
             ItemUnlockElement unlockElement = Instantiate(itemUnlockElementPrefab, itemUnlockWindow).GetComponent<ItemUnlockElement>();
+            unlockElement.display = display;
             unlockElement.SetUp(item, unlockData[item.id]);
             counter++;
             if(counter == 10) { counter = 0; yield return new WaitForEndOfFrame(); }

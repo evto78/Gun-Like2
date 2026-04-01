@@ -93,6 +93,8 @@ public class UIManager : MonoBehaviour
     public GameObject hurtPointer;
     public GameObject warnPointer;
     public DamageFlash flash;
+
+    public PopupNotif popupNotif;
     private void Start()
     {
         pi = GetComponent<PlayerItem>();
