@@ -12,8 +12,11 @@ public class ItemUnlockElement : MonoBehaviour
     public List<Sprite> rarityBGs;
     public TextMeshProUGUI nameTxt;
     public TextMeshProUGUI progressTxt;
+    public GameObject progressObject;
     public TextMeshProUGUI conditionTxt;
     public Image fillGear;
+    public Image bgGear;
+    public GameObject lockedbg;
 
     public GameObject unlockDataWindow;
     public List<GameObject> gameObjects;
@@ -37,6 +40,12 @@ public class ItemUnlockElement : MonoBehaviour
         progressTxt.text = Mathf.FloorToInt(unlockInfo.unlockProgress*100).ToString() + "%";
         conditionTxt.text = myItem.unlockCondition;
         fillGear.fillAmount = unlockInfo.unlockProgress;
+        if (fillGear.fillAmount >= 1) 
+        { 
+            bgGear.enabled = false; fillGear.enabled = false; lockedbg.SetActive(false);
+            progressObject.SetActive(false);
+            conditionTxt.text = myItem.effect.ToString();
+        }
     }
 
     private void Update()

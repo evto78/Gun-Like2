@@ -74,11 +74,8 @@ public class PlayerDataManager : MonoBehaviour
         int counter = 0;
         foreach(ItemObject item in itemData)
         {
-            if (item.needsToBeUnlocked)
-            {
-                ItemUnlockElement unlockElement = Instantiate(itemUnlockElementPrefab, itemUnlockWindow).GetComponent<ItemUnlockElement>();
-                unlockElement.SetUp(item, unlockData[item.id]);
-            }
+            ItemUnlockElement unlockElement = Instantiate(itemUnlockElementPrefab, itemUnlockWindow).GetComponent<ItemUnlockElement>();
+            unlockElement.SetUp(item, unlockData[item.id]);
             counter++;
             if(counter == 10) { counter = 0; yield return new WaitForEndOfFrame(); }
         }
