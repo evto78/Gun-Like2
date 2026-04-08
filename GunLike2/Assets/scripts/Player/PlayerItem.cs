@@ -635,6 +635,7 @@ public class PlayerItem : MonoBehaviour
             {
                 itemDisplay.SetActive(false);
             }
+            uiManager.ammoDisplayTextHolder.transform.parent.gameObject.SetActive(!itemDisplay.activeSelf);
             if(hit.collider.gameObject.tag == "Interactable")
             {
                 ItemContainer ic;
