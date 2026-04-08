@@ -10,11 +10,15 @@ public class ItemDisplayScript : MonoBehaviour
     public GameObject cam;
     PlayerItem playerItemScript;
 
+    int previousItemID;
+
     public List<Sprite> backgroundList = new List<Sprite>();
 
     public TextMeshProUGUI nameTxt;
     public TextMeshProUGUI buffTxt;
+    List<string> buffList = new List<string>();
     public TextMeshProUGUI debuffTxt;
+    List<string> debuffList = new List<string>();
     public TextMeshProUGUI effectTxt;
     public TextMeshProUGUI flavorTxt;
 
@@ -33,8 +37,20 @@ public class ItemDisplayScript : MonoBehaviour
     public TextMeshProUGUI leftInteractBtn;
     public TextMeshProUGUI rightInteractBtn;
 
+    public GameObject templateBuff;
+    public GameObject templateDebuff;
+    List<GameObject> buffClones = new List<GameObject>();
+    List<GameObject> debuffClones = new List<GameObject>();
+    public RectTransform effectBox;
+    public RectTransform buffDebuffBox;
+    public RectTransform descriptionBox;
+    public Transform buffHolder;
+    public Transform debuffHolder;
+
     private void Start()
     {
+        previousItemID = -1;
+
         playerItemScript = player.GetComponent<PlayerItem>();
 
         detailsBtn.text = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>().instance.controlsBinds.showMoreInformation.ToString();
@@ -57,8 +73,9 @@ public class ItemDisplayScript : MonoBehaviour
     {
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
+        bool detailedView = Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1;
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1)
+        if (detailedView)
         {
             //id 22 is the irradiated french pastry
             if(selectedItem.id == 22)
@@ -118,15 +135,11 @@ public class ItemDisplayScript : MonoBehaviour
             }
             else
             {
-                buffTxt.text = selectedItem.buff;
-                debuffTxt.text = selectedItem.debuff;
                 effectTxt.text = selectedItem.effect;
             }
         }
         else
         {
-            buffTxt.text = selectedItem.buffSum;
-            debuffTxt.text = selectedItem.debuffSum;
             effectTxt.text = selectedItem.effectSum;
         }
         
@@ -135,7 +148,65 @@ public class ItemDisplayScript : MonoBehaviour
         itemSprite.sprite = selectedItem.itemSprite;
         if (selectedItem.globalItem) { itemGlobal.sprite = isGlobal; } else { itemGlobal.sprite = notGlobal; }
 
+        if (previousItemID == selectedItem.id) { return; }
+        previousItemID = selectedItem.id;
+
+        while(buffClones.Count > 0) { Destroy(buffClones[0]); buffClones.RemoveAt(0); }
+        while(debuffClones.Count > 0) { Destroy(debuffClones[0]); debuffClones.RemoveAt(0); }
+        buffList = new List<string>();
+        debuffList = new List<string>();
+
+        if (detailedView)
+        {
+            buffList.AddRange(selectedItem.buff.Split(','));
+            debuffList.AddRange(selectedItem.debuff.Split(','));
+        }
+        else
+        {
+            buffList.AddRange(selectedItem.buffSum.Split(','));
+            debuffList.AddRange(selectedItem.debuffSum.Split(','));
+        }
+
+        if (buffList.Count > 0)
+        {
+            for (int i = 0; i < buffList.Count; i++)
+            {
+                buffList[i] = buffList[i].TrimStart(' ');
+
+                if (i == 0) { buffTxt.text = buffList[0]; }
+                else
+                {
+                    GameObject buffClone = Instantiate(templateBuff, templateBuff.transform.parent);
+                    buffClones.Add(buffClone);
+                    buffClone.GetComponent<TextMeshProUGUI>().text = buffList[i];
+                }
+            }
+        }
+        if (debuffList.Count > 0)
+        {
+            for (int i = 0; i < debuffList.Count; i++)
+            {
+                debuffList[i] = debuffList[i].TrimStart(' ');
+
+                if (i == 0) { debuffTxt.text = debuffList[0]; }
+                else
+                {
+                    GameObject debuffClone = Instantiate(templateDebuff, templateDebuff.transform.parent);
+                    debuffClones.Add(debuffClone);
+                    debuffClone.GetComponent<TextMeshProUGUI>().text = debuffList[i];
+                }
+            }
+        }
+
         SetRarity(selectedItem.id);
+
+        LayoutUpdate(selectedItem);
+    }
+
+    void LayoutUpdate(ItemObject selectedItem)
+    {
+        int listCount = buffHolder.childCount;
+        if (debuffHolder.childCount > listCount) { listCount = debuffHolder.childCount; }
 
     }
     void SetRarity(int id)
