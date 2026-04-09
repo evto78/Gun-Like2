@@ -205,7 +205,8 @@ public class LevelBuilder : MonoBehaviour
                 if (placeable)
                 {
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
-                    GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
+                    //Debug Cubes
+                    //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
                 }
             }
         }
@@ -277,7 +278,8 @@ public class LevelBuilder : MonoBehaviour
                 if (placeable) 
                 { 
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
-                    GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
+                    //Debug Cubes
+                    //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
                 }
             }
         }

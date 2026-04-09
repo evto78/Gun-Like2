@@ -1340,12 +1340,12 @@ public class GunManager : MonoBehaviour
             if (leftSpinach > 0)
             {
                 for (int i = 0; i < leftMRs.Count; i++)
-                { leftMRs[i].material.color = new Color(leftColors[i].r - (leftSpinach / 50f), leftColors[i].g + (leftSpinach / 50f), leftColors[i].b - (leftSpinach / 50f), leftColors[i].a); }
+                { if (leftMRs[i] != null) { leftMRs[i].material.color = new Color(leftColors[i].r - (leftSpinach / 50f), leftColors[i].g + (leftSpinach / 50f), leftColors[i].b - (leftSpinach / 50f), leftColors[i].a); } }
             }
             if (rightSpinach > 0)
             {
                 for (int i = 0; i < rightMRs.Count; i++)
-                { rightMRs[i].material.color = new Color(rightColors[i].r - (rightSpinach / 50f), rightColors[i].g + (rightSpinach / 50f), rightColors[i].b - (rightSpinach / 50f), rightColors[i].a); }
+                { if (rightMRs[i] != null) { rightMRs[i].material.color = new Color(rightColors[i].r - (rightSpinach / 50f), rightColors[i].g + (rightSpinach / 50f), rightColors[i].b - (rightSpinach / 50f), rightColors[i].a); } }
             }
         }
     }

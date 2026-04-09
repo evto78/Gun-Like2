@@ -43,6 +43,7 @@ public class ExitGateConsole : MonoBehaviour
         completionTxt.text = "";
         textAnimTimer = 0f; textAnimCycle = 0;
         interacted = false;
+        GetComponent<OutlineScript>().disabledObject = false;
         if(bossEhm == null) { bossHealth = null; } else { bossHealth = bossEhm; }
     }
     private void Update()
@@ -74,6 +75,7 @@ public class ExitGateConsole : MonoBehaviour
     }
     IEnumerator UnlockSequence()
     {
+        GetComponent<OutlineScript>().disabledObject = true;
         ui.GateUnlockUpdate(false);
         gdm.PointsRestore();
         consoleTxt.text = "Input Recived!";
