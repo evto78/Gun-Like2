@@ -27,6 +27,7 @@ public class ItemDisplayScript : MonoBehaviour
     public Image bgOutline;
     public Image bgDesc;
     public Image bgTitle;
+    public Image bgEffect;
     public Image itemSprite;
     public Image itemGlobal;
 
@@ -223,5 +224,6 @@ public class ItemDisplayScript : MonoBehaviour
         bgOutline.sprite = backgroundList[temp]; 
         bgDesc.sprite = backgroundList[temp]; 
         bgTitle.sprite = backgroundList[temp];
+        bgEffect.sprite = backgroundList[temp];
     }
 }

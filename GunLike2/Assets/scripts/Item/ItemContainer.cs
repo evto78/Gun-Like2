@@ -119,7 +119,7 @@ public class ItemContainer : MonoBehaviour
             }
         }
 
-        Destroy(costTxt.transform.gameObject);
+        Destroy(costTxt.transform.parent.gameObject);
     }
     private void Update()
     {

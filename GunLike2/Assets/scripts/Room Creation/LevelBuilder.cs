@@ -150,7 +150,7 @@ public class LevelBuilder : MonoBehaviour
         Vector3 tPos = lvlTerrain.transform.position;
         TerPlaceData[,] tDataFull = new TerPlaceData[Mathf.RoundToInt(tSize.x / resolution), Mathf.RoundToInt(tSize.z / resolution)];
         int maxHeight = 150;
-        int paddingFromUnplaceable = Mathf.RoundToInt(80f / resolution);
+        int paddingFromUnplaceable = Mathf.RoundToInt(50f / resolution);
         List<Vector2> placeableArrayIndex = new List<Vector2>();
         for (int x = 0; x < tDataFull.GetLength(0); x++)//build height map
         {
@@ -174,23 +174,37 @@ public class LevelBuilder : MonoBehaviour
                 if (tDataFull[x, z].height > maxHeight) { placeable = false; }
                 else
                 {
-                    for (int i = 0; i < paddingFromUnplaceable; i++)
+                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height)>1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > 1)
                     {
-                        if (tDataFull[x + i, z].height > maxHeight ||
-                            tDataFull[x, z + i].height > maxHeight ||
-                            tDataFull[x + i, z + i].height > maxHeight ||
-                            tDataFull[x - i, z].height > maxHeight ||
-                            tDataFull[x, z - i].height > maxHeight ||
-                            tDataFull[x - i, z - i].height > maxHeight ||
-                            tDataFull[x - i, z + i].height > maxHeight ||
-                            tDataFull[x + i, z - i].height > maxHeight)
-                        { placeable = false; break; }
+                        placeable = false;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < paddingFromUnplaceable; i++)
+                        {
+                            if (tDataFull[x + i, z].height > maxHeight ||
+                                tDataFull[x, z + i].height > maxHeight ||
+                                tDataFull[x + i, z + i].height > maxHeight ||
+                                tDataFull[x - i, z].height > maxHeight ||
+                                tDataFull[x, z - i].height > maxHeight ||
+                                tDataFull[x - i, z - i].height > maxHeight ||
+                                tDataFull[x - i, z + i].height > maxHeight ||
+                                tDataFull[x + i, z - i].height > maxHeight)
+                            { placeable = false; break; }
+                        }
                     }
                 }
                 if (placeable)
                 {
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
-                    //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
+                    GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
                 }
             }
         }
@@ -207,7 +221,7 @@ public class LevelBuilder : MonoBehaviour
         Vector3 tPos = lvlTerrain.transform.position;
         TerPlaceData[,] tDataFull = new TerPlaceData[Mathf.RoundToInt(tSize.x / resolution), Mathf.RoundToInt(tSize.z / resolution)];
         int maxHeight = 150;
-        int paddingFromUnplaceable = Mathf.RoundToInt(80f / resolution);
+        int paddingFromUnplaceable = Mathf.RoundToInt(50f / resolution);
         List<Vector2> placeableArrayIndex = new List<Vector2>();
         for (int x = 0; x < tDataFull.GetLength(0); x++)//build height map
         {
@@ -231,23 +245,37 @@ public class LevelBuilder : MonoBehaviour
                 if (tDataFull[x, z].height > maxHeight) { placeable = false; }
                 else
                 {
-                    for (int i = 0; i < paddingFromUnplaceable; i++)
+                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > 1 ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > 1)
                     {
-                        if (tDataFull[x+i,z].height > maxHeight ||
-                            tDataFull[x,z+i].height > maxHeight ||
-                            tDataFull[x+i,z+i].height > maxHeight ||
-                            tDataFull[x-i,z].height > maxHeight ||
-                            tDataFull[x,z-i].height > maxHeight ||
-                            tDataFull[x-i,z-i].height > maxHeight ||
-                            tDataFull[x-i,z+i].height > maxHeight ||
-                            tDataFull[x+i,z-i].height > maxHeight ) 
-                        { placeable = false; break; }
+                        placeable = false;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < paddingFromUnplaceable; i++)
+                        {
+                            if (tDataFull[x + i, z].height > maxHeight ||
+                                tDataFull[x, z + i].height > maxHeight ||
+                                tDataFull[x + i, z + i].height > maxHeight ||
+                                tDataFull[x - i, z].height > maxHeight ||
+                                tDataFull[x, z - i].height > maxHeight ||
+                                tDataFull[x - i, z - i].height > maxHeight ||
+                                tDataFull[x - i, z + i].height > maxHeight ||
+                                tDataFull[x + i, z - i].height > maxHeight)
+                            { placeable = false; break; }
+                        }
                     }
                 }
                 if (placeable) 
                 { 
                     tDataFull[x, z].placeable = true; placeableArrayIndex.Add(new Vector2(x, z));
-                    //GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
+                    GameObject spawned = Instantiate(debugCube, tDataFull[x,z].worldPos, transform.rotation); spawned.GetComponent<MeshRenderer>().material.color = Color.green;
                 }
             }
         }

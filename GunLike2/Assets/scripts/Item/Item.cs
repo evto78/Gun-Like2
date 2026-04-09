@@ -31,6 +31,12 @@ public class Item : MonoBehaviour
         if (playerItem.leftItems[142] + playerItem.rightItems[142] > 0) { SetItemID(143); }
 
         GameObject.Find("LevelBuilder").GetComponent<LevelBuilder>().placed.Add(gameObject);
+
+        playerItem.healthManager.gdm.spawnedItems.Add(this);
+    }
+    private void OnDestroy()
+    {
+        if (playerItem.healthManager.gdm.spawnedItems.Contains(this)) { playerItem.healthManager.gdm.spawnedItems.Remove(this); }
     }
     private void LateUpdate()
     {
@@ -81,5 +87,19 @@ public class Item : MonoBehaviour
             rb.useGravity = false;
             rb.isKinematic = true;
         }
+    }
+    public IEnumerator GlideToPosition(Vector3 targetPosition)
+    {
+        float progress = Vector3.Distance(transform.position, targetPosition);
+
+        while (progress > 1) 
+        {
+            progress = Vector3.Distance(transform.position, targetPosition);
+            transform.position += (targetPosition - transform.position).normalized * Time.deltaTime * 10f;
+            yield return new WaitForEndOfFrame();
+        }
+        transform.position = targetPosition;
+
+        yield return null;
     }
 }

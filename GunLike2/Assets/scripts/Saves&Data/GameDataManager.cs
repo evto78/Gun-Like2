@@ -15,6 +15,7 @@ public class GameDataManager : MonoBehaviour
     public PlayerItem pi;
     public List<EffectObject> effectData;
     public UnlockManager unlockMan;
+    public List<Item> spawnedItems;
     //Checking Change
     bool changedLastFrame;
     List<int> leftSnapshot;
@@ -494,5 +495,13 @@ public class GameDataManager : MonoBehaviour
         infoR.accuracy = (((infoR.accuracy / 100) + (gm.rightBulletsFiredDATA / (gm.rightHitsDATA + 1))) / 2) * 100f;
         if (difficulty > infoL.difficulyReachedRecord) { infoL.difficulyReachedRecord = (int)difficulty; }
         if (difficulty > infoR.difficulyReachedRecord) { infoR.difficulyReachedRecord = (int)difficulty; }
+    }
+    public void PullItemsToPosition(Vector3 tarPos)
+    {
+        foreach(Item item in spawnedItems)
+        {
+            Vector3 offset = new Vector3(Random.Range(-3f,3f), 0, Random.Range(-3f,3f));
+            item.StartCoroutine(item.GlideToPosition(tarPos+offset));
+        }
     }
 }

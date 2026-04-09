@@ -116,6 +116,7 @@ public class PlayerItem : MonoBehaviour
     public int itemHeld = -1; public string itemHeldHand = "left";
 
     public GameObject itemPos;
+    public GameObject itemPickupEffectPrefab;
 
     GameDataManager gdm;
     public bool spentMoneyThisRoom = false;
@@ -613,6 +614,20 @@ public class PlayerItem : MonoBehaviour
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (leftItems[86] > 0) { leftItems[id] += 1; leftItems[86]--; }
                     if (id == 186) { healthManager.GiveEffect(27, 120); }
+                    ItemPickupEffect spawnedEffect = Instantiate(itemPickupEffectPrefab).GetComponent<ItemPickupEffect>();
+                    spawnedEffect.transform.position = hit.point;
+                    switch (itemData[id].rarity)
+                    {
+                        case ItemObject.rarityType.Common: spawnedEffect.SetUpEffect(0, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Uncommon: spawnedEffect.SetUpEffect(1, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Rare: spawnedEffect.SetUpEffect(2, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Legendary: spawnedEffect.SetUpEffect(3, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Mutated: spawnedEffect.SetUpEffect(4, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Haunted: spawnedEffect.SetUpEffect(5, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Irradiated: spawnedEffect.SetUpEffect(6, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Nuclear: spawnedEffect.SetUpEffect(7, gunManager.rightGunScript.transform); break;
+                        case ItemObject.rarityType.Unique: spawnedEffect.SetUpEffect(8, gunManager.rightGunScript.transform); break;
+                    }
                 }
                 if (Input.GetKeyDown(healthManager.gdm.instance.controlsBinds.leftInteract) || (Input.GetKey(healthManager.gdm.instance.controlsBinds.leftInteract) && Input.GetKey(healthManager.gdm.instance.controlsBinds.sprint)))
                 {
@@ -622,6 +637,20 @@ public class PlayerItem : MonoBehaviour
                     hit.collider.gameObject.GetComponentInParent<Item>().Taken();
                     if (rightItems[86] > 0) { rightItems[id] += 1; rightItems[86]--; }
                     if (id == 186) { healthManager.GiveEffect(27, 120); }
+                    ItemPickupEffect spawnedEffect = Instantiate(itemPickupEffectPrefab).GetComponent<ItemPickupEffect>();
+                    spawnedEffect.transform.position = hit.point;
+                    switch (itemData[id].rarity)
+                    {
+                        case ItemObject.rarityType.Common: spawnedEffect.SetUpEffect(0, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Uncommon: spawnedEffect.SetUpEffect(1, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Rare: spawnedEffect.SetUpEffect(2, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Legendary: spawnedEffect.SetUpEffect(3, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Mutated: spawnedEffect.SetUpEffect(4, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Haunted: spawnedEffect.SetUpEffect(5, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Irradiated: spawnedEffect.SetUpEffect(6, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Nuclear: spawnedEffect.SetUpEffect(7, gunManager.leftGunScript.transform); break;
+                        case ItemObject.rarityType.Unique: spawnedEffect.SetUpEffect(8, gunManager.leftGunScript.transform); break;
+                    }
                 }
             }
             else if (hit.collider.gameObject.TryGetComponent<ShopCrate>(out ShopCrate sc))
@@ -636,7 +665,8 @@ public class PlayerItem : MonoBehaviour
                 itemDisplay.SetActive(false);
             }
             uiManager.ammoDisplayTextHolder.transform.parent.gameObject.SetActive(!itemDisplay.activeSelf);
-            if(hit.collider.gameObject.tag == "Interactable")
+            uiManager.crosshair.transform.gameObject.SetActive(!itemDisplay.activeSelf);
+            if (hit.collider.gameObject.tag == "Interactable")
             {
                 ItemContainer ic;
                 if (hit.collider.gameObject.TryGetComponent<ItemContainer>(out ic))

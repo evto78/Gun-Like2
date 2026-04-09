@@ -118,6 +118,7 @@ public class ExitGateConsole : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         exitGate.Toggle(false);
         collide.enabled = false;
+        gdm.PullItemsToPosition(transform.position - Vector3.forward * 10f);
         yield return null;
     }
 }

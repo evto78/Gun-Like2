@@ -1935,13 +1935,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1320151609655439176, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.25
-      objectReference: {fileID: 0}
+    - target: {fileID: 1652207953152809334, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+      propertyPath: itemPickupEffectPrefab
+      value: 
+      objectReference: {fileID: 7996497649506769586, guid: badb464d9fb219843be791fe07e6f374, type: 3}
     - target: {fileID: 2518637335849271105, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267405102876203020, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+      propertyPath: bgEffect
+      value: 
+      objectReference: {fileID: 950714297}
+    - target: {fileID: 3982082957099634174, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5632374844428695184, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1953,6 +1961,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5632374844428695184, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6320099125477345246, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+      propertyPath: prewarm
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7175104016231244769, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
@@ -3174,6 +3186,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 949300214}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &950714297 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3292274786821521128, guid: 8c59d3dc6fd4382479c3f276f63dec40, type: 3}
+  m_PrefabInstance: {fileID: 515218678}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &950963531
 GameObject:
   m_ObjectHideFlags: 0
@@ -3884,7 +3907,7 @@ GameObject:
   - component: {fileID: 1150253627}
   m_Layer: 0
   m_Name: Terrain3
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
