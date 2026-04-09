@@ -174,14 +174,15 @@ public class LevelBuilder : MonoBehaviour
                 if (tDataFull[x, z].height > maxHeight) { placeable = false; }
                 else
                 {
-                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height)>1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > 1)
+                    float maxHeightDiff = 2f;
+                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height)> maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > maxHeightDiff)
                     {
                         placeable = false;
                     }
@@ -245,14 +246,15 @@ public class LevelBuilder : MonoBehaviour
                 if (tDataFull[x, z].height > maxHeight) { placeable = false; }
                 else
                 {
-                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > 1 ||
-                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > 1)
+                    float maxHeightDiff = 2f;
+                    if (Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z + 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z + 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > maxHeightDiff ||
+                        Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > maxHeightDiff)
                     {
                         placeable = false;
                     }
@@ -343,7 +345,7 @@ public class LevelBuilder : MonoBehaviour
                 }
             }
         }
-        if (!objData.flatten) { return; }
+        if (!objData.flatten || maxLocalHeight == 0) { return; }
 
         placedObj.transform.position = new Vector3(placedObj.transform.position.x, maxLocalHeight, placedObj.transform.position.z);
         GameObject pillar = Instantiate(supportPillar); placed.Add(pillar);
