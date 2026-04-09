@@ -21,6 +21,8 @@ public class LevelBuilder : MonoBehaviour
     public GameObject debugCube;
     public GameObject supportPillar;
 
+    public List<Collider> outerWallsColliders;
+
     public List<GameObject> placed = new List<GameObject>();
     private void Start()
     {
@@ -147,6 +149,15 @@ public class LevelBuilder : MonoBehaviour
     void Build(Terrain lvlTerrain, bool placeObj, bool placeFeatures)
     {
         if (placed.Count > 0) { foreach(GameObject obj in placed) { Destroy(obj); } placed = new List<GameObject>(); }
+        List<Collider> terrainObjects = new List<Collider>();
+        Transform terrainObjHolder = lvlTerrain.transform.GetChild(lvlTerrain.transform.childCount - 1);//get the last child
+        for(int i = 0; i < terrainObjHolder.childCount; i++)
+        {
+            terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<Collider>());
+        }
+        List<Collider> blockingObjects = new List<Collider>();
+        blockingObjects.AddRange(terrainObjects);
+        blockingObjects.AddRange(outerWallsColliders);
         int resolution = 4;
         Vector3 tSize = lvlTerrain.terrainData.size;
         Vector3 tPos = lvlTerrain.transform.position;
@@ -185,23 +196,31 @@ public class LevelBuilder : MonoBehaviour
                         Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z - 1].height) > maxHeightDiff ||
                         Mathf.Abs(tDataFull[x, z].height - tDataFull[x + 1, z - 1].height) > maxHeightDiff ||
                         Mathf.Abs(tDataFull[x, z].height - tDataFull[x - 1, z + 1].height) > maxHeightDiff)
-                    {
-                        placeable = false;
-                    }
+                    { placeable = false; }
                     else
                     {
-                        for (int i = 0; i < paddingFromUnplaceable; i++)
+                        float maxObjectDist = 8f;
+                        for(int i = 0; i < blockingObjects.Count; i++)
                         {
-                            if (tDataFull[x + i, z].height > maxHeight ||
-                                tDataFull[x, z + i].height > maxHeight ||
-                                tDataFull[x + i, z + i].height > maxHeight ||
-                                tDataFull[x - i, z].height > maxHeight ||
-                                tDataFull[x, z - i].height > maxHeight ||
-                                tDataFull[x - i, z - i].height > maxHeight ||
-                                tDataFull[x - i, z + i].height > maxHeight ||
-                                tDataFull[x + i, z - i].height > maxHeight)
+                            if (Vector3.Distance(blockingObjects[i].ClosestPoint(tDataFull[x, z].worldPos), tDataFull[x, z].worldPos) < maxObjectDist)
                             { placeable = false; break; }
                         }
+                        //OLD loop for checking if near the max height \/
+                        //if (placeable)
+                        //{
+                            //for (int i = 0; i < paddingFromUnplaceable; i++)
+                            //{
+                            //    if (tDataFull[x + i, z].height > maxHeight ||
+                            //        tDataFull[x, z + i].height > maxHeight ||
+                            //        tDataFull[x + i, z + i].height > maxHeight ||
+                            //        tDataFull[x - i, z].height > maxHeight ||
+                            //        tDataFull[x, z - i].height > maxHeight ||
+                            //        tDataFull[x - i, z - i].height > maxHeight ||
+                            //        tDataFull[x - i, z + i].height > maxHeight ||
+                            //        tDataFull[x + i, z - i].height > maxHeight)
+                            //    { placeable = false; break; }
+                            //}
+                        //}
                     }
                 }
                 if (placeable) 
