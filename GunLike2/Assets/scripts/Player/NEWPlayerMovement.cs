@@ -115,9 +115,9 @@ public class NEWPlayerMovement : MonoBehaviour
         float jumpForceMult = 1f; float jumpForceDiv = 1f;
         float gravityMult = 1f; float gravityDiv = 1f;
 
-        baseMoveSpeed = 600f;
+        baseMoveSpeed = 1000f;
         baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
-        baseJumpForce = 2000f;
+        baseJumpForce = 60f;
         baseNumberOfJumps = 1;
 
         moveSpeed = baseMoveSpeed;
@@ -302,11 +302,11 @@ public class NEWPlayerMovement : MonoBehaviour
         {
             if (playerItem.leftItems[93] + playerItem.rightItems[93] > 0)
             {
-                rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
+                rb.AddForce(-Vector3.up * 10 * Time.fixedDeltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
             }
             else
             {
-                rb.AddForce(-Vector3.up * 10 * Time.deltaTime * gravityModifier);
+                rb.AddForce(-Vector3.up * 10 * Time.fixedDeltaTime * gravityModifier);
             }
         }
         if (healthMan.dead) { return; }
@@ -386,7 +386,7 @@ public class NEWPlayerMovement : MonoBehaviour
             {
                 if(slidingMod > 0)
                 {
-                    if (slideDir == Vector3.zero) { slideDir = transform.forward; }
+                    if (slideDir == Vector3.zero) { slideDir = transform.forward - (Vector3.up * 0.05f); }
                     Slide();
                 }
             }
@@ -412,23 +412,29 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     void Move()
     {
+        float universalSpeedBuff = 2f; //To compisate with changing time.deltatime to time.fixeddeltatime
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
         if (sliding)
         {
-            if(rb.velocity.y > 0)
+            if(rb.velocity.y > 0 && !onGround)
             {
-                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.8f; } else { slidingMod -= Time.fixedDeltaTime * 1.5f; }
+            }
+            if(rb.velocity.y > 0 && onGround)
+            {
+                rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
+                if (buttered) { slidingMod -= Time.fixedDeltaTime * 1.2f; } else { slidingMod -= Time.fixedDeltaTime * 2.5f; }
             }
             else if (rb.velocity.y < 0)
             {
-                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod += Time.fixedDeltaTime; } else { slidingMod += Time.fixedDeltaTime * 0.5f; }
             }
             else if (rb.velocity.y <= 0)
             {
-                rb.AddForce(slideDir * slideAccelerationRate * slidingMod * Time.deltaTime, ForceMode.Impulse);
+                rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.2f; } else { slidingMod -= Time.fixedDeltaTime; }
             }
             if(slidingMod <= 0)
@@ -443,15 +449,15 @@ public class NEWPlayerMovement : MonoBehaviour
         }
         else if (onGround)
         {
-            rb.AddRelativeForce(inputDir * airStrafeSpeed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddRelativeForce(universalSpeedBuff * airStrafeSpeed * Time.fixedDeltaTime * inputDir, ForceMode.Impulse);
         }
         else if (isSprinting)
         {
-            rb.AddRelativeForce(inputDir * sprintMoveSpeed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddRelativeForce(universalSpeedBuff * sprintMoveSpeed * Time.fixedDeltaTime * inputDir, ForceMode.Impulse);
         }
         else
         {
-            rb.AddRelativeForce(inputDir * moveSpeed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddRelativeForce(universalSpeedBuff * moveSpeed * Time.fixedDeltaTime * inputDir, ForceMode.Impulse);
         }
 
         //Limit Velocity realative to speed
@@ -489,7 +495,8 @@ public class NEWPlayerMovement : MonoBehaviour
             }
 
             jumpsLeft -= 1;
-            rb.AddForce(transform.up * jumpForce, ForceMode.Force);
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             if (slamming)
             {
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -523,12 +530,13 @@ public class NEWPlayerMovement : MonoBehaviour
     void Effects()
     {
         //camera effects
-        if(rb.velocity.magnitude > 10)
+        if(dfov)
         {
-            float t = rb.velocity.magnitude / maxVelFov;
-            if(dfov) { Camera.main.fieldOfView = Mathf.Lerp(fov, fov + 10f, t); }
+            float camFOVTar = Camera.main.fieldOfView;
+            float t = (rb.velocity.magnitude-10f) / maxVelFov;
+            camFOVTar = Mathf.Lerp(fov, fov + 10f, t);
+            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, camFOVTar, Time.deltaTime*50f);
         }
-        
 
         //particle effects
         slamEffect.SetActive(slamming);
@@ -559,9 +567,9 @@ public class NEWPlayerMovement : MonoBehaviour
         if (onGround)
         {
             Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            if(inputDir == Vector3.zero && !sliding) { flatVel = flatVel / (friction * 4 * (1 + Time.deltaTime)); rb.useGravity = false; } else { rb.useGravity = true; }
-            flatVel = flatVel / (friction * (1 + Time.deltaTime));
-            rb.velocity = new Vector3(flatVel.x, rb.velocity.y / (1+Time.deltaTime), flatVel.z); 
+            if(inputDir == Vector3.zero && !sliding) { flatVel /= (friction * 4 * (1+Time.fixedDeltaTime)); rb.useGravity = false; } else { rb.useGravity = true; }
+            flatVel /= (friction * (1 + Time.fixedDeltaTime));
+            rb.velocity = new Vector3(flatVel.x, rb.velocity.y / (1+Time.fixedDeltaTime), flatVel.z); 
         } else if (!noGravity) { rb.useGravity = true; }
     }
 }

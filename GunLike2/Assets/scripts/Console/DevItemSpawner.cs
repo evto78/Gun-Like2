@@ -18,6 +18,8 @@ public class DevItemSpawner : MonoBehaviour
 	bool typing;
 	string numberTyped;
 	int modifier;
+
+	float backspaceHeldFor = 0;
     private void Awake()
     {
         gdm = GameObject.FindGameObjectWithTag("gdm").GetComponent<GameDataManager>();
@@ -45,58 +47,20 @@ public class DevItemSpawner : MonoBehaviour
 			numberTyped = "";
 		}
 
+		if (Input.GetKey(KeyCode.Backspace)) { backspaceHeldFor += Time.deltaTime; }
+		if (Input.GetKeyUp(KeyCode.Backspace)) { backspaceHeldFor = 0f; }
+
 		if (typing)
 		{
 			consoleText.text = numberTyped;
 
-			if ((Input.GetKeyDown(KeyCode.Backspace) || Input.GetKey(KeyCode.Backspace)) && numberTyped.Length > 0)
+			if ((Input.GetKeyDown(KeyCode.Backspace) || (Input.GetKey(KeyCode.Backspace) && backspaceHeldFor > 0.4f)) && numberTyped.Length > 0)
 			{
 				numberTyped = numberTyped.Substring(0, numberTyped.Length - 1);
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
-			{	
-				if (numberTyped == "") { Debug.Log("EmptyCommand"); }
-				else if(numberTyped == "$") { GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; }
-				else if(numberTyped == "c") { SpawnPotential(0); }
-				else if (numberTyped == "u") { SpawnPotential(1); }
-				else if (numberTyped == "r") { SpawnPotential(2); }
-				else if (numberTyped == "l") { SpawnPotential(3); }
-				else if (numberTyped == "m") { SpawnPotential(4); }
-				else if (numberTyped == "h") { SpawnPotential(5); }
-				else if (numberTyped == "i") { SpawnPotential(6); }
-				else if (numberTyped == "n") { SpawnPotential(7); }
-				else if (numberTyped == "o") { SpawnPotential(8); }
-				else if (numberTyped == "rand") { SpawnPotential(Random.Range(0,8)); }
-				else if (numberTyped == "gunlike") { Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); }
-				else if (numberTyped == "all") { SpawnALL(); }
-				else if (numberTyped == "unlockall") { unlockMan.UnlockAll(); }
-				else if (numberTyped == "lockall") { unlockMan.LockAll(); }
-				else if (numberTyped == "openroof") { gdm.roofScript.OpenRoof(); }
-				else if (numberTyped == "kill") { foreach (EnemyHealthManager ehm in gdm.activeEhms) { ehm.TakeDamage(float.PositiveInfinity, true, HitType.ht.special, ehm.transform.position, "god"); } }
-				else if (numberTyped[0].ToString() == "x") { numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
-				else
-				{
-					try
-					{
-                        if (modifier > 0)
-                        {
-                            for (int i = 0; i < modifier; i++)
-                            {
-                                SpawnItem(int.Parse(numberTyped.Trim()));
-                            }
-                        }
-                        SpawnItem(int.Parse(numberTyped.Trim()));
-                    }
-					catch (System.Exception)
-					{
-						Debug.LogWarning("Invalid Command: " + numberTyped);
-						typing = false;
-						consoleText.text = "";
-
-						throw;
-					}
-					
-				}
+			{
+				TryRunCommand(numberTyped);
 
 				typing = false;
 			}
@@ -109,6 +73,57 @@ public class DevItemSpawner : MonoBehaviour
         {
 			consoleText.text = "";
         }
+	}
+	void TryRunCommand(string command)
+    {
+        switch (command)
+        {
+			case "": Debug.Log("EmptyCommand"); break;
+			case "$": GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; break;
+			case "c": SpawnPotential(0); break;
+			case "u": SpawnPotential(1); break;
+			case "r": SpawnPotential(2); break;
+			case "l": SpawnPotential(3); break;
+			case "m": SpawnPotential(4); break;
+			case "h": SpawnPotential(5); break;
+			case "i": SpawnPotential(6); break;
+			case "n": SpawnPotential(7); break;
+			case "o": SpawnPotential(8); break;
+			case "rand": SpawnPotential(Random.Range(0, 8)); break;
+			case "gunlike": Application.OpenURL("https://scratch.mit.edu/projects/547360850/"); break;
+			case "all": SpawnALL(); break;
+			case "unlockall": unlockMan.UnlockAll(); break;
+			case "lockall": unlockMan.LockAll(); break;
+			case "openroof": gdm.roofScript.OpenRoof(); break;
+			case "roofopen": gdm.roofScript.OpenRoof(); break;
+			case "kill": foreach (EnemyHealthManager ehm in gdm.activeEhms) { ehm.TakeDamage(float.PositiveInfinity, true, HitType.ht.special, ehm.transform.position, "god"); } break;
+			default: 
+				if (command[0].ToString() == "x") { command = command.Remove(0, 1); modifier = int.Parse(command.Trim()); }
+				else
+				{
+					try
+					{
+						if (modifier > 0)
+						{
+							for (int i = 0; i < modifier; i++)
+							{
+								SpawnItem(int.Parse(command.Trim()));
+							}
+						}
+						SpawnItem(int.Parse(command.Trim()));
+					}
+					catch (System.Exception)
+					{
+						Debug.LogWarning("Invalid Command: " + command);
+						typing = false;
+						consoleText.text = "";
+
+						throw;
+					}
+
+				}
+				break;
+		}
 	}
 	void SpawnALL()
     {
