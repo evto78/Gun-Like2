@@ -115,17 +115,17 @@ public class NEWPlayerMovement : MonoBehaviour
         float jumpForceMult = 1f; float jumpForceDiv = 1f;
         float gravityMult = 1f; float gravityDiv = 1f;
 
-        baseMoveSpeed = 1000f;
-        baseSprintMoveSpeed = baseMoveSpeed * 1.6f;
+        baseMoveSpeed = 800f;
+        baseSprintMoveSpeed = baseMoveSpeed * 1.4f;
         baseJumpForce = 60f;
         baseNumberOfJumps = 1;
 
         moveSpeed = baseMoveSpeed;
         sprintMoveSpeed = baseSprintMoveSpeed;
         jumpForce = baseJumpForce;
-        airStrafeSpeed = moveSpeed * 0.5f;
-        maxSlideVelocity = moveSpeed * 3f;
-        slideAccelerationRate = sprintMoveSpeed * 1.5f;
+        airStrafeSpeed = moveSpeed * 0.3f;
+        maxSlideVelocity = sprintMoveSpeed * 1.4f;
+        slideAccelerationRate = sprintMoveSpeed * 1.4f;
         numberOfJumps = baseNumberOfJumps;
         gravityModifier = 1f;
 
@@ -298,15 +298,17 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        onGround = GroundCheck();
+
         if (!onGround && !noGravity) 
         {
             if (playerItem.leftItems[93] + playerItem.rightItems[93] > 0)
             {
-                rb.AddForce(-Vector3.up * 10 * Time.fixedDeltaTime * gravityModifier * (timeSinceGrounded * (0.5f + playerItem.leftItems[93] + playerItem.rightItems[93] - 1f)));
+                rb.AddForce(10 * Time.fixedDeltaTime * gravityModifier * ((timeSinceGrounded * 0.5f) + 1) * ((timeSinceGrounded * (0.8f * (playerItem.leftItems[93] + playerItem.rightItems[93]))) + 1) * -Vector3.up);
             }
             else
             {
-                rb.AddForce(-Vector3.up * 10 * Time.fixedDeltaTime * gravityModifier);
+                rb.AddForce(10 * Time.fixedDeltaTime * gravityModifier * ((timeSinceGrounded * 0.5f) + 1) * -Vector3.up);
             }
         }
         if (healthMan.dead) { return; }
@@ -422,17 +424,17 @@ public class NEWPlayerMovement : MonoBehaviour
                 rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.8f; } else { slidingMod -= Time.fixedDeltaTime * 1.5f; }
             }
-            if(rb.velocity.y > 0 && onGround)
+            else if(rb.velocity.y > 0 && onGround)
             {
                 rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod -= Time.fixedDeltaTime * 1.2f; } else { slidingMod -= Time.fixedDeltaTime * 2.5f; }
             }
-            else if (rb.velocity.y < 0)
+            else if (rb.velocity.y <= -0.5f)
             {
                 rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod += Time.fixedDeltaTime; } else { slidingMod += Time.fixedDeltaTime * 0.5f; }
             }
-            else if (rb.velocity.y <= 0)
+            else 
             {
                 rb.AddForce(universalSpeedBuff * slideAccelerationRate * slidingMod * Time.fixedDeltaTime * slideDir, ForceMode.Impulse);
                 if (buttered) { slidingMod -= Time.fixedDeltaTime * 0.2f; } else { slidingMod -= Time.fixedDeltaTime; }
@@ -447,7 +449,7 @@ public class NEWPlayerMovement : MonoBehaviour
             if(slidingMod > 5f) { slidingMod = 5f; }
             
         }
-        else if (onGround)
+        else if (!onGround)
         {
             rb.AddRelativeForce(universalSpeedBuff * airStrafeSpeed * Time.fixedDeltaTime * inputDir, ForceMode.Impulse);
         }

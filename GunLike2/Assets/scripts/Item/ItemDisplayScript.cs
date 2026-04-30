@@ -74,7 +74,9 @@ public class ItemDisplayScript : MonoBehaviour
     {
         transform.position = new Vector3(itemPos.x, itemPos.y+1f, itemPos.z);
 
-        bool detailedView = Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1;
+        bool detailedView = PlayerPrefs.GetInt("ADVDESC") == 1;
+        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation)) { detailedView = !detailedView; }
+
         nameTxt.text = selectedItem.itemName;
         if (detailedView)
         {
@@ -149,7 +151,7 @@ public class ItemDisplayScript : MonoBehaviour
         itemSprite.sprite = selectedItem.itemSprite;
         if (selectedItem.globalItem) { itemGlobal.sprite = isGlobal; } else { itemGlobal.sprite = notGlobal; }
 
-        if (previousItemID == selectedItem.id) { return; }
+        if (previousItemID == selectedItem.id && !Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation)) { return; }
         previousItemID = selectedItem.id;
 
         while(buffClones.Count > 0) { Destroy(buffClones[0]); buffClones.RemoveAt(0); }
