@@ -5,6 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="New Item", menuName ="Item/Create New Item")]
 public class ItemObject : ScriptableObject
 {
+    [System.Serializable]
+    public class StatData
+    {
+        public enum Stat { 
+            MHP, Armor, PassiveRegen, Speed, SprintSpeed, JumpForce, NumberOfJumps, AttackSpeed, ReloadSpeed, 
+            Damage, MagSize, Accuracy, BulletSpeed, BulletSize, Pierce, CritChance, CritDamage, WeakPointChance, WeakPointDamage
+        }
+        public Stat stat;
+        public float initialChange;
+        public float stackingChange;
+        public string ChangeSum;
+    }
+
     [Header("Functional")]
     public int id;
     public string itemName;
@@ -34,6 +47,7 @@ public class ItemObject : ScriptableObject
     public string buffSum;
     public string debuffSum;
     public string flavor;
+    public List<StatData> statData = new List<StatData>();
     [Header("Credit")]
     public string ideaCredit;
     public string flavorCredit;
