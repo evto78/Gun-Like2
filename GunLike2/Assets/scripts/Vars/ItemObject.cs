@@ -9,14 +9,20 @@ public class ItemObject : ScriptableObject
     public class StatData
     {
         public enum Stat { 
-            MHP, Armor, PassiveRegen, Speed, SprintSpeed, JumpForce, NumberOfJumps, AttackSpeed, ReloadSpeed, 
+            MHP, Armor, PassiveRegen, Speed, SprintSpeed, JumpHeight, JumpCount, AttackSpeed, ReloadSpeed, 
             Damage, MagSize, Accuracy, BulletSpeed, BulletSize, Pierce, CritChance, CritDamage, WeakPointChance, WeakPointDamage
         }
         public Stat stat;
-        public float initialChange;
-        public float stackingChange;
-        public string ChangeSum;
+        public float change;
     }
+
+    /// <summary>
+    /// General Definition of buff symbols
+    /// + <= 20%
+    /// ++ <= 40%
+    /// +++ <= 60%
+    /// +1/2 <= 10%
+    /// </summary>
 
     [Header("Functional")]
     public int id;
@@ -32,13 +38,6 @@ public class ItemObject : ScriptableObject
     public enum itemType { basic, sponser, classic, fish, unstablePart, boss, horror }
     public itemType subType;
     
-    /// <summary>
-    /// General Definition of buff symbols
-    /// + = 20%
-    /// ++ = 40%
-    /// +++ = 50%/60%
-    /// + 1/2 = 10%
-    /// </summary>
     [Header("Display Text")]
     public string effect;
     public string buff;
