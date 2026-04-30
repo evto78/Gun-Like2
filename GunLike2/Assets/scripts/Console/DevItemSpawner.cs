@@ -55,7 +55,8 @@ public class DevItemSpawner : MonoBehaviour
 			}
 			else if (Input.GetKeyDown(KeyCode.Return) && typing)
 			{	
-				if(numberTyped == "$") { GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; }
+				if (numberTyped == "") { Debug.Log("EmptyCommand"); }
+				else if(numberTyped == "$") { GameObject.Find("Player").GetComponent<HealthManager>().money += 99999999; }
 				else if(numberTyped == "c") { SpawnPotential(0); }
 				else if (numberTyped == "u") { SpawnPotential(1); }
 				else if (numberTyped == "r") { SpawnPotential(2); }
@@ -70,18 +71,31 @@ public class DevItemSpawner : MonoBehaviour
 				else if (numberTyped == "all") { SpawnALL(); }
 				else if (numberTyped == "unlockall") { unlockMan.UnlockAll(); }
 				else if (numberTyped == "lockall") { unlockMan.LockAll(); }
+				else if (numberTyped == "openroof") { gdm.roofScript.OpenRoof(); }
 				else if (numberTyped == "kill") { foreach (EnemyHealthManager ehm in gdm.activeEhms) { ehm.TakeDamage(float.PositiveInfinity, true, HitType.ht.special, ehm.transform.position, "god"); } }
-				else if (numberTyped[0].ToString() == "x") {numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
+				else if (numberTyped[0].ToString() == "x") { numberTyped = numberTyped.Remove(0, 1); modifier = int.Parse(numberTyped.Trim()); }
 				else
-                {
-					if(modifier > 0)
-                    {
-						for(int i = 0; i < modifier; i++)
+				{
+					try
+					{
+                        if (modifier > 0)
                         {
-							SpawnItem(int.Parse(numberTyped.Trim()));
-						}
+                            for (int i = 0; i < modifier; i++)
+                            {
+                                SpawnItem(int.Parse(numberTyped.Trim()));
+                            }
+                        }
+                        SpawnItem(int.Parse(numberTyped.Trim()));
                     }
-					SpawnItem(int.Parse(numberTyped.Trim()));
+					catch (System.Exception)
+					{
+						Debug.LogWarning("Invalid Command: " + numberTyped);
+						typing = false;
+						consoleText.text = "";
+
+						throw;
+					}
+					
 				}
 
 				typing = false;

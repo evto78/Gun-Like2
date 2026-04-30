@@ -10,6 +10,7 @@ public class LevelBuilder : MonoBehaviour
 
     public Terrain currentTerrain;
     public List<Terrain> terrainList;
+    public int defaultIndex;
     public Transform terrainOptions;
     List<int> unusedTerrains;
     List<NavMeshDataInstance> addedNavData = new List<NavMeshDataInstance>();
@@ -35,7 +36,7 @@ public class LevelBuilder : MonoBehaviour
             terrainList.Add(terrain); unusedTerrains.Add(terrainList.IndexOf(terrain));
             terrain.gameObject.SetActive(false);
         }
-        currentTerrain = terrainList[0];
+        currentTerrain = terrainList[defaultIndex];
         currentTerrain.gameObject.SetActive(true);
         foreach (NavMeshSurface surface in currentTerrain.transform.GetComponentsInChildren<NavMeshSurface>()) { addedNavData.Add(NavMesh.AddNavMeshData(surface.navMeshData)); }
 
