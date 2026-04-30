@@ -151,6 +151,8 @@ public class NEWPlayerMovement : MonoBehaviour
 
         leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[20]);
         rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[20]);
+        leftmoveSpeedDiv += MultAdder(-100f, givenLeftItems[29]);
+        rightmoveSpeedDiv += MultAdder(-100f, givenRightItems[29]);
         leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[61]);
         rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[61]);
         //Sprint Speed
@@ -213,7 +215,6 @@ public class NEWPlayerMovement : MonoBehaviour
         hasFightingWings = (givenLeftItems[46] + givenRightItems[46] > 0);
 
         beltFed = 0 + givenLeftItems[29] + givenRightItems[29];
-        if (beltFed > 0) { moveSpeed = moveSpeed / 2f; sprintMoveSpeed = sprintMoveSpeed / 2f; }
 
         //Irradiated French Pastry
         if (givenLeftItems[22] > 0)
