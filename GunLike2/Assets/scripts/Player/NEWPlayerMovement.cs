@@ -135,42 +135,62 @@ public class NEWPlayerMovement : MonoBehaviour
         if (effectList[18].x > 0f) { moveSpeed = moveSpeed * 1.5f; }
         if (effectList[26].x > 0f) { moveSpeed = moveSpeed * 2f; }
         if (effectList[33].x > 0f) { moveSpeed /= 2f; sprintMoveSpeed /= 2f; }
-        //Move Speed
-        leftmoveSpeedMult += MultAdder(20f, givenLeftItems[59]);
-        rightmoveSpeedMult += MultAdder(20f, givenRightItems[59]);
-        leftmoveSpeedMult += MultAdder(20f, givenLeftItems[73]);
-        rightmoveSpeedMult += MultAdder(20f, givenRightItems[73]);
-        leftmoveSpeedMult += MultAdder(10f, givenLeftItems[143]);
-        rightmoveSpeedMult += MultAdder(10f, givenRightItems[143]);
-        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[165]);
-        rightmoveSpeedMult += MultAdder(40f, givenRightItems[165]);
-        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[185]);
-        rightmoveSpeedMult += MultAdder(40f, givenRightItems[185]);
-        leftmoveSpeedMult += MultAdder(40f, givenLeftItems[194]);
-        rightmoveSpeedMult += MultAdder(40f, givenRightItems[194]);
 
-        leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[20]);
-        rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[20]);
-        leftmoveSpeedDiv += MultAdder(-100f, givenLeftItems[29]);
-        rightmoveSpeedDiv += MultAdder(-100f, givenRightItems[29]);
-        leftmoveSpeedDiv += MultAdder(-20f, givenLeftItems[61]);
-        rightmoveSpeedDiv += MultAdder(-20f, givenRightItems[61]);
-        //Sprint Speed
-        sprintMoveSpeedMult += MultAdder(20f, givenLeftItems[0] + givenRightItems[0]);
-        sprintMoveSpeedMult += MultAdder(40f, givenLeftItems[59] + givenRightItems[59]);
-        //Jump Force
-        jumpForceMult += MultAdder(20f, givenLeftItems[1] + givenRightItems[1]);
-        jumpForceMult += MultAdder(20f, givenLeftItems[20] + givenRightItems[20]);
-        jumpForceMult += MultAdder(20f, givenLeftItems[59] + givenRightItems[59]);
-        jumpForceMult += MultAdder(40f, givenLeftItems[144] + givenRightItems[144]);
-
-        jumpForceDiv += MultAdder(-20f, givenLeftItems[23] + givenRightItems[23]);
-        //Num of Jumps
-        numberOfJumps += givenLeftItems[15] + givenRightItems[15];
-        numberOfJumps += givenLeftItems[31] + givenRightItems[31];
-        numberOfJumps += givenLeftItems[32] + givenRightItems[32];
-        numberOfJumps += (givenLeftItems[46]*2) + (givenRightItems[46]*2);
-        numberOfJumps += givenLeftItems[135] + givenRightItems[135];
+        //Left Simple Stats
+        for (int i = 0; i < givenLeftItems.Count; i++)
+        {
+            foreach (ItemObject.StatData statData in playerItem.itemData[i].statData)
+            {
+                if (statData.change > 0)
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.JumpCount: numberOfJumps += (int)statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.JumpHeight: jumpForceMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Speed: leftmoveSpeedMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.SprintSpeed: sprintMoveSpeedMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                    }
+                }
+                else
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.JumpCount: numberOfJumps += (int)statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.JumpHeight: jumpForceDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Speed: leftmoveSpeedDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.SprintSpeed: sprintMoveSpeedDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                    }
+                }
+            }
+        }
+        //Right Simple Stats
+        for (int i = 0; i < givenRightItems.Count; i++)
+        {
+            foreach (ItemObject.StatData statData in playerItem.itemData[i].statData)
+            {
+                if (statData.change > 0)
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.JumpCount: numberOfJumps += (int)statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.JumpHeight: jumpForceMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Speed: rightmoveSpeedMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.SprintSpeed: sprintMoveSpeedMult += MultAdder(statData.change, givenRightItems[i]); break;
+                    }
+                }
+                else
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.JumpCount: numberOfJumps += (int)statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.JumpHeight: jumpForceDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Speed: rightmoveSpeedDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.SprintSpeed: sprintMoveSpeedDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                    }
+                }
+            }
+        }
+        
         //Gravity
         gravityDiv += MultAdder(-10f, givenLeftItems[15] + givenRightItems[15]);
         //Partial Intagability
@@ -271,9 +291,8 @@ public class NEWPlayerMovement : MonoBehaviour
     }
     float MultAdder(float mult, int amount)
     {
-        if (mult > 0) { return mult * (1f / 100f) * amount; }
-        if (mult < 0) { return -mult * (1f / 100f) * amount; }
-        return 0;
+        if (mult >= 0) { return mult * (1f / 100f) * amount; }
+        else { return -mult * (1f / 100f) * amount; }
     }
     // Update is called once per frame
     void Update()

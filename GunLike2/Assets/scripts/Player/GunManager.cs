@@ -492,141 +492,95 @@ public class GunManager : MonoBehaviour
         }
         //Endless Mag
         leftEndless = givenLeftItems[192]; rightEndless = givenRightItems[192];
-        //Left Attack Speed
-        leftAtkSpdMult += MultAdder(20f, givenLeftItems[62]);
-        leftAtkSpdMult += MultAdder(10f, givenLeftItems[97]);
-        leftAtkSpdMult += MultAdder(60f, givenLeftItems[118]);
-        leftAtkSpdMult += MultAdder(60f, givenLeftItems[132]);
-        leftAtkSpdMult += MultAdder(10f, givenLeftItems[143]);
-        leftAtkSpdMult += MultAdder(20f, givenLeftItems[153]);
-        leftAtkSpdMult += MultAdder(40f, givenLeftItems[157]);
-        leftAtkSpdMult += MultAdder(20f, givenLeftItems[161]);
-        leftAtkSpdMult += MultAdder(120f, givenLeftItems[169]);
-        leftAtkSpdMult += MultAdder(40f, givenLeftItems[184]);
-        leftAtkSpdMult += MultAdder(40f, givenLeftItems[194]);
-
-        leftAtkSpdDiv += MultAdder(-50f, givenLeftItems[21]);
-        leftAtkSpdDiv += MultAdder(-10f, givenLeftItems[59]);
-        leftAtkSpdDiv += MultAdder(-60f, givenLeftItems[91]);
-        leftAtkSpdDiv += MultAdder(-40f, givenLeftItems[138]);
-        leftAtkSpdDiv += MultAdder(-20f, givenLeftItems[139]);
-        leftAtkSpdDiv += MultAdder(-40f, givenLeftItems[151]);
-        //Left Reload Speed
-        leftReSpdMult += MultAdder(20f, givenLeftItems[7]);
-        leftReSpdMult += MultAdder(10f, givenLeftItems[143]);
-        leftReSpdMult += MultAdder(20f, givenLeftItems[161]);
-        leftReSpdMult += MultAdder(40f, givenLeftItems[184]);
-
-        leftReSpdDiv += MultAdder(-100f, givenLeftItems[29]);
-        leftReSpdDiv += MultAdder(-10f, givenLeftItems[59]);
-        leftReSpdDiv += MultAdder(-60f, givenLeftItems[90]);
-        leftReSpdDiv += MultAdder(-20f, givenLeftItems[113]);
-        leftReSpdDiv += MultAdder(-100f, givenLeftItems[172]);
-        leftReSpdDiv += MultAdder(-100f, givenLeftItems[180]);
-        //Left Damage
-        leftDmgMult += MultAdder(40f, givenLeftItems[21]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[13]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[4]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[11]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[40]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[26]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[27]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[66]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[84]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[90]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[91]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[102]);
-        leftDmgMult += MultAdder(10f, givenLeftItems[98]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[121]);
-        leftDmgMult += MultAdder(20f, givenLeftItems[133]);
-        leftDmgMult += MultAdder(10f, givenLeftItems[143]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[157]);
-        leftDmgMult += MultAdder(500f, givenLeftItems[180]);
-        leftDmgMult += MultAdder(40f, givenLeftItems[184]);
         
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[12]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[31]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[46]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[59]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[113]);
-        leftDmgDiv += MultAdder(-80f, givenLeftItems[118]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[138]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[139]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[149]);
-        leftDmgDiv += MultAdder(-80f, givenLeftItems[163]);
-        //Left Magazine Size
-        leftMagSizeMult += MultAdder(20f, givenLeftItems[6]);
-        leftMagSizeMult += MultAdder(200f, givenLeftItems[29]);
-        leftMagSizeMult += MultAdder(10f, givenLeftItems[100]);
-        leftMagSizeMult += MultAdder(50f, givenLeftItems[101]);
-        leftMagSizeMult += MultAdder(60f, givenLeftItems[118]);
-        leftMagSizeMult += MultAdder(10f, givenLeftItems[143]);
-        leftMagSizeMult += MultAdder(20f, givenLeftItems[158]);
-        leftMagSizeMult += MultAdder(20f, givenLeftItems[169]);
-        leftMagSizeMult += MultAdder(40f, givenLeftItems[184]);
-        leftMagSizeMult += MultAdder(100f, givenLeftItems[192]);
+        //Left Simple Stats
+        for(int i = 0; i < givenLeftItems.Count; i++)
+        {
+            foreach(ItemObject.StatData statData in playerItem.itemData[i].statData)
+            {
+                if (statData.change > 0)
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.Accuracy: leftAccMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.AttackSpeed: leftAtkSpdMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSize: leftBulSizeMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSpeed: leftBulSpdMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.CritChance: leftCritChance += statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.CritDamage: leftCritDamageMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Damage: leftDmgMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.MagSize: leftMagSizeMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Pierce: leftBulPir += (int)statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.ReloadSpeed: leftReSpdMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.WeakPointChance: leftWeakPointChance += statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.WeakPointDamage: leftWeakPointDamageMult += MultAdder(statData.change, givenLeftItems[i]); break;
+                    }
+                }
+                else
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.Accuracy: leftAccDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.AttackSpeed: leftAtkSpdDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSize: leftBulSizeDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSpeed: leftBulSpdDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.CritChance: leftCritChance += statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.CritDamage: leftCritDamageDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Damage: leftDmgDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.MagSize: leftMagSizeDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.Pierce: leftBulPir += (int)statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.ReloadSpeed: leftReSpdDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                        case ItemObject.StatData.Stat.WeakPointChance: leftWeakPointChance += statData.change * givenLeftItems[i]; break;
+                        case ItemObject.StatData.Stat.WeakPointDamage: leftWeakPointDamageDiv += MultAdder(statData.change, givenLeftItems[i]); break;
+                    }
+                }
+            }
+        }
 
-        leftMagSizeDiv += MultAdder(-50f, givenLeftItems[21]);
-        leftMagSizeDiv += MultAdder(-40f, givenLeftItems[25]);
-        leftMagSizeDiv += MultAdder(-40f, givenLeftItems[26]);
-        leftMagSizeDiv += MultAdder(-10f, givenLeftItems[59]);
-        leftMagSizeDiv += MultAdder(-20f, givenLeftItems[113]);
-        leftMagSizeDiv += MultAdder(-40f, givenLeftItems[159]);
-        leftMagSizeDiv += MultAdder(-20f, givenLeftItems[161]);
-        //Left Accuracy
-        leftAccMult += MultAdder(20f, givenLeftItems[8]);
-        leftAccMult += MultAdder(40f, givenLeftItems[25]);
-        leftAccMult += MultAdder(40f, givenLeftItems[27]);
-        leftAccMult += MultAdder(40f, givenLeftItems[128]);
-        leftAccMult += MultAdder(10f, givenLeftItems[143]);
-        leftAccMult += MultAdder(40f, givenLeftItems[184]);
+        //Right Simple Stats
+        for (int i = 0; i < givenRightItems.Count; i++)
+        {
+            foreach (ItemObject.StatData statData in playerItem.itemData[i].statData)
+            {
+                if (statData.change > 0)
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.Accuracy: rightAccMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.AttackSpeed: rightAtkSpdMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSize: rightBulSizeMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSpeed: rightBulSpdMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.CritChance: rightCritChance += statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.CritDamage: rightCritDamageMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Damage: rightDmgMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.MagSize: rightMagSizeMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Pierce: rightBulPir += (int)statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.ReloadSpeed: rightReSpdMult += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.WeakPointChance: rightWeakPointChance += statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.WeakPointDamage: rightWeakPointDamageMult += MultAdder(statData.change, givenRightItems[i]); break;
+                    }
+                }
+                else
+                {
+                    switch (statData.stat)
+                    {
+                        case ItemObject.StatData.Stat.Accuracy: rightAccDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.AttackSpeed: rightAtkSpdDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSize: rightBulSizeDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.BulletSpeed: rightBulSpdDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.CritChance: rightCritChance += statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.CritDamage: rightCritDamageDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Damage: rightDmgDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.MagSize: rightMagSizeDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.Pierce: rightBulPir += (int)statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.ReloadSpeed: rightReSpdDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                        case ItemObject.StatData.Stat.WeakPointChance: rightWeakPointChance += statData.change * givenRightItems[i]; break;
+                        case ItemObject.StatData.Stat.WeakPointDamage: rightWeakPointDamageDiv += MultAdder(statData.change, givenRightItems[i]); break;
+                    }
+                }
+            }
+        }
 
-        leftAccDiv += MultAdder(-20f, givenLeftItems[32]);
-        leftAccDiv += MultAdder(-20f, givenLeftItems[46]);
-        leftAccDiv += MultAdder(-10f, givenLeftItems[59]);
-        leftAccDiv += MultAdder(-60f, givenLeftItems[118]);
-        leftAccDiv += MultAdder(-40f, givenLeftItems[121]);
-        leftAccDiv += MultAdder(-40f, givenLeftItems[163]);
-        leftAccDiv += MultAdder(-20f, givenLeftItems[173]);
-        //Left Bullet Speed
-        leftBulSpdMult += MultAdder(20f, givenLeftItems[9]);
-        leftBulSpdMult += MultAdder(20f, givenLeftItems[57]);
-        leftBulSpdMult += MultAdder(20f, givenLeftItems[76]);
-        leftBulSpdMult += MultAdder(20f, givenLeftItems[119]);
-        leftBulSpdMult += MultAdder(10f, givenLeftItems[143]);
-        leftBulSpdMult += MultAdder(20f, givenLeftItems[173]);
-        leftBulSpdMult += MultAdder(40f, givenLeftItems[184]);
-
-        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[11]);
-        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[12]);
-        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[59]);
-        leftBulSpdDiv += MultAdder(-20f, givenLeftItems[77]);
-        leftBulSpdDiv += MultAdder(-60f, givenLeftItems[118]);
-        //Left Bullet Size
-        leftBulSizeMult += MultAdder(20f, givenLeftItems[11]);
-        leftBulSizeMult += MultAdder(20f, givenLeftItems[64]);
-        leftBulSizeMult += MultAdder(40f, givenLeftItems[184]);
-        //Left Bullet Pierce
-        leftBulPir += givenLeftItems[10] + givenLeftItems[26] + givenLeftItems[82] + givenLeftItems[184];
-        //Left Weak Point Chance
-        leftWeakPointChance += 10f * givenLeftItems[141];
-        leftWeakPointChance += 10f * givenLeftItems[150];
-        leftWeakPointChance += 20f * givenLeftItems[184];
-        //Left Weak Point Damage
-        leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[76]);
-        leftWeakPointDamageMult += MultAdder(10f, givenLeftItems[141]);
-        leftWeakPointDamageMult += MultAdder(20f, givenLeftItems[149]);
-        leftWeakPointDamageMult += MultAdder(40f, givenLeftItems[184]);
-        //Left Crit Chance
-        leftCritChance += 20f * givenLeftItems[77];
-        leftCritChance += 10f * givenLeftItems[78];
-        leftCritChance += 20f * givenLeftItems[148];
-        leftCritChance += 50f * givenLeftItems[179];
-        leftCritChance += 20f * givenLeftItems[184];
-        //Left Crit Damage
-        leftCritDamageMult += MultAdder(20f, givenLeftItems[77]);
-        leftCritDamageMult += MultAdder(100f, givenLeftItems[147]);
-        leftCritDamageMult += MultAdder(40f, givenLeftItems[184]);
         //Left Other
         leftHeavyBul = givenLeftItems[11] + givenLeftItems[59];
         leftMutatedCell = givenLeftItems[14];
@@ -697,151 +651,15 @@ public class GunManager : MonoBehaviour
         
         leftRicochet = false;
 
-        if (givenLeftItems[16] > 0f) { leftDmg = leftDmg * 1.2f; leftAcc = leftAcc * 1.1f; leftBulSpd = leftBulSpd * 1.1f; leftAtkSpd = leftAtkSpd / 1.2f; }
-        if (givenLeftItems[21] > 0f) { leftDmg = leftDmg * 1.1f; leftAtkSpd = leftAtkSpd / 1.1f; leftMagSize = leftMagSize / 1.5f; }
         if (givenLeftItems[26] > 0f) { leftRicochet = true; }
         if (givenLeftItems[82] > 0f) { leftRicochet = true; }
         if (givenLeftItems[102] > 0f) { leftBulPir++; }
-        if (givenLeftItems[126] > 0f) { leftDmg = Calc(-40f, 1, leftDmg); }
+        if (givenLeftItems[126] > 0f) { leftDmgMult += MultAdder(-40f, 1); }
         if (leftAdvTrig > 0 && leftMasterTrig > 0) { leftBulPir += 5; }
-        if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSize = Calc(40f, leftIntroTrig + leftAdvTrig, leftMagSize); }
-        if (leftStickToCounters > 0f) { leftDmg = Calc(10f,leftStickToCounters, leftDmg); }
+        if (leftIntroTrig > 0 && leftAdvTrig > 0 && leftMasterTrig > 0) { leftMagSizeMult += MultAdder(40f, leftIntroTrig + leftAdvTrig); }
+        if (leftStickToCounters > 0f) { leftDmgMult += MultAdder(10f,leftStickToCounters); }
         if (givenLeftItems[135] > 0f) { float upBuff = 1 + ((transform.position.y / 50f) * 2f); if (upBuff > 2f) { upBuff = 2f; }; leftDmg *= upBuff; }
 
-        //Right Attack Speed
-        rightAtkSpdMult += MultAdder(20f, givenRightItems[62]);
-        rightAtkSpdMult += MultAdder(10f, givenRightItems[97]);
-        rightAtkSpdMult += MultAdder(60f, givenRightItems[118]);
-        rightAtkSpdMult += MultAdder(60f, givenRightItems[132]);
-        rightAtkSpdMult += MultAdder(10f, givenRightItems[143]);
-        rightAtkSpdMult += MultAdder(20f, givenRightItems[153]);
-        rightAtkSpdMult += MultAdder(40f, givenRightItems[157]);
-        rightAtkSpdMult += MultAdder(20f, givenRightItems[161]);
-        rightAtkSpdMult += MultAdder(120f, givenRightItems[169]);
-        rightAtkSpdMult += MultAdder(40f, givenRightItems[184]);
-        rightAtkSpdMult += MultAdder(40f, givenRightItems[194]);
-
-        rightAtkSpdDiv += MultAdder(-50f, givenRightItems[21]);
-        rightAtkSpdDiv += MultAdder(-10f, givenRightItems[59]);
-        rightAtkSpdDiv += MultAdder(-60f, givenRightItems[91]);
-        rightAtkSpdDiv += MultAdder(-40f, givenRightItems[138]);
-        rightAtkSpdDiv += MultAdder(-20f, givenRightItems[139]);
-        rightAtkSpdDiv += MultAdder(-40f, givenRightItems[151]);
-        //Right Reload Speed
-        rightReSpdMult += MultAdder(20f, givenRightItems[7]);
-        rightReSpdMult += MultAdder(10f, givenRightItems[143]);
-        rightReSpdMult += MultAdder(20f, givenRightItems[161]);
-        rightReSpdMult += MultAdder(40f, givenRightItems[184]);
-
-        rightReSpdDiv += MultAdder(-100f, givenRightItems[29]);
-        rightReSpdDiv += MultAdder(-20f, givenRightItems[59]);
-        rightReSpdDiv += MultAdder(-60f, givenRightItems[90]);
-        rightReSpdDiv += MultAdder(-20f, givenRightItems[113]);
-        rightReSpdDiv += MultAdder(-100f, givenRightItems[172]);
-        rightReSpdDiv += MultAdder(-100f, givenRightItems[180]);
-        //Right Damage
-        rightDmgMult += MultAdder(40f, givenRightItems[21]);
-        rightDmgMult += MultAdder(40f, givenRightItems[13]);
-        rightDmgMult += MultAdder(20f, givenRightItems[11]);
-        rightDmgMult += MultAdder(20f, givenRightItems[4]);
-        rightDmgMult += MultAdder(20f, givenRightItems[40]);
-        rightDmgMult += MultAdder(40f, givenRightItems[26]);
-        rightDmgMult += MultAdder(40f, givenRightItems[27]);
-        rightDmgMult += MultAdder(20f, givenRightItems[66]);
-        rightDmgMult += MultAdder(40f, givenRightItems[90]);
-        rightDmgMult += MultAdder(40f, givenRightItems[91]);
-        rightDmgMult += MultAdder(40f, givenRightItems[102]);
-        rightDmgMult += MultAdder(10f, givenRightItems[98]);
-        rightDmgMult += MultAdder(40f, givenRightItems[121]);
-        rightDmgMult += MultAdder(20f, givenRightItems[133]);
-        rightDmgMult += MultAdder(10f, givenRightItems[143]);
-        rightDmgMult += MultAdder(40f, givenRightItems[157]);
-        rightDmgMult += MultAdder(500f, givenRightItems[180]);
-        rightDmgMult += MultAdder(40f, givenRightItems[184]);
-
-        rightDmgDiv += MultAdder(-20f, givenRightItems[12]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[31]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[46]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[59]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[113]);
-        rightDmgDiv += MultAdder(-80f, givenRightItems[118]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[138]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[139]);
-        rightDmgDiv += MultAdder(-20f, givenRightItems[149]);
-        rightDmgDiv += MultAdder(-80f, givenRightItems[163]);
-        //Right Magazine Size
-        rightMagSizeMult += MultAdder(20f, givenRightItems[6]);
-        rightMagSizeMult += MultAdder(200f, givenRightItems[29]);
-        rightMagSizeMult += MultAdder(10f, givenRightItems[100]);
-        rightMagSizeMult += MultAdder(50f, givenRightItems[101]);
-        rightMagSizeMult += MultAdder(60f, givenRightItems[118]);
-        rightMagSizeMult += MultAdder(10f, givenRightItems[143]);
-        rightMagSizeMult += MultAdder(20f, givenRightItems[158]);
-        rightMagSizeMult += MultAdder(20f, givenRightItems[169]);
-        rightMagSizeMult += MultAdder(40f, givenRightItems[184]);
-        rightMagSizeMult += MultAdder(100f, givenRightItems[192]);
-
-        rightMagSizeDiv += MultAdder(-50f, givenRightItems[21]);
-        rightMagSizeDiv += MultAdder(-40f, givenRightItems[25]);
-        rightMagSizeDiv += MultAdder(-40f, givenRightItems[26]);
-        rightMagSizeDiv += MultAdder(-10f, givenRightItems[59]);
-        rightMagSizeDiv += MultAdder(-20f, givenRightItems[113]);
-        rightMagSizeDiv += MultAdder(-40f, givenRightItems[159]);
-        rightMagSizeDiv += MultAdder(-20f, givenRightItems[161]);
-        //Right Accuracy
-        rightAccMult += MultAdder(20f, givenRightItems[8]);
-        rightAccMult += MultAdder(40f, givenRightItems[25]);
-        rightAccMult += MultAdder(40f, givenRightItems[27]);
-        rightAccMult += MultAdder(40f, givenRightItems[128]);
-        rightAccMult += MultAdder(10f, givenRightItems[143]);
-        rightAccMult += MultAdder(40f, givenRightItems[184]);
-
-        rightAccDiv += MultAdder(-20f, givenRightItems[32]);
-        rightAccDiv += MultAdder(-20f, givenRightItems[46]);
-        rightAccDiv += MultAdder(-10f, givenRightItems[59]);
-        rightAccDiv += MultAdder(-60f, givenRightItems[118]);
-        rightAccDiv += MultAdder(-40f, givenRightItems[121]);
-        rightAccDiv += MultAdder(-40f, givenRightItems[163]);
-        rightAccDiv += MultAdder(-20f, givenRightItems[173]);
-        //Right Bullet Speed
-        rightBulSpdMult += MultAdder(20f, givenRightItems[9]);
-        rightBulSpdMult += MultAdder(20f, givenRightItems[57]);
-        rightBulSpdMult += MultAdder(20f, givenRightItems[76]);
-        rightBulSpdMult += MultAdder(20f, givenRightItems[119]);
-        rightBulSpdMult += MultAdder(10f, givenRightItems[143]);
-        rightBulSpdMult += MultAdder(20f, givenRightItems[173]);
-        rightBulSpdMult += MultAdder(40f, givenRightItems[184]);
-
-        rightBulSpdDiv += MultAdder(-20f, givenRightItems[11]);
-        rightBulSpdDiv += MultAdder(-20f, givenRightItems[12]);
-        rightBulSpdDiv += MultAdder(-20f, givenRightItems[59]);
-        rightBulSpdDiv += MultAdder(-20f, givenRightItems[77]);
-        rightBulSpdDiv += MultAdder(-60f, givenRightItems[118]);
-        //Right Bullet Size
-        rightBulSizeMult += MultAdder(20f, givenRightItems[11]);
-        rightBulSizeMult += MultAdder(20f, givenRightItems[64]);
-        rightBulSizeMult += MultAdder(40f, givenRightItems[184]);
-        //Right Pierce
-        rightBulPir += givenRightItems[10] + givenRightItems[26] + givenRightItems[82] + givenRightItems[184];
-        //Right Weak Point Chance
-        rightWeakPointChance += 10f * givenRightItems[141];
-        rightWeakPointChance += 10f * givenRightItems[150];
-        rightWeakPointChance += 20f * givenRightItems[184];
-        //Right Weak Point Damage
-        rightWeakPointDamageMult += MultAdder(20f, givenRightItems[76]);
-        rightWeakPointDamageMult += MultAdder(10f, givenRightItems[141]);
-        rightWeakPointDamageMult += MultAdder(20f, givenRightItems[149]);
-        rightWeakPointDamageMult += MultAdder(40f, givenRightItems[184]);
-        //Right Crit Chance
-        rightCritChance += 20f * givenRightItems[77];
-        rightCritChance += 10f * givenRightItems[78];
-        rightCritChance += 20f * givenRightItems[148];
-        rightCritChance += 50f * givenRightItems[179];
-        rightCritChance += 20f * givenRightItems[184];
-        //Right Crit Damage
-        rightCritDamageMult += MultAdder(20f, givenRightItems[77]);
-        rightCritDamageMult += MultAdder(100f, givenRightItems[147]);
-        rightCritDamageMult += MultAdder(40f, givenRightItems[184]);
         //Right Other
         rightHeavyBul = givenRightItems[11] + givenRightItems[59];
         rightMutatedCell = givenRightItems[14];
@@ -912,15 +730,12 @@ public class GunManager : MonoBehaviour
 
         rightRicochet = false;
 
-        if (givenRightItems[16] > 0f) { rightDmg = rightDmg * 1.2f; rightAcc = rightAcc * 1.1f; rightBulSpd = rightBulSpd * 1.1f; rightAtkSpd = rightAtkSpd / 1.2f; }
-        if (givenRightItems[21] > 0f) { rightDmg = rightDmg * 1.1f; rightAtkSpd = rightAtkSpd / 1.1f; rightMagSize = rightMagSize / 1.5f; }
         if (givenRightItems[26] > 0f) { rightRicochet = true; }
         if (givenRightItems[82] > 0f) { rightRicochet = true; }
         if (givenRightItems[102] > 0f) { rightBulPir++; }
-        if (givenRightItems[126] > 0f) { rightDmg = Calc(-40f, 1, rightDmg); }
         if (rightAdvTrig > 0 && rightMasterTrig > 0) { rightBulPir += 5; }
-        if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSize = Calc(40f, rightIntroTrig + rightAdvTrig, rightMagSize); }
-        if (rightStickToCounters > 0f) { rightDmg = Calc(10f, rightStickToCounters, rightDmg); }
+        if (rightIntroTrig > 0 && rightAdvTrig > 0 && rightMasterTrig > 0) { rightMagSizeMult += MultAdder(40f, rightIntroTrig + rightAdvTrig); }
+        if (rightStickToCounters > 0f) { rightDmgMult += MultAdder(10f, rightStickToCounters); }
         if (givenRightItems[135] > 0f) { float upBuff = 1 + ((transform.position.y / 50f) * 2f); if (upBuff > 2f) { upBuff = 2f; } ; rightDmg *= upBuff; }
         //endless mag
         if(leftEndless > 0) { leftMagSizeMult *= 2f; } if(rightEndless > 0) { rightMagSizeMult *= 2; }
@@ -1037,9 +852,8 @@ public class GunManager : MonoBehaviour
     }
     float MultAdder(float mult, int amount)
     {
-        if (mult > 0) { return mult * (1f / 100f) * amount; }
-        if (mult < 0) { return -mult * (1f / 100f) * amount; }
-        return 0;
+        if (mult >= 0) { return mult * (1f / 100f) * amount; }
+        else { return -mult * (1f / 100f) * amount; }
     }
     float Calc(float modifier, int amount, float baseVal)
     {
@@ -1047,16 +861,15 @@ public class GunManager : MonoBehaviour
 
         if (amount <= 0) { return result; }
 
-        if (modifier > 0)
+        if (modifier >= 0)
         {
             //Buff
-
             for (int i = 0; i <= amount; i++)
             {
                 result = result + result * (modifier / 100);
             }
         }
-        else if(modifier < 0)
+        else
         {
             //Debuff
             modifier = modifier * -1f;
