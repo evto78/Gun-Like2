@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Sponge Stone
   rarity: 3
   itemSprite: {fileID: 21300000, guid: 6296c632bda98b141abd1ecad3669114, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: Your armor effecting items on this gun are 2x as effective. When a enemy
     has their damage to you reduced to 1 due to your armor, they will take damage
@@ -30,5 +33,10 @@ MonoBehaviour:
   buffSum: Armor +, Max Hp ++
   debuffSum: '-'
   flavor: Not for use in cleaning.
+  statData:
+  - stat: 1
+    change: 20
+  - stat: 0
+    change: 40
   ideaCredit: 
   flavorCredit: 

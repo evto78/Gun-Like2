@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Door Knob
   rarity: 5
   itemSprite: {fileID: 21300000, guid: ea309cbff37d21f4783f30396b967ba3, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 6
   effect: Your bullets are shot in a spiral pattern always aiming at least 3 degrees
     away from the barrel.
@@ -27,5 +30,8 @@ MonoBehaviour:
   buffSum: Attack Speed +++
   debuffSum: '-'
   flavor: A downward Spiral.
+  statData:
+  - stat: 7
+    change: 60
   ideaCredit: 
   flavorCredit: 

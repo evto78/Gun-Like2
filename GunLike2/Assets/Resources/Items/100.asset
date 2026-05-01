@@ -16,6 +16,11 @@ MonoBehaviour:
   itemName: Unstable Particle M
   rarity: 8
   itemSprite: {fileID: 21300000, guid: 91845daebd7c25e44963551c142ec585, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
+  cooldownItem: 0
+  baseCooldown: 0
+  globalItem: 0
   subType: 4
   effect: This item has a chance to be created after any item you own is destroyed
     at a rate of 2.5% with a extra 7.5% for each teir of rarity it is above common.
@@ -29,5 +34,8 @@ MonoBehaviour:
   buffSum: Magazine Size+1/2
   debuffSum: '-'
   flavor: '"Bzzt"'
+  statData:
+  - stat: 10
+    change: 10
   ideaCredit: 
   flavorCredit: 

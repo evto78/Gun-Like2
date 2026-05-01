@@ -16,6 +16,8 @@ MonoBehaviour:
   itemName: Shotgun Snail Shell
   rarity: 0
   itemSprite: {fileID: 21300000, guid: 1e0231c507f07b943be1fe92712aad79, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
   globalItem: 1
@@ -28,5 +30,12 @@ MonoBehaviour:
   debuffSum: Speed-
   flavor: A good use for used shells is as a home for little critters! just dont
     mix it up with normal ammo.
+  statData:
+  - stat: 0
+    change: 20
+  - stat: 1
+    change: 20
+  - stat: 3
+    change: -20
   ideaCredit: Scrappu
   flavorCredit: 

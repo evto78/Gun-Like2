@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: On Death's Door
   rarity: 5
   itemSprite: {fileID: 21300000, guid: a16b3df76034c064a9e2eabe4c5fbe79, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: When you are below half hp, each time you shoot an enemy you have a 10%
     chance to active every on kill effect as if you had killed that enemy.
@@ -28,5 +31,8 @@ MonoBehaviour:
   buffSum: '-'
   debuffSum: Passive HP Regen -
   flavor: Have their life flash before their eyes.
+  statData:
+  - stat: 2
+    change: -20
   ideaCredit: 
   flavorCredit: 

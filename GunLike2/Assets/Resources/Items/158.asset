@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Broken Ink Bottle
   rarity: 2
   itemSprite: {fileID: 21300000, guid: c32908fb5d391174e819a7e5841447fc, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: every 10th shot from this gun does not require ammo to be shot. Stacks
     make this effect happen 1 bullet earlier, to a max of every other shot not requiring
@@ -29,5 +32,8 @@ MonoBehaviour:
   debuffSum: '-'
   flavor: A broken bottle that used to hold light blue ink. Maybe someone else needed
     the ink.
+  statData:
+  - stat: 10
+    change: 20
   ideaCredit: 
   flavorCredit: 

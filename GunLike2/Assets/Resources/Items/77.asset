@@ -16,15 +16,25 @@ MonoBehaviour:
   itemName: Gold Plated Bullets
   rarity: 2
   itemSprite: {fileID: 21300000, guid: bc1c6000c90430e48807f523231b87ec, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: '-'
   buff: Critical Chance + 20%(+20%), Critical Damage + 20%(+20%)
   debuff: Bullet Speed - 20%(-20%)
   effectSum: '-'
   buffSum: Critical Chance + , Critical Damage +
-  debuffSum: Bullet Speed --
+  debuffSum: Bullet Speed -
   flavor: the gold makes the bullet more lucky!
+  statData:
+  - stat: 15
+    change: 20
+  - stat: 16
+    change: 20
+  - stat: 12
+    change: -20
   ideaCredit: 
   flavorCredit: 

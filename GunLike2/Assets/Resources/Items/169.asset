@@ -16,15 +16,23 @@ MonoBehaviour:
   itemName: Trigger Happy
   rarity: 7
   itemSprite: {fileID: 21300000, guid: f92a847cfc342394fad92c0154dade9a, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: Each bullet costs 2 ammo.
-  buff: Attack Speed X2, Attack Speed + 40%(+40%), Magazine Size + 20%(+20%)
+  buff: Attack Speed + 120%(+120%), Magazine Size + 20%(+20%)
   debuff: '-'
   effectSum: Each bullet costs 2 ammo.
-  buffSum: Attack Speed X2, Attack Speed ++, Magazine Size +
+  buffSum: Attack Speed ++++++, Magazine Size +
   debuffSum: '-'
   flavor: Do what makes you happy.
+  statData:
+  - stat: 7
+    change: 120
+  - stat: 10
+    change: 20
   ideaCredit: scrappu
   flavorCredit: 

@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: 200 Fleas
   rarity: 4
   itemSprite: {fileID: 21300000, guid: de75403c482518a4499f528c60541685, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: each time you shoot a bullet you have a 15% chance to also launch a small
     flea that does 1 point of damage. Stacks launch an additonal flea.
@@ -28,5 +31,12 @@ MonoBehaviour:
   buffSum: Reload Speed +, Attack Speed +
   debuffSum: Magazine Size -
   flavor: Ethicly sourced from a local flea shelter.
+  statData:
+  - stat: 8
+    change: 20
+  - stat: 7
+    change: 20
+  - stat: 10
+    change: -20
   ideaCredit: 
   flavorCredit: 

@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Haunt
   rarity: 5
   itemSprite: {fileID: 21300000, guid: 52ee8d8f2fe904b469ecf2b9c548008a, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: Bullets from this gun deal half of their damage 2 times instead of their
     full damage 1 time. Stacks splits the damage further.
@@ -27,5 +30,10 @@ MonoBehaviour:
   buffSum: '-'
   debuffSum: Damage - ,Attack Speed --
   flavor: ECHO, Echo, echo...
+  statData:
+  - stat: 9
+    change: -20
+  - stat: 7
+    change: -40
   ideaCredit: 
   flavorCredit: 

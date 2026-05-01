@@ -16,15 +16,27 @@ MonoBehaviour:
   itemName: Belt-Fed Chamber
   rarity: 6
   itemSprite: {fileID: 21300000, guid: b9f2785496941bc44a34b7c7ba997b46, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
+  cooldownItem: 0
+  baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: Your pants have fallen. Reloading has you pull up your pants, giving you
     a deteriorating bonus to your speed for 5 seconds. Stacking adds 5 more seconds.
-  buff: Magazine Size X3 (X1.2)
-  debuff: Reload Speed X0.5, Speed X0.5
+  buff: Magazine Size + 200%(+200%)
+  debuff: Reload Speed - 100%(-100%), Speed - 100%(-100%)
   effectSum: Your pants have fallen. Reloading allows you to pull them back up, temporarily
     increaseing your speed.
-  buffSum: Magazine Size X3
-  debuffSum: Reload Speed X0.5, Speed X0.5
+  buffSum: Magazine Size +++++
+  debuffSum: Reload Speed ----, Speed ----
   flavor: Ammo storage is what it's all a-belt.
+  statData:
+  - stat: 10
+    change: 200
+  - stat: 8
+    change: -100
+  - stat: 3
+    change: -100
   ideaCredit: Scrappu
   flavorCredit: 

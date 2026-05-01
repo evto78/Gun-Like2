@@ -501,7 +501,7 @@ public class GunManager : MonoBehaviour
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[153]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[157]);
         leftAtkSpdMult += MultAdder(20f, givenLeftItems[161]);
-        leftAtkSpdMult += MultAdder(40f, givenLeftItems[169]);
+        leftAtkSpdMult += MultAdder(120f, givenLeftItems[169]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[184]);
         leftAtkSpdMult += MultAdder(40f, givenLeftItems[194]);
 
@@ -553,7 +553,7 @@ public class GunManager : MonoBehaviour
         leftDmgDiv += MultAdder(-20f, givenLeftItems[138]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[139]);
         leftDmgDiv += MultAdder(-20f, givenLeftItems[149]);
-        leftDmgDiv += MultAdder(-20f, givenLeftItems[163]);
+        leftDmgDiv += MultAdder(-80f, givenLeftItems[163]);
         //Left Magazine Size
         leftMagSizeMult += MultAdder(20f, givenLeftItems[6]);
         leftMagSizeMult += MultAdder(200f, givenLeftItems[29]);
@@ -586,7 +586,7 @@ public class GunManager : MonoBehaviour
         leftAccDiv += MultAdder(-10f, givenLeftItems[59]);
         leftAccDiv += MultAdder(-60f, givenLeftItems[118]);
         leftAccDiv += MultAdder(-40f, givenLeftItems[121]);
-        leftAccDiv += MultAdder(-20f, givenLeftItems[163]);
+        leftAccDiv += MultAdder(-40f, givenLeftItems[163]);
         leftAccDiv += MultAdder(-20f, givenLeftItems[173]);
         //Left Bullet Speed
         leftBulSpdMult += MultAdder(20f, givenLeftItems[9]);
@@ -717,7 +717,7 @@ public class GunManager : MonoBehaviour
         rightAtkSpdMult += MultAdder(20f, givenRightItems[153]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[157]);
         rightAtkSpdMult += MultAdder(20f, givenRightItems[161]);
-        rightAtkSpdMult += MultAdder(40f, givenRightItems[169]);
+        rightAtkSpdMult += MultAdder(120f, givenRightItems[169]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[184]);
         rightAtkSpdMult += MultAdder(40f, givenRightItems[194]);
 
@@ -768,6 +768,7 @@ public class GunManager : MonoBehaviour
         rightDmgDiv += MultAdder(-20f, givenRightItems[138]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[139]);
         rightDmgDiv += MultAdder(-20f, givenRightItems[149]);
+        rightDmgDiv += MultAdder(-80f, givenRightItems[163]);
         //Right Magazine Size
         rightMagSizeMult += MultAdder(20f, givenRightItems[6]);
         rightMagSizeMult += MultAdder(200f, givenRightItems[29]);
@@ -800,6 +801,7 @@ public class GunManager : MonoBehaviour
         rightAccDiv += MultAdder(-10f, givenRightItems[59]);
         rightAccDiv += MultAdder(-60f, givenRightItems[118]);
         rightAccDiv += MultAdder(-40f, givenRightItems[121]);
+        rightAccDiv += MultAdder(-40f, givenRightItems[163]);
         rightAccDiv += MultAdder(-20f, givenRightItems[173]);
         //Right Bullet Speed
         rightBulSpdMult += MultAdder(20f, givenRightItems[9]);
@@ -932,12 +934,7 @@ public class GunManager : MonoBehaviour
         leftBulSize *= leftBulSizeMult; leftBulSize /= leftBulSizeDiv; rightBulSize *= rightBulSizeMult; rightBulSize /= rightBulSizeDiv;
         leftCritDamage *= leftCritDamageMult; leftCritDamage /= leftCritDamageDiv; rightCritDamage *= rightCritDamageMult; rightCritDamage /= rightCritDamageDiv;
         leftWeakPointDamage *= leftWeakPointDamageMult; leftWeakPointDamage /= leftWeakPointDamageDiv; rightWeakPointDamage *= rightWeakPointDamageMult; rightWeakPointDamage /= rightWeakPointDamageDiv;
-        //Trigger Happy
-        if(leftTriggerHappy > 0) { leftAtkSpd *= 2; }
-        if(rightTriggerHappy > 0) { rightAtkSpd *= 2; }
-        //Forked Barrel
-        if (givenLeftItems[163] > 0) { leftDmg /= 2f; leftAcc /= 2f; }
-        if (givenRightItems[163] > 0) { rightDmg /= 2f; rightAcc /= 2f; }
+
         //Rotation transfer cable
         if (givenLeftItems[153] > 0) { leftAtkSpd /= 2f; leftCritChance += (((100 * leftAtkSpdMult) - (100 * leftAtkSpdDiv))); } 
         if (givenRightItems[153] > 0) { rightAtkSpd /= 2f; rightCritChance += (((100 * rightAtkSpdMult) - (100 * rightAtkSpdDiv))); }

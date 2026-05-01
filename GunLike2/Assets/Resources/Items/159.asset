@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Full Metal Jacket
   rarity: 6
   itemSprite: {fileID: 21300000, guid: e60e4016b3f3f8b428c5caefc823a797, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: '-'
   buff: Armor + 40%(+40%), Max Hp + 40%(+40%)
@@ -26,5 +29,12 @@ MonoBehaviour:
   buffSum: Armor ++, Max Hp ++
   debuffSum: Magazine Size --
   flavor: hey, metal is metal. And thats metal.
+  statData:
+  - stat: 1
+    change: 40
+  - stat: 0
+    change: 40
+  - stat: 10
+    change: -40
   ideaCredit: 
   flavorCredit: 

@@ -16,16 +16,24 @@ MonoBehaviour:
   itemName: Forked Barrel
   rarity: 6
   itemSprite: {fileID: 21300000, guid: 4222ef540729d984aad82da1821c47fb, type: 3}
+  needsToBeUnlocked: 0
+  unlockCondition: 
   cooldownItem: 0
   baseCooldown: 0
+  globalItem: 0
   subType: 0
   effect: Fire an additonal bullet per bullet that has bad accuracy. Additonal stacks
     add a chance for a third bullet.
   buff: '-'
-  debuff: Damage / 2, Damage - 0%(-20%), Accuracy - 0%(-20%)
+  debuff: Damage -80%(-80%), Accuracy -40%(-40%)
   effectSum: Fire an additonal bullet per bullet that has bad accuracy.
   buffSum: '-'
-  debuffSum: Damage / 2, Accuracy / 2
+  debuffSum: Damage----, Accuracy--
   flavor: 
+  statData:
+  - stat: 9
+    change: -80
+  - stat: 11
+    change: -40
   ideaCredit: 
   flavorCredit: 
