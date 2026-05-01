@@ -316,8 +316,11 @@ public class NEWPlayerMovement : MonoBehaviour
 
         Effects();
     }
+    Vector3 prevFlatVel = new Vector3();
+    bool blockSlide;
     private void FixedUpdate()
     {
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         onGround = GroundCheck();
 
         if (!onGround && !noGravity) 
@@ -332,7 +335,9 @@ public class NEWPlayerMovement : MonoBehaviour
             }
         }
         if (healthMan.dead) { return; }
+        if (flatVel.magnitude - prevFlatVel.magnitude < -10 && sliding) { blockSlide = true; }
         if (Cursor.lockState == CursorLockMode.Locked) { Move(); } else { Friction(); }
+        prevFlatVel = flatVel;
     }
     bool GroundCheck()
     {
@@ -402,7 +407,11 @@ public class NEWPlayerMovement : MonoBehaviour
                 Slam();
             }
         }
-        if (Input.GetKey(healthMan.gdm.instance.controlsBinds.slide))
+        if (Input.GetKeyUp(healthMan.gdm.instance.controlsBinds.slide))
+        {
+            blockSlide = false;
+        }
+        if ((Input.GetKey(healthMan.gdm.instance.controlsBinds.slide) && !blockSlide) || Input.GetKeyDown(healthMan.gdm.instance.controlsBinds.slide))
         {
             if(onGround || sliding)
             {
