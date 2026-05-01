@@ -76,6 +76,7 @@ public class ItemDisplayScript : MonoBehaviour
 
         bool detailedView = PlayerPrefs.GetInt("ADVDESC") == 1;
         if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation)) { detailedView = !detailedView; }
+        if (selectedItem.id == 22) { detailedView = true; }
 
         nameTxt.text = selectedItem.itemName;
         if (detailedView)
@@ -151,52 +152,126 @@ public class ItemDisplayScript : MonoBehaviour
         itemSprite.sprite = selectedItem.itemSprite;
         if (selectedItem.globalItem) { itemGlobal.sprite = isGlobal; } else { itemGlobal.sprite = notGlobal; }
 
-        if (previousItemID == selectedItem.id && !Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation)) { return; }
+        if (previousItemID == selectedItem.id && (!Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) && !Input.GetKeyUp(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation))) { return; }
         previousItemID = selectedItem.id;
 
-        while(buffClones.Count > 0) { Destroy(buffClones[0]); buffClones.RemoveAt(0); }
-        while(debuffClones.Count > 0) { Destroy(debuffClones[0]); debuffClones.RemoveAt(0); }
         buffList = new List<string>();
         debuffList = new List<string>();
-
-        if (detailedView)
+        
+        foreach(ItemObject.StatData statData in selectedItem.statData)
         {
-            buffList.AddRange(selectedItem.buff.Split(','));
-            debuffList.AddRange(selectedItem.debuff.Split(','));
-        }
-        else
-        {
-            buffList.AddRange(selectedItem.buffSum.Split(','));
-            debuffList.AddRange(selectedItem.debuffSum.Split(','));
-        }
-
-        if (buffList.Count > 0)
-        {
-            for (int i = 0; i < buffList.Count; i++)
+            if (detailedView)
             {
-                buffList[i] = buffList[i].TrimStart(' ');
-
-                if (i == 0) { buffTxt.text = buffList[0]; }
+                if (statData.change >= 0)
+                {
+                    buffList.Add(statData.stat.ToString() + " + " + (int)statData.change + "%");
+                }
                 else
                 {
-                    GameObject buffClone = Instantiate(templateBuff, templateBuff.transform.parent);
-                    buffClones.Add(buffClone);
-                    buffClone.GetComponent<TextMeshProUGUI>().text = buffList[i];
+                    debuffList.Add(statData.stat.ToString() + " - " + Mathf.Abs((int)statData.change) + "%");
+                }
+            }
+            else
+            {
+                string sumAttachment = "";
+                if (statData.change >= 0)
+                {
+                    switch (Mathf.Abs(statData.change))
+                    {
+                        case <= 10: sumAttachment = "+1/2"; break;
+                        case <= 20: sumAttachment = "+"; break;
+                        case <= 40: sumAttachment = "++"; break;
+                        case <= 60: sumAttachment = "+++"; break;
+                        case <= 80: sumAttachment = "++++"; break;
+                        case <= 100: sumAttachment = "+++++"; break;
+                        case > 100: sumAttachment = "++++++"; break;
+                    }
+                    buffList.Add(statData.stat.ToString() + " " + sumAttachment);
+                }
+                else
+                {
+                    switch (Mathf.Abs(statData.change))
+                    {
+                        case <= 10: sumAttachment = "-1/2"; break;
+                        case <= 20: sumAttachment = "-"; break;
+                        case <= 40: sumAttachment = "--"; break;
+                        case <= 60: sumAttachment = "---"; break;
+                        case <= 80: sumAttachment = "----"; break;
+                        case <= 100: sumAttachment = "-----"; break;
+                        case > 100: sumAttachment = "------"; break;
+                    }
+                    debuffList.Add(statData.stat.ToString() + " " + sumAttachment);
                 }
             }
         }
-        if (debuffList.Count > 0)
-        {
-            for (int i = 0; i < debuffList.Count; i++)
-            {
-                debuffList[i] = debuffList[i].TrimStart(' ');
 
-                if (i == 0) { debuffTxt.text = debuffList[0]; }
-                else
+        if (buffClones.Count == buffList.Count - 1)
+        {
+            if (buffList.Count > 0)
+            {
+                for (int i = 0; i < buffList.Count; i++)
                 {
-                    GameObject debuffClone = Instantiate(templateDebuff, templateDebuff.transform.parent);
-                    debuffClones.Add(debuffClone);
-                    debuffClone.GetComponent<TextMeshProUGUI>().text = debuffList[i];
+                    buffList[i] = buffList[i].TrimStart(' ');
+
+                    if (i == 0) { buffTxt.text = buffList[0]; }
+                    else
+                    {
+                        buffClones[i-1].GetComponent<TextMeshProUGUI>().text = buffList[i];
+                    }
+                }
+            }
+        }
+        else
+        {
+            while (buffClones.Count > 0) { Destroy(buffClones[0]); buffClones.RemoveAt(0); }
+            if (buffList.Count > 0)
+            {
+                for (int i = 0; i < buffList.Count; i++)
+                {
+                    buffList[i] = buffList[i].TrimStart(' ');
+
+                    if (i == 0) { buffTxt.text = buffList[0]; }
+                    else
+                    {
+                        GameObject buffClone = Instantiate(templateBuff, templateBuff.transform.parent);
+                        buffClones.Add(buffClone);
+                        buffClone.GetComponent<TextMeshProUGUI>().text = buffList[i];
+                    }
+                }
+            }
+        }
+        if (debuffClones.Count == debuffList.Count - 1)
+        {
+            if (debuffList.Count > 0)
+            {
+                for (int i = 0; i < debuffList.Count; i++)
+                {
+                    debuffList[i] = debuffList[i].TrimStart(' ');
+
+                    if (i == 0) { debuffTxt.text = debuffList[0]; }
+                    else
+                    {
+                        debuffClones[i-1].GetComponent<TextMeshProUGUI>().text = debuffList[i];
+                    }
+                }
+            }
+        }
+        else
+        {
+            while (debuffClones.Count > 0) { Destroy(debuffClones[0]); debuffClones.RemoveAt(0); }
+            if (debuffList.Count > 0)
+            {
+                for (int i = 0; i < debuffList.Count; i++)
+                {
+                    debuffList[i] = debuffList[i].TrimStart(' ');
+
+                    if (i == 0) { debuffTxt.text = debuffList[0]; }
+                    else
+                    {
+                        GameObject debuffClone = Instantiate(templateDebuff, templateDebuff.transform.parent);
+                        debuffClones.Add(debuffClone);
+                        debuffClone.GetComponent<TextMeshProUGUI>().text = debuffList[i];
+                    }
                 }
             }
         }

@@ -77,7 +77,7 @@ public class InvItemDisplay : MonoBehaviour
         ItemObject selectedItem = Resources.Load<ItemObject>("Items/" + id.ToString());
 
         nameTxt.text = selectedItem.itemName;
-        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1)
+        if (Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) || PlayerPrefs.GetInt("ADVDESC") == 1 || selectedItem.id == 22)
         {
             //id 22 is the irradiated french pastry
             if (selectedItem.id == 22)
@@ -137,15 +137,66 @@ public class InvItemDisplay : MonoBehaviour
             }
             else
             {
-                buffTxt.text = selectedItem.buff;
-                debuffTxt.text = selectedItem.debuff;
+                buffTxt.text = "";
+                debuffTxt.text = "";
+                foreach (ItemObject.StatData statData in selectedItem.statData)
+                {
+                    if (statData.change >= 0)
+                    {
+                        buffTxt.text += (statData.stat.ToString() + " + " + (int)statData.change) + "%, ";
+                    }
+                    else
+                    {
+                        debuffTxt.text += (statData.stat.ToString() + " - " + Mathf.Abs((int)statData.change)) + "%, ";
+                    }
+                }
+                buffTxt.text = buffTxt.text.TrimEnd(' ');
+                buffTxt.text = buffTxt.text.TrimEnd(',');
+                debuffTxt.text = debuffTxt.text.TrimEnd(' ');
+                debuffTxt.text = debuffTxt.text.TrimEnd(',');
                 effectTxt.text = selectedItem.effect;
             }
         }
         else
         {
-            buffTxt.text = selectedItem.buffSum;
-            debuffTxt.text = selectedItem.debuffSum;
+            string sumAttachment = "";
+            buffTxt.text = "";
+            debuffTxt.text = "";
+            foreach(ItemObject.StatData statData in selectedItem.statData)
+            {
+                if (statData.change >= 0)
+                {
+                    switch (Mathf.Abs(statData.change))
+                    {
+                        case <= 10: sumAttachment = "+1/2"; break;
+                        case <= 20: sumAttachment = "+"; break;
+                        case <= 40: sumAttachment = "++"; break;
+                        case <= 60: sumAttachment = "+++"; break;
+                        case <= 80: sumAttachment = "++++"; break;
+                        case <= 100: sumAttachment = "+++++"; break;
+                        case > 100: sumAttachment = "++++++"; break;
+                    }
+                    buffTxt.text += (statData.stat.ToString() + " " + sumAttachment) + ", ";
+                }
+                else
+                {
+                    switch (Mathf.Abs(statData.change))
+                    {
+                        case <= 10: sumAttachment = "-1/2"; break;
+                        case <= 20: sumAttachment = "-"; break;
+                        case <= 40: sumAttachment = "--"; break;
+                        case <= 60: sumAttachment = "---"; break;
+                        case <= 80: sumAttachment = "----"; break;
+                        case <= 100: sumAttachment = "-----"; break;
+                        case > 100: sumAttachment = "------"; break;
+                    }
+                    debuffTxt.text += (statData.stat.ToString() + " " + sumAttachment) + ", ";
+                }
+            }
+            buffTxt.text = buffTxt.text.TrimEnd(' ');
+            buffTxt.text = buffTxt.text.TrimEnd(',');
+            debuffTxt.text = debuffTxt.text.TrimEnd(' ');
+            debuffTxt.text = debuffTxt.text.TrimEnd(',');
             effectTxt.text = selectedItem.effectSum;
         }
 

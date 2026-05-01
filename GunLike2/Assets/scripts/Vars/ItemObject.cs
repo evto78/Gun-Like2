@@ -40,11 +40,7 @@ public class ItemObject : ScriptableObject
     
     [Header("Display Text")]
     public string effect;
-    public string buff;
-    public string debuff;
     public string effectSum;
-    public string buffSum;
-    public string debuffSum;
     public string flavor;
     public List<StatData> statData = new List<StatData>();
     [Header("Credit")]

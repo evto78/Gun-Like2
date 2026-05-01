@@ -43,9 +43,9 @@ public class ItemUnlockDisplayScript : MonoBehaviour
         unlockCondition.text = itemData.unlockCondition;
         gearFill.fillAmount = unlockInfo.unlockProgress;
         itemRarity.text = itemData.rarity.ToString();
-        itemBuffs.text = itemData.buff;
+        itemBuffs.text = BuildSimpleStatTxt(itemData, true);
         itemEffect.text = itemData.effect;
-        itemDebuffs.text = itemData.debuff;
+        itemDebuffs.text = BuildSimpleStatTxt(itemData, false);
         if (gearFill.fillAmount >= 1)
         {
             lockedUI.SetActive(false);
@@ -54,5 +54,29 @@ public class ItemUnlockDisplayScript : MonoBehaviour
         {
             lockedUI.SetActive(true);
         }
+    }
+
+    string BuildSimpleStatTxt(ItemObject itemData, bool isBuff)
+    {
+        string returnTxt = "";
+        if(itemData.id == 22)
+        {
+            if (isBuff) { return "Your Lowest Stat X2"; }
+            else { return "Your Highest Stat X0.9"; }
+        }
+        foreach(ItemObject.StatData statData in itemData.statData)
+        {
+            if (statData.change >= 0 && isBuff)
+            {
+                returnTxt += (statData.stat.ToString() + " + " + (int)statData.change + "%, ");
+            }
+            else if (statData.change < 0 && !isBuff)
+            {
+                returnTxt += (statData.stat.ToString() + " - " + Mathf.Abs((int)statData.change) + "%, ");
+            }
+        }
+        returnTxt = returnTxt.TrimEnd(' ');
+        returnTxt = returnTxt.TrimEnd(',');
+        return returnTxt;
     }
 }
