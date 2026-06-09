@@ -206,22 +206,6 @@ public class LevelBuilder : MonoBehaviour
                             if (Vector3.Distance(blockingObjects[i].ClosestPoint(tDataFull[x, z].worldPos), tDataFull[x, z].worldPos) < maxObjectDist)
                             { placeable = false; break; }
                         }
-                        //OLD loop for checking if near the max height \/
-                        //if (placeable)
-                        //{
-                            //for (int i = 0; i < paddingFromUnplaceable; i++)
-                            //{
-                            //    if (tDataFull[x + i, z].height > maxHeight ||
-                            //        tDataFull[x, z + i].height > maxHeight ||
-                            //        tDataFull[x + i, z + i].height > maxHeight ||
-                            //        tDataFull[x - i, z].height > maxHeight ||
-                            //        tDataFull[x, z - i].height > maxHeight ||
-                            //        tDataFull[x - i, z - i].height > maxHeight ||
-                            //        tDataFull[x - i, z + i].height > maxHeight ||
-                            //        tDataFull[x + i, z - i].height > maxHeight)
-                            //    { placeable = false; break; }
-                            //}
-                        //}
                     }
                 }
                 if (placeable) 
