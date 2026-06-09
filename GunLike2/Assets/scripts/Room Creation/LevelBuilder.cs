@@ -185,7 +185,15 @@ public class LevelBuilder : MonoBehaviour
             {
                 bool placeable = true;
                 tDataFull[x, z].placeable = false;
+
+                //If the height of this spot is over the max height, it is not placeable.
                 if (tDataFull[x, z].height > maxHeight) { placeable = false; }
+
+                //If this spot is one of the edges of the grid of spots, it is not placeable.
+                else if (x == 0 || z == 0 || x+1 >= tDataFull.GetLength(0) || z+1 >= tDataFull.GetLength(1)) 
+                { placeable = false; }
+
+                //If this spot's neighbors vary in height too much from this spot, it is not placeable.
                 else
                 {
                     float maxHeightDiff = 2f;
@@ -200,8 +208,9 @@ public class LevelBuilder : MonoBehaviour
                     { placeable = false; }
                     else
                     {
+                        //If this spot is too close to any blocking objects, it is not placeable.
                         float maxObjectDist = 8f;
-                        for(int i = 0; i < blockingObjects.Count; i++)
+                        for (int i = 0; i < blockingObjects.Count; i++)
                         {
                             if (Vector3.Distance(blockingObjects[i].ClosestPoint(tDataFull[x, z].worldPos), tDataFull[x, z].worldPos) < maxObjectDist)
                             { placeable = false; break; }

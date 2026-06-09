@@ -40,7 +40,7 @@ public class GameDataManager : MonoBehaviour
     float deadlinespeedmod = 1f;
 
     [Header("Points System")]
-    float pointregenTimer;
+    public float pointregenTimer;
     public int roomNumber;
     public Vector2 basePoints; public float flatPointsPerDifficulty;
     public float pointsLeft; public bool pointsLocked;
@@ -258,7 +258,7 @@ public class GameDataManager : MonoBehaviour
         {
             timeSpent += Time.deltaTime;
             pointregenTimer += Time.deltaTime;
-            if (pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f) * Random.Range(0, 1); }
+            if (pointregenTimer >= 60) { pointsLeft += ((flatPointsPerDifficulty * difficulty) / 2f); pointregenTimer = 0; }
             if (pointsLeft < 10) { pointregenTimer += Time.deltaTime; }
         }
         else if (pointsLocked) { pointsLeft = 0f; }

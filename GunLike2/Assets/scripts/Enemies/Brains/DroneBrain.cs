@@ -19,15 +19,15 @@ public class DroneBrain : MonoBehaviour
     GameObject fop;
     [Header("Uzi Walker")]
     public GameObject pickUpUzi; public GameObject uziBullet; public Transform firePointUzi; public GameObject gunUzi; public ParticleSystem jammedUzi;
-    public float uziCooldown; float uCooldownTimer; public float uziBurstCooldown; float uBurstTimer; public int UziBustAmt; int bulShot; public float uziAcc;
+    public float uziCooldown; float uCooldownTimer; public float uziBurstCooldown; float uBurstTimer; public int UziBustAmt; int bulShot; public float uziAcc; public float uziBulSpeed;
     [Header("Grenade Lobber")]
     public GameObject pickUpGrenade; public GameObject grenade; public Transform firePointGrenade; public GameObject gunGrenade; public ParticleSystem jammedGrenade;
-    public float greCooldown; float gCooldownTimer; public float greBurstCooldown; float gBurstTimer; public int greBurstAmt; int greShot; public int maxAtOnce; int curAmt;
+    public float greCooldown; float gCooldownTimer; public float greBurstCooldown; float gBurstTimer; public int greBurstAmt; int greShot; public int maxAtOnce; int curAmt; public float greLaunchSpeed;
     List<EnemyHealthManager> activeGernades = new List<EnemyHealthManager>();
     [Header("Nukeshell Spider")]
     public GameObject pickUpNuke; public GameObject nuke; Vector3 nukeDivePos; public float nukeSpeed; public float nukeHoverSpeed;
     [Header("Crate Crab")]
-    public GameObject pickUpCrab; public GameObject crabBullet; public Transform firePointCrab; public ParticleSystem jammedCrab;
+    public GameObject pickUpCrab; public GameObject crabBullet; public Transform firePointCrab; public ParticleSystem jammedCrab; public float crabBulSpeed;
     public float crabCooldown; float cCooldownTimer;
     void Start()
     {
@@ -245,7 +245,7 @@ public class DroneBrain : MonoBehaviour
             uziBul.transform.LookAt(player.transform.position + player.GetComponent<Rigidbody>().velocity / 3f);
             uziBul.transform.Rotate(new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * uziAcc);
             uziBul.GetComponent<EnemyBullet>().SetStats(3 * hm.baseDamage * hm.difficultyScale * hm.difficultyStatScaling, hm);
-            uziBul.GetComponent<Rigidbody>().AddForce(uziBul.transform.forward * 1.2f, ForceMode.Impulse);
+            uziBul.GetComponent<Rigidbody>().AddForce(uziBul.transform.forward * uziBulSpeed, ForceMode.Impulse);
             bulShot++;
             hm.PlaySound(1, false, true);
         }
@@ -255,7 +255,7 @@ public class DroneBrain : MonoBehaviour
             gunGrenade.GetComponent<Animator>().SetTrigger("shoot");
             if (jammed) { jammedGrenade.Play(); return; }
             GameObject spawned = Instantiate(grenade, firePointGrenade.position, firePointGrenade.rotation);
-            spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * 150f, ForceMode.Impulse);
+            spawned.GetComponent<Rigidbody>().AddForce(firePointGrenade.forward * greLaunchSpeed, ForceMode.Impulse);
             spawned.GetComponent<EnemyHealthManager>().refundPoints = false; ;
             greShot++; activeGernades.Add(spawned.GetComponent<EnemyHealthManager>());
             hm.PlaySound(0, false, true);
@@ -267,7 +267,7 @@ public class DroneBrain : MonoBehaviour
             spawnedGlob.GetComponent<CrateCrabGlob>().damage = 6 * hm.baseDamage * hm.difficultyScale * hm.difficultyStatScaling;
             spawnedGlob.GetComponent<CrateCrabGlob>().ehm = hm;
             spawnedGlob.GetComponent<CrateCrabGlob>().lifeTimeTimer = Random.Range(10f, 20f);
-            spawnedGlob.GetComponent<Rigidbody>().AddForce(transform.forward * 6, ForceMode.Impulse);
+            spawnedGlob.GetComponent<Rigidbody>().AddForce(transform.forward * crabBulSpeed, ForceMode.Impulse);
         }
     }
     void MoveToTarget(Vector3 target, float desDistance)

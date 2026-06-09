@@ -169,17 +169,29 @@ public class EnemySpawner : MonoBehaviour
         {
             SpawnRand(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]);
         }
-        pauseTimer = false;
-        yield return null;
+        if (spawningWave) 
+        { 
+            yield return null; 
+        }
+        else
+        {
+            pauseTimer = false;
+            yield return null;
+        }
     }
     void SpawnRand(Spawnable thing)
     {
         if(attempts > 25) { return; }
-        if (thing.pointCost > gdm.pointsLeft) { attempts++; SpawnRand(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); return; }
-        gdm.pointsLeft -= thing.pointCost;
+        if (thing.pointCost * thing.amountToSpawn.x > gdm.pointsLeft) { attempts++; SpawnRand(spawnableEnemies[Random.Range(0, spawnableEnemies.Count)]); return; }
+        
 
-        for (int i = 0; i < Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y); i++){
-            SpawnEnemyGiven(thing);
+        float amnt = Random.Range(thing.amountToSpawn.x, thing.amountToSpawn.y);
+        for (int i = 0; i < amnt; i++){
+            if (gdm.pointsLeft >= thing.pointCost)
+            {
+                gdm.pointsLeft -= thing.pointCost;
+                SpawnEnemyGiven(thing);
+            }
         }
     }
     IEnumerator SpawnWave(SpawnableWave wave)

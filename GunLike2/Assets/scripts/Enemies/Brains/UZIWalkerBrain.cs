@@ -89,7 +89,6 @@ public class UZIWalkerBrain : MonoBehaviour
                     {
                         turretAnim.SetBool("Recharge", false);
                     }
-                    //if (cooldownTimer <= warnTime && !sentWarningThisBurst) { sentWarningThisBurst = true; uiMan.AddDangerWarnSource(transform, transform.position, false, warnTime); }
                 }
                 else if (cooldownTimer <= 0f)
                 {

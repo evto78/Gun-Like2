@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
     public GearUI healthGear;
     public Image healthFill;
     public TextMeshProUGUI effectsText; //   <---- Changed by heath manager script since it holds the effect info.
-    public TextMeshProUGUI fpsText;
     public TextMeshProUGUI crosshair;
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI gotchaText;//item 75 gotcha
@@ -237,7 +236,6 @@ public class UIManager : MonoBehaviour
 
         fps = (int)(1f / Time.unscaledDeltaTime);
         fpsHistory.Add(fps); if (fpsHistory.Count > 240) { fpsHistory.RemoveAt(0); }
-        fpsText.text = "FPS: " + fps;
 
         moneyText.text = healthManager.money + "$";
         if(healthManager.playerItem.gotchaTickets > 0) { gotchaText.text = healthManager.playerItem.gotchaTickets.ToString(); gotchaText.transform.parent.gameObject.SetActive(true); } else { gotchaText.transform.parent.gameObject.SetActive(false); }

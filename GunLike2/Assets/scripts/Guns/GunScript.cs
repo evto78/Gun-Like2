@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Animations;
 
 public class GunScript : MonoBehaviour
 {
@@ -764,7 +765,10 @@ public class GunScript : MonoBehaviour
                 }
                 else
                 {
-                    return Instantiate(fleaBullet).transform;
+                    BulletScript spawnedFlea = Instantiate(fleaBullet).GetComponent<BulletScript>();
+                    spawnedFlea.gunFiredFrom = this;
+                    spawnedFlea.MiniSetUp();
+                    return spawnedFlea.transform;
                 }
             case false:
                 if (bulletReservoir.childCount > 0)

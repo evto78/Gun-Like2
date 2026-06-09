@@ -155,6 +155,9 @@ public class ItemDisplayScript : MonoBehaviour
         if (previousItemID == selectedItem.id && (!Input.GetKey(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation) && !Input.GetKeyUp(playerItemScript.healthManager.gdm.instance.controlsBinds.showMoreInformation))) { return; }
         previousItemID = selectedItem.id;
 
+        buffTxt.text = "-";
+        debuffTxt.text = "-";
+
         buffList = new List<string>();
         debuffList = new List<string>();
         
