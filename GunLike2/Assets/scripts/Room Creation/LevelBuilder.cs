@@ -154,7 +154,9 @@ public class LevelBuilder : MonoBehaviour
         Transform terrainObjHolder = lvlTerrain.transform.GetChild(lvlTerrain.transform.childCount - 1);//get the last child
         for(int i = 0; i < terrainObjHolder.childCount; i++)
         {
-            terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<Collider>());
+            terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<BoxCollider>());
+            terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<SphereCollider>());
+            terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<CapsuleCollider>());
         }
         List<Collider> blockingObjects = new List<Collider>();
         blockingObjects.AddRange(terrainObjects);
