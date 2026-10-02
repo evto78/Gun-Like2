@@ -140,25 +140,26 @@ public class LevelBuilder : MonoBehaviour
             output = terrainList[newID];
         }
 
-        foreach(Terrain terrain in terrainList) { terrain.gameObject.SetActive(false); }
+        foreach (Terrain terrain in terrainList) { terrain.gameObject.SetActive(false); }
         output.gameObject.SetActive(true);
         foreach (NavMeshDataInstance navData in addedNavData) { NavMesh.RemoveNavMeshData(navData); } addedNavData.Clear();
         foreach (NavMeshSurface surface in output.transform.GetComponentsInChildren<NavMeshSurface>()) { addedNavData.Add(NavMesh.AddNavMeshData(surface.navMeshData)); }
 
         return output;
     }
+    public List<Collider> blockingObjects;
     void Build(Terrain lvlTerrain, bool placeObj, bool placeFeatures)
     {
         if (placed.Count > 0) { foreach(GameObject obj in placed) { Destroy(obj); } placed = new List<GameObject>(); }
         List<Collider> terrainObjects = new List<Collider>();
         Transform terrainObjHolder = lvlTerrain.transform.GetChild(lvlTerrain.transform.childCount - 1);//get the last child
-        for(int i = 0; i < terrainObjHolder.childCount; i++)
+        for (int i = 0; i < terrainObjHolder.childCount; i++)
         {
             terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<BoxCollider>());
             terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<SphereCollider>());
             terrainObjects.AddRange(terrainObjHolder.GetChild(i).GetComponentsInChildren<CapsuleCollider>());
         }
-        List<Collider> blockingObjects = new List<Collider>();
+        blockingObjects = new List<Collider>();
         blockingObjects.AddRange(terrainObjects);
         blockingObjects.AddRange(outerWallsColliders);
         int resolution = 4;
@@ -170,7 +171,7 @@ public class LevelBuilder : MonoBehaviour
         List<Vector2> placeableArrayIndex = new List<Vector2>();
         for (int x = 0; x < tDataFull.GetLength(0); x++)//build height map
         {
-            for(int z = 0; z < tDataFull.GetLength(1); z++)
+            for (int z = 0; z < tDataFull.GetLength(1); z++)
             {
                 Vector3 worldPos = tPos + Vector3.right * x * resolution + Vector3.forward * z * resolution;
                 tDataFull[x,z] = new TerPlaceData();
@@ -214,8 +215,11 @@ public class LevelBuilder : MonoBehaviour
                         float maxObjectDist = 8f;
                         for (int i = 0; i < blockingObjects.Count; i++)
                         {
-                            if (Vector3.Distance(blockingObjects[i].ClosestPoint(tDataFull[x, z].worldPos), tDataFull[x, z].worldPos) < maxObjectDist)
-                            { placeable = false; break; }
+                            if (blockingObjects[i].enabled && Vector3.Distance(blockingObjects[i].ClosestPoint(tDataFull[x, z].worldPos), tDataFull[x, z].worldPos) < maxObjectDist)
+                            { 
+                                //Debug.Log("could not place. Touching " + i + " : " +  blockingObjects[i]);
+                                placeable = false; break; 
+                            }
                         }
                     }
                 }
@@ -253,6 +257,7 @@ public class LevelBuilder : MonoBehaviour
     {
         GameObject placedObject = Instantiate(objToPlace); placed.Add(placedObject);
         int rand = Random.Range(0, placeableArrayIndex.Count);
+        //Debug.Log("PLACEABLEARRAYINDEX: " + placeableArrayIndex.Count);
         TerPlaceData pointToBePlacedOn = tDataFull[Mathf.RoundToInt(placeableArrayIndex[rand].x), Mathf.RoundToInt(placeableArrayIndex[rand].y)];
         PlaceableObject objData = placedObject.GetComponent<PlaceableObject>();
         placedObject.transform.position = pointToBePlacedOn.worldPos;

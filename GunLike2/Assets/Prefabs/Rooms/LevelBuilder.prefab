@@ -44,7 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d494edb38d16c34fa6d93f92ed360e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrain: {fileID: 0}
+  showDebugCubes: 1
+  currentTerrain: {fileID: 0}
+  terrainList: []
+  defaultIndex: 1
+  terrainOptions: {fileID: 0}
   chancesObjectsBASE:
   - amount: {x: 1, y: 3}
     chancePerOne: 85
@@ -113,4 +117,17 @@ MonoBehaviour:
     obj: {fileID: 8614469731708240469, guid: 48cd9048ca9fd04479d09a070e1015b7, type: 3}
   debugCube: {fileID: 0}
   supportPillar: {fileID: 7871264026415938520, guid: 6f04f512e79bbd44bba729e6a13b0175, type: 3}
+  outerWallsColliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   placed: []

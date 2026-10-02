@@ -339,7 +339,7 @@ public class GameDataManager : MonoBehaviour
             {
                 Destroy(ehm.gameObject);
             }
-            activePoints = 0f;
+            //activePoints = 0f;
 
             instance.AddEmailToQue("RoomEnter");
         }
@@ -420,7 +420,7 @@ public class GameDataManager : MonoBehaviour
     {
         pointsLeft = Random.Range(basePoints.x, basePoints.y); 
         pointsLeft += flatPointsPerDifficulty * difficulty;
-        pointsLeft *= difficulty / 2f; 
+        //pointsLeft *= difficulty / 2f; 
         pointsLeft *= 1 + (0.5f * (phm.playerItem.leftItems[185] + phm.playerItem.rightItems[185]));
     }
     public void SpawnBoss(string boss)

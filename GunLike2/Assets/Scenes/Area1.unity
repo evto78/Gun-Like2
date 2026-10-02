@@ -1659,8 +1659,6 @@ Transform:
   m_Children:
   - {fileID: 1934810650}
   - {fileID: 1062849839}
-  - {fileID: 571216905}
-  - {fileID: 1530635000}
   m_Father: {fileID: 2133517604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &290504964
@@ -3627,7 +3625,7 @@ Transform:
   - {fileID: 100427258}
   - {fileID: 249436234}
   - {fileID: 141836203}
-  m_Father: {fileID: 290351981}
+  m_Father: {fileID: 1438148591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!154 &571216906
 TerrainCollider:
@@ -8854,6 +8852,39 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1426225750}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1438148590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1438148591}
+  m_Layer: 0
+  m_Name: DONT INCLUDE terrain options
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1438148591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438148590}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 571216905}
+  - {fileID: 1530635000}
+  m_Father: {fileID: 2133517604}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1450114886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9337,7 +9368,7 @@ Transform:
   - {fileID: 273991388}
   - {fileID: 1095025844}
   - {fileID: 1343443296}
-  m_Father: {fileID: 290351981}
+  m_Father: {fileID: 1438148591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!154 &1530635001
 TerrainCollider:
@@ -12281,6 +12312,7 @@ Transform:
   - {fileID: 15374932}
   - {fileID: 1194977087}
   - {fileID: 1238314134}
+  - {fileID: 1438148591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1874979680541868365
@@ -12666,21 +12698,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 925597046}
     - target: {fileID: 8925239676254497327, guid: d16588980a62c594e8990017244b80c1, type: 3}
-      propertyPath: defaultIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8925239676254497327, guid: d16588980a62c594e8990017244b80c1, type: 3}
       propertyPath: showDebugCubes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8925239676254497327, guid: d16588980a62c594e8990017244b80c1, type: 3}
       propertyPath: terrainOptions
       value: 
       objectReference: {fileID: 290351981}
-    - target: {fileID: 8925239676254497327, guid: d16588980a62c594e8990017244b80c1, type: 3}
-      propertyPath: outerWallsColliders.Array.size
-      value: 12
-      objectReference: {fileID: 0}
     - target: {fileID: 8925239676254497327, guid: d16588980a62c594e8990017244b80c1, type: 3}
       propertyPath: outerWallsColliders.Array.data[0]
       value: 

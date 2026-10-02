@@ -128,8 +128,8 @@ public class EnemyHealthManager : MonoBehaviour
             transform.localScale *= 1.5f;
         }
         //Base Stat setup
-        maxHp = baseMaxHp * difficultyScale * gdm.difficulty;
-        armor = baseArmor * difficultyScale * gdm.difficulty;
+        maxHp = baseMaxHp * difficultyScale * (1 + ((gdm.difficulty-1) / 2f));
+        armor = baseArmor * difficultyScale * (1 + ((gdm.difficulty-1) / 4f));
         //Make sure is at fullHP
         curHp = maxHp;
         //NOW GO GET EM SOILDER!!!
